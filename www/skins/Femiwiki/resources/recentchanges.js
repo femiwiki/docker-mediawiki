@@ -36,7 +36,7 @@ $(function() {
   function renderRow(row) {
     row.timestamp = new Date(row.timestamp);
     row.timestampStr = (
-      zeropad(row.timestamp.getMonth()) + '-' +
+      zeropad(row.timestamp.getMonth() + 1) + '-' +
       zeropad(row.timestamp.getDate()) + ' ' +
       zeropad(row.timestamp.getHours()) + ':' +
       zeropad(row.timestamp.getMinutes())
