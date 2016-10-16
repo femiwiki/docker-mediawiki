@@ -1,0 +1,221 @@
+@import "variables.less";
+
+#mw-navigation {
+  position: relative;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 2.4rem;
+
+  background-color: #aca6e4;
+
+  h2 {
+    display: none;
+  }
+
+  // Logo
+  #p-logo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+
+    width: 2.4rem;
+    height: 2.4rem;
+
+    a {
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      /* @embed */
+      background: url("images/logo-icon.png") top left no-repeat;
+      background-size: 2.4rem 2.4rem;
+    }
+
+    img {
+      display: none;
+    }
+  }
+
+  // Recent changes and random pages
+  #site-navigation {
+    position: absolute;
+    top: 0;
+    right: 2.4rem;
+    margin: 0;
+    padding: 0;
+
+    h3 {
+      display: none;
+    }
+
+    li {
+      float: left;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      font-size: 0.6rem;
+      color: #FFF;
+      text-align: center;
+    }
+    li:last-child {
+      border-right: 1px solid #FFF;
+    }
+    .changes a {
+      /* @embed */
+      background: url("images/icon-changes.png") no-repeat;
+      background-size: 2.4rem 2.4rem;
+    }
+    .random a {
+      /* @embed */
+      background: url("images/icon-random.png") no-repeat;
+      background-size: 2.4rem 2.4rem;
+    }
+
+    a {
+      position: relative;
+      display: block;
+      width: 2.4rem;
+      height: 2.4rem;
+      color: #FFF;
+      text-decoration: none;
+    }
+  }
+
+  // Menu button
+  #fw-menu-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+    background-color: inherit;
+
+    /* @embed */
+    background: url("images/icon-bars.png") 0.3rem 0.3rem no-repeat;
+    background-size: 1.8rem 1.8rem;
+
+    .badge {
+      display: none;
+    }
+    .badge.active {
+      position: absolute;
+      right: 0.2rem;
+      top: 0.2rem;
+      display: block;
+      background-color: #a5c831;
+      width: 1.2rem;
+      height: 1.2rem;
+      font-size: 0.7rem;
+      line-height: 1.1rem;
+      border: 1px solid #aca7e2;
+      border-radius: 0.6rem;
+
+      animation: gentle-pulse 5s infinite;
+    }
+
+    @keyframes gentle-pulse {
+      0% {
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+  }
+
+  // Search form
+  #p-search {
+    position: absolute;
+    top: 0;
+    left: 2.5rem;
+    right: 7.3rem;
+    height: 2.4rem;
+    display: block;
+
+    h3 {
+      display: none;
+    }
+    #searchGoButton {
+      display: none;
+    }
+
+    #searchInput {
+      display: block;
+      width: ~"calc(100% - 1rem - 2px)";
+
+      font-size: 1rem;
+      height: ~"calc(2.4rem - 2px)";
+      border: 1px solid #ACA6E4;
+      padding: 0 0.5rem;
+    }
+  }
+}
+
+#fw-menu {
+  display: none;
+  margin-top: 0.6rem;
+  padding: 0.85rem;
+
+  border-bottom: 1px solid #aca6e4;
+
+  .mw-portlet,
+  .portal {
+    width: 8.8rem;
+    margin: 0.6rem 0.8rem 0.6rem 0;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+
+    h3 {
+      font-weight: normal;
+      font-size: 1rem;
+      border-bottom: 1px solid #b9b5d9;
+      margin-bottom: 0.4rem;
+    }
+
+    ul {
+      margin: 0;
+    }
+
+    li {
+      list-style-type: none;
+      margin: 0;
+    }
+
+    a {
+      display: block;
+    }
+  }
+
+  // Hide less-frequently used links
+  #p-namespaces,
+  #ca-addsection {
+    display: none;
+  }
+
+  #pt-notifications-alert .mw-echo-notifications-badge, #pt-notifications-message .mw-echo-notifications-badge {
+    font-weight: inherit;
+    margin: 0;
+    padding: 0;
+    height: inherit;
+    min-height: inherit;
+    text-decoration: inherit;
+  }
+}
+
+#fw-menu.active {
+  display: block;
+}

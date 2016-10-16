@@ -1,0 +1,142 @@
+/*!
+// CSS only Responsive Tables
+// http://dbushell.com/2016/03/04/css-only-responsive-tables/
+// by David Bushell
+*/
+
+#content {
+  /*!
+ // CSS only Responsive Tables
+ // http://dbushell.com/2016/03/04/css-only-responsive-tables/
+ // by David Bushell
+ */
+  th,
+  td {
+    background-color: transparent;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid #DDD;
+  }
+
+
+
+  .wikitable {
+    /*!
+    // IE needs inline-block to position scrolling shadows otherwise use:
+    // display: block;
+    // max-width: min-content;
+    */
+    display: inline-block;
+    vertical-align: top;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-width: 0;
+    font-size: 0.8rem;
+  }
+
+  .wikitable,
+  .wikitable--flip tbody {
+    -webkit-overflow-scrolling: touch;
+    background: -webkit-radial-gradient(left ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 0 center, -webkit-radial-gradient(right ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 100% center;
+    background: radial-gradient(ellipse at left, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 0 center, radial-gradient(ellipse at right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 100% center;
+    background-size: 10px 100%, 10px 100%;
+    background-attachment: scroll, scroll;
+    background-repeat: no-repeat;
+  }
+
+  .wikitable th:first-child,
+  .wikitable td:first-child,
+  .wikitable--flip tbody tr:first-child {
+    background-image: -webkit-linear-gradient(left, white 50%, rgba(255, 255, 255, 0) 100%);
+    background-image: linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 100%);
+    background-repeat: no-repeat;
+    background-size: 20px 100%;
+  }
+
+  .wikitable th:last-child,
+  .wikitable td:last-child,
+  .wikitable--flip tbody tr:last-child {
+    background-image: -webkit-linear-gradient(right, white 50%, rgba(255, 255, 255, 0) 100%);
+    background-image: linear-gradient(to left, white 50%, rgba(255, 255, 255, 0) 100%);
+    background-repeat: no-repeat;
+    background-position: 100% 0;
+    background-size: 20px 100%;
+  }
+
+  .wikitable th {
+    font-size: inherit;
+    color: #000;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  .wikitable td {
+    color: inherit;
+  }
+
+ .wikitable--flip {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    background: none;
+  }
+
+  .wikitable--flip thead {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    min-width: -webkit-min-content;
+    min-width: -moz-min-content;
+    min-width: min-content;
+  }
+
+  .wikitable--flip tbody {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .wikitable--flip tr {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: -webkit-min-content;
+    min-width: -moz-min-content;
+    min-width: min-content;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+  }
+
+  .wikitable--flip td,
+  .wikitable--flip th {
+    display: block;
+  }
+
+  .wikitable--flip td {
+    background-image: none !important;
+    border-left: 0;
+  }
+
+  .wikitable--flip th:not(:last-child),
+  .wikitable--flip td:not(:last-child) {
+    border-bottom: 0;
+  }
+}

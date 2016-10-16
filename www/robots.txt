@@ -1,0 +1,8 @@
+User-agent: *
+
+Disallow: /w/api.php
+Disallow: /api.php
+Disallow: /w/Special:*
+Disallow: /w/%ED%8A%B9%EC%88%98:*
+
+sitemap:https://femiwiki.com/sitemap/sitemap-index-femiwiki.xml

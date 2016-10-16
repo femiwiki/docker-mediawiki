@@ -1,0 +1,11 @@
+# Project related files
+.aws/
+.vagrant/
+fw.pem
+www/LocalSettingsSecure.php
+
+# OS related files
+.DS_Store
+
+# IDE related files
+.idea/
