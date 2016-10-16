@@ -1,6 +1,6 @@
 페미위키 소스 코드.
 
-[femiwiki.com](https://femiwiki.com)에 사용되는 소스 코드 저장소입니다. 다음 코드들을 포함하고 있습니다.
+한국의 페미니즘 위키인 [femiwiki.com](https://femiwiki.com)에 사용되는 소스 코드 저장소입니다. 다음 코드들을 포함하고 있습니다.
 
 * 웹 서버 및 시각편집기 서버(parsoid)용 Vagrantfile 및 프로비저닝 스크립트
 * 개발/테스트 및 실제 서버용 배포 스크립트
