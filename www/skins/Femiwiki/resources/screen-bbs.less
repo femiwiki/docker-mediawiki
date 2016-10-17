@@ -2,14 +2,21 @@
 
 body.ns-3902 {
   // Prevent flickering
-  display: none;
+  #content,
+  #mw-footer {
+    display: none;
+  }
+
   &.bbs-read {
-    display: block;
+    #content,
+    #mw-footer {
+      display: block;
+    }
   }
 }
 
 body #mw-wrapper.bbs-list,
-body.bbs-read {
+body #mw-wrapper.bbs-read {
   // Hide UI chromes to make it more like conventional BBS
   .mw-editsection,
   .lastmod,
@@ -19,7 +26,9 @@ body.bbs-read {
   }
 }
 
-body #mw-wrapper .fw-bbs-list {
+// Common
+body #mw-wrapper div.fw-bbs-list,
+body #mw-wrapper.bbs-read {
   .menu {
     margin: 0.5rem 0;
     padding: 0;
@@ -27,7 +36,10 @@ body #mw-wrapper .fw-bbs-list {
   .menu li {
     display: inline-block;
   }
+}
 
+// List page
+body #mw-wrapper div.fw-bbs-list {
   .rows {
     margin: 0;
     padding: 0;
@@ -87,4 +99,9 @@ body #mw-wrapper .fw-bbs-list {
       padding: 0.2rem 0 0.3rem;
     }
   }
+}
+
+// Read page
+body #mw-wrapper.bbs-read {
+
 }

@@ -132,6 +132,8 @@ class FemiwikiTemplate extends BaseTemplate
             </div>
 
             <div id="mw-footer">
+                <div id="mw-footer-bar"></div>
+
                 <ul id="fw-footer-menu"></ul>
                 <?php
                 echo Html::openElement(

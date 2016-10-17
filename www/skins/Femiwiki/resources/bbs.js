@@ -109,11 +109,12 @@ $(function () {
 
     // Render BBS menu
     var menu = renderMenu();
-    $('#mw-footer').prepend(menu);
+    $('#mw-content-text').append(menu);
+
     $('a.list').on('click', onClickList);
 
     // Done
-    $('body').addClass('bbs-read');
+    $('body, #mw-wrapper').addClass('bbs-read');
 
     function onClickList(e) {
       e.preventDefault();
