@@ -1,70 +1,133 @@
-$(function() {
-  var element = document.querySelector('.fw-bbs');
-  if(!element) return;
+$(function () {
+  var BBS_NS = ['3902'];
 
-  var nsId = element.innerHTML;
-
-  fetch(nsId, function(data) {
-    var menu = renderMenu();
-    var list = renderList(data);
-
-    element.innerHTML = menu + list + menu;
-  });
-
-  /**
-   * Fetch recent changes for given namespace
-   *
-   * @param nsId
-   * @param callback
-   */
-  function fetch(nsId, callback) {
-    var url = '/w/api.php?action=query&list=recentchanges&rctype=new|edit&rcprop=title|ids|user|timestamp&rclimit=100&format=json&rcnamespace=' + nsId;
-    $.get(url, callback);
+  var listElement = document.querySelector('.fw-bbs-list');
+  if(listElement) {
+    handleListPage(listElement);
+    return;
   }
 
-  /**
-   * Render recent changes table as HTML
-   * @param data
-   */
-  function renderList(data) {
-    var rows = data.query.recentchanges;
-    var buffer = [];
+  var nsId = document.body.className.match(/\bns-(\d+)\b/)[1];
+  if(BBS_NS.indexOf(nsId) !== -1) {
+    handleReadPage();
+  }
 
-    buffer.push('<ul class="rows">');
-    rows.forEach(function(row) {
-      buffer.push(renderRow(row));
+  function handleListPage(element) {
+    var nsId = element.dataset.nsid;
+    var nsName = element.dataset.nsname;
+
+    fetchList(nsId, function (data) {
+      var menu = renderMenu();
+      var list = renderList(data);
+
+      element.innerHTML = menu + list + menu;
+      $(element).find('a.write').on('click', onClickWrite);
     });
-    buffer.push('</ul>');
 
-    return buffer.join('');
+    function onClickWrite(e) {
+      e.preventDefault();
+      var title = window.prompt('새 글의 제목을 입력해주세요');
+      if(!title) return;
+
+      // append timestamp to the title in order to avoid name conflict
+      var timestamp = Date.now().toString(16);
+      location.href = '/index.php?title=' + encodeURIComponent(nsName + ':' + title + '_(' + timestamp + ')') + '&action=edit&classes=bbs';
+    }
+
+    /**
+     * Fetch recent changes for given namespace
+     *
+     * @param nsId
+     * @param callback
+     */
+    function fetchList(nsId, callback) {
+      var url = '/w/api.php?action=query&list=recentchanges&rctype=new|edit&rcprop=title|ids|user|timestamp&rclimit=100&format=json&rcnamespace=' + nsId;
+      $.get(url, callback);
+    }
+
+    /**
+     * Render recent changes table as HTML
+     * @param data
+     */
+    function renderList(data) {
+      var rows = data.query.recentchanges;
+      var buffer = [];
+
+      buffer.push('<ul class="rows">');
+      rows.forEach(function (row) {
+        buffer.push(renderRow(row));
+      });
+      buffer.push('</ul>');
+
+      return buffer.join('');
+    }
+
+    function renderRow(row) {
+      row.timestamp = new Date(row.timestamp);
+      row.timestampStr = (
+        zeropad(row.timestamp.getMonth() + 1) + '-' +
+        zeropad(row.timestamp.getDate()) + ' ' +
+        zeropad(row.timestamp.getHours()) + ':' +
+        zeropad(row.timestamp.getMinutes())
+      );
+
+      try {
+        row.displayTitle = row.title.match(/^.+?:(.+) \([a-f0-9]+\)$/)[1];
+      } catch (e) {
+        // ignore article with invalid title
+        return '';
+      }
+
+      return (
+        '<li class="row type-' + row.type + '">' +
+        '<ul class="cols">' +
+        '<li class="col timestamp">' + row.timestampStr + '</li>' +
+        '<li class="col user"><a href="/w/' + encodeURI('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
+        '<li class="col title"><a href="/w/' + encodeURI(row.title) + '">' + escapeEntity(row.displayTitle) + '</a></li>' +
+        '</ul>' +
+        '</li>'
+      );
+    }
+
+    function renderMenu() {
+      return (
+        '<ul class="menu">' +
+        '<li><a href="#" class="write btn">새글</a></li>' +
+        '</ul>'
+      );
+    }
   }
 
-  function renderRow(row) {
-    row.timestamp = new Date(row.timestamp);
-    row.timestampStr = (
-      zeropad(row.timestamp.getMonth() + 1) + '-' +
-      zeropad(row.timestamp.getDate()) + ' ' +
-      zeropad(row.timestamp.getHours()) + ':' +
-      zeropad(row.timestamp.getMinutes())
-    );
+  function handleReadPage() {
+    // Replace title
+    var titleEl = document.querySelector('.firstHeading');
+    var title = titleEl.childNodes[0].nodeValue;
+    var match = title.match(/^(.+?):(.+?)( \([a-f0-9]+\))?$/);
+    var nsName = match[1];
+    var newTitle = match[2];
+    titleEl.childNodes[0].nodeValue = newTitle;
 
-    return (
-      '<li class="row type-' + row.type + '">' +
-      '<ul class="cols">' +
-      '<li class="col timestamp">' + row.timestampStr + '</li>' +
-      '<li class="col user"><a href="/w/' + encodeURI('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
-      '<li class="col title"><a href="/w/' + encodeURI(row.title) + '">' + escapeEntity(row.title.substr(row.title.indexOf(':') + 1)) + '</a></li>' +
-      '</ul>' +
-      '</li>'
-    );
-  }
+    // Render BBS menu
+    var menu = renderMenu();
+    $('#mw-footer').prepend(menu);
+    $('a.list').on('click', onClickList);
 
-  function renderMenu() {
-    return (
-      '<ul class="menu">' +
-      '<li><a href="#">새글</a></li>' +
-      '</ul>'
-    );
+    // Done
+    $('body').addClass('bbs-read');
+
+    function onClickList(e) {
+      e.preventDefault();
+
+      location.href = '/w/' + encodeURI('페미위키:' + nsName) + '?classes=bbs-list';
+    }
+
+    function renderMenu() {
+      return (
+        '<ul class="menu">' +
+        '<li><a href="#" class="list btn">목록</a></li>' +
+        '</ul>'
+      );
+    }
   }
 
   function escapeEntity(text) {
@@ -75,4 +138,5 @@ $(function() {
     var padded = '0' + num;
     return padded.length === 2 ? padded : padded.substr(1);
   }
-});
+})
+;

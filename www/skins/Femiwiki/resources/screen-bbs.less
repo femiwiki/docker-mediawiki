@@ -1,6 +1,15 @@
 @import "variables.less";
 
-body #mw-wrapper.bbs {
+body.ns-3902 {
+  // Prevent flickering
+  display: none;
+  &.bbs-read {
+    display: block;
+  }
+}
+
+body #mw-wrapper.bbs-list,
+body.bbs-read {
   // Hide UI chromes to make it more like conventional BBS
   .mw-editsection,
   .lastmod,
@@ -10,22 +19,13 @@ body #mw-wrapper.bbs {
   }
 }
 
-body #mw-wrapper .fw-bbs {
+body #mw-wrapper .fw-bbs-list {
   .menu {
     margin: 0.5rem 0;
     padding: 0;
-    text-align: right;
   }
   .menu li {
     display: inline-block;
-
-    a {
-      background-color: #aca6e4;
-      padding: 0.2rem 0.5rem;
-      border-radius: 0.2rem;
-      color: #FFF;
-      text-decoration: none;
-    }
   }
 
   .rows {
