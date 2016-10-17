@@ -22,32 +22,34 @@ class FemiwikiTemplate extends BaseTemplate
         <!-- End Google Tag Manager (noscript) -->
 
         <div id="mw-wrapper">
-            <div id="mw-navigation">
-                <h1 id="p-logo">
-                    <a href="/" class="mw-wiki-logo"><img src="/skins/Femiwiki/images/logo-long.png" alt="Femiwiki"></a>
-                </h1>
+            <div class="nav-bar">
+                <div id="mw-navigation">
+                    <h1 id="p-logo">
+                        <a href="/" class="mw-wiki-logo"><img src="/skins/Femiwiki/images/logo-long.png" alt="Femiwiki"></a>
+                    </h1>
 
-                <?php
-                echo Html::rawElement(
-                    'h2',
-                    [],
-                    $this->getMsg('navigation-heading')->parse()
-                );
-                ?>
+                    <?php
+                    echo Html::rawElement(
+                        'h2',
+                        [],
+                        $this->getMsg('navigation-heading')->parse()
+                    );
+                    ?>
 
-                <button id="fw-menu-toggle">
-                    <span class="icon"></span>
-                    <span class="badge"></span>
-                </button>
+                    <button id="fw-menu-toggle">
+                        <span class="icon"></span>
+                        <span class="badge"></span>
+                    </button>
 
-                <ul id="site-navigation">
-                    <li class="changes"><a href="/w/페미위키:바뀐글" title="바뀐글"> </a></li>
-                    <li class="random"><a href="/w/Special:RandomPage" title="임의글"> </a></li>
-                </ul>
+                    <ul id="site-navigation">
+                        <li class="changes"><a href="/w/페미위키:바뀐글" title="바뀐글"> </a></li>
+                        <li class="random"><a href="/w/Special:RandomPage" title="임의글"> </a></li>
+                    </ul>
 
-                <?php
-                echo $this->getSearch();
-                ?>
+                    <?php
+                    echo $this->getSearch();
+                    ?>
+                </div>
             </div>
 
             <div id="fw-menu">
