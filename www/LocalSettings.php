@@ -138,6 +138,14 @@ wfLoadSkin('Femiwiki');
 # Instant Commons
 $wgUseInstantCommons = true;
 
+# Additional namespaces
+## BBS
+define("NS_BBSFREE", 3902);
+define("NS_BBSFREE_TALK", 3903);
+$wgExtraNamespaces[NS_BBSFREE] = "자유게시판";
+$wgExtraNamespaces[NS_BBSFREE_TALK] = "자유게시판토론";
+$wgContentNamespaces[] = NS_BBSFREE;
+
 # Permission
 $wgGroupPermissions['*']['createaccount'] = true;
 $wgGroupPermissions['bureaucrat']['usermerge'] = true;
@@ -159,6 +167,7 @@ $wgNamespaceProtection[NS_CATEGORY] = array('edit-main');
 $wgNamespaceProtection[NS_HELP] = array('edit-main');
 $wgNamespaceProtection[NS_PROJECT] = array('edit-main');
 $wgNamespaceProtection[NS_TEMPLATE] = array('edit-main');
+$wgNamespaceProtection[NS_BBSFREE] = array('edit-main');
 $wgGroupPermissions['seeder']['edit-main'] = true;
 $wgGroupPermissions['bot']['edit-main'] = true;
 $wgGroupPermissions['bureaucrat']['edit-main'] = true;

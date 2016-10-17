@@ -1,0 +1,90 @@
+@import "variables.less";
+
+body #mw-wrapper.bbs {
+  // Hide UI chromes to make it more like conventional BBS
+  .mw-editsection,
+  .lastmod,
+  #fw-footer-menu,
+  #footer-info-lastmod {
+    display: none;
+  }
+}
+
+body #mw-wrapper .fw-bbs {
+  .menu {
+    margin: 0.5rem 0;
+    padding: 0;
+    text-align: right;
+  }
+  .menu li {
+    display: inline-block;
+
+    a {
+      background-color: #aca6e4;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.2rem;
+      color: #FFF;
+      text-decoration: none;
+    }
+  }
+
+  .rows {
+    margin: 0;
+    padding: 0;
+    line-height: 1.2rem;
+  }
+
+  .row {
+    margin: 0;
+    padding: 0.9rem 0.5rem 0.3rem;
+    list-style-type: none;
+
+    border-top: 1px solid #DDD;
+    &:last-child {
+      border-bottom: 1px solid #DDD;
+    }
+    &:nth-child(even) {
+      background-color: #F8F8F8;
+    }
+  }
+
+  .cols {
+    position: relative;
+    margin: 0;
+    padding: 0;
+  }
+
+  .col {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .col.title {
+    display: inline-block;
+    width: ~"calc(100% - 14rem)";
+  }
+  .col.timestamp {
+    display: inline-block;
+    margin-right: 1rem;
+    width: 6rem;
+    opacity: 0.6;
+  }
+  .col.user {
+    display: inline-block;
+    margin-right: 1rem;
+    width: 6rem;
+    opacity: 0.6;
+  }
+
+  @media screen and (max-width: 640px) {
+    .col.title {
+      display: block;
+      width: auto;
+      padding: 0.2rem 0 0.3rem;
+    }
+  }
+}

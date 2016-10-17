@@ -21,7 +21,7 @@ class FemiwikiTemplate extends BaseTemplate
         </noscript>
         <!-- End Google Tag Manager (noscript) -->
 
-        <div id="mw-wrapper">
+        <div id="mw-wrapper" class="<?php echo $_GET['classes'] ?>">
             <div class="nav-bar">
                 <div id="mw-navigation">
                     <h1 id="p-logo">
