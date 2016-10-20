@@ -33,7 +33,7 @@ $(function () {
 
       // append timestamp to the title in order to avoid name conflict
       var timestamp = Date.now().toString(16);
-      location.href = '/index.php?title=' + encodeURIComponent(nsName + ':' + title + '_(' + timestamp + ')') + '&action=edit&classes=bbs';
+      location.href = '/index.php?title=' + encodeTitle(nsName + ':' + title + '_(' + timestamp + ')') + '&action=edit&classes=bbs';
     }
 
     /**
@@ -84,8 +84,8 @@ $(function () {
         '<li class="row type-' + row.type + '">' +
         '<ul class="cols">' +
         '<li class="col timestamp">' + row.timestampStr + '</li>' +
-        '<li class="col user"><a href="/w/' + encodeURIComponent('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
-        '<li class="col title"><a href="/w/' + encodeURIComponent(row.title) + '">' + escapeEntity(row.displayTitle) + '</a></li>' +
+        '<li class="col user"><a href="/w/' + encodeTitle('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
+        '<li class="col title"><a href="/w/' + encodeTitle(row.title) + '">' + escapeEntity(row.displayTitle) + '</a></li>' +
         '</ul>' +
         '</li>'
       );
@@ -119,8 +119,12 @@ $(function () {
     function onClickList(e) {
       e.preventDefault();
 
-      location.href = '/w/' + encodeURIComponent('페미위키:' + nsName) + '?classes=bbs-list';
+      location.href = '/w/' + encodeTitle('페미위키:' + nsName) + '?classes=bbs-list';
     }
+  }
+
+  function encodeTitle(title) {
+    return title.split('/').map(function(path) {return encodeURIComponent(path);}).join('/')
   }
 
   function escapeEntity(text) {

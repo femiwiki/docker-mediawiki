@@ -53,14 +53,18 @@ $(function() {
       '<li class="col flags">' +
       (row.typeStr ? '<span class="type-' + row.type + ' logtype-' + row.logtype + '">' + row.typeStr + '</span>' : '') +
       '</li>' +
-      '<li class="col timestamp"><a href="/index.php?title=' + encodeURIComponent(row.title) + '&action=history"><span class="mono">' + row.timestampStr + '</span> [역사]</a></li>' +
-      '<li class="col sizes ' + (row.diff > 0 ? 'added' : (row.diff === 0 ? '' : 'deleted')) + '"><a href="/index.php?title=' + encodeURIComponent(row.title) + '&curid=' + row.pageid + '&diff=' + row.revid + '&oldid=' + row.old_revid + '"><span class="mono">' + (row.diff > 0 ? '+' : '') + row.diff + '</span> [차이]</a></li>' +
-      '<li class="col user"><a href="/w/' + encodeURIComponent('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
-      '<li class="col title"><a href="/w/' + encodeURIComponent(row.title) + '">' + escapeEntity(row.title) + '</a></li>' +
+      '<li class="col timestamp"><a href="/index.php?title=' + encodeTitle(row.title) + '&action=history"><span class="mono">' + row.timestampStr + '</span> [역사]</a></li>' +
+      '<li class="col sizes ' + (row.diff > 0 ? 'added' : (row.diff === 0 ? '' : 'deleted')) + '"><a href="/index.php?title=' + encodeTitle(row.title) + '&curid=' + row.pageid + '&diff=' + row.revid + '&oldid=' + row.old_revid + '"><span class="mono">' + (row.diff > 0 ? '+' : '') + row.diff + '</span> [차이]</a></li>' +
+      '<li class="col user"><a href="/w/' + encodeTitle('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
+      '<li class="col title"><a href="/w/' + encodeTitle(row.title) + '">' + escapeEntity(row.title) + '</a></li>' +
       '<li class="col parsedcomment">' + (row.parsedcomment || '(설명 없음)') + '</li>' +
       '</ul>' +
       '</li>'
     );
+  }
+
+  function encodeTitle(title) {
+    return title.split('/').map(function(path) {return encodeURIComponent(path);}).join('/')
   }
 
   function escapeEntity(text) {
