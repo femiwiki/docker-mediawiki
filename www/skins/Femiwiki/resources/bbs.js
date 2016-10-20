@@ -7,8 +7,10 @@ $(function () {
     return;
   }
 
+  var $body = $(document.body);
   var nsId = document.body.className.match(/\bns-(\d+)\b/)[1];
-  if(BBS_NS.indexOf(nsId) !== -1) {
+  var isEditPage = $body.hasClass('action-edit');
+  if(!isEditPage && BBS_NS.indexOf(nsId) !== -1) {
     handleReadPage();
   }
 
@@ -20,7 +22,7 @@ $(function () {
       var menu = renderMenu();
       var list = renderList(data);
 
-      element.innerHTML = menu + list + menu;
+      element.innerHTML = menu + list;
       $(element).find('a.write').on('click', onClickWrite);
     });
 
@@ -108,9 +110,7 @@ $(function () {
     titleEl.childNodes[0].nodeValue = newTitle;
 
     // Render BBS menu
-    var menu = renderMenu();
-    $('#mw-content-text').append(menu);
-
+    $('#fw-footer-menu').prepend('<li><a href="#" class="list">글목록</a></li>');
     $('a.list').on('click', onClickList);
 
     // Done
@@ -120,14 +120,6 @@ $(function () {
       e.preventDefault();
 
       location.href = '/w/' + encodeURI('페미위키:' + nsName) + '?classes=bbs-list';
-    }
-
-    function renderMenu() {
-      return (
-        '<ul class="menu">' +
-        '<li><a href="#" class="list btn">목록</a></li>' +
-        '</ul>'
-      );
     }
   }
 

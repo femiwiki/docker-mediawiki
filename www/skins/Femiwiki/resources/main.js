@@ -61,6 +61,8 @@ $(function () {
   $namespaces.each(function () {
     $footerMenu.append(this);
   });
+  // Change label of first namespace
+  $namespaces[0].firstChild.innerHTML = '문서';
 
   // Do not show edit page when user clicks red link
   $('#bodyContent a').each(function() {
