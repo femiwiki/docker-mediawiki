@@ -186,6 +186,10 @@ $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 $wgAllowUserCss = true;
 $wgAllowUserJs = true;
 
+# Allow external image link
+$wgAllowExternalImages = true;
+$wgAllowImageTag = true;
+
 # Plugins
 ## ParserFunction
 wfLoadExtension( 'ParserFunctions' );
