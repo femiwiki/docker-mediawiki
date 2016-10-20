@@ -84,8 +84,8 @@ $(function () {
         '<li class="row type-' + row.type + '">' +
         '<ul class="cols">' +
         '<li class="col timestamp">' + row.timestampStr + '</li>' +
-        '<li class="col user"><a href="/w/' + encodeURI('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
-        '<li class="col title"><a href="/w/' + encodeURI(row.title) + '">' + escapeEntity(row.displayTitle) + '</a></li>' +
+        '<li class="col user"><a href="/w/' + encodeURIComponent('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
+        '<li class="col title"><a href="/w/' + encodeURIComponent(row.title) + '">' + escapeEntity(row.displayTitle) + '</a></li>' +
         '</ul>' +
         '</li>'
       );
@@ -94,7 +94,7 @@ $(function () {
     function renderMenu() {
       return (
         '<ul class="menu">' +
-        '<li><a href="#" class="write btn">새글</a></li>' +
+        '<li><a href="#" class="write btn">글쓰기</a></li>' +
         '</ul>'
       );
     }
@@ -119,7 +119,7 @@ $(function () {
     function onClickList(e) {
       e.preventDefault();
 
-      location.href = '/w/' + encodeURI('페미위키:' + nsName) + '?classes=bbs-list';
+      location.href = '/w/' + encodeURIComponent('페미위키:' + nsName) + '?classes=bbs-list';
     }
   }
 
