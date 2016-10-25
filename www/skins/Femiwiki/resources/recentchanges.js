@@ -8,7 +8,7 @@ $(function() {
   }
 
   // Fetch data and render
-  var url = '/w/api.php?action=query&list=recentchanges&rcprop=parsedcomment|title|ids|user|timestamp|sizes|loginfo&rclimit=100&format=json';
+  var url = '/w/api.php?action=query&list=recentchanges&rcprop=parsedcomment|title|ids|user|timestamp|sizes|loginfo&rcshow=!bot&rclimit=200&format=json';
   $.get(url, function(data) {
     var html = render(data);
     for(var i = 0; i < elements.length; i++) {
