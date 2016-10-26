@@ -108,8 +108,6 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
         certbot-auto --noninteractive --apache -d $2 -m admin@femiwiki.com --agree-tos
         sudo ln -sf /etc/apache2/mods-available/ssl.conf /etc/apache2/mods-enabled/
         sudo ln -sf /etc/apache2/mods-available/ssl.load /etc/apache2/mods-enabled/
-        sudo ln -sf /etc/apache2/mods-available/socache_shmcb.load /etc/apache2/mods-enabled/
-        sudo ln -sf /etc/apache2/mods-available/expires.load /etc/apache2/mods-enabled/
         sudo crontab -l 2>/dev/null; echo "30 2 * * 1 /usr/local/sbin/certbot-auto renew >> /var/log/le-renew.log" | sudo crontab -
     fi
     sudo rm /etc/apache2/sites-enabled/*.conf
@@ -166,5 +164,7 @@ sudo sed -i s/HOST/$2/ /etc/apache2/sites-available/femiwiki.conf
 
 sudo ln -sf /etc/apache2/sites-available/femiwiki.conf /etc/apache2/sites-enabled/femiwiki.conf
 sudo ln -sf /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
+sudo ln -sf /etc/apache2/mods-available/socache_shmcb.load /etc/apache2/mods-enabled/
+sudo ln -sf /etc/apache2/mods-available/expires.load /etc/apache2/mods-enabled/
 sudo service apache2 reload
 
