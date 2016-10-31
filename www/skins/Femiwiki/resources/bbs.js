@@ -111,9 +111,9 @@ $(function () {
     titleEl.childNodes[0].nodeValue = title;
 
     // Render BBS menu
+    $('#bodyContent').prepend('<div id="#contentSub"><p><span class="subpages">&lt; <a href="#" class="list">글목록</a></span></p></div>');
     $('#fw-footer-menu').prepend('<li><a href="#" class="list">글목록</a></li>');
     $('a.list').on('click', onClickList);
-
 
     // Render comments
     renderComments(nsName, title, hash, function($commentList) {
@@ -157,7 +157,7 @@ $(function () {
       );
       $newComment.find('.user').text('[[사용자:' + userName + '|' + userName + ']]');
       $newComment.find('.text').text(comment);
-      var commentWikimarkup = $newComment.text();
+      var commentWikimarkup = $newComment.html();
 
       // Prepend comment
       $.getJSON('/w/api.php?action=query&meta=tokens&format=json', function(json) {
