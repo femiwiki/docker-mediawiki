@@ -102,5 +102,56 @@ body #mw-wrapper div.fw-bbs-list {
 
 // Read page
 body #mw-wrapper.bbs-read {
+  #fw-bbs-comment-section {
+    margin: 2.8rem 0;
+    padding: 1rem;
+    background-color: #F8F8F8;
 
+    #fw-bbs-new-comment-form {
+      label {
+      }
+      input[type="text"] {
+        display: block;
+        width: 100%;
+        margin: 0.2rem 0 1rem;
+      }
+    }
+
+    #fw-bbs-comment-list {
+      margin: 0;
+      padding: 0;
+
+      & > li {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        .ts, .user, .text {
+          display: inline-block;
+        }
+
+        .ts {
+          width: 8rem;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          opacity: 0.6;
+        }
+
+        .user {
+          width: 6rem;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          opacity: 0.6;
+        }
+
+        .text {
+          display: block;
+          width: auto;
+          margin-bottom: 1rem;
+        }
+      }
+    }
+  }
 }
