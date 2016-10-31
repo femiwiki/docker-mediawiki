@@ -157,7 +157,7 @@ $(function () {
       );
       $newComment.find('.user').text('[[사용자:' + userName + '|' + userName + ']]');
       $newComment.find('.text').text(comment);
-      var commentWikimarkup = $newComment.html();
+      var commentWikimarkup = $newComment.text();
 
       // Prepend comment
       $.getJSON('/w/api.php?action=query&meta=tokens&format=json', function(json) {
