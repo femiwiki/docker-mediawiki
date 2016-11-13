@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20161101_2';
+$wgStyleVersion = '20161113_1';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki

@@ -285,6 +285,42 @@ button {
     height: auto;
   }
 
+  // Calendar
+  .fw-calendar {
+    float: right;
+    margin: 1rem 0 1rem 2rem;
+
+    th, td {
+      margin: 0;
+      padding: 0;
+      font-weight: normal;
+      width: 2rem;
+    }
+    th.sat {
+      color: blue;
+    }
+    th.sun {
+      color: red;
+    }
+    th {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    th.sat {
+      background-color: rgba(0, 0, 255, 0.1);
+    }
+    th.sun {
+      background-color: rgba(255, 0, 0, 0.1);
+    }
+
+    a, .selflink {
+      display: block;
+      width: 100%;
+      height: 2rem;
+      line-height: 2rem;
+      text-align: center;
+    }
+  }
+
   // Table of contents
   #toc {
     margin: 3.2rem 0;
@@ -484,8 +520,6 @@ button {
   }
 }
 
-// RecentChanges
-
 // Preferences
 ul#preftoc {
   margin: 0;
@@ -607,6 +641,11 @@ html.ve-active {
       .thumbinner {
         margin: 0 auto;
       }
+    }
+
+    // Calendar
+    .fw-calendar {
+      width: 100%;
     }
   }
 
