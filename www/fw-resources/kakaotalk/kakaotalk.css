@@ -1,0 +1,114 @@
+html {
+    font-size: 16px;
+    font-family: 'Apple SD Gothic Neo','Noto Sans CJK KR','본고딕','KoPubDotum Medium','나눔바른고딕','나눔고딕',NanumGothic,'맑은고딕','Malgun Gothic',Arial,Dotum,sans-serif;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    background-color: #9bbad8;
+}
+
+.kakaotalk {
+    height: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+p {
+    margin: 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.talk {
+    position: relative;
+    margin: 1.2rem 0 0.4rem;
+}
+
+.talk.continued {
+    margin-top: 0.4rem;
+}
+
+.notification {
+    text-align: center;
+    color: #333;
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 0.2rem 1rem;
+    margin: 2rem 0;
+    font-size: 0.8rem;
+}
+
+.talk .sender {
+    display: block;
+    padding: 0.2rem 0.1rem;
+    font-size: 0.8rem;
+}
+
+.talk .profile {
+    float: left;
+    margin-right: 0.5rem;
+    width: 2.4rem;
+    height: 2.4rem;
+}
+.talk .profile img {
+    width: 100%;
+    border-radius: 1.2rem;
+}
+
+.talk .info {
+    display: inline-block;
+    position: relative;
+    width: 3.5rem;
+    height: 1rem;
+    margin: 0 0.4rem;
+    bottom: 0;
+    color: #666;
+}
+
+.talk .time {
+    display: block;
+    position: absolute;
+    top: 0.8rem;
+    font-size: 0.8rem;
+}
+
+.talk .read {
+    display: block;
+    position: absolute;
+    top: 0;
+    font-size: 0.8rem;
+    color: #fae904;
+}
+
+.talk .message {
+    display: inline-block;
+    padding: 0.5rem;
+    background-color: #FFF;
+    border-radius: 3px;
+    max-width: calc(100% - 10rem);
+}
+
+.talk.sender-나 {
+    text-align: right;
+}
+
+.talk.sender-나 .message {
+    background-color: #fae904;
+}
+
+.talk.sender-나 .info .time,
+.talk.sender-나 .info .read {
+    right: 0;
+}
+
+.talk.continued .sender,
+.talk.continued .profile img,
+.talk.sender-나 .profile,
+.talk.sender-나 .sender {
+    display: none;
+}
