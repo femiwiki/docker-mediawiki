@@ -162,16 +162,16 @@ $wgGroupPermissions['seeder']['edit'] = true;
 $wgGroupPermissions['bureaucrat']['edit'] = true;
 
 ## But only seeders can edit major namespaces
-$wgNamespaceProtection[NS_MAIN] = array('edit-main');
-$wgNamespaceProtection[NS_CATEGORY] = array('edit-main');
-$wgNamespaceProtection[NS_HELP] = array('edit-main');
-$wgNamespaceProtection[NS_PROJECT] = array('edit-main');
-$wgNamespaceProtection[NS_TEMPLATE] = array('edit-main');
-$wgNamespaceProtection[NS_BBSFREE] = array('edit-main');
-$wgGroupPermissions['seeder']['edit-main'] = true;
-$wgGroupPermissions['bot']['edit-main'] = true;
-$wgGroupPermissions['bureaucrat']['edit-main'] = true;
-$wgGroupPermissions['sysop']['edit-main'] = true;
+//$wgNamespaceProtection[NS_MAIN] = array('edit-main');
+//$wgNamespaceProtection[NS_CATEGORY] = array('edit-main');
+//$wgNamespaceProtection[NS_HELP] = array('edit-main');
+//$wgNamespaceProtection[NS_PROJECT] = array('edit-main');
+//$wgNamespaceProtection[NS_TEMPLATE] = array('edit-main');
+//$wgNamespaceProtection[NS_BBSFREE] = array('edit-main');
+//$wgGroupPermissions['seeder']['edit-main'] = true;
+//$wgGroupPermissions['bot']['edit-main'] = true;
+//$wgGroupPermissions['bureaucrat']['edit-main'] = true;
+//$wgGroupPermissions['sysop']['edit-main'] = true;
 
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
