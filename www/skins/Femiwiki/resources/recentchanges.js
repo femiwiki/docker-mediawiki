@@ -44,7 +44,7 @@ $(function() {
     row.diff = row.newlen - row.oldlen;
 
     row.typeStr =
-      {'newusers': '가입', 'delete': '삭제', 'protect': '보호', 'rights': '권한', 'move': '이동'}[row.logtype] ||
+      {'newusers': '가입', 'delete': '삭제', 'protect': '보호', 'rights': '권한', 'move': '이동', 'block': '차단'}[row.logtype] ||
       {'new': '새글', 'edit': '', 'log': '기록'}[row.type];
 
     return (
