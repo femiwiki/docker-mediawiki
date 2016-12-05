@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20161204_1';
+$wgStyleVersion = '20161205_2';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -98,7 +98,7 @@ $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
-$wgUseInstantCommons = false;
+$wgUseInstantCommons = true;
 
 ## If you use ImageMagick (or any other shell command) on a
 ## Linux server, this will need to be set to the name of an
@@ -134,9 +134,6 @@ wfLoadSkin('Femiwiki');
 
 # End of automatically generated settings.
 # Add more configuration options below.
-
-# Instant Commons
-$wgUseInstantCommons = true;
 
 # Additional namespaces
 ## BBS

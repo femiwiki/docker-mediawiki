@@ -7,6 +7,11 @@
 // </gtm>
 
 
+var _FW = {
+  BBS_NS: [3902]
+};
+
+
 $(function () {
   $('#fw-menu-toggle').click(function () {
     $('#fw-menu').toggle();

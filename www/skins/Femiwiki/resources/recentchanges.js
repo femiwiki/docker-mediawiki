@@ -47,6 +47,19 @@ $(function() {
       {'newusers': '가입', 'delete': '삭제', 'protect': '보호', 'rights': '권한', 'move': '이동', 'block': '차단'}[row.logtype] ||
       {'new': '새글', 'edit': '', 'log': '기록'}[row.type];
 
+    // Link comment to article page instead of discussion page
+    var url;
+    var isComment = _FW.BBS_NS.indexOf(+row.ns - 1) !== -1;
+    if(isComment) {
+      var match = row.title.match(/^(.+?):(.+?)( \([a-f0-9]+\))?$/);
+      var nsName = match[1];
+      var title = match[2];
+      var hash = match[3];
+      url = '/w/' + encodeTitle(nsName.substr(0, nsName.length - 2) + ':' + title + ' ' + hash) + '">' + escapeEntity(nsName + ':' + title);
+    } else {
+      url = '/w/' + encodeTitle(row.title) + '">' + escapeEntity(row.title);
+    }
+
     return (
       '<li class="row type-' + row.type + '">' +
       '<ul class="cols">' +
@@ -56,7 +69,7 @@ $(function() {
       '<li class="col timestamp"><a href="/index.php?title=' + encodeTitle(row.title) + '&action=history"><span class="mono">' + row.timestampStr + '</span> [역사]</a></li>' +
       '<li class="col sizes ' + (row.diff > 0 ? 'added' : (row.diff === 0 ? '' : 'deleted')) + '"><a href="/index.php?title=' + encodeTitle(row.title) + '&curid=' + row.pageid + '&diff=' + row.revid + '&oldid=' + row.old_revid + '"><span class="mono">' + (row.diff > 0 ? '+' : '') + row.diff + '</span> [차이]</a></li>' +
       '<li class="col user"><a href="/w/' + encodeTitle('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
-      '<li class="col title"><a href="/w/' + encodeTitle(row.title) + '">' + escapeEntity(row.title) + '</a></li>' +
+      '<li class="col title"><a href="' + url + '</a></li>' +
       '<li class="col parsedcomment">' + (row.parsedcomment || '(설명 없음)') + '</li>' +
       '</ul>' +
       '</li>'

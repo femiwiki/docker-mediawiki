@@ -1,6 +1,4 @@
 $(function () {
-  var BBS_NS = ['3902'];
-
   var listElement = document.querySelector('.fw-bbs-list');
   if(listElement) {
     handleListPage(listElement);
@@ -8,14 +6,14 @@ $(function () {
   }
 
   var $body = $(document.body);
-  var nsId = document.body.className.match(/\bns-(\d+)\b/)[1];
+  var nsId = +document.body.className.match(/\bns-(\d+)\b/)[1];
   var isEditPage = $body.hasClass('action-edit');
-  if(!isEditPage && BBS_NS.indexOf(nsId) !== -1) {
+  if(!isEditPage && _FW.BBS_NS.indexOf(nsId) !== -1) {
     handleReadPage();
   }
 
   function handleListPage(element) {
-    var nsId = element.dataset.nsid;
+    var nsId = +element.dataset.nsid;
     var nsName = element.dataset.nsname;
 
     fetchList(nsId, function (data) {
