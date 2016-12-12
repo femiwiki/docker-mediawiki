@@ -62,7 +62,6 @@
         list-style-type: none;
         margin: 0;
         padding: 0;
-        font-size: 0.6rem;
         color: #FFF;
         text-align: center;
       }
@@ -78,6 +77,9 @@
         /* @embed */
         background: url("images/icon-random.png") no-repeat;
         background-size: 2.4rem 2.4rem;
+      }
+      .text {
+        display: none;
       }
 
       a {
@@ -225,4 +227,50 @@
 
 #fw-menu.active {
   display: block;
+}
+
+@media screen and (min-width: 640px) {
+  .nav-bar {
+    #mw-navigation {
+      #p-logo {
+        width: 7.7rem;
+
+        a {
+          /* @embed */
+          background: url("images/logo-long.png") 0.6rem 0.4rem no-repeat;
+          background-size: 6.5rem 1.8rem;
+        }
+      }
+
+      #p-search {
+        left: 7.8rem;
+        right: 13.3rem;
+      }
+
+      #site-navigation {
+        .changes a {
+          /* @embed */
+          background: url("images/icon-changes-notext.png") 0.4rem 0.4rem no-repeat;
+          background-size: 1.6rem 1.6rem;
+        }
+        .random a {
+          /* @embed */
+          background: url("images/icon-random-notext.png") 0.4rem 0.4rem no-repeat;
+          background-size: 1.6rem 1.6rem;
+        }
+
+        a {
+          width: 5.4rem;
+          font-size: 1rem;
+        }
+
+        .text {
+          display: inline;
+
+          margin-left: 1.6rem;
+          line-height: 2.5rem;
+        }
+      }
+    }
+  }
 }
