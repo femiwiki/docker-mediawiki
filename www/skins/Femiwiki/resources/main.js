@@ -69,6 +69,10 @@ $(function () {
   // Change label of first namespace
   $namespaces[0].firstChild.innerHTML = '문서';
 
+  // Move fw-catlinks
+  var $catlinks = $('.fw-catlinks');
+  $('#bodyContent').append($catlinks);
+
   // Do not show edit page when user clicks red link
   $('#bodyContent a').each(function() {
     this.href = this.href.replace('&action=edit&redlink=1', '&redlink=1');

@@ -19,7 +19,7 @@ class SkinFemiwiki extends SkinTemplate
     {
 
         $out->addMeta('viewport', 'width=device-width, initial-scale=1.0');
-        
+
         // Favicons
         $out->addHeadItem('fav0', "<link rel='apple-touch-icon' sizes='57x75' href='/fw-resources/favicons/apple-icon-57x57.png'>");
         $out->addHeadItem("fav1", "<link rel='apple-touch-icon' sizes='57x75' href='/fw-resources/favicons/apple-icon-57x57.png'>");
