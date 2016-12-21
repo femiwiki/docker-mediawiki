@@ -192,22 +192,6 @@ button {
     margin: 1.6rem 0 1.6rem;
     padding-left: 1.2rem;
   }
-  dl {
-    border-left: 2px solid #afc8e7;
-  }
-  dl dl {
-    border-color: #fdba7d;
-  }
-  dl dl dl {
-    border-color: #9ade8d;
-  }
-  dl dl dl dl {
-    border-color: #fd9998;
-  }
-  dl dl dl dl dl {
-    border-color: #c5b1d4;
-  }
-
   ul li {
     list-style-type: disc;
   }
@@ -216,10 +200,6 @@ button {
   li ol {
     margin-top: 0rem;
     margin-bottom: 0rem;
-  }
-
-  dd {
-    margin: 1.6rem 0 1.6rem 0;
   }
 
   // Quote
@@ -477,6 +457,52 @@ button {
 
   .patrollink {
     font-size: inherit;
+  }
+}
+
+// Discussion
+.ns-talk #content {
+  dl {
+    padding: 0.2rem 0.2rem 0.2rem 0.6rem;
+    margin: 0.6rem 0;
+    border: 1px dashed #afc8e7;
+    border-left: 2px solid #afc8e7;
+  }
+  dl:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+  dl {
+    border-color: #afc8e7;
+  }
+  dl dl {
+    border-color: #fdba7d;
+  }
+  dl dl dl {
+    border-color: #9ade8d;
+  }
+  dl dl dl dl {
+    border-color: #fd9998;
+  }
+  dl dl dl dl dl {
+    border-color: #c5b1d4;
+  }
+  dl dl dl dl dl dl {
+    border-color: #afc8e7;
+  }
+  dl dl dl dl dl dl dl {
+    border-color: #fdba7d;
+  }
+  dl dl dl dl dl dl dl dl {
+    border-color: #9ade8d;
+  }
+  dl dl dl dl dl dl dl dl dl {
+    border-color: #fd9998;
+  }
+  dl dl dl dl dl dl dl dl dl dl {
+    border-color: #c5b1d4;
+  }
+  dd {
+    margin: 0.2rem 0.2rem 0.2rem 0;
   }
 }
 
