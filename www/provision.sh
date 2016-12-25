@@ -96,6 +96,12 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf OpenGraphMeta-REL1_27-e745bf8.tar.gz -C /var/www/femiwiki.com/extensions
     rm OpenGraphMeta-REL1_27-e745bf8.tar.gz
 
+    ## SimpleMathJax
+    wget -nv https://github.com/jmnote/SimpleMathJax/archive/master.zip
+    sudo unzip master.zip
+    sudo mv SimpleMathJax-master /var/www/femiwiki.com/extensions/SimpleMathJax
+    rm master.zip
+
     # Initialize and generate LocalSettings.php
     php /var/www/femiwiki.com/maintenance/install.php --scriptpath "/w" --dbtype mysql --dbname femiwiki --dbserver localhost --dbuser root --dbpass root --installdbuser root --installdbpass root --server https://femiwiki.com --lang ko --pass "$" "페미위키" Admin
 

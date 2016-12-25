@@ -247,6 +247,9 @@ require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 ## GoogleRichCards
 require_once "$IP/extensions/GoogleRichCards/GoogleRichCards.php";
 
+## SimpleMathJax
+require_once "$IP/extensions/SimpleMathJax/SimpleMathJax.php";
+
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
 $wgDebugToolbar = ('HOST' != 'femiwiki.com');
 
