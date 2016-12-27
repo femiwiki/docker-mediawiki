@@ -6,7 +6,8 @@ $(function () {
   }
 
   var $body = $(document.body);
-  var nsId = +document.body.className.match(/\bns-(\d+)\b/)[1];
+  var nsId = document.body.className.match(/\bns-(\d+)\b/);
+  nsId = nsId ? +nsId[1] : -1;
   var isEditPage = $body.hasClass('action-edit');
   if(!isEditPage && _FW.BBS_NS.indexOf(nsId) !== -1) {
     handleReadPage();
