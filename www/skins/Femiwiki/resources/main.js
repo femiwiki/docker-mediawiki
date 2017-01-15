@@ -6,6 +6,15 @@
 })(window,document,'script','dataLayer','GTM-5TNKVJ');
 // </gtm>
 
+// Web-font for Windows
+// (function() {
+//   if(navigator.userAgent.indexOf('Windows') === -1) return;
+//
+//   var link = document.createElement('link');
+//   link.setAttribute('rel', 'stylesheet');
+//   link.setAttribute('href', '//fonts.googleapis.com/earlyaccess/notosanskr.css');
+//   document.head.appendChild(link);
+// })();
 
 var _FW = {
   BBS_NS: [3902]
