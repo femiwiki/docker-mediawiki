@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170106_2';
+$wgStyleVersion = '20170118_2';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -173,6 +173,9 @@ $wgGroupPermissions['bureaucrat']['edit'] = true;
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
 
+# Open external links in new tab
+$wgExternalLinkTarget = '_blank';
+
 # Copyright
 $wgRightsPage = "페미위키:저작권";
 $wgRightsUrl = "https://creativecommons.org/licenses/by-sa/4.0/deed.ko";
@@ -244,11 +247,15 @@ require_once "$IP/extensions/Description2/Description2.php";
 ## OpenGraphMeta
 require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 
-## GoogleRichCards
-require_once "$IP/extensions/GoogleRichCards/GoogleRichCards.php";
-
 ## SimpleMathJax
 require_once "$IP/extensions/SimpleMathJax/SimpleMathJax.php";
+
+## HTMLTags
+require_once "$IP/extensions/HTMLTags/HTMLTags.php";
+$wgHTMLTagsAttributes['a'] = array( 'href', 'class', 'itemprop' );
+$wgHTMLTagsAttributes['link'] = array('href', 'itemprop');
+$wgHTMLTagsAttributes['meta'] = array('content', 'itemprop');
+
 
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
 $wgDebugToolbar = ('HOST' != 'femiwiki.com');

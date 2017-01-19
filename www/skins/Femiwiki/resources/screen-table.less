@@ -17,7 +17,23 @@
     border: 1px solid #DDD;
   }
 
+  td > ul,
+  td > ol {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 
+  td {
+    ul.singular {
+      li {
+        list-style-type: none;
+      }
+    }
+
+    li {
+      margin-bottom: 0;
+    }
+  }
 
   .wikitable {
     /*!
@@ -138,5 +154,23 @@
   .wikitable--flip th:not(:last-child),
   .wikitable--flip td:not(:last-child) {
     border-bottom: 0;
+  }
+
+  .wikitable.microdata {
+    float: right;
+    margin-left: 1.5rem;
+    margin-top: 0;
+
+    ul {
+      padding-left: 1rem;
+    }
+  }
+
+
+  @media screen and (max-width: 640px) {
+    .wikitable.microdata {
+      float: inherit;
+      margin-left: 0;
+    }
   }
 }

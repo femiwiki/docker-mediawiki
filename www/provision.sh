@@ -80,12 +80,6 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo mv mediawiki-embedvideo-2.4.1 /var/www/femiwiki.com/extensions/EmbedVideo
     rm v2.4.1.zip
 
-    ## GoogleRichCards
-    wget -nv https://github.com/teran/mediawiki-GoogleRichCards/archive/master.zip
-    unzip master.zip
-    sudo mv mediawiki-GoogleRichCards-master /var/www/femiwiki.com/extensions/GoogleRichCards
-    rm master.zip
-
     ## Description2
     wget -nv https://extdist.wmflabs.org/dist/extensions/Description2-REL1_27-e4e123a.tar.gz
     sudo tar -xzf Description2-REL1_27-e4e123a.tar.gz -C /var/www/femiwiki.com/extensions
@@ -101,6 +95,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo unzip master.zip
     sudo mv SimpleMathJax-master /var/www/femiwiki.com/extensions/SimpleMathJax
     rm master.zip
+
+    wget -nv https://github.com/wikimedia/mediawiki-extensions-HTMLTags/archive/c09635d70857ba47b18bc5aed1289b5f9f4d9bf6.zip -O HTMLTags.zip
+    sudo unzip HTMLTags.zip
+    sudo mv mediawiki-extensions-HTMLTags-c09635d70857ba47b18bc5aed1289b5f9f4d9bf6 /var/www/femiwiki.com/extensions/HTMLTags
+    rm HTMLTags.zip
 
     # Initialize and generate LocalSettings.php
     php /var/www/femiwiki.com/maintenance/install.php --scriptpath "/w" --dbtype mysql --dbname femiwiki --dbserver localhost --dbuser root --dbpass root --installdbuser root --installdbpass root --server https://femiwiki.com --lang ko --pass "$" "페미위키" Admin
