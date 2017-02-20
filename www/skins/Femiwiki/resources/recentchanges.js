@@ -42,10 +42,7 @@ $(function() {
       zeropad(row.timestamp.getMinutes())
     );
     row.diff = row.newlen - row.oldlen;
-
-    row.typeStr =
-      {'newusers': '가입', 'delete': '삭제', 'protect': '보호', 'rights': '권한', 'move': '이동', 'block': '차단'}[row.logtype] ||
-      {'new': '새글', 'edit': '', 'log': '기록'}[row.type];
+    row['flags'] = assignFlags(row);
 
     // Link comment to article page instead of discussion page
     var url;
@@ -60,12 +57,16 @@ $(function() {
       url = '/w/' + encodeTitle(row.title) + '">' + escapeEntity(row.title);
     }
 
+    var flags = [];
+    for(var i = 0; i < row.flags.length; i++) {
+      var flag = row.flags[i];
+      flags.push('<span class="flag type-' + flag['type'] + ' logtype-' + flag['logtype'] + '">' + flag['text'] + '</span>');
+    }
+
     return (
       '<li class="row type-' + row.type + '">' +
       '<ul class="cols">' +
-      '<li class="col flags">' +
-      (row.typeStr ? '<span class="type-' + row.type + ' logtype-' + row.logtype + '">' + row.typeStr + '</span>' : '') +
-      '</li>' +
+      '<li class="col flags">' + flags.join('\n') + '</li>' +
       '<li class="col timestamp"><a href="/index.php?title=' + encodeTitle(row.title) + '&action=history"><span class="mono">' + row.timestampStr + '</span> [역사]</a></li>' +
       '<li class="col sizes ' + (row.diff > 0 ? 'added' : (row.diff === 0 ? '' : 'deleted')) + '"><a href="/index.php?title=' + encodeTitle(row.title) + '&curid=' + row.pageid + '&diff=' + row.revid + '&oldid=' + row.old_revid + '"><span class="mono">' + (row.diff > 0 ? '+' : '') + row.diff + '</span> [차이]</a></li>' +
       '<li class="col user"><a href="/w/' + encodeTitle('사용자:' + row.user) + '">' + escapeEntity(row.user) + '</a></li>' +
@@ -76,12 +77,42 @@ $(function() {
     );
   }
 
+  function assignFlags(row) {
+    var textMap = [
+      [function(row) {return row['type'] === 'log' && row['logtype'] === 'newusers'}, '신규 가입'],
+      [function(row) {return row['type'] === 'log' && row['logtype'] === 'protect'}, '문서 보호'],
+      [function(row) {return row['type'] === 'log' && row['logtype'] === 'rights'}, '권한 변경'],
+      [function(row) {return row['type'] === 'log' && row['logtype'] === 'delete' && row['logaction'] === 'revision'}, '리비전 삭제'],
+      [function(row) {return row['type'] === 'log' && row['logtype'] === 'delete' && row['logaction'] === 'delete'}, '문서 삭제'],
+      [function(row) {return row['type'] === 'log' && row['logtype'] === 'block' && row['logaction'] === 'block'}, '이용자 차단'],
+      [function(row) {return row['type'] === 'log' && row['logtype'] === 'move'}, '문서 이동'],
+      [function(row) {return row['type'] === 'log'}, '기타 로그'],
+      [function(row) {return row['type'] === 'new'}, '문서 생성']
+    ];
+    var text = '';
+    for(var i = 0; i < textMap.length; i++) {
+      var test = textMap[i][0];
+      var value = textMap[i][1];
+      if(test(row)) {
+        text = value;
+        break;
+      }
+    }
+
+    return [{
+      type: row['type'],
+      logtype: row['logtype'] || 'null',
+      logaction: row['logaction'] || 'null',
+      text: text
+    }];
+  }
+
   function encodeTitle(title) {
-    return title.split('/').map(function(path) {return encodeURIComponent(path);}).join('/')
+    return title ? title.split('/').map(function(path) {return encodeURIComponent(path);}).join('/') : '';
   }
 
   function escapeEntity(text) {
-    return text.replace(/</g, '&lt;')
+    return text ? text.replace(/</g, '&lt;') : '';
   }
 
   function zeropad(num) {
