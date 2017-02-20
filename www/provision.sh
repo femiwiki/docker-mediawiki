@@ -96,6 +96,7 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo mv SimpleMathJax-master /var/www/femiwiki.com/extensions/SimpleMathJax
     rm master.zip
 
+    ## HTMLTags
     wget -nv https://github.com/wikimedia/mediawiki-extensions-HTMLTags/archive/c09635d70857ba47b18bc5aed1289b5f9f4d9bf6.zip -O HTMLTags.zip
     sudo unzip HTMLTags.zip
     sudo mv mediawiki-extensions-HTMLTags-c09635d70857ba47b18bc5aed1289b5f9f4d9bf6 /var/www/femiwiki.com/extensions/HTMLTags
