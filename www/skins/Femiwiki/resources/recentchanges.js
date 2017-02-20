@@ -86,6 +86,7 @@ $(function() {
       [function(row) {return row['type'] === 'log' && row['logtype'] === 'delete' && row['logaction'] === 'delete'}, '문서 삭제'],
       [function(row) {return row['type'] === 'log' && row['logtype'] === 'block' && row['logaction'] === 'block'}, '이용자 차단'],
       [function(row) {return row['type'] === 'log' && row['logtype'] === 'move'}, '문서 이동'],
+      [function(row) {return row['type'] === 'log' && row['logtype'] === 'upload'}, '파일 업로드'],
       [function(row) {return row['type'] === 'log'}, '기타 로그'],
       [function(row) {return row['type'] === 'new'}, '문서 생성']
     ];
