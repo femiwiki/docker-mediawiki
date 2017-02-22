@@ -79,7 +79,7 @@ $(function() {
 
   function assignFlags(row) {
     var textMap = [
-      [function(row) {return row['type'] === 'log' && row['logtype'] === 'newusers'}, '신규 가입'],
+      [function(row) {return row['type'] === 'log' && row['logtype'] === 'newusers'}, '가입'],
       [function(row) {return row['type'] === 'log' && row['logtype'] === 'protect'}, '문서 보호'],
       [function(row) {return row['type'] === 'log' && row['logtype'] === 'rights'}, '권한 변경'],
       [function(row) {return row['type'] === 'log' && row['logtype'] === 'delete' && row['logaction'] === 'revision'}, '리비전 삭제'],
@@ -88,7 +88,7 @@ $(function() {
       [function(row) {return row['type'] === 'log' && row['logtype'] === 'move'}, '문서 이동'],
       [function(row) {return row['type'] === 'log' && row['logtype'] === 'upload'}, '파일 업로드'],
       [function(row) {return row['type'] === 'log'}, '기타 로그'],
-      [function(row) {return row['type'] === 'new'}, '문서 생성']
+      [function(row) {return row['type'] === 'new'}, '새 문서']
     ];
     var text = '';
     for(var i = 0; i < textMap.length; i++) {
