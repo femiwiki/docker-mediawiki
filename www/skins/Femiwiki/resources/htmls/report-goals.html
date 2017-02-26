@@ -4,6 +4,7 @@
         html, body {
             margin: 0;
             height: 100%;
+            overflow: hidden;
         }
     </style>
     <!--Load the AJAX API-->
@@ -26,8 +27,10 @@
 
         var options = {
           'title': title,
-          'width': window.innerWidth,
-          'height': window.innerHeight
+          'legend': 'top',
+          'chartArea': {left: 50, right: 10, top: 30, bottom: 50},
+          'width': window.innerWidth - 20,
+          'height': window.innerHeight - 20
         };
 
         chart = new google.visualization.LineChart(document.getElementById('chart_div'));
