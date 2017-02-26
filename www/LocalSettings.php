@@ -255,6 +255,7 @@ require_once "$IP/extensions/HTMLTags/HTMLTags.php";
 $wgHTMLTagsAttributes['a'] = array( 'href', 'class', 'itemprop' );
 $wgHTMLTagsAttributes['link'] = array('href', 'itemprop');
 $wgHTMLTagsAttributes['meta'] = array('content', 'itemprop');
+$wgHTMLTagsAttributes['iframe'] = array('src', 'class', 'style');
 
 
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
