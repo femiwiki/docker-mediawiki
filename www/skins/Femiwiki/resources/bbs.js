@@ -42,7 +42,7 @@ $(function () {
      * @param callback
      */
     function fetchList(nsId, callback) {
-      var url = '/w/api.php?action=query&list=recentchanges&rctype=new|edit&rcprop=title|ids|user|timestamp&rclimit=100&format=json&rcnamespace=' + nsId;
+      var url = '/w/api.php?action=query&list=recentchanges&rctype=new|edit&rcprop=title|ids|user|timestamp&rcstart=19700101000000&rclimit=100&rctoponly=1&format=json&rcnamespace=' + nsId;
       $.get(url, callback);
     }
 
