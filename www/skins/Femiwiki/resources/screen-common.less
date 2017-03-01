@@ -633,8 +633,20 @@ body.action-edit {
 
 // VisualEditor
 html.ve-active {
-  #content .mw-editsection {
-    display: none;
+  #content {
+    .mw-editsection {
+      display: none;
+    }
+
+    // Remove margin of generated elements
+    li > p.ve-ce-generated-wrapper {
+      margin: 0;
+    }
+
+    // Remove padding of visual editor
+    .ve-ce-documentNode {
+      padding: 0;
+    }
   }
 
   .oo-ui-toolbar-bar * {
