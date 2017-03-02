@@ -1,0 +1,71 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/load.php?debug=false&lang=ko&modules=ext.echo.badgeicons%7Cext.echo.styles.badge%7Cext.visualEditor.desktopArticleTarget.noscript%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.content.externallinks%7Cmediawiki.skinning.interface%7Cskins.femiwiki&only=styles&skin=femiwiki" />
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        #chart_div table {
+            width: 100%;
+        }
+        #chart_div .title {
+            text-align: left;
+        }
+        #chart_div .pageview {
+            text-align: right;
+        }
+        #chart_div th,
+        #chart_div td {
+            padding: 0.25rem 0.5rem;
+        }
+    </style>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      var url = 'https://docs.google.com/spreadsheets/d/1X3m2r7n6Gww8ZaCiKvYxgH1oPKSmbi2zArwEsZ1jCxQ/gviz/tq?sheet=Documents&headers=1';
+      var title = '인기 문서';
+      var chart;
+
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var query = new google.visualization.Query(url);
+        query.send(handleQueryResponse);
+      }
+
+      function handleQueryResponse(response) {
+        var data = response.getDataTable();
+        var rows = data.getNumberOfRows();
+        var html = [
+          '<table><thead>' +
+          '<tr><th class="title">문서</th><th class="pageview">조회수</th></tr>' +
+          '</thead><tbody>'
+        ];
+        for(var i = 0; i < rows; i++) {
+          var title = data.getValue(i, 0);
+          var pageview = data.getValue(i, 2);
+          var url = '/w/' + encodeTitle(title);
+          html.push(
+            '<tr>' +
+            '<td class="title"><a href="' + url + '" target="_parent">' + title + '</a></td>' +
+            '<td class="pageview">' + pageview + '</td>' +
+            '</tr>'
+          );
+        }
+        html.push('</tbody></table>');
+        document.querySelector('#chart_div').innerHTML = html.join('\n');
+      }
+
+      function encodeTitle(title) {
+        return title.split('/').map(function(path) {return encodeURIComponent(path);}).join('/')
+      }
+
+    </script>
+</head>
+<body>
+    <div id="chart_div" style="width:100%; height:100%"></div>
+</body>
+</html>
