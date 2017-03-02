@@ -21,7 +21,7 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
         unzip \
         apache2 \
         memcached \
-        php7.0 php7.0-mysql php7.0-mbstring php7.0-xml php7.0-curl php-apcu \
+        php7.0 php7.0-mysql php7.0-mbstring php7.0-xml php7.0-curl php7.0-intl php-apcu \
         imagemagick
     sudo apt-get --purge autoremove -y
 
