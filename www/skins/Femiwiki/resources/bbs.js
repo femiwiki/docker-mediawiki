@@ -122,7 +122,8 @@ $(function () {
       $commentSection.append(
         '<form id="fw-bbs-new-comment-form">' +
         '<label for="fw-bbs-new-comment">새 댓글 쓰기:</label>' +
-        '<input type="text" id="fw-bbs-new-comment" ' + (editable ? '' : 'disabled') + ' placeholder="' + (editable ? '댓글' : '권한 없음') + '">' +
+        '<textarea id="fw-bbs-new-comment" ' + (editable ? '' : 'disabled') + ' placeholder="' + (editable ? '댓글' : '권한 없음') + '"></textarea>' +
+        '<input type="submit" value="댓글 저장">' +
         '</form>'
       );
       $commentSection.append($commentList);
@@ -155,7 +156,7 @@ $(function () {
         zeropad(now.getSeconds())
       );
       $newComment.find('.user').text('[[사용자:' + userName + '|' + userName + ']]');
-      $newComment.find('.text').text(comment);
+      $newComment.find('.text').html(comment.replace(/\n/g, '<br>'));
       var commentWikimarkup = $newComment.html();
 
       // Prepend comment
