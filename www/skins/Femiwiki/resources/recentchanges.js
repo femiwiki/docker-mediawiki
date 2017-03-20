@@ -26,6 +26,8 @@ $(function() {
 
     buffer.push('<ul class="rows">');
     rows.forEach(function(row) {
+      var textsInRow = [row.title, row.user, row.parsedcomment].join('\t');
+      row.muted = _FW.mute.shouldMute(textsInRow);
       buffer.push(renderRow(row));
     });
     buffer.push('</ul>');
@@ -64,7 +66,7 @@ $(function() {
     }
 
     return (
-      '<li class="row type-' + row.type + '">' +
+      '<li class="row type-' + row.type + ' ' + (row.muted ? 'muted' : '') + '">' +
       '<ul class="cols">' +
       '<li class="col flags">' + flags.join('\n') + '</li>' +
       '<li class="col timestamp"><a href="/index.php?title=' + encodeTitle(row.title) + '&action=history"><span class="mono">' + row.timestampStr + '</span> [역사]</a></li>' +

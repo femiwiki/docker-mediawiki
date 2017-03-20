@@ -26,6 +26,9 @@
         "resources/screen-common.less": {
           "media": "screen"
         },
+        "resources/screen-mute.less": {
+          "media": "screen"
+        },
         "resources/screen-table.less": {
           "media": "screen"
         },
@@ -50,6 +53,7 @@
       "position": "bottom",
       "scripts": [
         "resources/main.js",
+        "resources/mute.js",
         "resources/recentchanges.js",
         "resources/bbs.js"
       ]
