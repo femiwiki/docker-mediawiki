@@ -17,12 +17,6 @@
             border-spacing: 0;
             margin: 1rem 0;
         }
-        #chart_div .title {
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            width: calc(100% - 10rem);
-            overflow: hidden;
-        }
         #chart_div .time {
             width: 4rem;
         }
@@ -76,7 +70,7 @@
             '<tr>' +
             '<td class="time">' + time + '</td>' +
             '<td class="pageview">' + pageview + '</td>' +
-            '<td class="title"><a href="' + url + '" target="_parent">' + title + '</a></td>' +
+            '<td class="title"><a href="' + url + '" target="_parent">' + title.substr(0, 15) + '</a></td>' +
             '</tr>'
           );
         }

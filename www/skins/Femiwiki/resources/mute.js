@@ -43,14 +43,35 @@
     });
   }
 
+  function _showTriggerWarning() {
+    // Do nothing if it's edit mode
+    if($('body.action-edit').length) return;
+    if($('html.ve-activated').length) return;
+
+    var text = $('#content').html();
+    if(!shouldMute(text)) return;
+
+    // Show trigger warning
+    $('#mw-content-text').prepend(
+      '<div class="notice warning">' +
+      '가림 단어가 포함된 문서입니다. 이 문서의 제목 또는 본문에 한 개 이상의 가림 단어가 있습니다.' +
+      '</div>'
+    );
+  }
+
   // Load, save
   function loadData() {
     return JSON.parse(localStorage.getItem('muteWords') || '[]');
   }
 
   function saveData(muteWords) {
-    localStorage.setItem('muteWords', JSON.stringify(muteWords));
-    _muteWords = muteWords;
+    try {
+      localStorage.setItem('muteWords', JSON.stringify(muteWords));
+      _muteWords = muteWords;
+    } catch(e) {
+      alert('프라이버시 모드에서는 이 기능을 사용하실 수 없습니다.');
+    }
+
   }
 
   // Should mute or not?
@@ -64,6 +85,7 @@
   // Init UI
   $(function() {
     _initUI();
+    _showTriggerWarning();
   });
 
   // Expose public APIs
