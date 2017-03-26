@@ -260,6 +260,13 @@ require_once "$IP/extensions/Description2/Description2.php";
 ## OpenGraphMeta
 require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 
+## Prevent Search for some namespaces
+$wgNamespaceRobotPolicies = array(
+    NS_TALK => 'noindex,nofollow',
+    NS_USER_TALK => 'noindex,nofollow',
+    NS_PROJECT_TALK => 'noindex,nofollow',
+);
+
 ## SimpleMathJax
 require_once "$IP/extensions/SimpleMathJax/SimpleMathJax.php";
 
