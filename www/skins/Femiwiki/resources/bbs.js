@@ -130,6 +130,9 @@ $(function () {
       $('#content').append($commentSection);
 
       $('#fw-bbs-new-comment-form').on('submit', onComment);
+
+      // Rerun mathjax for comments
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     });
 
     // Done
@@ -167,6 +170,7 @@ $(function () {
           // reload comment
           renderComments(nsName, title, hash, function($commentList) {
             $('#fw-bbs-comment-list').html($commentList.html());
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
           });
         });
       });
