@@ -232,6 +232,9 @@ wfLoadExtension('Thanks');
 require_once "$IP/extensions/Scribunto/Scribunto.php";
 $wgScribuntoDefaultEngine = 'luastandalone';
 
+## CategoryTree
+wfLoadExtension('CategoryTree');
+
 ## Cite
 wfLoadExtension('Cite');
 

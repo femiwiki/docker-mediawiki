@@ -59,6 +59,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf Scribunto-REL1_27-4da5346.tar.gz -C /var/www/femiwiki.com/extensions
     rm Scribunto-REL1_27-4da5346.tar.gz
 
+    ## CategoryTree
+    wget -nv https://extdist.wmflabs.org/dist/extensions/CategoryTree-REL1_27-b454f2c.tar.gz
+    sudo tar -xzf CategoryTree-REL1_27-b454f2c.tar.gz -C /var/www/femiwiki.com/extensions
+    rm CategoryTree-REL1_27-b454f2c.tar.gz
+
     ## CodeEditor
     wget -nv https://extdist.wmflabs.org/dist/extensions/CodeEditor-REL1_27-5e8053d.tar.gz
     sudo tar -xzf CodeEditor-REL1_27-5e8053d.tar.gz -C /var/www/femiwiki.com/extensions
