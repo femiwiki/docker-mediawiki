@@ -233,7 +233,7 @@ require_once "$IP/extensions/Scribunto/Scribunto.php";
 $wgScribuntoDefaultEngine = 'luastandalone';
 
 ## CategoryTree
-wfLoadExtension('CategoryTree');
+require_once "$IP/extensions/CategoryTree/CategoryTree.php";
 
 ## Cite
 wfLoadExtension('Cite');
