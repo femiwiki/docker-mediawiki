@@ -62,17 +62,21 @@
           '</tr></thead><tbody>'
         ];
         for(var i = 0; i < rows; i++) {
-          var title = data.getValue(i, 0);
-          var time = data.getValue(i, 1);
-          var pageview = data.getValue(i, 2);
-          var url = '/w/' + encodeTitle(title);
-          html.push(
-            '<tr>' +
-            '<td class="time">' + time + '</td>' +
-            '<td class="pageview">' + pageview + '</td>' +
-            '<td class="title"><a href="' + url + '" target="_parent">' + title.substr(0, 15) + '</a></td>' +
-            '</tr>'
-          );
+          try {
+            var title = data.getValue(i, 0);
+            var time = data.getValue(i, 1);
+            var pageview = data.getValue(i, 2);
+            var url = '/w/' + encodeTitle(title);
+            html.push(
+              '<tr>' +
+              '<td class="time">' + time + '</td>' +
+              '<td class="pageview">' + pageview + '</td>' +
+              '<td class="title"><a href="' + url + '" target="_parent">' + title.substr(0, 15) + '</a></td>' +
+              '</tr>'
+            );
+          } catch(e) {
+            console.log([i, e]);
+          }
         }
         html.push('</tbody></table>');
         document.querySelector('#chart_div').innerHTML = html.join('\n');
