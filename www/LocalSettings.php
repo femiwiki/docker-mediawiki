@@ -263,6 +263,9 @@ require_once "$IP/extensions/Description2/Description2.php";
 ## OpenGraphMeta
 require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 
+## FacetedCategory
+wfLoadExtension( 'FacetedCategory' );
+
 ## Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = array(
     NS_TALK => 'noindex,nofollow',
