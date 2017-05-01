@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170327_0';
+$wgStyleVersion = '20170429_1';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -142,6 +142,12 @@ define("NS_BBSFREE_TALK", 3903);
 $wgExtraNamespaces[NS_BBSFREE] = "자유게시판";
 $wgExtraNamespaces[NS_BBSFREE_TALK] = "자유게시판토론";
 $wgContentNamespaces[] = NS_BBSFREE;
+
+define("NS_BBSINTRO", 3904);
+define("NS_BBSINTRO_TALK", 3905);
+$wgExtraNamespaces[NS_BBSINTRO] = "가입인사게시판";
+$wgExtraNamespaces[NS_BBSINTRO_TALK] = "가입인사게시판토론";
+$wgContentNamespaces[] = NS_BBSINTRO;
 
 # Permission
 $wgGroupPermissions['*']['createaccount'] = true;
