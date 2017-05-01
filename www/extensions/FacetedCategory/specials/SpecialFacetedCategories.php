@@ -28,9 +28,14 @@ private function initServices() {
 		$this->setHeaders();
 		$this->outputHeader();
 		$this->getOutput()->allowClickjacking();
+
+
 		$slash = strpos($par,'/');
-		$facetName = $this->getRequest()->getText( 'facetName', $slash?substr($par,0,$slash):$par );
-		$facetMember = $this->getRequest()->getText( 'facetMember', $slash?substr($par,$slash+1,strlen($par)-1):'' );
+		$left = $slash===false?$par:substr($par,0,$slash);
+		$right = substr($par,$slash+1,strlen($par)-1);
+		
+		$facetName = $this->getRequest()->getText( 'facetName', $left );
+		$facetMember = $this->getRequest()->getText( 'facetMember', $right );
 		$matchExactly = $this->getRequest()->getBool( 'matchExactly', false );
 
 		$cap = new FacetedCategoryPager(
