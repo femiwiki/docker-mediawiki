@@ -1,0 +1,27 @@
+{
+	"name": "FacetedCategory",
+	"version": "0.0.0",
+	"author": [
+		"Lens"
+	],
+	"descriptionmsg": "facetedcategory-desc",
+	"license-name": "GPL-2.0+",
+	"type": "specialpage",
+	"AutoloadClasses": {
+		"SpecialFacetedCategories": "specials/SpecialFacetedCategories.php",
+		"FacetedCategoryPager": "includes/FacetedCategoryPager.php"
+	},
+	"MessagesDirs": {
+		"FacetedCategory": [
+			"i18n"
+		]
+	},
+	"SpecialPages": {
+		"FacetedCategories": "SpecialFacetedCategories"
+	},
+	"ExtensionMessagesFiles": {
+		"FacetedCategoriesAlias": "FacetedCategories.alias.php",
+		"FacetedCategoriesMagic": "FacetedCategories.i18n.magic.php"
+	},
+	"manifest_version": 1
+}
