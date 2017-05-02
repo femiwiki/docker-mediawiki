@@ -6,6 +6,7 @@ class FacetedCategoryPager extends AlphabeticPager {
 	private $facetName;
 	private $facetMember;
 	private $matchExactly;
+	private $including;
 
 	public function __construct( IContextSource $context, $facetName, $facetMember, $matchExactly, PageLinkRenderer $linkRenderer, $including
 	) {
