@@ -3,12 +3,10 @@ class FacetedCategoryPager extends AlphabeticPager {
 
 	protected $linkRenderer;
 
-	private $facetName;
-	private $facetMember;
-	private $matchExactly;
-	private $including;
+	public $facetName;
+	public $facetMember;
 
-	public function __construct( IContextSource $context, $facetName, $facetMember, $matchExactly, PageLinkRenderer $linkRenderer, $including
+	public function __construct( IContextSource $context, $facetName, $facetMember, PageLinkRenderer $linkRenderer
 	) {
 		parent::__construct( $context );
 		$facetName = str_replace( ' ', '_', $facetName );
@@ -18,12 +16,6 @@ class FacetedCategoryPager extends AlphabeticPager {
 			$this->facetName = $facetName;
 		if($facetMember !== '')
 			$this->facetMember = $facetMember;
-		if($matchExactly !== '')
-			$this->matchExactly = $matchExactly;
-		if($including !== '')
-			$this->including = $including;
-
-		if($including) $this->setLimit(200);
 
 		$this->linkRenderer = $linkRenderer;
 	}
@@ -36,18 +28,13 @@ class FacetedCategoryPager extends AlphabeticPager {
 			'options' => [ 'USE INDEX' => 'cat_title' ],
 		];
 
-		if($this->matchExactly) {
-			if ($this->facetName!='' && $this->facetMember!='') {
-				$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->facetName.'/'.$this->facetMember);
-			} elseif ($this->facetName!='' && $this->facetMember=='') {
-				$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->facetName.'/',$this->mDb->anyString());
-			} elseif ($this->facetName=='' && $this->facetMember!='') {
-				$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->mDb->anyString(),'/'.$this->facetMember);
-			} else {
-				$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->mDb->anyString(),'/',$this->mDb->anyString());
-			}
-		} else {
+		if ($this->facetName!=='' && $this->facetMember!=='') {
 			$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->mDb->anyString(),$this->facetName,$this->mDb->anyString(),'/',$this->mDb->anyString(),$this->facetMember,$this->mDb->anyString());
+			//$query['conds'][] = 'cat_title' . $this->mDb->buildLike('$this->facetMember.'/'.$this->facetMember');
+		} elseif ($this->facetName!=='' && $this->facetMember==='') {
+			$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->mDb->anyString(),$this->facetName,$this->mDb->anyString(),'/',$this->mDb->anyString());
+		} elseif ($this->facetName==='' && $this->facetMember!=='') {
+			$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->mDb->anyString(),'/',$this->mDb->anyString(),$this->facetMember,$this->mDb->anyString());
 		}
 
 		return $query;
@@ -85,11 +72,10 @@ class FacetedCategoryPager extends AlphabeticPager {
 
 		$count = $this->msg( 'nmembers' )->numParams( $result->cat_pages )->escaped();
 		return Html::rawElement( 'li', null, $this->getLanguage()->specialList( $link, $count ) ) . "\n";
-
 	}
 
-	public function getStartForm( $facetName, $facetMember, $matchExactly ) {
-		return $this->including ? '':Xml::tags(
+	public function getStartForm( $facetName, $facetMember ) {
+		return Xml::tags(
 			'form',
 			[ 'method' => 'get', 'action' => wfScript() ],
 			Html::hidden( 'title', $this->getTitle()->getPrefixedText() ) .
@@ -106,10 +92,7 @@ class FacetedCategoryPager extends AlphabeticPager {
 				Html::submitButton(
 					$this->msg( 'categories-submit' )->text(),
 					[], [ 'mw-ui-progressive' ]
-				) .
-				' ' .
-				Xml::checkLabel(
-					$this->msg( 'faceted_category_match_exactly' ), 'matchExactly', 'matchExactly', $matchExactly, [] )
+				)
 			)
 		);
 	}
