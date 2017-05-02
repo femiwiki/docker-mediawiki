@@ -272,6 +272,10 @@ require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 ## FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
+## FacetedCategory --it needs the CategoryTree
+wfLoadExtension( 'UncategorizedCategoryTree' );
+$wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
+
 ## Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = array(
     NS_TALK => 'noindex,nofollow',
