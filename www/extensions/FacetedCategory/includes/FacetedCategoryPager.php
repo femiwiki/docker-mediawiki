@@ -3,11 +3,11 @@ class FacetedCategoryPager extends AlphabeticPager {
 
 	protected $linkRenderer;
 
-	public $facetName;
-	public $facetMember;
-	public $matchExactly;
+	private $facetName;
+	private $facetMember;
+	private $matchExactly;
 
-	public function __construct( IContextSource $context, $facetName, $facetMember, $matchExactly, PageLinkRenderer $linkRenderer
+	public function __construct( IContextSource $context, $facetName, $facetMember, $matchExactly, PageLinkRenderer $linkRenderer, $including
 	) {
 		parent::__construct( $context );
 		$facetName = str_replace( ' ', '_', $facetName );
@@ -19,6 +19,10 @@ class FacetedCategoryPager extends AlphabeticPager {
 			$this->facetMember = $facetMember;
 		if($matchExactly !== '')
 			$this->matchExactly = $matchExactly;
+		if($including !== '')
+			$this->including = $including;
+
+		if($including) $this->setLimit(200);
 
 		$this->linkRenderer = $linkRenderer;
 	}
@@ -81,10 +85,11 @@ class FacetedCategoryPager extends AlphabeticPager {
 
 		$count = $this->msg( 'nmembers' )->numParams( $result->cat_pages )->escaped();
 		return Html::rawElement( 'li', null, $this->getLanguage()->specialList( $link, $count ) ) . "\n";
+
 	}
 
 	public function getStartForm( $facetName, $facetMember, $matchExactly ) {
-		return Xml::tags(
+		return $this->including ? '':Xml::tags(
 			'form',
 			[ 'method' => 'get', 'action' => wfScript() ],
 			Html::hidden( 'title', $this->getTitle()->getPrefixedText() ) .
