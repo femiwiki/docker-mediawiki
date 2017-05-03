@@ -1,0 +1,27 @@
+{
+	"name": "UncategorizedCategoryTree",
+	"version": "0.0.0",
+	"author": [
+		"Lens"
+	],
+	"descriptionmsg": "uncategorizedcategorytree-desc",
+	"license-name": "GPL-2.0+",
+	"type": "specialpage",
+	"requires": {
+		"extensions": {
+			"CategoryTree": "*"
+		}
+	},
+	"AutoloadClasses": {
+		"SpecialUncategorizedCategoryTree": "specials/SpecialUncategorizedCategoryTree.php"
+	},
+	"MessagesDirs": {
+		"UncategorizedCategoryTree": [
+			"i18n"
+		]
+	},
+	"SpecialPages": {
+		"UncategorizedCategoryTree": "SpecialUncategorizedCategoryTree"
+	},
+	"manifest_version": 1
+}
