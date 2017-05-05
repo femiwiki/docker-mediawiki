@@ -10,6 +10,5 @@ sudo sed -i s/HOST/$2/ /etc/mediawiki/parsoid/settings.js
 sudo cp /vagrant/parsoid/config.yaml /etc/mediawiki/parsoid/config.yaml
 sudo sed -i s/PROTOCOL/$1/ /etc/mediawiki/parsoid/config.yaml
 sudo sed -i s/HOST/$2/ /etc/mediawiki/parsoid/config.yaml
-
 sudo service parsoid restart
-
+curl PROTOCOL://HOST/api.php
