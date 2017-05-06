@@ -36,13 +36,13 @@ class SpecialFacetedCategories extends IncludableSpecialPage {
 		
 		$facetName = $this->getRequest()->getText( 'facetName', $left );
 		$facetMember = $this->getRequest()->getText( 'facetMember', $right );
-		$matchExactly = $this->getRequest()->getBool( 'matchExactly', true );
+		$includeNotExactlyMatched = $this->getRequest()->getBool( 'includeNotExactlyMatched', false );
 
 		$cap = new FacetedCategoryPager(
 			$this->getContext(),
 			$facetName,
 			$facetMember,
-			$matchExactly,
+			$includeNotExactlyMatched,
 			$this->linkRenderer,
 			$this->including()
 		);
@@ -51,7 +51,7 @@ class SpecialFacetedCategories extends IncludableSpecialPage {
 		$this->getOutput()->addHTML(
 			Html::openElement( 'div', [ 'class' => 'mw-spcontent' ] ) .
 				($this->including()?'':$this->msg( 'categoriespagetext', $cap->getNumRows() )->parseAsBlock()) .
-				$cap->getStartForm( $facetName, $facetMember, $matchExactly ) .
+				$cap->getStartForm( $facetName, $facetMember, $includeNotExactlyMatched ) .
 				($this->including()?'':$cap->getNavigationBar()) .
 				'<ul>' . $cap->getBody() . '</ul>' .
 				($this->including()?'':$cap->getNavigationBar()) .
