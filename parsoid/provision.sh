@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-sudo apt-get install nodejs npm
 sudo apt-key advanced --keyserver pgp.mit.edu --recv-keys 90E9F83F22250DD7
 sudo apt-add-repository "deb https://releases.wikimedia.org/debian jessie-mediawiki main"
 sudo apt-get update && sudo apt-get install -y --force-yes parsoid
