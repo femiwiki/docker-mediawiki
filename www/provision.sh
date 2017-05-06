@@ -144,8 +144,8 @@ then
     sudo cp /vagrant/www/google6a8c7f190836bc0d.html /var/www/femiwiki.com/
     sudo cp /vagrant/www/naver09b95fd90c3231a5a37f42d39222c217.html /var/www/femiwiki.com/
     sudo cp /vagrant/www/favicon.ico /var/www/femiwiki.com/
-    sudo cp -r /vagrant/www/extensions/FacetedCategory /var/www/femiwiki.com/extensions/FacetedCategory
-    sudo cp -r /vagrant/www/extensions/UncategorizedCategoryTree /var/www/femiwiki.com/extensions/UncategorizedCategoryTree
+    sudo cp -r /vagrant/www/extensions/FacetedCategory /var/www/femiwiki.com/extensions/
+    sudo cp -r /vagrant/www/extensions/UncategorizedCategoryTree /var/www/femiwiki.com/extensions/
 else
     sudo ln -sf /vagrant/www/robots.txt /var/www/femiwiki.com/robots.txt
     sudo ln -sf /vagrant/www/LocalSettingsSecure.php /opt/femiwiki/LocalSettingsSecure.php
