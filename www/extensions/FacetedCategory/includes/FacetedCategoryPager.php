@@ -5,10 +5,10 @@ class FacetedCategoryPager extends AlphabeticPager {
 
 	private $facetName;
 	private $facetMember;
-	private $matchExactly;
+	private $includeNotExactlyMatched;
 	private $including;
 
-	public function __construct( IContextSource $context, $facetName, $facetMember, $matchExactly, PageLinkRenderer $linkRenderer, $including
+	public function __construct( IContextSource $context, $facetName, $facetMember, $includeNotExactlyMatched, PageLinkRenderer $linkRenderer, $including
 	) {
 		parent::__construct( $context );
 		$facetName = str_replace( ' ', '_', $facetName );
@@ -18,12 +18,15 @@ class FacetedCategoryPager extends AlphabeticPager {
 			$this->facetName = $facetName;
 		if($facetMember !== '')
 			$this->facetMember = $facetMember;
-		if($matchExactly !== '')
-			$this->matchExactly = $matchExactly;
+		if($includeNotExactlyMatched !== '')
+			$this->includeNotExactlyMatched = $includeNotExactlyMatched;
 		if($including !== '')
 			$this->including = $including;
 
-		if($including) $this->setLimit(200);
+		if($this->including) {
+			$this->setLimit(200);
+			$this->includeNotExactlyMatched = false;
+		}
 
 		$this->linkRenderer = $linkRenderer;
 	}
@@ -31,12 +34,14 @@ class FacetedCategoryPager extends AlphabeticPager {
 	function getQueryInfo() {
 		$query = [
 			'tables' => [ 'category' ],
-			'fields' => [ 'cat_title', 'cat_pages' ],
+			'fields' => [ 'cat_title' ],
 			'conds' => [ 'cat_pages > 0'],
 			'options' => [ 'USE INDEX' => 'cat_title' ],
 		];
 
-		if($this->matchExactly) {
+		if($this->includeNotExactlyMatched) {
+			$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->mDb->anyString(),$this->facetName,$this->mDb->anyString(),'/',$this->mDb->anyString(),$this->facetMember,$this->mDb->anyString());
+		} else {
 			if ($this->facetName!='' && $this->facetMember!='') {
 				$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->facetName.'/'.$this->facetMember);
 			} elseif ($this->facetName!='' && $this->facetMember=='') {
@@ -46,8 +51,6 @@ class FacetedCategoryPager extends AlphabeticPager {
 			} else {
 				$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->mDb->anyString(),'/',$this->mDb->anyString());
 			}
-		} else {
-			$query['conds'][] = 'cat_title' . $this->mDb->buildLike($this->mDb->anyString(),$this->facetName,$this->mDb->anyString(),'/',$this->mDb->anyString(),$this->facetMember,$this->mDb->anyString());
 		}
 
 		return $query;
@@ -73,22 +76,41 @@ class FacetedCategoryPager extends AlphabeticPager {
 			$batch->addObj( Title::makeTitleSafe( NS_CATEGORY, $row->cat_title ) );
 		}
 		$batch->execute();
+        CategoryTree::setHeaders( $this->getOutput() );
 		$this->mResult->rewind();
 
 		return parent::getBody();
 	}
 
 	function formatRow( $result ) {
+		/*
 		$title = new TitleValue( NS_CATEGORY, $result->cat_title );
 		$text = $title->getText();
 		$link = $this->linkRenderer->renderHtmlLink( $title, $text );
 
 		$count = $this->msg( 'nmembers' )->numParams( $result->cat_pages )->escaped();
-		return Html::rawElement( 'li', null, $this->getLanguage()->specialList( $link, $count ) ) . "\n";
+		*/
+
+        global $wgCategoryTreeDefaultOptions, $wgCategoryTreeSpecialPageOptions;
+
+        $title = Title::makeTitle( NS_CATEGORY, $result->cat_title );
+
+        $options = array();
+        # grab all known options from the request. Normalization is done by the CategoryTree class
+        foreach ( $wgCategoryTreeDefaultOptions as $option => $default ) {
+            if ( isset( $wgCategoryTreeSpecialPageOptions[$option] ) ) {
+                $default = $wgCategoryTreeSpecialPageOptions[$option];
+            }
+            $options[$option] = $default;
+        }
+        $options['mode'] = 'categories';
+        $this->tree = new CategoryTree( $options );
+
+		return $this->tree->renderNode( $title );//Html::rawElement( 'li', null, $this->getLanguage()->specialList( $link, $count ) ) . "\n";
 
 	}
 
-	public function getStartForm( $facetName, $facetMember, $matchExactly ) {
+	public function getStartForm( $facetName, $facetMember, $includeNotExactlyMatched ) {
 		return $this->including ? '':Xml::tags(
 			'form',
 			[ 'method' => 'get', 'action' => wfScript() ],
@@ -109,7 +131,7 @@ class FacetedCategoryPager extends AlphabeticPager {
 				) .
 				' ' .
 				Xml::checkLabel(
-					$this->msg( 'faceted_category_match_exactly' ), 'matchExactly', 'matchExactly', $matchExactly, [] )
+					$this->msg( 'faceted_category_not_only_match_exactly' ), 'includeNotExactlyMatched', 'includeNotExactlyMatched', $includeNotExactlyMatched, [] )
 			)
 		);
 	}
