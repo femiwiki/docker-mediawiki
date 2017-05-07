@@ -1,6 +1,6 @@
 {
 	"name": "FacetedCategory",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"author": [
 		"Lens"
 	],
@@ -14,7 +14,8 @@
 	},
 	"AutoloadClasses": {
 		"SpecialFacetedCategories": "specials/SpecialFacetedCategories.php",
-		"FacetedCategoryPager": "includes/FacetedCategoryPager.php"
+		"FacetedCategoryPager": "includes/FacetedCategoryPager.php",
+		"SpecialFacets": "specials/SpecialFacets.php"
 	},
 	"MessagesDirs": {
 		"FacetedCategory": [
@@ -22,7 +23,8 @@
 		]
 	},
 	"SpecialPages": {
-		"FacetedCategories": "SpecialFacetedCategories"
+		"FacetedCategories": "SpecialFacetedCategories",
+		"Facets": "SpecialFacets"
 	},
 	"ExtensionMessagesFiles": {
 		"FacetedCategoriesAlias": "FacetedCategories.alias.php",
