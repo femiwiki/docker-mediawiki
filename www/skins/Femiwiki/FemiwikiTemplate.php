@@ -354,8 +354,7 @@ class FemiwikiTemplate extends BaseTemplate
         }
         $msgObj = wfMessage($msg);
         $labelId = Sanitizer::escapeId("p-$name-label");
-        ?>
-        <div class="portal" role="navigation" id='<?php
+        ?><div class="portal" role="navigation" id='<?php
         echo Sanitizer::escapeId("p-$name")
         ?>'<?php
         echo Linker::tooltip('p-' . $name)
