@@ -3,7 +3,8 @@
 		"authors": []
 	},
 	"facetedcategories": "다면 분류 목록",
-	"facetedcategory-desc": "[[특수:다면분류]]를 추가합니다.",
+	"facetedcategory-desc": "[[특수:다면분류]], [[특수:패싯목록]]를 추가합니다.",
 	"faceted_category_search_for": "다음 분류 보기:",
-	"faceted_category_match_exactly": "정확히 일치하는 결과만 보기"
+	"faceted_category_not_only_match_exactly": "검색어를 포함하는 모든 결과 보기",
+	"facets": "패싯 목록"
 }

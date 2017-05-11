@@ -3,7 +3,8 @@
 		"authors": []
 	}, 
 	"facetedcategories": "Faceted Categories",
-	"facetedcategory-desc": "Add [[Special:FacetedCategories]]",
+	"facetedcategory-desc": "Add [[Special:FacetedCategories]], [[Special:Facets]] special pages",
 	"faceted_category_search_for": "category name:",
-	"faceted_category_match_exactly": "Match exactly"
+	"faceted_category_not_only_match_exactly": "Include not exactly matched",
+	"facets": "Facets"
 }
