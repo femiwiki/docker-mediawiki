@@ -53,15 +53,15 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     wget -nv https://extdist.wmflabs.org/dist/extensions/Thanks-REL1_27-61b9af7.tar.gz
     sudo tar -xzf Thanks-REL1_27-61b9af7.tar.gz -C /var/www/femiwiki.com/extensions
     rm Thanks-REL1_27-61b9af7.tar.gz
-    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=page
-    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=revision
-    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=archive
-    sudo php /var/www/femiwiki.com/extensions/Flow/maintenance/FlowUpdateRevContentModelFromOccupyPages.php
 
     ## Flow
     wget -nv https://extdist.wmflabs.org/dist/extensions/Flow-REL1_27-6ecdef3.tar.gz
     sudo tar -xzf Flow-REL1_27-6ecdef3.tar.gz -C /var/www/femiwiki.com/extensions
     rm Flow-REL1_27-6ecdef3.tar.gz
+    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=page
+    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=revision
+    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=archive
+    sudo php /var/www/femiwiki.com/extensions/Flow/maintenance/FlowUpdateRevContentModelFromOccupyPages.php
 
     ## Scribunto
     wget -nv https://extdist.wmflabs.org/dist/extensions/Scribunto-REL1_27-4da5346.tar.gz
