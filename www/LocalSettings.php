@@ -234,6 +234,19 @@ require_once "$IP/extensions/Echo/Echo.php";
 ## Thanks
 wfLoadExtension('Thanks');
 
+## Flow
+require_once "$IP/extensions/Flow/Flow.php";
+$wgFlowEditorList = array( 'visualeditor', 'none' );
+$wgFlowContentFormat = 'html';
+$wgNamespaceContentModels[NS_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_USER_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_PROJECT_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_FILE_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
+
 ## Scribunto
 require_once "$IP/extensions/Scribunto/Scribunto.php";
 $wgScribuntoDefaultEngine = 'luastandalone';

@@ -54,6 +54,15 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf Thanks-REL1_27-61b9af7.tar.gz -C /var/www/femiwiki.com/extensions
     rm Thanks-REL1_27-61b9af7.tar.gz
 
+    ## Flow
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Flow-REL1_27-6ecdef3.tar.gz
+    sudo tar -xzf Flow-REL1_27-6ecdef3.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Flow-REL1_27-6ecdef3.tar.gz
+    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=page
+    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=revision
+    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=archive
+    sudo php /var/www/femiwiki.com/extensions/Flow/maintenance/FlowUpdateRevContentModelFromOccupyPages.php
+
     ## Scribunto
     wget -nv https://extdist.wmflabs.org/dist/extensions/Scribunto-REL1_27-4da5346.tar.gz
     sudo tar -xzf Scribunto-REL1_27-4da5346.tar.gz -C /var/www/femiwiki.com/extensions
@@ -108,7 +117,7 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     rm HTMLTags.zip
 
     # Initialize and generate LocalSettings.php
-    php /var/www/femiwiki.com/maintenance/install.php --scriptpath "/w" --dbtype mysql --dbname femiwiki --dbserver localhost --dbuser root --dbpass root --installdbuser root --installdbpass root --server https://femiwiki.com --lang ko --pass "$" "페미위키" Admin
+    php /var/www/femiwiki.com/maintenance/install.php --scriptpath "/w" --dbtype mysql --dbname femiwiki --dbserver localhost --dbuser root --dbpass root --installdbuser root --installdbpass root --server https://femiwiki.com --lang ko --pass "$4" "페미위키" Admin
 
     # Enable SSL
     if [ "$1" = "https" ];
