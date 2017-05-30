@@ -118,21 +118,22 @@
       text-align: center;
     }
     .row.muted:after {
-      content:"가려짐";
+      content: "가려짐";
       font-size: 0.8rem;
       opacity: 0.6;
     }
   }
 }
 
-.mw-special-Recentchanges {
-  br {
+.mw-special-Recentchanges #content {
+  #mw-indicator-mw-helplink,
+  .mw-specialpage-summary,
+  .mw-changeslist-legend {
     display: none;
   }
 
-  #mw-indicator-mw-helplink,
-  .mw-specialpage-summary {
-    display: none;
+  td {
+    border-width: 0;
   }
 
   fieldset.rcoptions {
@@ -140,9 +141,6 @@
     margin: 0;
     padding: 0;
 
-    legend {
-      display: none;
-    }
   }
 
   .rclistfrom {
@@ -172,7 +170,7 @@
     }
   }
 
-  #content #bodyContent div.mw-changeslist {
+  #bodyContent div.mw-changeslist {
     h4 {
       margin: 2rem 0 1rem;
     }
@@ -185,27 +183,34 @@
       background-color: #F6F6F6;
     }
 
-    // Individual entries
+    // Entries (common)
+    & > div > table {
+      // arrow, "new" flag, timestamp
+      .newpage,
+      .minoredit,
+      .unpatrolled {
+        position: absolute;
+        right: 0;
+        margin-right: 1rem;
+      }
+      .unpatrolled {
+        margin-right: 0.5rem;
+      }
+      .mw-enhancedchanges-arrow-space {
+        display: none;
+      }
+    }
+
+    // Entries (individual)
     & > div > table:not(.mw-collapsible) {
       font-size: 0.8rem;
+
       .mw-changeslist-title {
         font-size: 1rem;
       }
 
       & > tbody > tr {
         position: relative;
-
-        // arrow, "new" flag, timestamp
-        & > td:first-child {
-          .newpage {
-            position: absolute;
-            right: 0;
-            margin-right: 0.5rem;
-          }
-          .mw-enhancedchanges-arrow-space {
-            display: none;
-          }
-        }
 
         // title and tools
         & > td:nth-child(2) {
@@ -214,7 +219,7 @@
       }
     }
 
-    // Nested entries
+    // Entries (nested)
     & > div > table.mw-collapsible {
       font-size: 0.8rem;
 
@@ -225,15 +230,6 @@
 
       & > tbody > tr {
         position: relative;
-
-        // timestamp
-        & > td:nth-child(2) {
-          .newpage {
-            position: absolute;
-            right: 0;
-            margin-right: 0.5rem;
-          }
-        }
 
         // title and tools
         & > td:nth-child(3) {
