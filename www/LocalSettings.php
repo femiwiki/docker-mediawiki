@@ -246,6 +246,7 @@ $wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_MODULE_TALK] = 'flow-board';
 
 ## Scribunto
 require_once "$IP/extensions/Scribunto/Scribunto.php";
