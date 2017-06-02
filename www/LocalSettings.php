@@ -234,6 +234,10 @@ require_once "$IP/extensions/Echo/Echo.php";
 ## Thanks
 wfLoadExtension('Thanks');
 
+## Scribunto
+require_once "$IP/extensions/Scribunto/Scribunto.php";
+$wgScribuntoDefaultEngine = 'luastandalone';
+
 ## Flow
 require_once "$IP/extensions/Flow/Flow.php";
 $wgFlowEditorList = array( 'visualeditor', 'none' );
@@ -247,10 +251,6 @@ $wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_MODULE_TALK] = 'flow-board';
-
-## Scribunto
-require_once "$IP/extensions/Scribunto/Scribunto.php";
-$wgScribuntoDefaultEngine = 'luastandalone';
 
 ## CategoryTree
 require_once "$IP/extensions/CategoryTree/CategoryTree.php";
