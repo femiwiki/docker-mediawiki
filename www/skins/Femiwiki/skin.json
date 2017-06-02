@@ -44,6 +44,9 @@
         "resources/screen-category.less": {
           "media": "screen"
         },
+        "resources/screen-flow.less": {
+          "media": "screen"
+        },
         "resources/print.css": {
           "media": "print"
         }
