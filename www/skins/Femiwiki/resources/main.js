@@ -86,12 +86,4 @@ $(function () {
   $('#bodyContent a').each(function() {
     this.href = this.href.replace('&action=edit&redlink=1', '&redlink=1');
   });
-
-  // Highlight signatures in discussion pages
-  var $paragraphs = $('body.ns-talk #mw-content-text').find('p, dd');
-  var pSig = /--(<a\s.+?>.+?<\/a>)/g;
-  $paragraphs.each(function() {
-    var html = this.innerHTML.trim();
-    this.innerHTML = html.replace(pSig, '--<span class="fw-signature">$1</span>');
-  })
 });
