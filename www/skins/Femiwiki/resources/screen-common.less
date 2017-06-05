@@ -133,7 +133,61 @@ button {
     float: right;
   }
 
-  #mw-indicator-mw-helplink {
+  #p-namespaces, #p-actions, #p-views, #p-page-tb {
+    h3 {
+      display: none;
+    }
+    ul {
+      overflow:hidden;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      display: block;
+      float:left;
+    }
+
+    li + li:before
+    {
+      content: "|";
+      padding: 0 10px;
+    }
+
+    li.selected a {
+      font-weight: bold;
+    }
+  }
+
+  #p-navigation-and-watch, #p-title-and-actions, #lastmod-and-tb {
+    overflow:hidden;
+  }
+
+  #p-actions {
+    float:right;
+    * {
+      float:right;
+    }
+    div.mw-portlet + div.mw-portlet 
+    {
+      ul:after {
+          content: "|";
+          padding: 0 10px;
+      }
+    }
+  }
+
+  #lastmod {
+    padding: 0;
+    margin: 0;
+    float:left;
+  }
+
+  #p-links-toggle {
+    float:right;
+  }
+
+  #p-page-tb {
+    float:right;
     display: none;
   }
 
@@ -156,6 +210,13 @@ button {
     font-size: 0.8rem;
   }
 
+  #p-namespaces {
+    float:left;
+  }
+  #p-watch {
+    float:right;
+  }
+
   // Headings
   h1, h2, h3, h4, h5, h6 {
     position: relative;
@@ -168,6 +229,9 @@ button {
   h1.firstHeading {
     font-size: 1.714rem;
     margin-bottom: 0;
+    clear:left;
+    float:left;
+    margin-top: 0.5rem;
   }
   h2 {
     font-size: 1.429rem;
@@ -192,6 +256,9 @@ button {
   }
 
   // Paragraph
+  #mw-content-text {
+    clear:both;
+  }
   #mw-content-text > p:first-child {
     margin-top: 2.8rem;
   }
