@@ -121,6 +121,110 @@ button {
   border: 2px solid #aca8e0;
 }
 
+#p-navigation-and-watch {
+  max-width: 50rem;
+  padding: 0 1.3rem;
+  margin: 1.6rem auto;
+
+  overflow:hidden;
+  clear:both;
+
+  #p-namespaces, #ca-watch {
+    font-size:0.75rem;
+    
+    h3 {
+      display: none;
+    }
+
+    ul {
+      padding: 0;
+      margin: 0;
+      li {
+        margin-bottom: 0;
+        display: block;
+        float:left;
+      }
+      li + li:before
+      {
+        content: "|";
+        padding: 0 10px;
+      }
+      li.selected a {
+        font-weight: bold;
+      }
+    }
+  }
+  #ca-watch {
+    float:right;
+  }
+}
+
+#content > #p-header, {
+  #p-title-and-toolbox, #lastmod-and-tb {
+    overflow:hidden;
+    clear:both;
+
+    #p-views, #p-actions, #p-links-toggle, #p-page-tb, #p-site-tb {
+      font-size:0.75rem;
+      
+      h3 {
+        display: none;
+      }
+
+      ul {
+        padding: 0;
+        margin: 0;
+        li {
+          margin-bottom: 0;
+          display: block;
+          float:left;
+        }
+        li + li:before
+        {
+          content: "|";
+          padding: 0 10px;
+        }
+        li.selected a {
+          font-weight: bold;
+        }
+      }
+    }
+
+    #p-page-tb, #p-site-tb {
+      clear:right;
+    }
+
+    div.mw-portlet + div.mw-portlet 
+    {
+      ul:after {
+          content: "|";
+          padding: 0 10px;
+      }
+    }
+
+    #ca-watch, #p-views-and-actions, #p-views, #p-actions, #p-links-toggle, #p-page-tb, #p-site-tb {
+      float:right;
+    }
+    #p-views-and-actions {
+      margin-top: 1.4rem;
+    }
+
+    #lastmod {
+      font-size:0.8rem;
+    }
+    #p-page-tb, #p-site-tb {
+      display: none;
+    }
+  }
+
+  h1.firstHeading {
+    font-size: 1.714rem;
+    margin-bottom: 0;
+    display: inline-block;
+    margin-top: 0.5rem;
+  }
+}
+
 // Content
 #content {
   position: relative;
@@ -133,63 +237,6 @@ button {
     float: right;
   }
 
-  #p-namespaces, #p-actions, #p-views, #p-page-tb {
-    h3 {
-      display: none;
-    }
-    ul {
-      overflow:hidden;
-      padding: 0;
-      margin: 0;
-    }
-    li {
-      display: block;
-      float:left;
-    }
-
-    li + li:before
-    {
-      content: "|";
-      padding: 0 10px;
-    }
-
-    li.selected a {
-      font-weight: bold;
-    }
-  }
-
-  #p-navigation-and-watch, #p-title-and-actions, #lastmod-and-tb {
-    overflow:hidden;
-  }
-
-  #p-actions {
-    float:right;
-    * {
-      float:right;
-    }
-    div.mw-portlet + div.mw-portlet 
-    {
-      ul:after {
-          content: "|";
-          padding: 0 10px;
-      }
-    }
-  }
-
-  #lastmod {
-    padding: 0;
-    margin: 0;
-    float:left;
-  }
-
-  #p-links-toggle {
-    float:right;
-  }
-
-  #p-page-tb {
-    float:right;
-    display: none;
-  }
 
   #mw-notification-area {
     width: auto;
@@ -206,17 +253,6 @@ button {
     }
   }
 
-  .lastmod {
-    font-size: 0.8rem;
-  }
-
-  #p-namespaces {
-    float:left;
-  }
-  #p-watch {
-    float:right;
-  }
-
   // Headings
   h1, h2, h3, h4, h5, h6 {
     position: relative;
@@ -225,13 +261,6 @@ button {
     border-bottom: 0;
     font-weight: normal;
     color: #252525;
-  }
-  h1.firstHeading {
-    font-size: 1.714rem;
-    margin-bottom: 0;
-    clear:left;
-    float:left;
-    margin-top: 0.5rem;
   }
   h2 {
     font-size: 1.429rem;

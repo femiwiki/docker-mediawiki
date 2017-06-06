@@ -58,11 +58,22 @@ class FemiwikiTemplate extends BaseTemplate
                 echo $this->getUserLinks();
 
                 $this->renderPortals( $this->data['sidebar'] );
-
-                // Toolbox
-                echo $this->renderPortal('tb', $this->getSiteToolbox(), 'toolbox', 'SkinTemplateToolboxEnd');
                 ?>
             </div>
+
+            <?php
+            echo Html::openElement(
+                'div',
+                array('id' => 'p-navigation-and-watch')
+            );
+            echo $this->getPortlet(array(
+                'id' => 'p-namespaces',
+                'headerMessage' => 'namespaces',
+                'content' => $this->data['content_navigation']['namespaces'],
+            ));
+            echo $this->getWatch();
+            echo Html::closeElement('div');
+            ?>
 
             <div id="content" class="mw-body" role="main">
                 <?php
@@ -86,22 +97,11 @@ class FemiwikiTemplate extends BaseTemplate
                     'div',
                     array('id' => 'p-header')
                 );
-                echo Html::openElement(
-                    'div',
-                    array('id' => 'p-navigation-and-watch')
-                );
-                echo $this->getPortlet(array(
-                    'id' => 'p-namespaces',
-                    'headerMessage' => 'namespaces',
-                    'content' => $this->data['content_navigation']['namespaces'],
-                ));
-                echo $this->getWatch();
-                echo Html::closeElement('div');
 
 
                 echo Html::openElement(
                     'div',
-                    array('id' => 'p-title-and-actions')
+                    array('id' => 'p-title-and-toolbox')
                 );
                 echo Html::rawElement(
                     'h1',
@@ -114,7 +114,7 @@ class FemiwikiTemplate extends BaseTemplate
 
                 echo Html::openElement(
                     'div',
-                    array('id' => 'p-actions')
+                    array('id' => 'p-views-and-actions')
                 );
 
                 unset( $this->data['content_navigation']['views']['view'] );
@@ -154,7 +154,10 @@ class FemiwikiTemplate extends BaseTemplate
                     ,'…'
                     );
 
+
+                // Toolbox
                 echo $this->renderPortal('page-tb', $this->getPageToolbox(), 'toolbox', 'SkinTemplateToolboxEnd');
+                echo $this->renderPortal('site-tb', $this->getSiteToolbox(), 'toolbox', 'SkinTemplateToolboxEnd');
                 
                 echo Html::closeElement('div');
                 echo Html::closeElement('div');
@@ -341,13 +344,11 @@ class FemiwikiTemplate extends BaseTemplate
             $nav['views'][$mode]['primary'] = true;
             unset( $this->data['content_navigation']['actions'][$mode] );
         }
-
         $item = $nav['actions'][$mode];
-
         $attrs = [];
         $attrs['class'] = 'mw-portlet';
-        $attrs['id'] = 'p-watch';
-        return Html::rawElement( 'div', $attrs, $this->makeLink( $mode, $item, $options ) );
+        $attrs['id'] = 'ca-watch';
+        return Html::rawElement( 'span', $attrs, $this->makeLink( $mode, $item, $options ) );
     }
 
     /**
@@ -392,7 +393,7 @@ class FemiwikiTemplate extends BaseTemplate
             }
         }
         foreach ( [ 'contributions', 'log', 'blockip', 'emailuser',
-            'userrights', 'upload', 'specialpages' ] as $special
+            'userrights'] as $special
         ) {
             if ( isset( $this->data['nav_urls'][$special] ) && $this->data['nav_urls'][$special] ) {
                 $toolbox[$special] = $this->data['nav_urls'][$special];

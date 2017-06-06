@@ -51,9 +51,16 @@ $(function () {
   });
   $(window).resize(fwMenuResize);
 
-  $('#p-links-toggle').click(function () {
-    $('#p-page-tb').toggle();
-  });
+  if($('#lastmod').length !==0 && $('#lastmod')[0].innerHTML!=='')
+    $('#p-links-toggle').click(function () {
+      $('#p-page-tb').toggle();
+      $('#p-site-tb').toggle();
+    });
+  else {
+    $('#p-links-toggle').css("display","none");
+    $('#p-page-tb').css("display","block");
+    $('#p-site-tb').css("display","block");
+  }
 
   // Notification badge
   var alerts = +$('#pt-notifications-alert').text();
