@@ -129,7 +129,7 @@ button {
   overflow:hidden;
   clear:both;
 
-  #p-namespaces, #ca-watch {
+  #p-namespaces, #ca-watch, #p-watch {
     font-size:0.75rem;
     
     h3 {
@@ -154,12 +154,12 @@ button {
       }
     }
   }
-  #ca-watch {
+  #ca-watch, #p-watch {
     float:right;
   }
 }
 
-#content > #p-header, {
+#content > #p-header {
   #p-title-and-toolbox, #lastmod-and-tb {
     overflow:hidden;
     clear:both;
@@ -745,6 +745,72 @@ html.ve-active {
     // Remove padding of visual editor
     .ve-ce-documentNode {
       padding: 0;
+    }
+
+    #p-header {
+      #p-title-and-toolbox, #lastmod-and-tb {
+        overflow:hidden;
+        clear:both;
+
+        #p-views, #p-actions, #p-links-toggle, #p-page-tb, #p-site-tb {
+          font-size:0.75rem;
+          
+          h3 {
+            display: none;
+          }
+
+          ul {
+            padding: 0;
+            margin: 0;
+            li {
+              margin-bottom: 0;
+              display: block;
+              float:left;
+            }
+            li + li:before
+            {
+              content: "|";
+              padding: 0 10px;
+            }
+            li.selected a {
+              font-weight: bold;
+            }
+          }
+        }
+
+        #p-page-tb, #p-site-tb {
+          clear:right;
+        }
+
+        div.mw-portlet + div.mw-portlet 
+        {
+          ul:after {
+              content: "|";
+              padding: 0 10px;
+          }
+        }
+
+        #ca-watch, #p-views-and-actions, #p-views, #p-actions, #p-links-toggle, #p-page-tb, #p-site-tb {
+          float:right;
+        }
+        #p-views-and-actions {
+          margin-top: 1.4rem;
+        }
+
+        #lastmod {
+          font-size:0.8rem;
+        }
+        #p-page-tb, #p-site-tb {
+          display: none;
+        }
+      }
+
+      h1.firstHeading {
+        font-size: 1.714rem;
+        margin-bottom: 0;
+        display: inline-block;
+        margin-top: 0.5rem;
+      }
     }
   }
 
