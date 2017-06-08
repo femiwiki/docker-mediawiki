@@ -149,9 +149,10 @@ class FemiwikiTemplate extends BaseTemplate
                 echo Html::rawElement(
                     'a',
                     array(
-                        'id' => 'p-links-toggle'
+                        'id' => 'p-links-toggle',
+                        'href' => '#'
                         )
-                    ,'…'
+                    ,'•••'
                     );
 
 
