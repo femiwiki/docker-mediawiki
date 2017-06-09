@@ -121,7 +121,7 @@ button {
   border: 2px solid #aca8e0;
 }
 
-#p-navigation-and-watch, html.ve-active #content #p-navigation-and-watch {
+#p-navigation-and-watch {
   max-width: 50rem;
   padding: 0 1.3rem;
   margin: 0.5rem auto;
@@ -139,12 +139,10 @@ button {
     display: block;
     overflow:hidden;
   }
-  * {
-    margin: 0;
-  }
 
   #p-namespaces {
     float:left;
+    margin-left: 0.5rem;
     ul {
       float:left;
       li {
@@ -166,13 +164,13 @@ button {
 }
 
 #content #p-header {
+  font-size:0.75rem;
+
   #p-title-and-toolbox, #lastmod-and-tb {
     overflow:hidden;
     clear:both;
 
-    #p-views, #p-links-toggle, #p-actions, #p-page-tb, #p-site-tb {
-      font-size:0.75rem;
-      
+    #p-views, #p-actions, #p-page-tb, #p-site-tb {
       h3 {
         display: none;
       }
@@ -181,12 +179,8 @@ button {
         padding: 0;
         margin: 0;
         li {
-          margin-bottom: 0;
+          margin: 0;
           display: block;
-          float:left;
-        }
-        li li {
-          margin-left:1em;
         }
         li.selected a {
           font-weight: bold;
@@ -194,42 +188,41 @@ button {
       }
     }
 
-    #p-links-toggle, #p-views, #p-actions, #p-page-tb, #p-site-tb {
+    #p-views {
+      float:right;
+      margin-top: 1.2rem;
+      li{
+        float:left;
+      }
+      li + li {
+        margin-left:1em;
+      }
+    }
+
+    #p-links-toggle {
       float:right;
     }
-    #p-views {
-      margin-top: 1.2rem;
-    }
+
     #p-actions-and-toolbox {
       display: none;
       clear:right;
 
-      div div {
-        margin-right:1em;
-      }
-
-      #p-actions ul, #p-page-tb ul, #p-site-tb ul {
-        li {
-            float:right;
+      #p-actions, #p-page-tb, #p-site-tb {
+        float:right;
+        li{
+          float:right;
         }
-        li li {
-          margin-left:0em;
+        li + li {
           margin-right:1em;
         }
       }
 
-      #p-page-tb, #p-site-tb {
-        /*clear:right;*/
-      }
-
-      div.mw-portlet div.mw-portlet 
-      {
+      div + div {
         margin-right:1em;
       }
-
-      #lastmod {
-        font-size:0.8rem;
-      }
+    }
+    #lastmod {
+      font-size:0.8rem;
     }
   }
 
