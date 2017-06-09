@@ -135,19 +135,28 @@ wfLoadSkin('Femiwiki');
 # End of automatically generated settings.
 # Add more configuration options below.
 
-# Additional namespaces
+# Namespace settings
 ## BBS
+define("NS_BBS", 3906);
+define("NS_BBS_TALK", 3907);
+$wgExtraNamespaces[NS_BBS] = "게시판";
+$wgExtraNamespaces[NS_BBS_TALK] = "게시판토론";
+$wgContentNamespaces[] = NS_BBS;
+
+## BBS (Legacy)
 define("NS_BBSFREE", 3902);
 define("NS_BBSFREE_TALK", 3903);
 $wgExtraNamespaces[NS_BBSFREE] = "자유게시판";
 $wgExtraNamespaces[NS_BBSFREE_TALK] = "자유게시판토론";
 $wgContentNamespaces[] = NS_BBSFREE;
-
 define("NS_BBSINTRO", 3904);
 define("NS_BBSINTRO_TALK", 3905);
 $wgExtraNamespaces[NS_BBSINTRO] = "가입인사게시판";
 $wgExtraNamespaces[NS_BBSINTRO_TALK] = "가입인사게시판토론";
 $wgContentNamespaces[] = NS_BBSINTRO;
+
+## Misc. ns settings
+$wgNamespacesWithSubpages[NS_TEMPLATE] = true;
 
 # Permission
 $wgGroupPermissions['*']['createaccount'] = true;
@@ -253,6 +262,8 @@ $wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_MODULE_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_BBS] = 'flow-board';
+$wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
 
 ## CategoryTree
 require_once "$IP/extensions/CategoryTree/CategoryTree.php";
