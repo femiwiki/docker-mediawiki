@@ -88,9 +88,8 @@ $(function () {
   });
 
   // Open external links in new tab
-  var host = location.href.match(/https?:\/\/([^:\/$]+)/)[1];
   $('#bodyContent a').each(function() {
-    var external = this.href.match('^https?://') && !this.href.match('^https?://' + host);
+    var external = this.href.match('^https?://') && !this.href.match('^https?://' + location.hostname);
     if(external) {
       $(this)
         .addClass('external')
