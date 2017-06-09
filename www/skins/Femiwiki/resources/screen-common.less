@@ -465,6 +465,13 @@ button {
     display: none;
   }
 
+  // Show horizontal scrollbar for very long mathjax expression
+  .mathjax-wrapper {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
   // Hide default category and show femiwiki category instead
   #catlinks {
     display: none;
