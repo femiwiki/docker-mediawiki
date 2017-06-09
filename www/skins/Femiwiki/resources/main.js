@@ -86,4 +86,17 @@ $(function () {
   $('#bodyContent a').each(function() {
     this.href = this.href.replace('&action=edit&redlink=1', '&redlink=1');
   });
+
+  // Open external links in new tab
+  var host = location.href.match(/https?:\/\/([^:\/$]+)/)[1];
+  $('#bodyContent a').each(function() {
+    var external = this.href.match('^https?://') && !this.href.match('^https?://' + host);
+    if(external) {
+      $(this)
+        .addClass('external')
+        .attr('target', '_blank');
+    } else {
+      $(this).removeClass('external');
+    }
+  })
 });
