@@ -18,7 +18,7 @@
   );
 
   function _initUI() {
-    $('#p-personal').append($muteLinkEl);
+    $('#footer-places').append($muteLinkEl);
     $(document.body).append($editorEl);
 
     // Event handlers

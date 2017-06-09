@@ -51,16 +51,10 @@ $(function () {
   });
   $(window).resize(fwMenuResize);
 
-  if($('#lastmod').length !==0 && $('#lastmod')[0].innerHTML!=='')
-    $('#p-links-toggle').click(function () {
-      $('#p-page-tb').toggle();
-      $('#p-site-tb').toggle();
-    });
-  else {
-    $('#p-links-toggle').css("display","none");
-    $('#p-page-tb').css("display","block");
-    $('#p-site-tb').css("display","block");
-  }
+
+  $('#p-links-toggle').click(function () {
+    $('#p-actions-and-toolbox').toggle();
+  });
 
   // Notification badge
   var alerts = +$('#pt-notifications-alert').text();
@@ -83,4 +77,16 @@ $(function () {
   $('#bodyContent a').each(function() {
     this.href = this.href.replace('&action=edit&redlink=1', '&redlink=1');
   });
+
+  // Open external links in new tab
+  $('#bodyContent a').each(function() {
+    var external = this.href.match('^https?://') && !this.href.match('^https?://' + location.hostname);
+    if(external) {
+      $(this)
+        .addClass('external')
+        .attr('target', '_blank');
+    } else {
+      $(this).removeClass('external');
+    }
+  })
 });

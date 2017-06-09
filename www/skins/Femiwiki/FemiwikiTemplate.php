@@ -112,11 +112,6 @@ class FemiwikiTemplate extends BaseTemplate
                     $this->get('title')
                 );
 
-                echo Html::openElement(
-                    'div',
-                    array('id' => 'p-views-and-actions')
-                );
-
                 unset( $this->data['content_navigation']['views']['view'] );
                 unset( $this->data['content_navigation']['views']['history'] );
                 echo $this->getPortlet(array(
@@ -125,13 +120,6 @@ class FemiwikiTemplate extends BaseTemplate
                     'content' => $this->data['content_navigation']['views'],
                 ));
 
-                echo $this->getPortlet(array(
-                    'id' => 'p-actions',
-                    'headerMessage' => 'actions',
-                    'content' => $this->data['content_navigation']['actions'],
-                ));
-
-                echo Html::closeElement('div');
                 echo Html::closeElement('div');
                 echo Html::openElement(
                     'div',
@@ -155,11 +143,19 @@ class FemiwikiTemplate extends BaseTemplate
                     ,'•••'
                     );
 
-
-                // Toolbox
+                echo Html::openElement(
+                    'div',
+                    array('id' => 'p-actions-and-toolbox')
+                );
+                echo $this->getPortlet(array(
+                    'id' => 'p-actions',
+                    'headerMessage' => 'actions',
+                    'content' => $this->data['content_navigation']['actions'],
+                ));
                 echo $this->renderPortal('page-tb', $this->getPageToolbox(), 'toolbox', 'SkinTemplateToolboxEnd');
                 echo $this->renderPortal('site-tb', $this->getSiteToolbox(), 'toolbox', 'SkinTemplateToolboxEnd');
-                
+
+                echo Html::closeElement('div');
                 echo Html::closeElement('div');
                 echo Html::closeElement('div');
                 ?>
@@ -346,6 +342,7 @@ class FemiwikiTemplate extends BaseTemplate
             unset( $this->data['content_navigation']['actions'][$mode] );
         }
         $item = $nav['actions'][$mode];
+        if($item === null) return;
         $attrs = [];
         $attrs['class'] = 'mw-portlet';
         $attrs['id'] = 'ca-watch';

@@ -121,50 +121,56 @@ button {
   border: 2px solid #aca8e0;
 }
 
-#p-navigation-and-watch {
+#p-navigation-and-watch, html.ve-active #content #p-navigation-and-watch {
   max-width: 50rem;
   padding: 0 1.3rem;
   margin: 0.5rem auto;
-  margin-bottom: 0;
 
   overflow:hidden;
   clear:both;
 
-  #p-namespaces, #ca-watch, #p-watch {
-    font-size:0.75rem;
-    
-    h3 {
-      display: none;
-    }
+  font-size:0.75rem;
 
+  h3 {
+    display: none;
+  }
+
+  div, ul, li {
+    display: block;
+    overflow:hidden;
+  }
+  * {
+    margin: 0;
+  }
+
+  #p-namespaces {
+    float:left;
     ul {
-      padding: 0;
-      margin: 0;
+      float:left;
       li {
-        margin-bottom: 0;
         display: block;
         float:left;
       }
-      li + li
-      {
-        margin-left:1em;
+      li.selected {
+        display: none;
       }
-      li.selected a {
-        font-weight: bold;
+      li > a:after {
+        content:" 보기";
       }
     }
   }
+
   #ca-watch, #p-watch {
     float:right;
   }
 }
 
-#content > #p-header {
+#content #p-header {
   #p-title-and-toolbox, #lastmod-and-tb {
     overflow:hidden;
     clear:both;
 
-    #p-views, #p-actions, #p-links-toggle, #p-page-tb, #p-site-tb {
+    #p-views, #p-links-toggle, #p-actions, #p-page-tb, #p-site-tb {
       font-size:0.75rem;
       
       h3 {
@@ -179,7 +185,7 @@ button {
           display: block;
           float:left;
         }
-        li + li {
+        li li {
           margin-left:1em;
         }
         li.selected a {
@@ -188,37 +194,42 @@ button {
       }
     }
 
-    #p-page-tb ul {
-      li {
-          float:right;
-      }
-      li + li {
-        margin-left:0em;
-        margin-right:1em;
-      }
-    }
-
-    #p-page-tb, #p-site-tb {
-      clear:right;
-    }
-
-    div.mw-portlet + div.mw-portlet 
-    {
-      margin-right:1em;
-    }
-
-    #ca-watch, #p-views-and-actions, #p-views, #p-actions, #p-links-toggle, #p-page-tb, #p-site-tb {
+    #p-links-toggle, #p-views, #p-actions, #p-page-tb, #p-site-tb {
       float:right;
     }
-    #p-views-and-actions {
-      margin-top: 1.4rem;
+    #p-views {
+      margin-top: 1.2rem;
     }
-
-    #lastmod {
-      font-size:0.8rem;
-    }
-    #p-page-tb, #p-site-tb {
+    #p-actions-and-toolbox {
       display: none;
+      clear:right;
+
+      div div {
+        margin-right:1em;
+      }
+
+      #p-actions ul, #p-page-tb ul, #p-site-tb ul {
+        li {
+            float:right;
+        }
+        li li {
+          margin-left:0em;
+          margin-right:1em;
+        }
+      }
+
+      #p-page-tb, #p-site-tb {
+        /*clear:right;*/
+      }
+
+      div.mw-portlet div.mw-portlet 
+      {
+        margin-right:1em;
+      }
+
+      #lastmod {
+        font-size:0.8rem;
+      }
     }
   }
 
@@ -236,7 +247,7 @@ button {
 
   padding: 0 1.3rem;
   max-width: 50rem;
-  margin: 1.6rem auto 3.2rem;
+  margin: 0 auto 3.2rem;
 
   .mw-indicators {
     float: right;
@@ -566,6 +577,13 @@ button {
     display: none;
   }
 
+  // Show horizontal scrollbar for very long mathjax expression
+  .mathjax-wrapper {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
   // Hide default category and show femiwiki category instead
   #catlinks {
     display: none;
@@ -750,77 +768,6 @@ html.ve-active {
     // Remove padding of visual editor
     .ve-ce-documentNode {
       padding: 0;
-    }
-
-    #p-header {
-      #p-title-and-toolbox, #lastmod-and-tb {
-        overflow:hidden;
-        clear:both;
-
-        #p-views, #p-actions, #p-links-toggle, #p-page-tb, #p-site-tb {
-          font-size:0.75rem;
-          
-          h3 {
-            display: none;
-          }
-
-          ul {
-            padding: 0;
-            margin: 0;
-            li {
-              margin-bottom: 0;
-              display: block;
-              float:left;
-            }
-            li + li
-            {
-              margin-left:1em;
-            }
-            li.selected a {
-              font-weight: bold;
-            }
-          }
-        }
-        #p-page-tb ul {
-          li {
-            float:right;
-          }
-          li + li{
-            margin-left:0em;
-            margin-right:1em;
-          }
-        }
-
-        #p-page-tb, #p-site-tb {
-          clear:right;
-        }
-
-        div.mw-portlet + div.mw-portlet 
-        {
-          margin-right: 1em;
-        }
-
-        #ca-watch, #p-views-and-actions, #p-views, #p-actions, #p-links-toggle, #p-page-tb, #p-site-tb {
-          float:right;
-        }
-        #p-views-and-actions {
-          margin-top: 1.4rem;
-        }
-
-        #lastmod {
-          font-size:0.8rem;
-        }
-        #p-page-tb, #p-site-tb {
-          display: none;
-        }
-      }
-
-      h1.firstHeading {
-        font-size: 1.714rem;
-        margin-bottom: 0;
-        display: inline-block;
-        margin-top: 0;
-      }
     }
   }
 
