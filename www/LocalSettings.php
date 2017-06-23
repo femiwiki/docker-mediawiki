@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170609_1';
+$wgStyleVersion = '20170623_0';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -291,6 +291,9 @@ wfLoadExtension( 'FacetedCategory' );
 ## FacetedCategory --it needs the CategoryTree
 wfLoadExtension( 'UncategorizedCategoryTree' );
 $wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
+
+## IntersectionSearch
+wfLoadExtension( 'CategoryIntersectionSearch' );
 
 ## Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = array(
