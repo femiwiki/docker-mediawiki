@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170604_1';
+$wgStyleVersion = '20170609_1';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -180,7 +180,8 @@ $wgGroupPermissions['bureaucrat']['edit'] = true;
 $wgDefaultUserOptions['numberheadings'] = 1;
 
 # Open external links in new tab
-$wgExternalLinkTarget = '_blank';
+# $wgExternalLinkTarget = '_blank';
+# Implemented using JS in order to open links starts with https://femiwiki.com on the current window.
 
 # Copyright
 $wgRightsPage = "페미위키:저작권";
