@@ -1,0 +1,37 @@
+{
+	"name": "CategoryIntersectionSearch",
+	"version": "0.0.0",
+	"author": [
+		"Lens"
+	],
+	"descriptionmsg": "categoryintersectionsearch-desc",
+	"license-name": "GPL-2.0+",
+	"type": "specialpage",
+	"requires": {
+		"extensions": {
+			"CategoryTree": "*"
+		}
+	},
+	"AutoloadClasses": {
+		"SpecialCategoryIntersectionSearch": "SpecialCategoryIntersectionSearch.php",
+		"CategoryIntersectionSearchHooks": "CategoryIntersectionSearch.hooks.php"
+	},
+	"MessagesDirs": {
+		"CategoryIntersectionSearch": [
+			"i18n"
+		]
+	},
+	"SpecialPages": {
+		"CategoryIntersectionSearch": "SpecialCategoryIntersectionSearch"
+	},
+	"Hooks": {
+		"SpecialSearchResultsPrepend": [
+			"CategoryIntersectionSearchHooks::onSpecialSearchResultsPrepend"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"CategoryIntersectionSearchAlias": "CategoryIntersectionSearch.alias.php",
+		"CategoryIntersectionSearchMagic": "CategoryIntersectionSearch.i18n.magic.php"
+	},
+	"manifest_version": 1
+}
