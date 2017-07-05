@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170609_1';
+$wgStyleVersion = '20170623_0';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -135,19 +135,28 @@ wfLoadSkin('Femiwiki');
 # End of automatically generated settings.
 # Add more configuration options below.
 
-# Additional namespaces
+# Namespace settings
 ## BBS
+define("NS_BBS", 3906);
+define("NS_BBS_TALK", 3907);
+$wgExtraNamespaces[NS_BBS] = "게시판";
+$wgExtraNamespaces[NS_BBS_TALK] = "게시판토론";
+$wgContentNamespaces[] = NS_BBS;
+
+## BBS (Legacy)
 define("NS_BBSFREE", 3902);
 define("NS_BBSFREE_TALK", 3903);
 $wgExtraNamespaces[NS_BBSFREE] = "자유게시판";
 $wgExtraNamespaces[NS_BBSFREE_TALK] = "자유게시판토론";
 $wgContentNamespaces[] = NS_BBSFREE;
-
 define("NS_BBSINTRO", 3904);
 define("NS_BBSINTRO_TALK", 3905);
 $wgExtraNamespaces[NS_BBSINTRO] = "가입인사게시판";
 $wgExtraNamespaces[NS_BBSINTRO_TALK] = "가입인사게시판토론";
 $wgContentNamespaces[] = NS_BBSINTRO;
+
+## Misc. ns settings
+$wgNamespacesWithSubpages[NS_TEMPLATE] = true;
 
 # Permission
 $wgGroupPermissions['*']['createaccount'] = true;
@@ -253,6 +262,8 @@ $wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_MODULE_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_BBS] = 'flow-board';
+$wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
 
 ## CategoryTree
 require_once "$IP/extensions/CategoryTree/CategoryTree.php";
@@ -291,6 +302,9 @@ wfLoadExtension( 'FacetedCategory' );
 ## FacetedCategory --it needs the CategoryTree
 wfLoadExtension( 'UncategorizedCategoryTree' );
 $wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
+
+## IntersectionSearch
+wfLoadExtension( 'CategoryIntersectionSearch' );
 
 ## Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = array(
