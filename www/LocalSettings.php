@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170623_0';
+$wgStyleVersion = '20170708_0';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -299,9 +299,10 @@ require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 ## FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
-## FacetedCategory --it needs the CategoryTree
-wfLoadExtension( 'UncategorizedCategoryTree' );
-$wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
+## ExtendedSpecialPagesForFemiwiki --it needs the CategoryTree
+wfLoadExtension( 'ExtendedSpecialPagesForFemiwiki' );
+$wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class]; #it needs the CategoryTree
+$wgSpecialPages['SpecialWhatLinksHere'] = [SpecialOrderedWhatlinkshere::class];
 
 ## IntersectionSearch
 wfLoadExtension( 'CategoryIntersectionSearch' );
