@@ -125,7 +125,8 @@ class FemiwikiTemplate extends BaseTemplate
                     array('id' => 'p-actions-and-toolbox')
                 );
                 echo $this->renderPortal('page-tb', $this->getToolbox(), 'toolbox');
-                echo $this->renderPortal('shere-tb', $this->getShereToolbox(), '공유하기', 'SkinTemplateToolboxEnd');
+                if (isset( $this->data['articleid']) && $this->data['articleid'] != 0 )
+                    echo $this->renderPortal('share-tb', $this->getShareToolbox(), '공유하기', 'SkinTemplateToolboxEnd');
                 echo $this->getPortlet(array(
                     'id' => 'p-actions',
                     'headerMessage' => 'actions',
@@ -465,7 +466,7 @@ class FemiwikiTemplate extends BaseTemplate
         return $toolbox;
     }
 
-    function getShereToolbox() {
+    function getShareToolbox() {
         $toolbox = [];
 
         $toolbox['twitter'] = [];
