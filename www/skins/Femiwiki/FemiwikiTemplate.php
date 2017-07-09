@@ -125,12 +125,12 @@ class FemiwikiTemplate extends BaseTemplate
                     array('id' => 'p-actions-and-toolbox')
                 );
                 echo $this->renderPortal('page-tb', $this->getToolbox(), 'toolbox');
+                echo $this->renderPortal('shere-tb', $this->getShereToolbox(), '공유하기', 'SkinTemplateToolboxEnd');
                 echo $this->getPortlet(array(
                     'id' => 'p-actions',
                     'headerMessage' => 'actions',
                     'content' => $this->data['content_navigation']['actions'],
                 ));
-                echo $this->renderPortal('shere-tb', $this->getShereToolbox(), '공유하기', 'SkinTemplateToolboxEnd');
 
     /*
      * @param string $name
