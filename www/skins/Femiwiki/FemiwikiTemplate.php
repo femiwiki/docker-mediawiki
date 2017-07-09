@@ -470,7 +470,10 @@ class FemiwikiTemplate extends BaseTemplate
 
         $toolbox['twitter'] = [];
         $toolbox['twitter']['id'] = 'twitter';
-        $toolbox['twitter']['href'] = 'https://twitter.com/intent/tweet?text='.urlencode($this->get('titleprefixeddbkey').' '.Title::newFromText($this->get('titleprefixeddbkey'))->getFullURL().'?utm_source=twitter&utm_medium=tweet #'.$this->get('sitename'));
+        global $wgServer;
+        $link = $wgServer.'/index.php?curid='.$this->get('articleid').'?utm_source=twitter&utm_medium=tweet';
+        $tweet = $this->get('title').' '.$link.' #'.$this->get('sitename');
+        $toolbox['twitter']['href'] = 'https://twitter.com/intent/tweet?text='.urlencode($tweet);
         $toolbox['twitter']['text'] = '트위터';
 
         return $toolbox;
