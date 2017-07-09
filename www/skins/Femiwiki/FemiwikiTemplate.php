@@ -58,7 +58,6 @@ class FemiwikiTemplate extends BaseTemplate
                 echo $this->getUserLinks();
 
                 $this->renderPortals( $this->data['sidebar'] );
-                //echo $this->renderPortal('site-tb', $this->getSiteToolbox(), 'toolbox', 'SkinTemplateToolboxEnd');
                 ?>
             </div>
 
@@ -125,7 +124,7 @@ class FemiwikiTemplate extends BaseTemplate
                     'div',
                     array('id' => 'p-actions-and-toolbox')
                 );
-                echo $this->renderPortal('page-tb', $this->getPageToolbox(), 'toolbox');
+                echo $this->renderPortal('page-tb', $this->getToolbox(), 'toolbox');
                 echo $this->getPortlet(array(
                     'id' => 'p-actions',
                     'headerMessage' => 'actions',
@@ -406,32 +405,7 @@ class FemiwikiTemplate extends BaseTemplate
         return Html::element( 'input', $realAttrs );
     }
 
-    function getSiteToolbox() {
-        $toolbox = [];
-        if ( isset( $this->data['feeds'] ) && $this->data['feeds'] ) {
-            $toolbox['feeds']['id'] = 'feedlinks';
-            $toolbox['feeds']['links'] = [];
-            foreach ( $this->data['feeds'] as $key => $feed ) {
-                $toolbox['feeds']['links'][$key] = $feed;
-                $toolbox['feeds']['links'][$key]['id'] = "feed-$key";
-                $toolbox['feeds']['links'][$key]['rel'] = 'alternate';
-                $toolbox['feeds']['links'][$key]['type'] = "application/{$key}+xml";
-                $toolbox['feeds']['links'][$key]['class'] = 'feedlink';
-            }
-        }
-        foreach ( [ 'contributions', 'log', 'blockip', 'emailuser',
-            'userrights'] as $special
-        ) {
-            if ( isset( $this->data['nav_urls'][$special] ) && $this->data['nav_urls'][$special] ) {
-                $toolbox[$special] = $this->data['nav_urls'][$special];
-                $toolbox[$special]['id'] = "t-$special";
-            }
-        }
-
-        return $toolbox;
-    }
-
-    function getPageToolbox() {
+    function getToolbox() {
         $toolbox = [];
 
         if ( isset( $this->data['nav_urls']['whatlinkshere'] )
@@ -467,6 +441,25 @@ class FemiwikiTemplate extends BaseTemplate
         if ( isset( $this->data['nav_urls']['info'] ) && $this->data['nav_urls']['info'] ) {
             $toolbox['info'] = $this->data['nav_urls']['info'];
             $toolbox['info']['id'] = 't-info';
+        }
+        if ( isset( $this->data['feeds'] ) && $this->data['feeds'] ) {
+            $toolbox['feeds']['id'] = 'feedlinks';
+            $toolbox['feeds']['links'] = [];
+            foreach ( $this->data['feeds'] as $key => $feed ) {
+                $toolbox['feeds']['links'][$key] = $feed;
+                $toolbox['feeds']['links'][$key]['id'] = "feed-$key";
+                $toolbox['feeds']['links'][$key]['rel'] = 'alternate';
+                $toolbox['feeds']['links'][$key]['type'] = "application/{$key}+xml";
+                $toolbox['feeds']['links'][$key]['class'] = 'feedlink';
+            }
+        }
+        foreach ( [ 'contributions', 'log', 'blockip', 'emailuser',
+            'userrights'] as $special
+        ) {
+            if ( isset( $this->data['nav_urls'][$special] ) && $this->data['nav_urls'][$special] ) {
+                $toolbox[$special] = $this->data['nav_urls'][$special];
+                $toolbox[$special]['id'] = "t-$special";
+            }
         }
 
         return $toolbox;
