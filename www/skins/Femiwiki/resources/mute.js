@@ -18,7 +18,7 @@
   );
 
   function _initUI() {
-    $('#footer-places').append($muteLinkEl);
+    $('#p-personal').append($muteLinkEl);
     $(document.body).append($editorEl);
 
     // Event handlers
@@ -95,4 +95,3 @@
     shouldMute: shouldMute
   };
 })();
-
