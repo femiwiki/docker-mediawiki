@@ -22,10 +22,49 @@ var _FW = {
 
 
 $(function () {
+  function menuResize(divId){
+    var containerWidth = parseFloat($('#'+divId).css('width'))
+      -parseFloat($('#'+divId).css('padding-left'))
+      -parseFloat($('#'+divId).css('padding-right')),
+      itemPadding
+        =parseFloat($('#'+divId+' > div').css('padding-left'))
+        +parseFloat($('#'+divId+' > div').css('padding-right')),
+      itemMargin
+        =parseFloat($('#'+divId+' > div').css('margin-left'))
+        +parseFloat($('#'+divId+' > div').css('margin-right')),
+      itemActualMinWidth = 
+        parseFloat($('#'+divId+' > div').css('min-width'))
+        +itemPadding+itemMargin,
+      itemLength = $('#'+divId+' > div').filter(function() {
+          return $(this).css('display') !== 'none';
+      }).length,
+      horizontalCapacity = Math.min(Math.floor(containerWidth / itemActualMinWidth),itemLength);
+
+    $('#'+divId+' > div').css("width",Math.floor(containerWidth/horizontalCapacity-itemPadding-itemMargin));
+  }
+
+  var searchInput = $('#searchInput'),
+   searchClearButton = $('#searchClearButton');
+  searchInput.on("input", function(){
+    searchClearButton.toggle(!!this.value);
+  });
+  searchClearButton.click(function () {
+    searchInput.val("").trigger('input').focus();
+  });
+
   $('#fw-menu-toggle').click(function () {
     $('#fw-menu').toggle();
+    menuResize('fw-menu');
     $('#fw-menu-toggle .badge')
       .removeClass('active')
+  });
+  $('#p-links-toggle').click(function () {
+    $('#p-actions-and-toolbox').toggle();
+    menuResize('p-actions-and-toolbox');
+  });
+  $(window).resize(function() {
+    menuResize('fw-menu');
+    menuResize('p-actions-and-toolbox')
   });
 
   // Notification badge
@@ -40,43 +79,6 @@ $(function () {
 
   $('#pt-notifications-alert a').text('알림: ' + alerts);
   $('#pt-notifications-message a').text('메시지: ' + messages);
-
-
-  // Add links
-  var $firstHeading = $('.firstHeading');
-
-  //// Add link to history to header and footer
-  var $linkToHistory = $('#ca-history a');
-  if ($linkToHistory.length) {
-    var $lastmod = $('#footer-info-lastmod');
-    if ($lastmod.length) {
-      $lastmod.html('<a href="' + $linkToHistory.attr('href') + '">' + $lastmod.text() + '</a>');
-      $firstHeading.after('<div class="lastmod">' + $lastmod.html() + '</div>');
-    }
-  }
-
-  //// Add edit and discussion menus to header and footer
-  var $editSection = $('<span class="mw-editsection"></span>').appendTo($firstHeading);
-  var $footerMenu = $('#fw-footer-menu');
-
-  var $veEdit = $('#ca-ve-edit');
-  if ($veEdit.length) {
-    $editSection.append($veEdit.html());
-    $footerMenu.append('<li>' + $veEdit.html() + '</li>')
-  }
-  var $edit = $('#ca-edit');
-  if ($edit.length) {
-    $editSection.append($edit.html());
-    $footerMenu.append('<li>' + $edit.html() + '</li>')
-  }
-
-  //// Add namespaces to footer
-  var $namespaces = $('#p-namespaces ul li');
-  $namespaces.each(function () {
-    $footerMenu.append(this);
-  });
-  // Change label of first namespace
-  $namespaces[0].firstChild.innerHTML = '문서';
 
   // Move fw-catlinks
   var $catlinks = $('.fw-catlinks');
