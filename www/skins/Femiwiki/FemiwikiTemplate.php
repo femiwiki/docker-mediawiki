@@ -56,16 +56,31 @@ class FemiwikiTemplate extends BaseTemplate
                 <?php
                 // User profile links
                 echo $this->getUserLinks();
-
                 $this->renderPortals( $this->data['sidebar'] );
                 ?>
             </div>
 
             <?php
+
             echo Html::openElement(
                 'div',
                 array('id' => 'p-navigation-and-watch')
             );
+            if ($this->data['sitenotice']) {
+                echo Html::rawElement(
+                    'div',
+                    array('id' => 'siteNotice'),
+                    $this->get('sitenotice')
+                );
+            }
+            if ($this->data['newtalk']) {
+                echo Html::rawElement(
+                    'div',
+                    array('class' => 'usermessage'),
+                    $this->get('newtalk')
+                );
+            }
+            //echo $this->getIndicators();
             echo $this->getPortlet(array(
                 'id' => 'p-namespaces',
                 'headerMessage' => 'namespaces',
@@ -77,22 +92,6 @@ class FemiwikiTemplate extends BaseTemplate
 
             <div id="content" class="mw-body" role="main">
                 <?php
-                if ($this->data['sitenotice']) {
-                    echo Html::rawElement(
-                        'div',
-                        array('id' => 'siteNotice'),
-                        $this->get('sitenotice')
-                    );
-                }
-                if ($this->data['newtalk']) {
-                    echo Html::rawElement(
-                        'div',
-                        array('class' => 'usermessage'),
-                        $this->get('newtalk')
-                    );
-                }
-                //echo $this->getIndicators();
-
                 echo Html::openElement(
                     'div',
                     array('id' => 'p-header')
