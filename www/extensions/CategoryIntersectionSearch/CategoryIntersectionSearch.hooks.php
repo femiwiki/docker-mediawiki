@@ -10,8 +10,13 @@ class CategoryIntersectionSearchHooks {
 	 */
 
 	public static function onSpecialSearchResultsPrepend( $specialSearch, $output, $term ) {
+		if($term === null || $term === '')
+			return true;
+		
 		$title = Title::newFromText('category:'.$term);
-		if($title->exists()) {
+		if($title === null)
+			return true;
+		else if($title->exists()) {
 			$output->redirect( $title->getFullURL() );
 			return false;
 		}
@@ -25,6 +30,7 @@ class CategoryIntersectionSearchHooks {
 			}
 			$url = Title::newFromText('Special:CategoryIntersectionSearch/'.$par)->getFullURL();
 			$output->redirect( $url );
+			return false;
 		}
 		return true;
 	}

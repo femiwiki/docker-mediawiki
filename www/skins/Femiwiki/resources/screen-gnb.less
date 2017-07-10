@@ -168,6 +168,20 @@
         border: 1px solid #ACA6E4;
         padding: 0 0.5rem;
       }
+
+      #searchInput::-ms-clear {
+          display: none;
+      }
+
+      #searchClearButton {
+        display: none;
+        position: absolute;
+        top:0;
+        right:0;
+        background-color: transparent;
+        color: black;
+        margin: 0 0.35rem;
+      }
     }
   }
 }
@@ -177,12 +191,12 @@
   margin: 0.6rem auto 0;
   padding: 0.85rem;
   max-width: 48.7rem;
-
   border-bottom: 1px solid #aca6e4;
+  direction: rtl;
 
   .mw-portlet,
   .portal {
-    width: 8.8rem;
+    min-width: 8.8rem;
     margin: 0.6rem 0.8rem 0.6rem 0;
     display: inline-block;
     vertical-align: top;
@@ -210,7 +224,6 @@
   }
 
   // Hide less-frequently used links
-  #p-namespaces,
   #ca-addsection {
     display: none;
   }
