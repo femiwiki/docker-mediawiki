@@ -121,21 +121,161 @@ button {
   border: 2px solid #aca8e0;
 }
 
+#p-navigation-and-watch {
+  max-width: 50rem;
+  padding: 0 1.3rem;
+  margin: 2.3rem auto 0.5rem;
+  overflow:hidden;
+  clear:both;
+  font-size:0.75rem;
+
+  h3 {
+    display: none;
+  }
+
+  div, ul, li {
+    margin: 0;
+    display: block;
+    overflow:hidden;
+  }
+
+  #p-namespaces {
+    float:left;
+    margin-right: 0.5rem;
+    ul {
+      float:left;
+      li {
+        display: block;
+        float:left;
+      }
+      li.selected {
+        display: none;
+      }
+      li > a:after {
+        content:" 보기";
+      }
+    }
+  }
+
+  #ca-watch, #p-watch {
+    float:left;
+  }
+}
+
+#content #p-header {
+
+  #p-title-and-tb{
+
+    #p-actions-and-toolbox {
+      display: none;
+      clear:right;
+      text-align: right;
+      overflow:hidden;
+      border-bottom: 1px solid #aca6e4;
+
+      #p-actions, #p-page-tb, #p-share-tb, #p-site-tb {
+        float:right;
+        width: 8.8rem;
+        margin: 0.6rem 0.8rem 0.6rem 0;
+        display: inline-block;
+        vertical-align: top;
+        text-align: left;
+        h3 {
+          margin:0;
+          font-weight: normal;
+          font-size: 1rem;
+          border-bottom: 1px solid #b9b5d9;
+          margin-bottom: 0.4rem;
+        }
+
+        ul {
+          padding: 0;
+          margin: 0;
+        }
+
+        li {
+          list-style-type: none;
+          margin: 0;
+        }
+
+        a {
+          display: block;
+        }
+      }
+
+      div + div {
+        margin-right:1em;
+      }
+    }
+
+    h1.firstHeading {
+      font-size: 1.714rem;
+      margin-bottom: 0;
+      display: inline-block;
+      margin-top: 0;
+    }
+    #p-links-toggle {
+      background-color: transparent;
+      color: #252525;
+      float:right;
+      padding: .4rem;
+    }
+  }
+  #lastmod-and-views {
+    font-size:0.75rem;
+    overflow:hidden;
+    clear:both;
+
+    #p-views {
+      h3 {
+        display: none;
+      }
+
+      ul {
+        padding: 0;
+        margin: 0;
+        li {
+          margin: 0;
+          display: block;
+        }
+        li.selected a {
+          font-weight: bold;
+        }
+      }
+
+      li#ca-view.selected {
+        display: none;
+      }
+    }
+
+
+    #p-views {
+      float:right;
+      li{
+        float:left;
+      }
+      li + li {
+        margin-left:1em;
+      }
+    }
+    #lastmod {
+      font-size:0.8rem;
+    }
+  }
+}
+
 // Content
 #content {
   position: relative;
 
   padding: 0 1.3rem;
   max-width: 50rem;
-  margin: 1.6rem auto 3.2rem;
+  margin: 0 auto;
 
   .mw-indicators {
     float: right;
   }
 
-  #mw-indicator-mw-helplink {
-    display: none;
-  }
 
   #mw-notification-area {
     width: auto;
@@ -152,10 +292,6 @@ button {
     }
   }
 
-  .lastmod {
-    font-size: 0.8rem;
-  }
-
   // Headings
   h1, h2, h3, h4, h5, h6 {
     position: relative;
@@ -164,10 +300,6 @@ button {
     border-bottom: 0;
     font-weight: normal;
     color: #252525;
-  }
-  h1.firstHeading {
-    font-size: 1.714rem;
-    margin-bottom: 0;
   }
   h2 {
     font-size: 1.429rem;
@@ -192,6 +324,9 @@ button {
   }
 
   // Paragraph
+  #mw-content-text {
+    clear:both;
+  }
   #mw-content-text > p:first-child {
     margin-top: 2.8rem;
   }
@@ -465,12 +600,18 @@ button {
     display: none;
   }
 
+  // Break very long mathjax expression
+  .mathjax-wrapper {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   // Hide default category and show femiwiki category instead
   #catlinks {
     display: none;
   }
   .fw-catlinks {
-    margin: 3.2rem 0;
+    margin: 4rem 0 0;
     padding: 0;
     border-width: 0;
     background-color: transparent;
@@ -534,7 +675,7 @@ body.ns-3 {
   padding: 0.4rem 1.3rem 0;
 
   max-width: 50rem;
-  margin: 1.6rem auto 3.2rem;
+  margin: 0 auto 3.2rem;
 
   ul {
     margin: 0;
@@ -745,6 +886,9 @@ html.ve-active {
 
     .nav-bar,
     .mw-indicators,
+    #p-navigation-and-watch,
+    #p-title-and-views,
+    #lastmod-and-tb,
     #contentSub,
     .mw-newarticletext,
     .mw-warning-with-logexcerpt,

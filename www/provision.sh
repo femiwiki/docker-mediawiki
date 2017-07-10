@@ -44,6 +44,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf VisualEditor-REL1_27-9da5996.tar.gz -C /var/www/femiwiki.com/extensions
     rm VisualEditor-REL1_27-9da5996.tar.gz
 
+    ## TemplateData
+    wget -nv https://extdist.wmflabs.org/dist/extensions/TemplateData-REL1_27-7f21111.tar.gz
+    sudo tar -xzf TemplateData-REL1_27-7f21111.tar.gz -C /var/www/femiwiki.com/extensions
+    rm TemplateData-REL1_27-7f21111.tar.gz
+
     ## Echo
     wget -nv https://extdist.wmflabs.org/dist/extensions/Echo-REL1_27-b87fa2f.tar.gz
     sudo tar -xzf Echo-REL1_27-b87fa2f.tar.gz -C /var/www/femiwiki.com/extensions
@@ -154,7 +159,7 @@ then
     sudo cp /vagrant/www/naver09b95fd90c3231a5a37f42d39222c217.html /var/www/femiwiki.com/
     sudo cp /vagrant/www/favicon.ico /var/www/femiwiki.com/
     sudo cp -r /vagrant/www/extensions/FacetedCategory /var/www/femiwiki.com/extensions/
-    sudo cp -r /vagrant/www/extensions/UncategorizedCategoryTree /var/www/femiwiki.com/extensions/
+    sudo cp -r /vagrant/www/extensions/ExtendedSpecialPagesForFemiwiki /var/www/femiwiki.com/extensions/
     sudo cp -r /vagrant/www/extensions/CategoryIntersectionSearch /var/www/femiwiki.com/extensions/
 else
     sudo ln -sf /vagrant/www/robots.txt /var/www/femiwiki.com/robots.txt
@@ -163,7 +168,7 @@ else
     sudo ln -sf /vagrant/www/naver09b95fd90c3231a5a37f42d39222c217.html /var/www/femiwiki.com/naver09b95fd90c3231a5a37f42d39222c217.html
     sudo ln -sf /vagrant/www/favicon.ico /var/www/femiwiki.com/favicon.ico
     sudo ln -sf /vagrant/www/extensions/FacetedCategory /var/www/femiwiki.com/extensions/FacetedCategory
-    sudo ln -sf /vagrant/www/extensions/UncategorizedCategoryTree /var/www/femiwiki.com/extensions/UncategorizedCategoryTree
+    sudo ln -sf /vagrant/www/extensions/ExtendedSpecialPagesForFemiwiki /var/www/femiwiki.com/extensions/ExtendedSpecialPagesForFemiwiki
     sudo ln -sf /vagrant/www/extensions/CategoryIntersectionSearch /var/www/femiwiki.com/extensions/CategoryIntersectionSearch
 fi
 

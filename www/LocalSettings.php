@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170623_0';
+$wgStyleVersion = '20170710_0';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -188,6 +188,9 @@ $wgGroupPermissions['bureaucrat']['edit'] = true;
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
 
+# Allow display titles not only to titles that normalize to the same canonical DB key as the real page title.
+$wgRestrictDisplayTitle = false;
+
 # Open external links in new tab
 # $wgExternalLinkTarget = '_blank';
 # Implemented using JS in order to open links starts with https://femiwiki.com on the current window.
@@ -226,6 +229,8 @@ $wgVisualEditorAvailableNamespaces = array(
     "_merge_strategy" => "array_plus",
 );
 
+require_once "$IP/extensions/TemplateData/TemplateData.php";
+
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
@@ -238,6 +243,11 @@ $wgVirtualRestConfig['modules']['parsoid'] = array(
 $wgSessionsInObjectCache = true;
 $wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;
 $wgVisualEditorSupportedSkins[] = 'femiwiki';
+
+$wgNamespaceAliases = array(
+        '도' => NS_HELP,
+        '페' => NS_PROJECT
+    );
 
 ## Echo
 require_once "$IP/extensions/Echo/Echo.php";
@@ -299,9 +309,10 @@ require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 ## FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
-## FacetedCategory --it needs the CategoryTree
-wfLoadExtension( 'UncategorizedCategoryTree' );
+## ExtendedSpecialPagesForFemiwiki --it needs the CategoryTree
+wfLoadExtension( 'ExtendedSpecialPagesForFemiwiki' );
 $wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
+$wgSpecialPages['Whatlinkshere'] = [SpecialOrderedWhatlinkshere::class];
 
 ## IntersectionSearch
 wfLoadExtension( 'CategoryIntersectionSearch' );

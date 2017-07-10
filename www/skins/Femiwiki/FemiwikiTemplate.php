@@ -43,7 +43,7 @@ class FemiwikiTemplate extends BaseTemplate
 
                     <ul id="site-navigation">
                         <li class="changes"><a href="/w/Special:RecentChanges" title="바뀐글"><span class="text">바뀐글</span></a></li>
-                        <li class="random"><a href="/w/Special:RandomPage" title="임의글"><span class="text">임의글</span></a></li>
+                        <li class="random"><a href="/w/특:임의문서/일반" title="임의글"><span class="text">임의글</span></a></li>
                     </ul>
 
                     <?php
@@ -57,13 +57,23 @@ class FemiwikiTemplate extends BaseTemplate
                 // User profile links
                 echo $this->getUserLinks();
 
-                // Page editing and tools
-                echo $this->getPageLinks();
-
-                // Toolbox
-                echo $this->renderPortal('tb', $this->getToolbox(), 'toolbox', 'SkinTemplateToolboxEnd');
+                $this->renderPortals( $this->data['sidebar'] );
                 ?>
             </div>
+
+            <?php
+            echo Html::openElement(
+                'div',
+                array('id' => 'p-navigation-and-watch')
+            );
+            echo $this->getPortlet(array(
+                'id' => 'p-namespaces',
+                'headerMessage' => 'namespaces',
+                'content' => $this->data['content_navigation']['namespaces'],
+            ));
+            echo $this->getWatch();
+            echo Html::closeElement('div');
+            ?>
 
             <div id="content" class="mw-body" role="main">
                 <?php
@@ -81,7 +91,18 @@ class FemiwikiTemplate extends BaseTemplate
                         $this->get('newtalk')
                     );
                 }
-                echo $this->getIndicators();
+                //echo $this->getIndicators();
+
+                echo Html::openElement(
+                    'div',
+                    array('id' => 'p-header')
+                );
+
+
+                echo Html::openElement(
+                    'div',
+                    array('id' => 'p-title-and-tb')
+                );
                 echo Html::rawElement(
                     'h1',
                     array(
@@ -90,12 +111,50 @@ class FemiwikiTemplate extends BaseTemplate
                     ),
                     $this->get('title')
                 );
+                ?>
+                <button id='p-links-toggle'>
+                    <span id='p-links-toggle-text'>•••</span>
+                </button>
+                <?php
+                echo Html::openElement(
+                    'div',
+                    array('id' => 'p-actions-and-toolbox')
+                );
+                echo $this->renderPortal('page-tb', $this->getToolbox(), 'toolbox');
+                if (isset( $this->data['articleid']) && $this->data['articleid'] != 0 )
+                    echo $this->renderPortal('share-tb', $this->getShareToolbox(), '공유하기', 'SkinTemplateToolboxEnd');
+                echo $this->getPortlet(array(
+                    'id' => 'p-actions',
+                    'headerMessage' => 'actions',
+                    'content' => $this->data['content_navigation']['actions'],
+                ));
+
+                echo Html::closeElement('div');
+                echo Html::closeElement('div');
+                echo Html::openElement(
+                    'div',
+                    array('id' => 'lastmod-and-views')
+                );
 
                 echo Html::rawElement(
-                    'div',
-                    array('id' => 'siteSub'),
-                    $this->getMsg('tagline')->parse()
-                );
+                        'a',
+                        array(
+                            'id' => 'lastmod',
+                            'href' => '/index.php?title='.$this->getSkin()->getRelevantTitle().'&action=history'
+                        ),
+                        $this->get('lastmod')
+                        );
+
+
+                unset( $this->data['content_navigation']['views']['history'] );
+                echo $this->getPortlet(array(
+                    'id' => 'p-views',
+                    'headerMessage' => 'views',
+                    'content' => $this->data['content_navigation']['views'],
+                ));
+                
+                echo Html::closeElement('div');
+                echo Html::closeElement('div');
                 ?>
 
                 <div class="mw-body-content" id="bodyContent">
@@ -130,6 +189,11 @@ class FemiwikiTemplate extends BaseTemplate
                     ?>
                 </div>
             </div>
+
+            <?php
+            $this->set( 'reportinfringement', $this->getSkin()->footerLink( 'reportinfringement', 'reportinfringementpage' ) );
+            $this->data['footerlinks']['places'][] = 'reportinfringement';
+            ?>
 
             <div id="mw-footer">
                 <div id="mw-footer-bar"></div>
@@ -166,6 +230,7 @@ class FemiwikiTemplate extends BaseTemplate
                         )
                     );
                     foreach ($links as $key) {
+                        if($key === 'lastmod') continue;
                         echo Html::rawElement(
                             'li',
                             array(
@@ -262,6 +327,25 @@ class FemiwikiTemplate extends BaseTemplate
         return $html;
     }
 
+    private function getWatch() {
+        $nav = $this->data['content_navigation'];
+        $mode = $this->getSkin()->getUser()->isWatched( $this->getSkin()->getRelevantTitle() )
+            ? 'unwatch'
+            : 'watch';
+        if ( isset( $nav['actions'][$mode] ) ) {
+            $nav['views'][$mode] = $nav['actions'][$mode];
+            $nav['views'][$mode]['class'] = rtrim( 'icon ' . $nav['views'][$mode]['class'], ' ' );
+            $nav['views'][$mode]['primary'] = true;
+            unset( $this->data['content_navigation']['actions'][$mode] );
+        }
+        $item = $nav['actions'][$mode];
+        if($item === null) return;
+        $attrs = [];
+        $attrs['class'] = 'mw-portlet';
+        $attrs['id'] = 'ca-watch';
+        return Html::rawElement( 'span', $attrs, $this->makeLink( $mode, $item, $options ) );
+    }
+
     /**
      * Generates the search form
      * @return string html
@@ -284,40 +368,104 @@ class FemiwikiTemplate extends BaseTemplate
             Html::label($this->getMsg('search')->escaped(), 'searchInput')
         );
         $html .= $this->makeSearchInput(array('id' => 'searchInput'));
+        $html .= Html::rawelement(
+            'button',
+            [
+                'id'=>'searchClearButton',
+                'type' => 'button'
+            ],
+            ×
+        );
         $html .= $this->makeSearchButton('go', array('id' => 'searchGoButton', 'class' => 'searchButton'));
         $html .= Html::closeElement('form');
 
         return $html;
     }
 
-    /**
-     * Generates page-related tools/links
-     * @return string html
-     */
-    private function getPageLinks()
-    {
-        $html = $this->getPortlet(array(
-            'id' => 'p-namespaces',
-            'headerMessage' => 'namespaces',
-            'content' => $this->data['content_navigation']['namespaces'],
-        ));
-        $html .= $this->getPortlet(array(
-            'id' => 'p-variants',
-            'headerMessage' => 'variants',
-            'content' => $this->data['content_navigation']['variants'],
-        ));
-        $html .= $this->getPortlet(array(
-            'id' => 'p-views',
-            'headerMessage' => 'views',
-            'content' => $this->data['content_navigation']['views'],
-        ));
-        $html .= $this->getPortlet(array(
-            'id' => 'p-actions',
-            'headerMessage' => 'actions',
-            'content' => $this->data['content_navigation']['actions'],
-        ));
+    function makeSearchInput( $attrs = [] ) {
+        $realAttrs = [
+            'type' => 'search',
+            'name' => 'search',
+            'placeholder' => wfMessage( 'searchsuggest-search' )->text(),
+            'value' => $this->get( 'search', '' ),
+        ];
+        //if($realAttrs[value]==null) $realAttrs[value] = str_replace( '_', ' ', $this->get('titleprefixeddbkey'));
+        $realAttrs = array_merge( $realAttrs, Linker::tooltipAndAccesskeyAttribs( 'search' ), $attrs );
+        return Html::element( 'input', $realAttrs );
+    }
 
-        return $html;
+    function getToolbox() {
+        $toolbox = [];
+
+        if ( isset( $this->data['nav_urls']['whatlinkshere'] )
+            && $this->data['nav_urls']['whatlinkshere']
+        ) {
+            $toolbox['whatlinkshere'] = $this->data['nav_urls']['whatlinkshere'];
+            $toolbox['whatlinkshere']['id'] = 't-whatlinkshere';
+        }
+        if ( isset( $this->data['nav_urls']['recentchangeslinked'] )
+            && $this->data['nav_urls']['recentchangeslinked']
+        ) {
+            $toolbox['recentchangeslinked'] = $this->data['nav_urls']['recentchangeslinked'];
+            $toolbox['recentchangeslinked']['msg'] = 'recentchangeslinked-toolbox';
+            $toolbox['recentchangeslinked']['id'] = 't-recentchangeslinked';
+        }
+        if ( isset( $this->data['nav_urls']['print'] ) && $this->data['nav_urls']['print'] ) {
+            $toolbox['print'] = $this->data['nav_urls']['print'];
+            $toolbox['print']['id'] = 't-print';
+            $toolbox['print']['rel'] = 'alternate';
+            $toolbox['print']['msg'] = 'printableversion';
+        }
+        if ( isset( $this->data['nav_urls']['permalink'] ) && $this->data['nav_urls']['permalink'] ) {
+            $toolbox['permalink'] = $this->data['nav_urls']['permalink'];
+            if ( $toolbox['permalink']['href'] === '' ) {
+                unset( $toolbox['permalink']['href'] );
+                $toolbox['ispermalink']['tooltiponly'] = true;
+                $toolbox['ispermalink']['id'] = 't-ispermalink';
+                $toolbox['ispermalink']['msg'] = 'permalink';
+            } else {
+                $toolbox['permalink']['id'] = 't-permalink';
+            }
+        }
+        if ( isset( $this->data['nav_urls']['info'] ) && $this->data['nav_urls']['info'] ) {
+            $toolbox['info'] = $this->data['nav_urls']['info'];
+            $toolbox['info']['id'] = 't-info';
+        }
+        if ( isset( $this->data['feeds'] ) && $this->data['feeds'] ) {
+            $toolbox['feeds']['id'] = 'feedlinks';
+            $toolbox['feeds']['links'] = [];
+            foreach ( $this->data['feeds'] as $key => $feed ) {
+                $toolbox['feeds']['links'][$key] = $feed;
+                $toolbox['feeds']['links'][$key]['id'] = "feed-$key";
+                $toolbox['feeds']['links'][$key]['rel'] = 'alternate';
+                $toolbox['feeds']['links'][$key]['type'] = "application/{$key}+xml";
+                $toolbox['feeds']['links'][$key]['class'] = 'feedlink';
+            }
+        }
+        foreach ( [ 'contributions', 'log', 'blockip', 'emailuser',
+            'userrights'] as $special
+        ) {
+            if ( isset( $this->data['nav_urls'][$special] ) && $this->data['nav_urls'][$special] ) {
+                $toolbox[$special] = $this->data['nav_urls'][$special];
+                $toolbox[$special]['id'] = "t-$special";
+            }
+        }
+
+        return $toolbox;
+    }
+
+    function getShareToolbox() {
+        $toolbox = [];
+
+        $toolbox['twitter'] = [];
+        $toolbox['twitter']['id'] = 'twitter';
+        global $wgServer;
+        $link = $wgServer.'/index.php?curid='.$this->get('articleid').'?utm_source=twitter&utm_medium=tweet';
+        $tweet = $this->get('title').' '.$link.' #'.$this->get('sitename');
+        $toolbox['twitter']['href'] = 'https://twitter.com/intent/tweet?text='.urlencode($tweet);
+        $toolbox['twitter']['text'] = '트위터';
+
+        return $toolbox;
     }
 
     /**
@@ -340,6 +488,25 @@ class FemiwikiTemplate extends BaseTemplate
     {
         echo '<div class="visualClear"></div>';
     }
+
+      /**
+   * Render a series of portals
+   *
+   * @param array $portals
+   */
+  protected function renderPortals( $portals ) {
+    // Render portals
+    foreach ( $portals as $name => $content ) {
+        if ( $content === false ) {
+            continue;
+        }
+
+        // Numeric strings gets an integer when set as key, cast back - T73639
+        $name = (string)$name;
+
+        $this->renderPortal( $name, $content );
+    }
+  }
 
     /**
      * @param string $name
@@ -385,7 +552,6 @@ class FemiwikiTemplate extends BaseTemplate
                 $this->renderAfterPortlet($name);
                 ?>
             </div>
-        </div>
-        <?php
+        </div><?php
     }
 }
