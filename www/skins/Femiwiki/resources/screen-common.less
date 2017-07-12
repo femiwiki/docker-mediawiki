@@ -640,12 +640,9 @@ button {
       display: inline;
     }
 
-    li::after {
+    li:not(:first-child):before {
       content: "|";
       margin: 0 0.3rem;
-    }
-    li:last-child::after {
-      content: "";
     }
 
     .fw-catlinks-toggle {
