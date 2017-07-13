@@ -455,12 +455,18 @@ class FemiwikiTemplate extends BaseTemplate
 
     function getShareToolbox() {
         $toolbox = [];
+        global $wgServer;
+        $canonicalLink = $wgServer.'/index.php?curid='.$this->get('articleid');
+
+        $toolbox['copy'] = [];
+        $toolbox['copy']['id'] = 'share-copy';
+        $toolbox['copy']['href'] = $canonicalLink.'?&utm_campaign=share';
+        $toolbox['copy']['text'] = 'URL 복사';
 
         $toolbox['twitter'] = [];
-        $toolbox['twitter']['id'] = 'twitter';
+        $toolbox['twitter']['id'] = 'share-twitter';
         $toolbox['twitter']['target'] = '_blank';
-        global $wgServer;
-        $link = $wgServer.'/index.php?curid='.$this->get('articleid').'?utm_source=twitter&utm_medium=tweet';
+        $link = $canonicalLink.'?utm_source=twitter&utm_medium=tweet';
         $tweet = $this->get('title').' '.$link.' #'.$this->get('sitename');
         $toolbox['twitter']['href'] = 'https://twitter.com/intent/tweet?text='.urlencode($tweet);
         $toolbox['twitter']['text'] = '트위터';
