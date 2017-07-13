@@ -460,13 +460,13 @@ class FemiwikiTemplate extends BaseTemplate
 
         $toolbox['copy'] = [];
         $toolbox['copy']['id'] = 'share-copy';
-        $toolbox['copy']['href'] = $canonicalLink.'?&utm_campaign=share';
+        $toolbox['copy']['href'] = $canonicalLink.'?utm_campaign=share';
         $toolbox['copy']['text'] = 'URL 복사';
 
         $toolbox['twitter'] = [];
         $toolbox['twitter']['id'] = 'share-twitter';
         $toolbox['twitter']['target'] = '_blank';
-        $link = $canonicalLink.'?utm_source=twitter&utm_medium=tweet';
+        $link = $canonicalLink.'&utm_source=twitter&utm_medium=tweet';
         $tweet = $this->get('title').' '.$link.' #'.$this->get('sitename');
         $toolbox['twitter']['href'] = 'https://twitter.com/intent/tweet?text='.urlencode($tweet);
         $toolbox['twitter']['text'] = '트위터';
