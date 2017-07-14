@@ -365,6 +365,7 @@ button {
 
   // Quote
   blockquote {
+  	display: inline-block;
     margin: 1.6rem 1rem 1.6rem 1.2rem;
     position: relative;
   }
@@ -381,6 +382,20 @@ button {
     position: absolute;
     left: -1.3rem;
     top: -1rem;
+  }
+  blockquote::after {
+    content: "\201D"; /*Unicode for Right Double Quote*/
+
+    /*Font*/
+    font-family: Georgia, serif;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #999;
+
+    /*Positioning*/
+    position: absolute;
+    right: -1.3rem;
+    bottom: -1rem;
   }
 
   // Links
