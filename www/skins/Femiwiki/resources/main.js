@@ -107,13 +107,15 @@ $(function () {
       if( !directCatTexts[catlinks[i].innerText] )
        catlinks[i].className += ' collapsible' ;
 
+    $('#catlinks li.collapsible').fadeOut();
+    var collapsed = true;
     catlinksToggle.click(function () {
-      $('#catlinks li.collapsible').toggle('fast',function(){
-        if($(this).css('display')==='list-item') $(this).css('display','inline');
-        $(this).toggleClass('hidden');
-        if($(this).css('display')==='list-item') $(this).css('display','inline');
-      });
       $(this).text($(this).text() == "▼" ? "►" : "▼");
+      if(collapsed)
+        $('#catlinks li.collapsible').fadeIn();
+      else
+        $('#catlinks li.collapsible').fadeOut();
+      collapsed = !collapsed;
     });
     $('#mw-normal-catlinks').prepend(catlinksToggle);
   }
