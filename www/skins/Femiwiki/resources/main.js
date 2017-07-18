@@ -96,7 +96,7 @@ $(function () {
   catlinksToggle.text("►");
   catlinksToggle.addClass('fw-catlinks-toggle');
 
-  var catlinks = $('#catlinks li'),
+  var catlinks = $('#mw-normal-catlinks li'),
     directCatAnchors = $('#fw-catlinks li>a'),
     directCatTexts = {};
   for(var i=0,len=directCatAnchors.length;i<len;i++)
