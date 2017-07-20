@@ -456,12 +456,20 @@ class FemiwikiTemplate extends BaseTemplate
     function getShareToolbox() {
         $toolbox = [];
         global $wgServer; //$wgServer = 'https://femiwiki.com';
-        $canonicalLink = $wgServer.'/index.php?curid='.$this->get('articleid').'?utm_campaign=share';
+        $canonicalLink = $wgServer.'/m/'.urlencode($this->get('titleprefixeddbkey')).'?utm_campaign=share';
 
         $toolbox['copy'] = [];
         $toolbox['copy']['id'] = 'share-copy';
         $toolbox['copy']['href'] = self::shortenURL($canonicalLink);
         $toolbox['copy']['text'] = 'URL 복사';
+
+        $toolbox['facebook'] = [];
+        $toolbox['facebook']['id'] = 'share-facebook';
+        $toolbox['facebook']['target'] = '_blank';
+        $link = $this->shortenURL($canonicalLink.'&utm_source=facebook&utm_medium=post');
+        $toolbox['facebook']['href'] = $link;
+        $toolbox['facebook']['text'] = '페이스북';
+
 
         $toolbox['twitter'] = [];
         $toolbox['twitter']['id'] = 'share-twitter';
