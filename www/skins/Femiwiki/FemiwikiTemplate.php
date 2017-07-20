@@ -456,7 +456,7 @@ class FemiwikiTemplate extends BaseTemplate
     function getShareToolbox() {
         $toolbox = [];
         global $wgServer; //$wgServer = 'https://femiwiki.com';
-        $canonicalLink = $wgServer.'/m/'.urlencode($this->get('titleprefixeddbkey')).'?utm_campaign=share';
+        $canonicalLink = $wgServer.'/w/'.urlencode($this->get('titleprefixeddbkey')).'?utm_campaign=share';
 
         $toolbox['copy'] = [];
         $toolbox['copy']['id'] = 'share-copy';
