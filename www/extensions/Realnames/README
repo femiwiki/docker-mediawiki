@@ -1,0 +1,12 @@
+Detailed information at: http://www.mediawiki.org/wiki/Extension:Realnames
+
+== Installation ==
+
+To install this extension, add the following to LocalSettings.php:
+require_once("$IP/extensions/Realnames/Realnames.php");
+#add configuration parameters here
+
+== Support ==
+
+It's hoped that you will enjoy the extension, and if you do, consider purchasing it as a pay-what-you-want scheme on the author's website ( http://olivierbeaton.com/mediawiki#realnames ).
+If you find a bug or wish to make a feature request, please contact the author by email olivier.beaton@gmail.com. The talk page is also monitored. The author is often in the #mediawiki irc channel under the nick Finlay.

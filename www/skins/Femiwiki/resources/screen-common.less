@@ -108,11 +108,6 @@ button {
   cursor: pointer;
 }
 
-#content .mw-ui-button.mw-ui-primary,
-#content .oo-ui-buttonElement-button {
-  color: #FFFFFF;
-}
-
 #p-navigation-and-watch {
   max-width: 50rem;
   padding: 0 1.3rem;
@@ -134,7 +129,7 @@ button {
   #siteNotice {
     font-size: 0.8rem;
     color: #000;
-    margin: 0 0 4rem;
+    margin: 0 0 2.3rem;
     padding: 0rem 0.8rem;
     border: 2px solid #aca8e0;
 
@@ -166,106 +161,9 @@ button {
   }
 }
 
-#content #p-header {
-
-  #p-title-and-tb{
-
-    #p-actions-and-toolbox {
-      display: none;
-      clear:right;
-      text-align: right;
-      overflow:hidden;
-      border-bottom: 1px solid #aca6e4;
-
-      #p-actions, #p-page-tb, #p-share-tb, #p-site-tb {
-        float:right;
-        min-width: 8.8rem;
-        margin: 0.6rem 0.8rem 0.6rem 0;
-        display: inline-block;
-        vertical-align: top;
-        text-align: left;
-        h3 {
-          margin:0;
-          font-weight: normal;
-          font-size: 1rem;
-          border-bottom: 1px solid #b9b5d9;
-          margin-bottom: 0.4rem;
-        }
-
-        ul {
-          padding: 0;
-          margin: 0;
-        }
-
-        li {
-          list-style-type: none;
-          margin: 0;
-        }
-
-        a {
-          display: block;
-        }
-      }
-
-      div + div {
-        margin-right:1em;
-      }
-    }
-
-    h1.firstHeading {
-      font-size: 1.714rem;
-      margin-bottom: 0;
-      display: inline-block;
-      margin-top: 0;
-    }
-    #p-links-toggle {
-      background-color: transparent;
-      color: #252525;
-      float:right;
-      padding: .4rem;
-    }
-  }
-  #lastmod-and-views {
-    font-size:0.75rem;
-    overflow:hidden;
-    clear:both;
-
-    #p-views {
-      h3 {
-        display: none;
-      }
-
-      ul {
-        padding: 0;
-        margin: 0;
-        li {
-          margin: 0;
-          display: block;
-        }
-        li.selected a {
-          font-weight: bold;
-        }
-      }
-
-      li#ca-view.selected {
-        display: none;
-      }
-    }
-
-
-    #p-views {
-      float:right;
-      li{
-        float:left;
-      }
-      li + li {
-        margin-left:1em;
-      }
-    }
-    #lastmod {
-      font-size:0.8rem;
-    }
-  }
+#content .mw-ui-button.mw-ui-primary,
+#content .oo-ui-buttonElement-button {
+  color: #FFFFFF;
 }
 
 // Content
@@ -280,7 +178,6 @@ button {
     float: right;
   }
 
-
   #mw-notification-area {
     width: auto;
     max-width: 16rem;
@@ -293,6 +190,106 @@ button {
     .mw-notification {
       border: solid 1px #b2d236;
       background-color: #dae8b2;
+    }
+  }
+
+  #p-header {
+    #p-title-and-tb{
+      #p-actions-and-toolbox {
+        display: none;
+        clear:right;
+        text-align: right;
+        overflow:hidden;
+        border-bottom: 1px solid #aca6e4;
+
+        #p-actions, #p-page-tb, #p-share-tb, #p-site-tb {
+          float:right;
+          min-width: 8.8rem;
+          margin: 0.6rem 0.8rem 0.6rem 0;
+          display: inline-block;
+          vertical-align: top;
+          text-align: left;
+          h3 {
+            margin:0;
+            font-weight: normal;
+            font-size: 1rem;
+            border-bottom: 1px solid #b9b5d9;
+            margin-bottom: 0.4rem;
+          }
+
+          ul {
+            padding: 0;
+            margin: 0;
+          }
+
+          li {
+            list-style-type: none;
+            margin: 0;
+          }
+
+          a {
+            display: block;
+          }
+        }
+
+        div + div {
+          margin-right:1em;
+        }
+      }
+
+      h1.firstHeading {
+        font-size: 1.714rem;
+        margin-bottom: 0;
+        display: inline-block;
+        margin-top: 0;
+      }
+      #p-links-toggle {
+        background-color: transparent;
+        color: #252525;
+        float:right;
+        padding: .4rem;
+      }
+    }
+    #lastmod-and-views {
+      font-size:0.75rem;
+      overflow:hidden;
+      clear:both;
+
+      #p-views {
+        h3 {
+          display: none;
+        }
+
+        ul {
+          padding: 0;
+          margin: 0;
+          li {
+            margin: 0;
+            display: block;
+          }
+          li.selected a {
+            font-weight: bold;
+          }
+        }
+
+        li#ca-view.selected, li#ca-history {
+          display: none;
+        }
+      }
+
+
+      #p-views {
+        float:right;
+        li{
+          float:left;
+        }
+        li + li {
+          margin-left:1em;
+        }
+      }
+      #lastmod {
+        font-size:0.8rem;
+      }
     }
   }
 
@@ -368,6 +365,7 @@ button {
 
   // Quote
   blockquote {
+    display: inline-block;
     margin: 1.6rem 1rem 1.6rem 1.2rem;
     position: relative;
   }
@@ -384,6 +382,25 @@ button {
     position: absolute;
     left: -1.3rem;
     top: -1rem;
+  }
+  blockquote::after {
+    content: "\201D"; /*Unicode for Right Double Quote*/
+
+    /*Font*/
+    font-family: Georgia, serif;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #999;
+
+    /*Positioning*/
+    position: absolute;
+    right: -1.3rem;
+    bottom: -1rem;
+  }
+
+  // Pre
+  pre {
+    overflow-x:auto;
   }
 
   // Links
@@ -610,12 +627,24 @@ button {
     vertical-align: middle;
   }
 
-  // Hide default category and show femiwiki category instead
-  #catlinks {
+  // CategoryTree
+  .CategoryTreeToggle {
+    float:right;
+    font-size: .7rem;
+    padding: .3rem;
+    color:#797979;
+  }
+  .CategoryTreeEmptyBullet {
     display: none;
   }
+
+  // Hide femiwiki category
   .fw-catlinks {
-    margin: 4rem 0 0;
+    display: none;
+  }
+
+  .catlinks, .fw-catlinks {
+    margin: 2.2rem 0;
     padding: 0;
     border-width: 0;
     background-color: transparent;
@@ -634,12 +663,16 @@ button {
       line-height: inherit;
     }
 
-    li::after {
+    li:not(:first-child):before {
       content: "|";
       margin: 0 0.3rem;
     }
-    li:last-child::after {
-      content: "";
+
+    .fw-catlinks-toggle {
+      float:right;
+      font-size:.7rem;
+      color:#797979;
+      background-color: transparent;
     }
   }
 
@@ -794,6 +827,11 @@ html.ve-active {
     // Remove padding of visual editor
     .ve-ce-documentNode {
       padding: 0;
+    }
+
+    // show femiwiki category
+    .fw-catlinks {
+      display: block;
     }
   }
 
@@ -972,12 +1010,25 @@ html.ve-active {
     }
 
     .nav-bar,
+    #p-navigation-and-watch,
     #mw-footer {
       display: none;
     }
 
     .oo-ui-toolbar-tools {
-      z-index: 1;
+      // z-index: 1;
+    }
+  }
+  html.ve-active, div.flow-board, .oo-ui-window-frame {
+    .oo-ui-popupWidget-popup {
+      min-width: 16rem;
+      min-height: 10rem;
+    }
+    div.oo-ui-menuLayout-menu {
+      width:3rem;
+    }
+    div.oo-ui-menuLayout-content {
+      left:3rem;
     }
   }
 }
