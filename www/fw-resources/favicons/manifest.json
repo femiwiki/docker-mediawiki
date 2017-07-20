@@ -1,5 +1,5 @@
 {
- "name": "App",
+ "name": "페미위키",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",
@@ -37,5 +37,8 @@
    "type": "image\/png",
    "density": "4.0"
   }
- ]
+ ],
+ "display": "standalone",
+ "theme_color": "#aca6e4",
+ "background_color": "#aca6e4"
 }

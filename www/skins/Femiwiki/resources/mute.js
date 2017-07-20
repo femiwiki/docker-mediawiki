@@ -3,7 +3,7 @@
 
   var $muteLinkEl = $('<li id="footer-places-mute"><a href="#">뮤트</a></li>');
   var $editorEl = $(
-    '<div id="muteEditor" style="display: none;">' +
+    '<div id="muteEditor" class="dialog" style="display: none;">' +
     '<form>' +
     '  <textarea id="muteEditor-text" placeholder="감출 키워드를 한 줄에 하나씩 입력하세요."></textarea>' +
     '  <input type="submit" value="저장">' +
