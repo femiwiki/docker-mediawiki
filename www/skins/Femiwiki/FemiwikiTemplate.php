@@ -44,7 +44,7 @@ class FemiwikiTemplate extends BaseTemplate
 
                     <ul id="site-navigation">
                         <li class="changes"><a href="/w/Special:RecentChanges" title="바뀐글"><span class="text">바뀐글</span></a></li>
-                        <li class="random"><a href="/w/특:임의문서/일반" title="임의글"><span class="text">임의글</span></a></li>
+                        <li class="random"><a href="/w/Special:RandomPage" title="임의글"><span class="text">임의글</span></a></li>
                     </ul>
 
                     <?php
