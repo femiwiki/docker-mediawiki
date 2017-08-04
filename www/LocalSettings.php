@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170710_0';
+$wgStyleVersion = '20170723_0';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -141,19 +141,16 @@ define("NS_BBS", 3906);
 define("NS_BBS_TALK", 3907);
 $wgExtraNamespaces[NS_BBS] = "게시판";
 $wgExtraNamespaces[NS_BBS_TALK] = "게시판토론";
-$wgContentNamespaces[] = NS_BBS;
 
 ## BBS (Legacy)
 define("NS_BBSFREE", 3902);
 define("NS_BBSFREE_TALK", 3903);
 $wgExtraNamespaces[NS_BBSFREE] = "자유게시판";
 $wgExtraNamespaces[NS_BBSFREE_TALK] = "자유게시판토론";
-$wgContentNamespaces[] = NS_BBSFREE;
 define("NS_BBSINTRO", 3904);
 define("NS_BBSINTRO_TALK", 3905);
 $wgExtraNamespaces[NS_BBSINTRO] = "가입인사게시판";
 $wgExtraNamespaces[NS_BBSINTRO_TALK] = "가입인사게시판토론";
-$wgContentNamespaces[] = NS_BBSINTRO;
 
 ## Misc. ns settings
 $wgNamespacesWithSubpages[NS_TEMPLATE] = true;
@@ -271,6 +268,10 @@ wfLoadExtension('Thanks');
 require_once "$IP/extensions/Scribunto/Scribunto.php";
 $wgScribuntoDefaultEngine = 'luastandalone';
 
+## Realnames
+require_once("$IP/extensions/Realnames/Realnames.php");
+$wgRealnamesLinkStyle = "femiwiki";
+
 ## Flow
 require_once "$IP/extensions/Flow/Flow.php";
 $wgFlowEditorList = array( 'visualeditor', 'none' );
@@ -302,6 +303,16 @@ $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
+
+## AbuseFilter
+wfLoadExtension( 'AbuseFilter' );
+$wgGroupPermissions['sysop']['abusefilter-modify'] = true;
+$wgGroupPermissions['*']['abusefilter-log-detail'] = true;
+$wgGroupPermissions['*']['abusefilter-view'] = true;
+$wgGroupPermissions['*']['abusefilter-log'] = true;
+$wgGroupPermissions['sysop']['abusefilter-private'] = true;
+$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
+$wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
 ## UserMerge
 wfLoadExtension('UserMerge');
@@ -349,4 +360,3 @@ $wgHTMLTagsAttributes['iframe'] = array('src', 'class', 'style');
 # Misc.
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
 $wgDebugToolbar = ('HOST' != 'femiwiki.com');
-
