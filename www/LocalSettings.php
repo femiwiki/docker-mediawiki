@@ -173,6 +173,18 @@ $wgGroupPermissions['user']['edit'] = true;
 $wgGroupPermissions['seeder']['edit'] = true;
 $wgGroupPermissions['bureaucrat']['edit'] = true;
 
+## Add `restricted-sysop` group
+$wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
+$wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
+$wgGroupPermissions['restricted-sysop']['deletelogentry'] = false;
+$wgGroupPermissions['restricted-sysop']['deleterevision'] = false;
+$wgGroupPermissions['restricted-sysop']['editinterface'] = false;
+$wgGroupPermissions['restricted-sysop']['editusercss'] = false;
+$wgGroupPermissions['restricted-sysop']['edituserjs'] = false;
+$wgGroupPermissions['restricted-sysop']['managechangetags'] = false;
+$wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
+$wgGroupPermissions['restricted-sysop']['unblockself'] = false;
+
 ## But only seeders can edit major namespaces
 //$wgNamespaceProtection[NS_MAIN] = array('edit-main');
 //$wgNamespaceProtection[NS_CATEGORY] = array('edit-main');
