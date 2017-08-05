@@ -1,0 +1,58 @@
+This is the historical changelog for the Realnames extension.
+This extension is pay-what-you want, please consider purchasing it.
+
+  http://olivierbeaton.com/mediawiki#realnames
+
+I always love hearing from my users,
+
+  email olivier.beaton@gmail.com
+
+any comments, issues, suggestions or complaints.
+
+== 0.2 (2011-09-22) ==
+
+features:
+* replaces username in personnal url bar (where you click login top right vector)
+* allows custom namespace detection $wgRealnamesNamespaces
+* adds support for Extension:Configure (undoc at release)
+
+bugfix:
+* i18n links User: namespaces (thanks Nilsy)
+* support for upcoming 1.18 gendered namespaces
+* title handling for pre 1.16 wiki's
+* custom namespace names
+
+testing:
+* trunk 2011-09-22 stable 1.17.0, 1.16.0, 1.15.5
+
+== 0.1.1 (2011-09-17) ==
+
+bugfix:
+* eliminated use of create_function due speed implications (thanks Dantman)
+* changed user caching to realname cache for a smaller memory footprint (thanks Dantman)
+* moved debug handling into class and uses $wgRequest, can expand later for 1.18+ (thanks Dantman)
+* license change to BSD, cc is not recommended for software (says them) (thanks Dantman)
+* fixed author link (backported to 0.1, thanks Dantman)
+
+issues:
+* It may be that this extension is slow on RecentChanges and History pages. If so,
+  I have a solution, but I'd rather not introduce more code if I don't have to.
+  If you experience noticable slowdowns on these pages please let me know at
+  olivier dot beaton at gmail dot com
+
+== 0.1 (2011-09-17) ==
+
+initial tested pages:
+* Special:ListUsers
+* old and new Special:RecentChanges
+* Special:Search of the User: space
+* History of page
+* Revisions list of page
+* Revision view of page
+* Revision Compare
+* Page header + html title (limited)
+* Should integrate into any page where user links are found
+
+issues:
+*Always destructive of User: text, new config in future release?
+*improve bare detection on users with spaces or underscores in names (article titles and html title)
