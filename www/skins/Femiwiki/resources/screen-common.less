@@ -611,11 +611,10 @@ button {
   }
 
   // Hide default category and show femiwiki category instead
-  #catlinks {
+  .fw-catlinks {
     display: none;
   }
-  .fw-catlinks {
-    margin: 4rem 0 0;
+  .catlinks, .fw-catlinks {
     padding: 0;
     border-width: 0;
     background-color: transparent;
@@ -634,12 +633,15 @@ button {
       line-height: inherit;
     }
 
-    li::after {
+    li:not(:first-child):before {
       content: "|";
       margin: 0 0.3rem;
     }
-    li:last-child::after {
-      content: "";
+    .fw-catlinks-toggle {
+      float:right;
+      font-size:.7rem;
+      color:#797979;
+      background-color: transparent;
     }
   }
 
