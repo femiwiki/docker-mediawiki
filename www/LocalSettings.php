@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170710_0';
+$wgStyleVersion = '20170805_0';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -302,6 +302,16 @@ $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
+
+## AbuseFilter
+wfLoadExtension( 'AbuseFilter' );
+$wgGroupPermissions['sysop']['abusefilter-modify'] = true;
+$wgGroupPermissions['*']['abusefilter-log-detail'] = true;
+$wgGroupPermissions['*']['abusefilter-view'] = true;
+$wgGroupPermissions['*']['abusefilter-log'] = true;
+$wgGroupPermissions['sysop']['abusefilter-private'] = true;
+$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
+$wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
 ## UserMerge
 wfLoadExtension('UserMerge');

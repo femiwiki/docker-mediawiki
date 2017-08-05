@@ -83,6 +83,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf CodeEditor-REL1_27-5e8053d.tar.gz -C /var/www/femiwiki.com/extensions
     rm CodeEditor-REL1_27-5e8053d.tar.gz
 
+    ## AbuseFilter
+    wget -nv https://extdist.wmflabs.org/dist/extensions/AbuseFilter-REL1_27-2072d2f.tar.gz
+    sudo tar -xzf AbuseFilter-REL1_27-2072d2f.tar.gz -C /var/www/femiwiki.com/extensions
+    rm AbuseFilter-REL1_27-2072d2f.tar.gz
+
     ## UserMerge
     wget -nv https://extdist.wmflabs.org/dist/extensions/UserMerge-REL1_27-31ea86d.tar.gz
     sudo tar -xzf UserMerge-REL1_27-31ea86d.tar.gz -C /var/www/femiwiki.com/extensions
