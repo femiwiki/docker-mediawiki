@@ -7,6 +7,7 @@
  */
 class FemiwikiTemplate extends BaseTemplate
 {
+    protected static $googleApiKey = 'AIzaSyC3vDxqg6zA-f8qU--V488nngsBYnZZgPc';
     /**
      * Outputs the entire contents of the page
      */
@@ -455,17 +456,45 @@ class FemiwikiTemplate extends BaseTemplate
 
     function getShareToolbox() {
         $toolbox = [];
+        global $wgServer; //$wgServer = 'https://femiwiki.com';
+        $canonicalLink = $wgServer.'/w/'.str_replace('%2F','/',urlencode($this->get('titleprefixeddbkey'))).'?utm_campaign=share';
+
+        $toolbox['copy'] = [];
+        $toolbox['copy']['id'] = 'share-copy';
+        $toolbox['copy']['href'] = self::shortenURL($canonicalLink);
+        $toolbox['copy']['text'] = 'URL 복사';
+
+        $toolbox['facebook'] = [];
+        $toolbox['facebook']['id'] = 'share-facebook';
+        $toolbox['facebook']['target'] = '_blank';
+        $link = $this->shortenURL($canonicalLink.'&utm_source=facebook&utm_medium=post');
+        $toolbox['facebook']['href'] = $link;
+        $toolbox['facebook']['text'] = '페이스북';
 
         $toolbox['twitter'] = [];
-        $toolbox['twitter']['id'] = 'twitter';
+        $toolbox['twitter']['id'] = 'share-twitter';
         $toolbox['twitter']['target'] = '_blank';
-        global $wgServer;
-        $link = $wgServer.'/index.php?curid='.$this->get('articleid').'?utm_source=twitter&utm_medium=tweet';
+        $link = $this->shortenURL($canonicalLink.'&utm_source=twitter&utm_medium=tweet');
         $tweet = $this->get('title').' '.$link.' #'.$this->get('sitename');
         $toolbox['twitter']['href'] = 'https://twitter.com/intent/tweet?text='.urlencode($tweet);
         $toolbox['twitter']['text'] = '트위터';
 
         return $toolbox;
+    }
+
+    static function shortenURL($longURL){
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL,'https://www.googleapis.com/urlshortener/v1/url'.'?key='.self::$googleApiKey);
+        curl_setopt($ch, CURLOPT_POST,1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode(array("longUrl"=>$longURL)));
+        curl_setopt($ch, CURLOPT_HTTPHEADER,array("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        if($result !== null && !isset(json_decode($result)->{'id'})) return $longURL;
+        return json_decode($result)->{'id'};
     }
 
     /**
