@@ -158,6 +158,7 @@ then
     sudo cp /vagrant/www/google6a8c7f190836bc0d.html /var/www/femiwiki.com/
     sudo cp /vagrant/www/naver09b95fd90c3231a5a37f42d39222c217.html /var/www/femiwiki.com/
     sudo cp /vagrant/www/favicon.ico /var/www/femiwiki.com/
+    sudo cp -r /vagrant/www/extensions/Realnames /var/www/femiwiki.com/extensions/
     sudo cp -r /vagrant/www/extensions/FacetedCategory /var/www/femiwiki.com/extensions/
     sudo cp -r /vagrant/www/extensions/ExtendedSpecialPagesForFemiwiki /var/www/femiwiki.com/extensions/
     sudo cp -r /vagrant/www/extensions/CategoryIntersectionSearch /var/www/femiwiki.com/extensions/
@@ -167,6 +168,7 @@ else
     sudo ln -sf /vagrant/www/google6a8c7f190836bc0d.html /var/www/femiwiki.com/google6a8c7f190836bc0d.html
     sudo ln -sf /vagrant/www/naver09b95fd90c3231a5a37f42d39222c217.html /var/www/femiwiki.com/naver09b95fd90c3231a5a37f42d39222c217.html
     sudo ln -sf /vagrant/www/favicon.ico /var/www/femiwiki.com/favicon.ico
+    sudo ln -sf /vagrant/www/extensions/Realnames /var/www/femiwiki.com/extensions/Realnames
     sudo ln -sf /vagrant/www/extensions/FacetedCategory /var/www/femiwiki.com/extensions/FacetedCategory
     sudo ln -sf /vagrant/www/extensions/ExtendedSpecialPagesForFemiwiki /var/www/femiwiki.com/extensions/ExtendedSpecialPagesForFemiwiki
     sudo ln -sf /vagrant/www/extensions/CategoryIntersectionSearch /var/www/femiwiki.com/extensions/CategoryIntersectionSearch
