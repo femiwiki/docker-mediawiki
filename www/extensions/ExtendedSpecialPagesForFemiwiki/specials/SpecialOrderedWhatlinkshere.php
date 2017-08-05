@@ -34,11 +34,11 @@ class SpecialOrderedWhatlinkshere extends SpecialWhatLinksHere {
 			$conds['imagelinks'][] = "il_from_namespace $nsComparison";
 		}
 
-		if ( $from ) {
+		/*if ( $from ) {
 			$conds['templatelinks'][] = "tl_from >= $from";
 			$conds['pagelinks'][] = "pl_from >= $from";
 			$conds['imagelinks'][] = "il_from >= $from";
-		}
+		}*/
 
 		if ( $hideredirs ) {
 			$conds['pagelinks']['rd_from'] = null;
@@ -50,7 +50,6 @@ class SpecialOrderedWhatlinkshere extends SpecialWhatLinksHere {
 			$conds, $target, $limit
 		) {
 			// Read an extra row as an at-end check
-			$queryLimit = $limit + 1;
 			$on = [
 				"rd_from = $fromCol",
 				'rd_title' => $target->getDBkey(),
@@ -64,7 +63,7 @@ class SpecialOrderedWhatlinkshere extends SpecialWhatLinksHere {
 				$conds[$table],
 				__CLASS__ . '::showIndirectLinks',
 				// Force JOIN order per T106682 to avoid large filesorts
-				[ 'ORDER BY' => $fromCol, 'LIMIT' => 2 * $queryLimit, 'STRAIGHT_JOIN' ],
+				[ 'ORDER BY' => $fromCol, 'STRAIGHT_JOIN' ],
 				[
 					'page' => [ 'INNER JOIN', "$fromCol = page_id" ],
 					'redirect' => [ 'LEFT JOIN', $on ]
@@ -75,7 +74,7 @@ class SpecialOrderedWhatlinkshere extends SpecialWhatLinksHere {
 				[ 'page_id', 'page_namespace', 'page_title', 'rd_from', 'page_is_redirect' ],
 				[],
 				__CLASS__ . '::showIndirectLinks',
-				[ 'ORDER BY' => 'page_title', 'LIMIT' => $queryLimit ],
+				[ 'ORDER BY' => 'page_title' ],
 				[ 'page' => [ 'INNER JOIN', "$fromCol = page_id" ] ]
 			);
 		};
@@ -120,42 +119,51 @@ class SpecialOrderedWhatlinkshere extends SpecialWhatLinksHere {
 			foreach ( $plRes as $row ) {
 				$row->is_template = 0;
 				$row->is_image = 0;
-				$rows[$row->page_title] = $row;
+				$rows[$row->page_id] = $row;
 			}
 		}
 		if ( !$hidetrans ) {
 			foreach ( $tlRes as $row ) {
 				$row->is_template = 1;
 				$row->is_image = 0;
-				$rows[$row->page_title] = $row;
+				$rows[$row->page_id] = $row;
 			}
 		}
 		if ( !$hideimages ) {
 			foreach ( $ilRes as $row ) {
 				$row->is_template = 0;
 				$row->is_image = 1;
-				$rows[$row->page_title] = $row;
+				$rows[$row->page_id] = $row;
 			}
 		}
 
 		// Sort by key and then change the keys to 0-based indices
-		ksort( $rows );
+		
+		
+		usort( $rows , function ($a, $b) use ($out) {
+			if(isset($a->page_title) && isset($b->page_title)){
+				return strcasecmp($a->page_title, $b->page_title);
+			}
+			else return 0;
+		} );
 		$rows = array_values( $rows );
 
 		$numRows = count( $rows );
 
 		// Work out the start and end IDs, for prev/next links
-		if ( $numRows > $limit ) {
+		if ( $numRows-$from > $limit ) {
 			// More rows available after these ones
 			// Get the ID from the last row in the result set
-			$nextId = $rows[$limit]->page_id;
+			$nextNumber = $from+$limit;
 			// Remove undisplayed rows
-			$rows = array_slice( $rows, 0, $limit );
+			$rows = array_slice( $rows, $from, $limit );
 		} else {
 			// No more rows after
-			$nextId = false;
+			$nextNumber = false;
+			// Remove undisplayed rows
+			$rows = array_slice( $rows, $from );
 		}
-		$prevId = $from;
+		$prevNumber = ($from == 0?null:$from-$limit);
 
 		// use LinkBatch to make sure, that all required data (associated with Titles)
 		// is loaded in one query
@@ -171,7 +179,7 @@ class SpecialOrderedWhatlinkshere extends SpecialWhatLinksHere {
 				$out->addHTML( $this->getFilterPanel() );
 				$out->addWikiMsg( 'linkshere', $this->target->getPrefixedText() );
 
-				$prevnext = $this->getPrevNext( $prevId, $nextId );
+				$prevnext = $this->getPrevNext( $prevNumber, $nextNumber );
 				$out->addHTML( $prevnext );
 			}
 		}
@@ -199,5 +207,35 @@ class SpecialOrderedWhatlinkshere extends SpecialWhatLinksHere {
 				$out->addHTML( $prevnext );
 			}
 		}
+	}
+
+	function getPrevNext( $prevNumber, $nextNumber ) {
+		$currentLimit = $this->opts->getValue( 'limit' );
+		$prev = $this->msg( 'whatlinkshere-prev' )->numParams( $currentLimit )->escaped();
+		$next = $this->msg( 'whatlinkshere-next' )->numParams( $currentLimit )->escaped();
+
+		$changed = $this->opts->getChangedValues();
+		unset( $changed['target'] ); // Already in the request title
+
+		if ( null !== $prevNumber ) {
+			$overrides = [ 'from' => $prevNumber ];
+			$prev = $this->makeSelfLink( $prev, array_merge( $changed, $overrides ) );
+		}
+		if ( 0 != $nextNumber ) {
+			$overrides = [ 'from' => $nextNumber ];
+			$next = $this->makeSelfLink( $next, array_merge( $changed, $overrides ) );
+		}
+
+		$limitLinks = [];
+		$lang = $this->getLanguage();
+		foreach ( $this->limits as $limit ) {
+			$prettyLimit = htmlspecialchars( $lang->formatNum( $limit ) );
+			$overrides = [ 'limit' => $limit ];
+			$limitLinks[] = $this->makeSelfLink( $prettyLimit, array_merge( $changed, $overrides ) );
+		}
+
+		$nums = $lang->pipeList( $limitLinks );
+
+		return $this->msg( 'viewprevnext' )->rawParams( $prev, $next, $nums )->escaped();
 	}
 }
