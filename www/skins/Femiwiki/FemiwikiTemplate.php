@@ -140,13 +140,12 @@ class FemiwikiTemplate extends BaseTemplate
                         'a',
                         array(
                             'id' => 'lastmod',
+                            'title' => '문서의 과거 판 [alt-shift-h]',
                             'href' => '/index.php?title='.$this->getSkin()->getRelevantTitle().'&action=history'
                         ),
                         $this->get('lastmod')
                         );
 
-
-                unset( $this->data['content_navigation']['views']['history'] );
                 echo $this->getPortlet(array(
                     'id' => 'p-views',
                     'headerMessage' => 'views',
