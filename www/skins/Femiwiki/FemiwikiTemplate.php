@@ -335,13 +335,13 @@ class FemiwikiTemplate extends BaseTemplate
             $nav['views'][$mode]['class'] = rtrim( 'icon ' . $nav['views'][$mode]['class'], ' ' );
             $nav['views'][$mode]['primary'] = true;
             unset( $this->data['content_navigation']['actions'][$mode] );
+            $item = $nav['actions'][$mode];
+            $attrs = [];
+            $attrs['class'] = 'mw-portlet';
+            $attrs['id'] = 'ca-watch';
+            
+            return Html::rawElement( 'span', $attrs, $this->makeLink( $mode, $item, $options ) );
         }
-        $item = $nav['actions'][$mode];
-        if($item === null) return;
-        $attrs = [];
-        $attrs['class'] = 'mw-portlet';
-        $attrs['id'] = 'ca-watch';
-        return Html::rawElement( 'span', $attrs, $this->makeLink( $mode, $item, $options ) );
     }
 
     /**
@@ -372,7 +372,7 @@ class FemiwikiTemplate extends BaseTemplate
                 'id'=>'searchClearButton',
                 'type' => 'button'
             ],
-            ×
+            '×'
         );
         $html .= $this->makeSearchButton('go', array('id' => 'searchGoButton', 'class' => 'searchButton'));
         $html .= Html::closeElement('form');
