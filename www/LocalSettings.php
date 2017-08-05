@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170805_0';
+$wgStyleVersion = '20170710_0';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -267,10 +267,6 @@ wfLoadExtension('Thanks');
 ## Scribunto
 require_once "$IP/extensions/Scribunto/Scribunto.php";
 $wgScribuntoDefaultEngine = 'luastandalone';
-
-## Realnams
-require_once("$IP/extensions/Realnames/Realnames.php");
-$wgRealnamesLinkStyle = "femiwiki";
 
 ## Flow
 require_once "$IP/extensions/Flow/Flow.php";
