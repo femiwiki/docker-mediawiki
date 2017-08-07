@@ -10,7 +10,7 @@ class CategoryIntersectionSearchHooks {
 	 */
 
 	public static function onSpecialSearchResultsPrepend( $specialSearch, $output, $term ) {
-		if($term === null || $term === '' || strpos($term,"/")===false)
+		if($term === null || $term === '' || strpos($term,"/") === false)
 			return true;
 		
 		$title = Title::newFromText('category:'.$term);
