@@ -610,7 +610,7 @@ button {
     vertical-align: middle;
   }
 
-  // Hide default category and show femiwiki category instead
+  // Hide femiwiki category
   .fw-catlinks {
     display: none;
   }
@@ -775,6 +775,15 @@ body.action-edit {
     display: none;
   }
 
+  // Show femiwiki category
+  #content .fw-catlinks {
+    display: block;
+  }
+}
+
+// Source Editor
+body.action-submit #content .fw-catlinks {
+  display: block;
 }
 
 // VisualEditor
@@ -796,6 +805,11 @@ html.ve-active {
     // Remove padding of visual editor
     .ve-ce-documentNode {
       padding: 0;
+    }
+
+    // Show femiwiki category
+    .fw-catlinks {
+      display: block;
     }
   }
 
