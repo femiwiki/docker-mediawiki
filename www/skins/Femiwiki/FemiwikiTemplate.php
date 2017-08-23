@@ -140,12 +140,12 @@ class FemiwikiTemplate extends BaseTemplate
                         'a',
                         array(
                             'id' => 'lastmod',
-                            'title' => '문서의 과거 판 [alt-shift-h]',
                             'href' => '/index.php?title='.$this->getSkin()->getRelevantTitle().'&action=history'
                         ),
                         $this->get('lastmod')
                         );
 
+                unset( $this->data['content_navigation']['views']['history'] );
                 echo $this->getPortlet(array(
                     'id' => 'p-views',
                     'headerMessage' => 'views',
@@ -336,13 +336,13 @@ class FemiwikiTemplate extends BaseTemplate
             $nav['views'][$mode]['class'] = rtrim( 'icon ' . $nav['views'][$mode]['class'], ' ' );
             $nav['views'][$mode]['primary'] = true;
             unset( $this->data['content_navigation']['actions'][$mode] );
+            $item = $nav['actions'][$mode];
+            $attrs = [];
+            $attrs['class'] = 'mw-portlet';
+            $attrs['id'] = 'ca-watch';
+            
+            return Html::rawElement( 'span', $attrs, $this->makeLink( $mode, $item, $options ) );
         }
-        $item = $nav['actions'][$mode];
-        if($item === null) return;
-        $attrs = [];
-        $attrs['class'] = 'mw-portlet';
-        $attrs['id'] = 'ca-watch';
-        return Html::rawElement( 'span', $attrs, $this->makeLink( $mode, $item, $options ) );
     }
 
     /**
@@ -373,7 +373,7 @@ class FemiwikiTemplate extends BaseTemplate
                 'id'=>'searchClearButton',
                 'type' => 'button'
             ],
-            ×
+            '×'
         );
         $html .= $this->makeSearchButton('go', array('id' => 'searchGoButton', 'class' => 'searchButton'));
         $html .= Html::closeElement('form');
