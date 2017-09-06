@@ -313,7 +313,7 @@ class ExtRealnames {
   public static function onUserSaveSettings( $user ) {
     global $wgCookiePrefix;
     $old = $_COOKIE[$wgCookiePrefix . self::$wgCookieName];
-    if( !isset($old) || $old === $user->getRealname())
+    if( $_COOKIE[$wgCookiePrefix . 'UserName'] !== $user->getName()|| !isset($old) || $old === $user->getRealname())
       return;
 
     $logEntry = new ManualLogEntry( 'nickname', 'nickname' );
