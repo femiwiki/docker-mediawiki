@@ -163,6 +163,7 @@ if (isset($wgConfigureAdditionalExtensions) && is_array($wgConfigureAdditionalEx
  * @since 2011-09-16, 0.1  
  */ 
 $wgAutoloadClasses['ExtRealnames'] = dirname(__FILE__) . '/Realnames.body.php';
+$wgMessagesDirs['ExtRealnames'] = dirname( __FILE__ ) . "/i18n";
 
 /* (not our var to doc)
  * This hook is called before the article is displayed.  
@@ -170,6 +171,14 @@ $wgAutoloadClasses['ExtRealnames'] = dirname(__FILE__) . '/Realnames.body.php';
  * @see $wgAutoloadClasses for how the class gets defined.  
  */
 $wgHooks['BeforePageDisplay'][] = 'ExtRealnames::hookBeforePageDisplay';
+
+//
+$wgHooks['GetLogTypesOnUser'][] = 'ExtRealnames::onGetLogTypesOnUser';
+$wgHooks['UserLoadOptions'][] = 'ExtRealnames::onUserLoadOptions';
+$wgHooks['UserSaveSettings'][] = 'ExtRealnames::onUserSaveSettings';
+
+$wgLogTypes[] = 'nickname';
+$wgLogActionsHandlers['nickname/nickname'] = 'LogFormatter';
 
 /* (not our var to doc)
  * This hook is called before the user links are displayed.  

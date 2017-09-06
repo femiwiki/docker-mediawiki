@@ -291,6 +291,42 @@ class ExtRealnames {
   } // function
 
   /**
+   * @param array $types
+   * @return bool
+   */
+  public static function onGetLogTypesOnUser( array &$types ) {
+    $types[] = 'nickname';
+
+    return true;
+  }
+
+  public static $wgCookieName = "UserNickname";
+
+  public static function onUserLoadOptions( $user, &$options ){
+    $old = $_COOKIE[$wgCookiePrefix . self::$wgCookieName];
+    if( $old === null || $old !== $user->getRealname() )
+      WebResponse::setCookie(self::$wgCookieName, $user->getRealname());
+
+    return true;
+  }
+
+  public static function onUserSaveSettings( $user ) {
+    global $wgCookiePrefix;
+    $old = $_COOKIE[$wgCookiePrefix . self::$wgCookieName];
+    if( !isset($old) || $old === $user->getRealname())
+      return;
+
+    $logEntry = new ManualLogEntry( 'nickname', 'nickname' );
+    $logEntry->setPerformer( $user );
+    $logEntry->setTarget( Title::makeTitle( NS_USER, $user->getName() ) );
+    $logEntry->setComment( $old . ' → ' . $user->getRealName() );
+
+    $logid = $logEntry->insert();
+    $logEntry->publish( $logid );
+    return;
+  }
+
+  /**
    * change all usernames to realnames in url bar
    * @param[inout] &$personal_urls \array the array of URLs set up so far
    * @param[inout] &$title \obj the Title object of the current article
