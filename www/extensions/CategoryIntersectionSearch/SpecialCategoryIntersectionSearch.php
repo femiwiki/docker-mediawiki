@@ -30,7 +30,7 @@ class SpecialCategoryIntersectionSearch extends SpecialPage {
 
 		$title = implode('", "',$this->categories);
 		if (count($this->exCategories) !== 0)
-			$title .= ', -"'.implode('", "',$this->exCategories);
+			$title .= ', -"'.implode('", -"',$this->exCategories);
 		$output->setPageTitle( '"'.$title.'" 분류 ' );
 
 		//여기서 아래는 mediawiki 1.27.1의 CategoryViewer.php과 동일
