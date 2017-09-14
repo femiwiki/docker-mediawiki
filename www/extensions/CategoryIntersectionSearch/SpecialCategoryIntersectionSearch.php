@@ -1,6 +1,9 @@
 <?php
 
 class SpecialCategoryIntersectionSearch extends SpecialPage {
+	var $categories = array();
+	var $exCategories = array();
+
 	public function __construct() {
 		parent::__construct( 'CategoryIntersectionSearch' );
 	}
@@ -10,21 +13,27 @@ class SpecialCategoryIntersectionSearch extends SpecialPage {
 		$output = $this->getOutput();
 		$this->setHeaders();
 
-		if($par=='') {
+		if ( $par == '' ) {
 			$output->addWikitext('검색어를 입력해 주세요.');
 			return;
 		}
 		$titleParam = str_replace( '_', ' ', $par );
-		$categories = $this->splitPar( $titleParam );
+		$this->splitPar( $titleParam );
 
-		if( count($categories) < 2 ) {
+		if (count($this->categories) === 0 && count($this->exCategories) > 0 ) {
+			$output->addWikitext('검색어를 입력해 주세요.');
+			return;
+		} elseif ( count($this->categories) < 2 && count($this->exCategories) == 0 ) {
 			$output->redirect( Title::newFromText('Category:'.$titleParam)->getFullURL() );
 			return;
 		}
 
-		$output->setPageTitle( '"'.implode('", "',$categories).'" 분류 ' );
+		$title = implode('", "',$this->categories);
+		if (count($this->exCategories) !== 0)
+			$title .= ', -"'.implode('", "',$this->exCategories);
+		$output->setPageTitle( '"'.$title.'" 분류 ' );
 
-		//여기서 아래는 CategoryViewer.php과 동일
+		//여기서 아래는 mediawiki 1.27.1의 CategoryViewer.php과 동일
 		$oldFrom = $request->getVal( 'from' );
 		$oldUntil = $request->getVal( 'until' );
  
@@ -44,32 +53,36 @@ class SpecialCategoryIntersectionSearch extends SpecialPage {
 		}
 		unset( $reqArray["from"] );
 		unset( $reqArray["to"] );
-		//위에서 여기까지는 CategoryViewer.php과 동일
+		//위에서 여기까지는 mediawiki 1.27.1의 CategoryViewer.php과 동일
 
 		$viewer = new CategoryIntersectionSearchViewer(
-			Title::newFromText('특수:교집합분류검색/'.implode(', ',$categories)), //"$1에 속하는 문서"라고 표시되는 부분을 그럴 듯하게 보여주기 위한 꼼수입니다.
+			Title::newFromText($title),
 			$this->getContext(),
 			$from,
 			$until,
 			$reqArray,
-			$categories
+			$this->categories,
+			$this->exCategories
 		);
 		$output->addHTML( $viewer->getHTML() );
 	}
 
 	function splitPar($par) {
-		if(strpos($par,",") === false)
-			return null;
+		$par = explode(",",$par);
+		if(count($par) === 1) return null;
 
-		$categories = explode(",",$par);
-		for($i=0;$i<count($categories);$i++) {
-			if(strpos($categories[$i],"/") === false) return null;
-			$categories[$i] = trim($categories[$i]);
-			$pos = strrchr($categories[$i],":");
-			if($pos !== false) $categories[$i] = trim(substr($pos,1));
+		for( $i = 0 ; $i < count($par) ; $i++ ) {
+			if(strpos($par[$i],"/") === false)
+				return null;
+			$par[$i] = trim($par[$i]);
+			$pos = strrchr($par[$i],":");
+			if($pos !== false)
+				$par[$i] = trim(substr($pos,1));
+			if ( substr($par[$i],0,1) !== '-' )
+				$this->categories[] = $par[$i];
+			else
+				$this->exCategories[] = substr($par[$i],1);
 		}
-
-		return $categories;
 	}
 
 	protected function getGroupName() {
@@ -78,8 +91,9 @@ class SpecialCategoryIntersectionSearch extends SpecialPage {
 }
 
 class CategoryIntersectionSearchViewer extends CategoryTreeCategoryViewer {
-	function __construct( $title, IContextSource $context, $from = [], $until = [], $query = [], $categories)  {
+	function __construct( $title, IContextSource $context, $from = [], $until = [], $query = [], $categories, $exCategories)  {
 		$this->categories = $categories;
+		$this->exCategories = $exCategories;
 		parent::__construct( $title, $context, $from, $until, $query );
 	}
 
@@ -89,7 +103,18 @@ class CategoryIntersectionSearchViewer extends CategoryTreeCategoryViewer {
 			if($key!==0) $categoriesStr .= ',';
 			$categoriesStr .= "'".Title::newFromText('category:'.$category)->getDBkey()."'";
 		}
-		//여기서부터 아래는 CategoryViewer.php의 doCategoryQuery()과 동일
+		if ( count($this->exCategories) !== 0 ) {
+			$exCategoriesStr='';
+			foreach($this->exCategories as $key => $category) {
+				if($key!==0) $exCategoriesStr .= ',';
+				$exCategoriesStr .= "'".Title::newFromText('category:'.$category)->getDBkey()."'";
+			}
+			$exSqlQueryStr = "AND cl_from NOT IN " .
+				"(SELECT cl_from " .
+				"FROM categorylinks " .
+				"WHERE cl_to IN ({$exCategoriesStr}))";
+		}
+		//여기서부터 아래는 mediawiki 1.27.1의 CategoryViewer.php의 doCategoryQuery()과 동일
 		$dbr = wfGetDB( DB_SLAVE, ['page','categorylinks','category'] );
 
 		$this->nextPage = [
@@ -115,34 +140,22 @@ class CategoryIntersectionSearchViewer extends CategoryTreeCategoryViewer {
 					. $dbr->addQuotes( $this->collation->getSortKey( $this->until[$type] ) );
 				$this->flip[$type] = true;
 			}
-			//위에서 여기까지는 CategoryViewer.php의 doCategoryQuery()과 동일
-			/*
-			$res = $dbr->select(
-				[ 'page', 'categorylinks', 'category' ],
-				[ 'page_id', 'page_title', 'page_namespace', 'page_len',
-					'page_is_redirect', 'cl_sortkey', 'cat_id', 'cat_title',
-					'cat_subcats', 'cat_pages', 'cat_files',
-					'cl_sortkey_prefix', 'cl_collation' ],
-				array_merge( [ 'cl_to' => Title::newFromText('category:성격/아주 많은 문서가 들어 있는 분류1')->getDBkey() ], $extraConds ),
-				__METHOD__,
-				[
-					'USE INDEX' => [ 'categorylinks' => 'cl_sortkey' ],
-					'LIMIT' => $this->limit + 1,
-					'ORDER BY' => $this->flip[$type] ? 'cl_sortkey DESC' : 'cl_sortkey',
-				],
-				[
-					'categorylinks' => [ 'INNER JOIN', 'cl_from = page_id' ],
-					'category' => [ 'LEFT JOIN', [
-						'cat_title = page_title',
-						'page_namespace' => NS_CATEGORY
-					] ]
-				]
-				);*/
+			//위에서 여기까지는 mediawiki 1.27.1의 CategoryViewer.php의 doCategoryQuery()과 동일
+
 			$res = $dbr->query(
-				"SELECT DISTINCT page_id, page_title, page_namespace, page_len, page_is_redirect, cl_sortkey, cat_id, cat_title, cat_subcats, cat_pages, cat_files, cl_sortkey_prefix, cl_collation ".
-				"FROM page ".
-					"INNER JOIN (SELECT cl_from, COUNT(*) AS match_count FROM categorylinks WHERE cl_to IN({$categoriesStr}) GROUP BY cl_from ORDER BY ". ($this->flip[$type] ? 'cl_sortkey DESC' : 'cl_sortkey').") AS matches ON page.page_id = matches.cl_from AND matches.match_count = ".count($this->categories)." ".
-					"INNER JOIN categorylinks ON page.page_id = categorylinks.cl_from "." ".
+				"SELECT DISTINCT page_id, page_title, page_namespace, page_len, page_is_redirect, ".
+					"cat_id, cat_title, cat_subcats, cat_pages, cat_files, ".
+					"cl_sortkey, cl_sortkey_prefix, cl_collation ".
+				"FROM ".
+					"page ".
+					"INNER JOIN ".
+						"(SELECT cl_from, COUNT(*) AS match_count FROM categorylinks ".
+							"WHERE cl_to IN ({$categoriesStr}) {$exSqlQueryStr}".
+							"GROUP BY cl_from ".
+							"ORDER BY ". ($this->flip[$type] ? 'cl_sortkey DESC' : 'cl_sortkey').") ".
+						"AS matches ON page.page_id = matches.cl_from ".
+						"AND matches.match_count = ".count($this->categories)." ".
+					"INNER JOIN categorylinks ON page.page_id = categorylinks.cl_from ".
 					"LEFT JOIN category ON category.cat_title = page.page_title AND page.page_namespace = ".NS_CATEGORY." ".
 				//'USE INDEX categorylinks.cl_sortkey '.
 				"WHERE ".$dbr->makeList( $extraConds, LIST_AND )." ".
@@ -151,7 +164,7 @@ class CategoryIntersectionSearchViewer extends CategoryTreeCategoryViewer {
 				, __METHOD__
 				);
 
-			//여기서부터 아래는 CategoryViewer.php의 doCategoryQuery()과 동일
+			//여기서부터 아래는 mediawiki 1.27.1의 CategoryViewer.php의 doCategoryQuery()과 동일
 			Hooks::run( 'CategoryViewer::doCategoryQuery', [ $type, $res ] );
  
 			$count = 0;
@@ -185,7 +198,7 @@ class CategoryIntersectionSearchViewer extends CategoryTreeCategoryViewer {
 					$this->addPage( $title, $humanSortkey, $row->page_len, $row->page_is_redirect );
 				}
 			}
-			//위에서 여기까지는 CategoryViewer.php의 doCategoryQuery()과 동일
+			//위에서 여기까지는 mediawiki 1.27.1의 CategoryViewer.php의 doCategoryQuery()과 동일
 		}
 	}
 }
