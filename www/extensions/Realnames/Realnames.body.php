@@ -303,9 +303,13 @@ class ExtRealnames {
   public static $wgCookieName = "UserNickname";
 
   public static function onUserLoadOptions( $user, &$options ){
-    $old = $_COOKIE[$wgCookiePrefix . self::$wgCookieName];
+    global $wgCookiePrefix;
+
+    $old = null;
+    if(isset($_COOKIE[$wgCookiePrefix . self::$wgCookieName]))
+      $old = $_COOKIE[$wgCookiePrefix . self::$wgCookieName];
     if( $old === null || $old !== $user->getRealname() )
-      WebResponse::setCookie(self::$wgCookieName, $user->getRealname());
+      $_COOKIE[$wgCookiePrefix . self::$wgCookieName] = $user->getRealname();
 
     return true;
   }
