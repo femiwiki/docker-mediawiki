@@ -1,14 +1,10 @@
-페미위키 소스 코드.
-
-한국의 페미니즘 위키인 [femiwiki.com](https://femiwiki.com)에 사용되는 소스 코드 저장소입니다. 다음 코드들을 포함하고 있습니다.
+[페미위키][femiwiki.com] 소스코드
+========
+한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 소스 코드 저장소입니다. 다음 코드들을 포함하고 있습니다.
 
 * 웹 서버 및 시각편집기 서버(parsoid)용 Vagrantfile 및 프로비저닝 스크립트
 * 개발/테스트 및 실제 서버용 배포 스크립트
 * 페미위키 스킨
-
-## 라이선스
-페미위키 소스 코드는 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt)에 따라 배포됩니다.
-
 
 ## 개발 및 배포에 필요한 소프트웨어
 
@@ -25,7 +21,7 @@
    (<PW> 대신 원하는 위키 관리자 패스워드를 입력하세요)
 3. 다음 명령을 실행하면 시각편집기 서버가 실행됩니다 ``vagrant up dev-parsoid``
    개발 환경에서 시각편집기를 사용하지 않을 것이라면 굳이 하지 않아도 됩니다.
-4. 브라우저에서 다음 주소에 접속하세요. [http://192.168.50.10](http://192.168.50.10)
+4. 브라우저에서 다음 주소에 접속하세요. <http://192.168.50.10>
 5. ``www/fw-resources`` 및 ``www/skins`` 디렉터리는 심볼릭 링크가 걸려 있으므로 내용을 수정하고 새로고침을 하면
    바로 변경 사항을 확인할 수 있습니다.
 6. ``LocalSettings.php`` 파일 등을 수정한 후에는 다음 명령을 실행해야만 반영이 됩니다. ``ADMIN_PW=<PW> ./update dev``
@@ -52,3 +48,14 @@ MacOS 설치 예시:
 6. 이상이 없으면 다음 명령을 실행하여 코드를 배포합니다. ``ADMIN_PW=<PW> ./update prod``
    (<PW> 대신 원하는 위키 관리자 패스워드를 입력하세요)
 
+<br>
+
+--------
+
+The source code of *femiwiki.com* is primarily distributed under the terms of
+the [GNU Affero General Public License v3.0] or any later version. See
+[COPYRIGHT] for details.
+
+[femiwiki.com]: https://femiwiki.com
+[GNU Affero General Public License v3.0]: LICENSE
+[COPYRIGHT]: COPYRIGHT
