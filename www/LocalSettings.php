@@ -165,8 +165,18 @@ $wgGroupPermissions['sysop']['deleterevision'] = true;
 ## Prevent anonymous users from edit pages
 $wgGroupPermissions['*']['edit'] = false;
 
-## Allow registered users to edit pages
-$wgGroupPermissions['user']['edit'] = true;
+## Set when users become autoconfirmed users
+$wgAutoConfirmCount = 0;
+$wgAutoConfirmAge = 10800;
+$wgAutopromote = array(
+	"autoconfirmed" => array( "&",
+		array( APCOND_EDITCOUNT, &$wgAutoConfirmCount ),
+		array( APCOND_AGE, &$wgAutoConfirmAge ),
+	),
+);
+## Allow autoconfirmed users to edit pages
+$wgGroupPermissions['user']['edit'] = false;
+$wgGroupPermissions['autoconfirmed']['edit'] = true;
 $wgGroupPermissions['seeder']['edit'] = true;
 $wgGroupPermissions['bureaucrat']['edit'] = true;
 
