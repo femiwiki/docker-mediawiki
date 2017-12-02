@@ -140,7 +140,7 @@ class FemiwikiTemplate extends BaseTemplate
                         'a',
                         array(
                             'id' => 'lastmod',
-                            'href' => '/index.php?title='.$this->getSkin()->getRelevantTitle().'&action=history'
+                            'href' => $this->data['content_navigation']['views']['history']['href']
                         ),
                         $this->get('lastmod')
                         );
