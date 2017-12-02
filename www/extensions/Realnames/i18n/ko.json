@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"lens0021"
+		]
+	},
+	"log-name-nickname": "닉네임 변경 기록",
+	"log-description-nickname": "닉네임을 변경한 기록입니다.",
+	"logentry-nickname-nickname": "$1 사용자가 닉네임을 바꾸었습니다"
+}
