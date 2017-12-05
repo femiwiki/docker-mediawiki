@@ -278,10 +278,6 @@ wfLoadExtension('Thanks');
 require_once "$IP/extensions/Scribunto/Scribunto.php";
 $wgScribuntoDefaultEngine = 'luastandalone';
 
-## Realnams
-require_once("$IP/extensions/Realnames/Realnames.php");
-$wgRealnamesLinkStyle = "femiwiki";
-
 ## Flow
 require_once "$IP/extensions/Flow/Flow.php";
 $wgFlowEditorList = array( 'visualeditor', 'none' );
