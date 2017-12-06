@@ -243,6 +243,7 @@ require_once "$IP/extensions/TemplateData/TemplateData.php";
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
+$wgHiddenPrefs[] = 'realname';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 $wgVirtualRestConfig['modules']['parsoid'] = array(
     'url' => 'http://PARSOID:8142',
