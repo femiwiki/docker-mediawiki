@@ -368,12 +368,12 @@ button {
 
   // Quote
   blockquote {
+    display: inline-block;
     margin: 1.6rem 1rem 1.6rem 1.2rem;
     position: relative;
   }
-  blockquote::before {
-    content: "\201C"; /*Unicode for Left Double Quote*/
 
+  blockquote::before, blockquote::after {
     /*Font*/
     font-family: Georgia, serif;
     font-size: 2rem;
@@ -382,8 +382,18 @@ button {
 
     /*Positioning*/
     position: absolute;
+  }
+
+  blockquote::before {
+    content: "\201C"; /*Unicode for Left Double Quote*/
     left: -1.3rem;
     top: -1rem;
+  }
+
+  blockquote::after {
+    content: "\201D"; /*Unicode for Right Double Quote*/
+    right: -1.3rem;
+    bottom: -1rem;
   }
 
   // Links
