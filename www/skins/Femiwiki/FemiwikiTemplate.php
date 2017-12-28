@@ -13,7 +13,7 @@ class FemiwikiTemplate extends BaseTemplate
      */
     public function execute()
     {
-        $this->html('headelement');
+        $this->html( 'headelement' );
         ?>
         <!-- Google Tag Manager (noscript) -->
         <noscript>
@@ -33,7 +33,7 @@ class FemiwikiTemplate extends BaseTemplate
                     echo Html::rawElement(
                         'h2',
                         [],
-                        $this->getMsg('navigation-heading')->parse()
+                        $this->getMsg( 'navigation-heading' )->parse()
                     );
                     ?>
 
@@ -65,51 +65,51 @@ class FemiwikiTemplate extends BaseTemplate
 
             echo Html::openElement(
                 'div',
-                array('id' => 'p-navigation-and-watch')
+                array( 'id' => 'p-navigation-and-watch' )
             );
-            if ($this->data['sitenotice']) {
+            if ( $this->data['sitenotice'] ) {
                 echo Html::rawElement(
                     'div',
-                    array('id' => 'siteNotice'),
-                    $this->get('sitenotice')
+                    array( 'id' => 'siteNotice' ),
+                    $this->get( 'sitenotice' )
                 );
             }
-            if ($this->data['newtalk']) {
+            if ( $this->data['newtalk'] ) {
                 echo Html::rawElement(
                     'div',
-                    array('class' => 'usermessage'),
-                    $this->get('newtalk')
+                    array( 'class' => 'usermessage' ),
+                    $this->get( 'newtalk' )
                 );
             }
             //echo $this->getIndicators();
-            echo $this->getPortlet(array(
+            echo $this->getPortlet( array(
                 'id' => 'p-namespaces',
                 'headerMessage' => 'namespaces',
                 'content' => $this->data['content_navigation']['namespaces'],
             ));
             echo $this->getWatch();
-            echo Html::closeElement('div');
+            echo Html::closeElement( 'div' );
             ?>
 
             <div id="content" class="mw-body" role="main">
                 <?php
                 echo Html::openElement(
                     'div',
-                    array('id' => 'p-header')
+                    array( 'id' => 'p-header' )
                 );
 
 
                 echo Html::openElement(
                     'div',
-                    array('id' => 'p-title-and-tb')
+                    array( 'id' => 'p-title-and-tb' )
                 );
                 echo Html::rawElement(
                     'h1',
                     array(
                         'class' => 'firstHeading',
-                        'lang' => $this->get('pageLanguage')
+                        'lang' => $this->get( 'pageLanguage' )
                     ),
-                    $this->get('title')
+                    $this->get( 'title' )
                 );
                 ?>
                 <button id='p-links-toggle'>
@@ -118,74 +118,74 @@ class FemiwikiTemplate extends BaseTemplate
                 <?php
                 echo Html::openElement(
                     'div',
-                    array('id' => 'p-actions-and-toolbox')
+                    array( 'id' => 'p-actions-and-toolbox' )
                 );
-                echo $this->renderPortal('page-tb', $this->getToolbox(), 'toolbox');
-                if (isset( $this->data['articleid']) && $this->data['articleid'] != 0 )
-                    echo $this->renderPortal('share-tb', $this->getShareToolbox(), '공유하기', 'SkinTemplateToolboxEnd');
-                echo $this->getPortlet(array(
+                echo $this->renderPortal( 'page-tb', $this->getToolbox(), 'toolbox' );
+                if ( isset( $this->data['articleid']) && $this->data['articleid'] != 0 )
+                    echo $this->renderPortal( 'share-tb', $this->getShareToolbox(), '공유하기', 'SkinTemplateToolboxEnd' );
+                echo $this->getPortlet( array(
                     'id' => 'p-actions',
                     'headerMessage' => 'actions',
                     'content' => $this->data['content_navigation']['actions'],
-                ));
+                ) );
 
-                echo Html::closeElement('div');
-                echo Html::closeElement('div');
+                echo Html::closeElement( 'div' );
+                echo Html::closeElement( 'div' );
                 echo Html::openElement(
                     'div',
-                    array('id' => 'lastmod-and-views')
+                    array( 'id' => 'lastmod-and-views' )
                 );
 
-                if(isset($this->data['content_navigation']['views']['history']['href']))
+                if( isset( $this->data['content_navigation']['views']['history']['href'] ) )
                 echo Html::rawElement(
                         'a',
                         array(
                             'id' => 'lastmod',
                             'href' => $this->data['content_navigation']['views']['history']['href']
                         ),
-                        $this->get('lastmod')
+                        $this->get( 'lastmod' )
                         );
 
                 unset( $this->data['content_navigation']['views']['history'] );
-                echo $this->getPortlet(array(
+                echo $this->getPortlet( array(
                     'id' => 'p-views',
                     'headerMessage' => 'views',
                     'content' => $this->data['content_navigation']['views'],
-                ));
+                ) );
                 
-                echo Html::closeElement('div');
-                echo Html::closeElement('div');
+                echo Html::closeElement( 'div' );
+                echo Html::closeElement( 'div' );
                 ?>
 
                 <div class="mw-body-content" id="bodyContent">
                     <?php
                     echo Html::openElement(
                         'div',
-                        array('id' => 'contentSub')
+                        array( 'id' => 'contentSub' )
                     );
-                    if ($this->data['subtitle']) {
+                    if ( $this->data['subtitle'] ) {
                         echo Html::rawelement(
                             'p',
                             [],
-                            $this->get('subtitle')
+                            $this->get( 'subtitle' )
                         );
                     }
                     echo Html::rawelement(
                         'p',
                         [],
-                        $this->get('undelete')
+                        $this->get( 'undelete' )
                     );
-                    echo Html::closeElement('div');
+                    echo Html::closeElement( 'div' );
 
-                    $this->html('bodycontent');
+                    $this->html( 'bodycontent' );
                     $this->clear();
                     echo Html::rawElement(
                         'div',
-                        array('class' => 'printfooter'),
-                        $this->get('printfooter')
+                        array( 'class' => 'printfooter' ),
+                        $this->get( 'printfooter' )
                     );
-                    $this->html('catlinks');
-                    $this->html('dataAfterContent');
+                    $this->html( 'catlinks' );
+                    $this->html( 'dataAfterContent' );
                     ?>
                 </div>
             </div>
@@ -207,39 +207,39 @@ class FemiwikiTemplate extends BaseTemplate
                         'role' => 'contentinfo'
                     )
                 );
-                foreach ($this->getFooterIcons('icononly') as $blockName => $footerIcons) {
+                foreach ( $this->getFooterIcons( 'icononly' ) as $blockName => $footerIcons ) {
                     echo Html::openElement(
                         'li',
                         array(
-                            'id' => 'footer-' . Sanitizer::escapeId($blockName) . 'ico'
+                            'id' => 'footer-' . Sanitizer::escapeId( $blockName ) . 'ico'
                         )
                     );
-                    foreach ($footerIcons as $icon) {
-                        echo $this->getSkin()->makeFooterIcon($icon);
+                    foreach ( $footerIcons as $icon ) {
+                        echo $this->getSkin()->makeFooterIcon( $icon );
                     }
-                    echo Html::closeElement('li');
+                    echo Html::closeElement( 'li' );
                 }
-                echo Html::closeElement('ul');
+                echo Html::closeElement( 'ul' );
 
-                foreach ($this->getFooterLinks() as $category => $links) {
+                foreach ( $this->getFooterLinks() as $category => $links ) {
                     echo Html::openElement(
                         'ul',
                         array(
-                            'id' => 'footer-' . Sanitizer::escapeId($category),
+                            'id' => 'footer-' . Sanitizer::escapeId( $category ),
                             'role' => 'contentinfo'
                         )
                     );
-                    foreach ($links as $key) {
-                        if($key === 'lastmod') continue;
+                    foreach ( $links as $key ) {
+                        if( $key === 'lastmod' ) continue;
                         echo Html::rawElement(
                             'li',
                             array(
-                                'id' => 'footer-' . Sanitizer::escapeId($category . '-' . $key)
+                                'id' => 'footer-' . Sanitizer::escapeId( $category . '-' . $key )
                             ),
-                            $this->get($key)
+                            $this->get( $key )
                         );
                     }
-                    echo Html::closeElement('ul');
+                    echo Html::closeElement( 'ul' );
                 }
                 $this->clear();
                 ?>
@@ -258,9 +258,9 @@ class FemiwikiTemplate extends BaseTemplate
      * Generates a single sidebar portlet of any kind
      * @return string html
      */
-    private function getPortlet($box)
+    private function getPortlet( $box )
     {
-        if (!$box['content']) {
+        if ( !$box['content'] ) {
             return;
         }
 
@@ -269,23 +269,23 @@ class FemiwikiTemplate extends BaseTemplate
             array(
                 'role' => 'navigation',
                 'class' => 'mw-portlet',
-                'id' => Sanitizer::escapeId($box['id'])
-            ) + Linker::tooltipAndAccesskeyAttribs($box['id'])
+                'id' => Sanitizer::escapeId( $box['id'] )
+            ) + Linker::tooltipAndAccesskeyAttribs( $box['id'] )
         );
         $html .= Html::element(
             'h3',
             [],
-            isset($box['headerMessage']) ? $this->getMsg($box['headerMessage'])->text() : $box['header']);
-        if (is_array($box['content'])) {
-            $html .= Html::openElement('ul');
-            foreach ($box['content'] as $key => $item) {
-                $html .= $this->makeListItem($key, $item);
+            isset( $box['headerMessage'] ) ? $this->getMsg( $box['headerMessage'] )->text() : $box['header']);
+        if ( is_array( $box['content'] ) ) {
+            $html .= Html::openElement( 'ul' );
+            foreach ( $box['content'] as $key => $item ) {
+                $html .= $this->makeListItem( $key, $item );
             }
-            $html .= Html::closeElement('ul');
+            $html .= Html::closeElement( 'ul' );
         } else {
             $html .= $box['content'];
         }
-        $html .= Html::closeElement('div');
+        $html .= Html::closeElement( 'div' );
 
         return $html;
     }
@@ -294,7 +294,7 @@ class FemiwikiTemplate extends BaseTemplate
      * Generates the logo and (optionally) site title
      * @return string html
      */
-    private function getLogo($id = 'p-logo', $imageOnly = false)
+    private function getLogo( $id = 'p-logo', $imageOnly = false )
     {
         $html = Html::openElement(
             'div',
@@ -309,20 +309,20 @@ class FemiwikiTemplate extends BaseTemplate
             array(
                 'href' => $this->data['nav_urls']['mainpage']['href'],
                 'class' => 'mw-wiki-logo',
-            ) + Linker::tooltipAndAccesskeyAttribs('p-logo')
+            ) + Linker::tooltipAndAccesskeyAttribs( 'p-logo' )
         );
-        if (!$imageOnly) {
+        if ( !$imageOnly ) {
             $html .= Html::element(
                 'a',
                 array(
                     'id' => 'p-banner',
                     'class' => 'mw-wiki-title',
                     'href' => $this->data['nav_urls']['mainpage']['href']
-                ) + Linker::tooltipAndAccesskeyAttribs('p-logo'),
-                $this->getMsg('sitetitle')->escaped()
+                ) + Linker::tooltipAndAccesskeyAttribs( 'p-logo' ),
+                $this->getMsg( 'sitetitle' )->escaped()
             );
         }
-        $html .= Html::closeElement('div');
+        $html .= Html::closeElement( 'div' );
 
         return $html;
     }
@@ -355,19 +355,19 @@ class FemiwikiTemplate extends BaseTemplate
         $html = Html::openElement(
             'form',
             array(
-                'action' => htmlspecialchars($this->get('wgScript')),
+                'action' => htmlspecialchars( $this->get( 'wgScript' ) ),
                 'role' => 'search',
                 'class' => 'mw-portlet',
                 'id' => 'p-search'
             )
         );
-        $html .= Html::hidden('title', htmlspecialchars($this->get('searchtitle')));
+        $html .= Html::hidden( 'title', htmlspecialchars( $this->get( 'searchtitle' ) ) );
         $html .= Html::rawelement(
             'h3',
             [],
-            Html::label($this->getMsg('search')->escaped(), 'searchInput')
+            Html::label( $this->getMsg( 'search' )->escaped(), 'searchInput' )
         );
-        $html .= $this->makeSearchInput(array('id' => 'searchInput'));
+        $html .= $this->makeSearchInput( array( 'id' => 'searchInput' ) );
         $html .= Html::rawelement(
             'button',
             [
@@ -376,8 +376,8 @@ class FemiwikiTemplate extends BaseTemplate
             ],
             '×'
         );
-        $html .= $this->makeSearchButton('go', array('id' => 'searchGoButton', 'class' => 'searchButton'));
-        $html .= Html::closeElement('form');
+        $html .= $this->makeSearchButton( 'go', array( 'id' => 'searchGoButton', 'class' => 'searchButton' ) );
+        $html .= Html::closeElement( 'form' );
 
         return $html;
     }
@@ -389,7 +389,7 @@ class FemiwikiTemplate extends BaseTemplate
             'placeholder' => wfMessage( 'searchsuggest-search' )->text(),
             'value' => $this->get( 'search', '' ),
         ];
-        //if($realAttrs[value]==null) $realAttrs[value] = str_replace( '_', ' ', $this->get('titleprefixeddbkey'));
+        //if ( $realAttrs[value]==null ) $realAttrs[value] = str_replace( '_', ' ', $this->get( 'titleprefixeddbkey' ));
         $realAttrs = array_merge( $realAttrs, Linker::tooltipAndAccesskeyAttribs( 'search' ), $attrs );
         return Html::element( 'input', $realAttrs );
     }
@@ -457,44 +457,44 @@ class FemiwikiTemplate extends BaseTemplate
     function getShareToolbox() {
         $toolbox = [];
         global $wgServer; //$wgServer = 'https://femiwiki.com';
-        $canonicalLink = $wgServer.'/w/'.str_replace('%2F','/',urlencode($this->get('titleprefixeddbkey'))).'?utm_campaign=share';
+        $canonicalLink = $wgServer.'/w/'.str_replace( '%2F','/',urlencode( $this->get( 'titleprefixeddbkey' ) ) ).'?utm_campaign=share';
 
         $toolbox['copy'] = [];
         $toolbox['copy']['id'] = 'share-copy';
-        $toolbox['copy']['href'] = self::shortenURL($canonicalLink);
+        $toolbox['copy']['href'] = self::shortenURL( $canonicalLink );
         $toolbox['copy']['text'] = 'URL 복사';
 
         $toolbox['facebook'] = [];
         $toolbox['facebook']['id'] = 'share-facebook';
         $toolbox['facebook']['target'] = '_blank';
-        $link = $this->shortenURL($canonicalLink.'&utm_source=facebook&utm_medium=post');
+        $link = $this->shortenURL( $canonicalLink.'&utm_source=facebook&utm_medium=post' );
         $toolbox['facebook']['href'] = $link;
         $toolbox['facebook']['text'] = '페이스북';
 
         $toolbox['twitter'] = [];
         $toolbox['twitter']['id'] = 'share-twitter';
         $toolbox['twitter']['target'] = '_blank';
-        $link = $this->shortenURL($canonicalLink.'&utm_source=twitter&utm_medium=tweet');
-        $tweet = $this->get('title').' '.$link.' #'.$this->get('sitename');
-        $toolbox['twitter']['href'] = 'https://twitter.com/intent/tweet?text='.urlencode($tweet);
+        $link = $this->shortenURL( $canonicalLink.'&utm_source=twitter&utm_medium=tweet' );
+        $tweet = $this->get( 'title' ).' '.$link.' #'.$this->get( 'sitename' );
+        $toolbox['twitter']['href'] = 'https://twitter.com/intent/tweet?text='.urlencode( $tweet );
         $toolbox['twitter']['text'] = '트위터';
 
         return $toolbox;
     }
 
-    static function shortenURL($longURL){
+    static function shortenURL( $longURL ){
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL,'https://www.googleapis.com/urlshortener/v1/url'.'?key='.self::$googleApiKey);
-        curl_setopt($ch, CURLOPT_POST,1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,json_encode(array("longUrl"=>$longURL)));
-        curl_setopt($ch, CURLOPT_HTTPHEADER,array("Content-Type: application/json"));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt( $ch, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url'.'?key='.self::$googleApiKey );
+        curl_setopt( $ch, CURLOPT_POST, 1 );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS,json_encode( array( "longUrl"=>$longURL ) ) );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER,array( "Content-Type: application/json" ) );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 
-        $result = curl_exec($ch);
-        curl_close($ch);
-        if($result !== null && !isset(json_decode($result)->{'id'})) return $longURL;
-        return json_decode($result)->{'id'};
+        $result = curl_exec( $ch );
+        curl_close( $ch );
+        if ( $result !== null && !isset( json_decode( $result )->{ 'id' } ) ) return $longURL;
+        return json_decode( $result )->{ 'id' };
     }
 
     /**
@@ -503,11 +503,11 @@ class FemiwikiTemplate extends BaseTemplate
      */
     private function getUserLinks()
     {
-        return $this->getPortlet(array(
+        return $this->getPortlet( array(
             'id' => 'p-personal',
             'headerMessage' => 'personaltools',
             'content' => $this->getPersonalTools(),
-        ));
+        ) );
     }
 
     /**
@@ -543,33 +543,33 @@ class FemiwikiTemplate extends BaseTemplate
      * @param null|string $msg
      * @param null|string|array $hook
      */
-    protected function renderPortal($name, $content, $msg = null, $hook = null)
+    protected function renderPortal( $name, $content, $msg = null, $hook = null )
     {
-        if ($msg === null) {
+        if ( $msg === null ) {
             $msg = $name;
         }
-        $msgObj = wfMessage($msg);
-        $labelId = Sanitizer::escapeId("p-$name-label");
+        $msgObj = wfMessage( $msg );
+        $labelId = Sanitizer::escapeId( "p-$name-label" );
         ?><div class="portal" role="navigation" id='<?php
-        echo Sanitizer::escapeId("p-$name")
+        echo Sanitizer::escapeId( "p-$name" )
         ?>'<?php
-        echo Linker::tooltip('p-' . $name)
+        echo Linker::tooltip( 'p-' . $name )
         ?> aria-labelledby='<?php echo $labelId ?>'>
-            <h3<?php $this->html('userlangattributes') ?> id='<?php echo $labelId ?>'><?php
-                echo htmlspecialchars($msgObj->exists() ? $msgObj->text() : $msg);
+            <h3<?php $this->html( 'userlangattributes' ) ?> id='<?php echo $labelId ?>'><?php
+                echo htmlspecialchars( $msgObj->exists() ? $msgObj->text() : $msg );
                 ?></h3>
 
             <div class="body">
                 <?php
-                if (is_array($content)) {
+                if ( is_array( $content ) ) {
                     ?>
                     <ul>
                         <?php
-                        foreach ($content as $key => $val) {
-                            echo $this->makeListItem($key, $val);
+                        foreach ( $content as $key => $val ) {
+                            echo $this->makeListItem( $key, $val );
                         }
-                        if ($hook !== null) {
-                            Hooks::run($hook, [&$this, true]);
+                        if ( $hook !== null ) {
+                            Hooks::run( $hook, [ &$this, true ] );
                         }
                         ?>
                     </ul>
@@ -578,7 +578,7 @@ class FemiwikiTemplate extends BaseTemplate
                     echo $content; /* Allow raw HTML block to be defined by extensions */
                 }
 
-                $this->renderAfterPortlet($name);
+                $this->renderAfterPortlet( $name );
                 ?>
             </div>
         </div><?php
