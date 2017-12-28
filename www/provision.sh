@@ -45,9 +45,9 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     rm VisualEditor-REL1_27-9da5996.tar.gz
 
     ## TemplateData
-    wget -nv https://extdist.wmflabs.org/dist/extensions/TemplateData-REL1_27-7f21111.tar.gz
-    sudo tar -xzf TemplateData-REL1_27-7f21111.tar.gz -C /var/www/femiwiki.com/extensions
-    rm TemplateData-REL1_27-7f21111.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/TemplateData-REL1_27-eeaba01.tar.gz
+    sudo tar -xzf TemplateData-REL1_27-eeaba01.tar.gz -C /var/www/femiwiki.com/extensions
+    rm TemplateData-REL1_27-eeaba01.tar.gz
 
     ## Echo
     wget -nv https://extdist.wmflabs.org/dist/extensions/Echo-REL1_27-b87fa2f.tar.gz
