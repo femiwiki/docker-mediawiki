@@ -136,6 +136,7 @@ class FemiwikiTemplate extends BaseTemplate
                     array('id' => 'lastmod-and-views')
                 );
 
+                if(isset($this->data['content_navigation']['views']['history']['href']))
                 echo Html::rawElement(
                         'a',
                         array(
@@ -341,7 +342,7 @@ class FemiwikiTemplate extends BaseTemplate
             $attrs['class'] = 'mw-portlet';
             $attrs['id'] = 'ca-watch';
             
-            return Html::rawElement( 'span', $attrs, $this->makeLink( $mode, $item, $options ) );
+            return Html::rawElement( 'span', $attrs, $this->makeLink( $mode, $item, [] ) );
         }
     }
 
