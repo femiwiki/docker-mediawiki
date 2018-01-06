@@ -50,7 +50,8 @@ class SkinFemiwiki extends SkinTemplate
             'skins.femiwiki'
         ));
         $out->addModules(array(
-            'skins.femiwiki.js'
+            'skins.femiwiki.js',
+            'skins.femiwiki.js.notification.init'
         ));
     }
 

@@ -8,12 +8,12 @@
 
 // Web-font for Windows
 // (function() {
-//	if(navigator.userAgent.indexOf('Windows') === -1) return;
+//	 if(navigator.userAgent.indexOf('Windows') === -1) return;
 //
-//	var link = document.createElement('link');
-//	link.setAttribute('rel', 'stylesheet');
-//	link.setAttribute('href', '//fonts.googleapis.com/earlyaccess/notosanskr.css');
-//	document.head.appendChild(link);
+//	 var link = document.createElement('link');
+//	 link.setAttribute('rel', 'stylesheet');
+//	 link.setAttribute('href', '//fonts.googleapis.com/earlyaccess/notosanskr.css');
+//	 document.head.appendChild(link);
 // })();
 
 var _FW = {
@@ -68,17 +68,15 @@ $(function () {
 	});
 
 	// Notification badge
-	var alerts = +$('#pt-notifications-alert').text();
-	var messages = +$('#pt-notifications-message').text();
+	var initialNotifCount = mw.config.get( 'wgEchoInitialNotifCount' );
+	var alerts = initialNotifCount.alert;
+	var messages = initialNotifCount.message;
 	var badge = alerts + messages;
 	if (badge !== 0) {
 		$('#fw-menu-toggle .badge')
 			.addClass('active')
 			.text(badge > 10 ? '+9' : badge)
 	}
-
-	$('#pt-notifications-alert a').text('알림: ' + alerts);
-	$('#pt-notifications-message a').text('메시지: ' + messages);
 
 	// Collapsible category links
 	var catlinksToggle = $('<button></button>');
@@ -125,6 +123,7 @@ $(function () {
 			$(this).removeClass('external');
 		}
 	})
+
 	// Set Mathjax linebreaks configuration
 	MathJax.Hub.Config({
 		CommonHTML: { linebreaks: { automatic: true } },

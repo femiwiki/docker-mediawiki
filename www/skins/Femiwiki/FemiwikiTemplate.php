@@ -509,6 +509,31 @@ class FemiwikiTemplate extends BaseTemplate
         ));
     }
 
+    function getPersonalTools() {
+        $personal_urls = $this->get( 'personal_urls' );
+
+        // 알림과 메시지를 skins.femiwiki.js.notification.init에서만 처리할 수 있도록 
+        // Echo 확장기능에서 $( '#pt-notifications-alert-dialog a' )이나 
+        // $( '.mw-echo-notification-badge-nojs' )과 같은 방법으로 접근하는 링크들을 다른 이름으로 바꿉니다.
+        $insertUrls = [];
+        foreach ( [ 'alert', 'message' ] as $type ) {
+            if ( isset( $personal_urls["notifications-$type"] ) ) {
+                $insertUrls["notifications-$type-dialog"] = $personal_urls["notifications-$type"];
+                // 숫자 앞에 무슨 알림인지를 표기합니다.
+                $insertUrls["notifications-$type-dialog"]['text'] = ( $type == 'alert' ? '알림: ' : '메시지: ' ).$insertUrls["notifications-$type-dialog"]['text'];
+                // 아이콘이 아니라 글자를 적을 것이기에 뺍니다. (아이콘의 경우 길이가 제한됩니다.)
+                $insertUrls["notifications-$type-dialog"]['class'] = str_replace( ' oo-ui-iconElement oo-ui-iconElement-icon', '', $insertUrls["notifications-$type-dialog"]['class'] );
+                $insertUrls["notifications-$type-dialog"]['class'] = str_replace( 'mw-echo-notification-badge-nojs', 'mw-echo-notification-badge-dialog-nojs', $insertUrls["notifications-$type-dialog"]['class'] );
+                unset( $personal_urls["notifications-$type"] );
+            }    
+        }
+
+        $personal_urls = wfArrayInsertAfter( $personal_urls, $insertUrls, 'userpage' );
+        $this->set( 'personal_urls', $personal_urls );
+
+        return parent::getPersonalTools();
+    }
+
     /**
      * Outputs a css clear using the core visualClear class
      */

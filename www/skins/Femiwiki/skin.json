@@ -61,6 +61,25 @@
 				"resources/recentchanges.js",
 				"resources/bbs.js"
 			]
+		},
+		"skins.femiwiki.js.notification.init": {
+			"scripts": [
+				"resources/notification.init.js"
+			],
+			"dependencies": [
+				"ext.echo.api",
+				"mediawiki.Uri"
+			]
+		},
+		"skins.femiwiki.js.ui.notification": {
+			"scripts": [
+				"resources/mw.femiwiki.js",
+				"resources/mw.femiwiki.NotificationBadgeWidget.js"
+			],
+			"dependencies": [
+				"oojs-ui",
+				"ext.echo.ui.desktop"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
