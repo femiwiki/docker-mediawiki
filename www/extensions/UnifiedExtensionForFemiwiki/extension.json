@@ -1,0 +1,29 @@
+{
+	"name": "UnifiedExtensionForFemiwiki",
+	"version": "0.0.1",
+	"author": [
+		"Lens"
+	],
+	"descriptionmsg": "unifiedextensionforfemiwiki-desc",
+	"license-name": "GPL-2.0+",
+	"type": "specialpage",
+	"requires": {
+		"extensions": {
+			"CategoryTree": "*"
+		}
+	},
+	"AutoloadClasses": {
+		"SpecialUncategorizedCategoryTree": "specials/SpecialUncategorizedCategoryTree.php",
+		"SpecialOrderedWhatlinkshere": "specials/SpecialOrderedWhatlinkshere.php",
+		"FemiwikiHooks": "Hooks.php"
+	},
+	"Hooks": {
+		"SkinTemplateOutputPageBeforeExec": "FemiwikiHooks::onSkinTemplateOutputPageBeforeExec"
+	},
+	"MessagesDirs": {
+		"UnifiedExtensionForFemiwiki": [
+			"i18n"
+		]
+	},
+	"manifest_version": 1
+}

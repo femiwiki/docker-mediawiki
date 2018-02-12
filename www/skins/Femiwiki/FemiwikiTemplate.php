@@ -189,11 +189,6 @@ class FemiwikiTemplate extends BaseTemplate
                 </div>
             </div>
 
-            <?php
-            $this->set( 'reportinfringement', $this->getSkin()->footerLink( 'reportinfringement', 'reportinfringementpage' ) );
-            $this->data['footerlinks']['places'][] = 'reportinfringement';
-            ?>
-
             <div id="mw-footer">
                 <div id="mw-footer-bar"></div>
 
