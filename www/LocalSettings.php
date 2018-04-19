@@ -364,6 +364,9 @@ $wgHTMLTagsAttributes['link'] = array('href', 'itemprop');
 $wgHTMLTagsAttributes['meta'] = array('content', 'itemprop');
 $wgHTMLTagsAttributes['iframe'] = array('src', 'class', 'style');
 
+## Sanction
+wfLoadExtension( 'Sanctions' );
+
 # Misc.
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
 $wgDebugToolbar = ('HOST' != 'femiwiki.com');
