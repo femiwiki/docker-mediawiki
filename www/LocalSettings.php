@@ -340,7 +340,7 @@ require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 wfLoadExtension( 'FacetedCategory' );
 
 ## ExtendedSpecialPagesForFemiwiki --it needs the CategoryTree
-wfLoadExtension( 'ExtendedSpecialPagesForFemiwiki' );
+wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
 $wgSpecialPages['Whatlinkshere'] = [SpecialOrderedWhatlinkshere::class];
 
