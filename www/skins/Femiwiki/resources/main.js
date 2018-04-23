@@ -69,13 +69,15 @@ $(function () {
 
 	// Notification badge
 	var initialNotifCount = mw.config.get( 'wgEchoInitialNotifCount' );
-	var alerts = initialNotifCount.alert;
-	var messages = initialNotifCount.message;
-	var badge = alerts + messages;
-	if (badge !== 0) {
-		$('#fw-menu-toggle .badge')
-			.addClass('active')
-			.text(badge > 10 ? '+9' : badge)
+	if( initialNotifCount != null ) {
+		var alerts = initialNotifCount.alert;
+		var messages = initialNotifCount.message;
+		var badge = alerts + messages;
+		if (badge !== 0) {
+			$('#fw-menu-toggle .badge')
+				.addClass('active')
+				.text(badge > 10 ? '+9' : badge)
+		}
 	}
 
 	// Collapsible category links
