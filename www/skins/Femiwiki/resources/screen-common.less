@@ -330,6 +330,7 @@ button {
   // Paragraph
   #mw-content-text {
     clear:both;
+    margin-bottom: 4.8rem;
   }
   #mw-content-text > p:first-child {
     margin-top: 2.8rem;
@@ -350,7 +351,7 @@ button {
   }
 
   // Lists
-  ol, ul, dl {
+  ol, ul {
     margin: 1.6rem 0 1.6rem;
     padding-left: 1.2rem;
   }
@@ -364,6 +365,23 @@ button {
   li ol {
     margin-top: 0rem;
     margin-bottom: 0rem;
+  }
+  dl {
+    margin: 1.6rem 0 1.6rem;
+    padding-left: 0.5rem;
+  }
+  dt:not(first-child) {
+    margin-top: 1em;
+  }
+  dd {
+    margin-left: 0.6em;
+  }
+
+  // Pre
+  pre {
+    font-family: inherit;
+    border: none;
+    background-color: #f0f0f0;
   }
 
   // Quote
@@ -431,6 +449,39 @@ button {
   #file img {
     max-width: 100%;
     height: auto;
+  }
+
+  // Gallery
+  #content .mw-gallery-traditional {
+    overflow-x: scroll;
+    white-space: nowrap;
+    padding: 0 1.3rem;
+    text-align: center;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 3.2rem;
+  }
+
+  #content .mw-gallery-traditional .gallerytext > p {
+    white-space: normal;
+    margin: 0;
+    text-align: center;
+  }
+    
+  #content .mw-gallery-traditional .thumb {
+    margin: 0;
+    border: none;
+    background-color: initial;
+  }
+
+  #content .mw-gallery-traditional::after {
+    content: "옆으로 스크롤 가능";
+    display: block;
+    position: absolute;
+    text-align: center;
+    font-size: 0.8rem;
+    width: ~"calc(100% - 2.6rem)";
+    color: gray;
+    margin-top: 1.6rem;
   }
 
   & > br:first-child,
@@ -690,6 +741,11 @@ ul#preftoc {
   }
 }
 
+// Search
+.mw-search-results {
+  max-width: 100%;
+}
+
 // Source Editor
 body.action-edit {
   #content .mw-editsection {
@@ -822,12 +878,39 @@ html.ve-active {
 @media screen and (max-width: 480px) {
   // Content
   #content {
+    pre,
+    #content .mw-gallery-traditional,
+    .mw-changeslist div,
+    .flow-topic-titlebar
+    {
+      width: ~"calc(100% + 2.6rem)";
+      margin-left: -1.3rem;
+    }
+    
+    .mw-changeslist table {
+      padding: 0 1.3rem;
+    }
+    
+    .flow-topic-titlebar {
+      padding-left: 1.3rem;
+    }
     .thumb {
       float: none;
       margin: 1rem auto;
 
       .thumbinner {
         margin: 0 auto;
+        border: none;
+        background-color: initial;
+      }
+
+      .thumbinner .thumbimage {
+        border: none;
+      }
+      
+      .thumbcaption {
+        color: gray;
+        text-align: center;
       }
     }
   }
