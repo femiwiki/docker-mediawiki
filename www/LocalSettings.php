@@ -350,7 +350,7 @@ wfLoadExtension( 'CategoryIntersectionSearch' );
 ## Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = array(
     NS_TALK => 'noindex,nofollow',
-    NS_USER => 'noindex,nofollow'
+    NS_USER => 'noindex,nofollow',
     NS_USER_TALK => 'noindex,nofollow',
     NS_PROJECT_TALK => 'noindex,nofollow',
     NS_TOPIC => 'noindex,nofollow',
