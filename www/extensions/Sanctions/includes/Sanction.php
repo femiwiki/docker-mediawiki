@@ -575,8 +575,9 @@ class Sanction {
 
 		$sumPeriod = 0;
 		$agree = 0;
+		$maxBlockPeriod = (float)wfMessage( 'sanctions-max-block-period' )->text();
 		foreach ( $votes as $userId => $period ) {
-			$sumPeriod += $period>30?30:$period;
+			$sumPeriod += $period>$maxBlockPeriod?$maxBlockPeriod:$period;
 			if ( $period > 0 ) $agree++;
 		}
 
