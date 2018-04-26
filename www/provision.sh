@@ -69,9 +69,9 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo php /var/www/femiwiki.com/extensions/Flow/maintenance/FlowUpdateRevContentModelFromOccupyPages.php
 
     ## Scribunto
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Scribunto-REL1_27-dabecf2.tar.gz
-    sudo tar -xzf Scribunto-REL1_27-dabecf2.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Scribunto-REL1_27-dabecf2.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Scribunto-REL1_27-3ada945.tar.gz
+    sudo tar -xzf Scribunto-REL1_27-3ada945.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Scribunto-REL1_27-3ada945.tar.gz
 
     ## CategoryTree
     wget -nv https://extdist.wmflabs.org/dist/extensions/CategoryTree-REL1_27-b454f2c.tar.gz
