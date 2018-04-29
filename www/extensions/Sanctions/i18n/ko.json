@@ -1,0 +1,16 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"sanctions-voting-period": "3",
+	"sanctions-voting-right-verification-period": "20",
+	"sanctions-voting-right-verification-edits": "3",
+	"sanctions-max-block-period": "30",
+	"sanctions-discussion-page-name": "페미위키토론:제재안에 대한 의결",
+	"sanctions": "제재안 목록",
+	"sanctions-desc": "[[페미위키]] 정책에 따라 제재안을 처리합니다.",
+	"sanctions-title-with-target": "$1 님에 대한 제재안 목록",
+	"sanctions-sactions-form-header": "새 제재안 올리기",
+	"sanctions-content-placeholder": "제재안의 내용을 적어 주세요",
+	"sanctions-submit": "올리기"
+}

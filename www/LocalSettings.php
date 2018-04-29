@@ -38,7 +38,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20170723_0';
+$wgStyleVersion = '20170710_0';
 $wgResourceLoaderMaxage = array(
     'versioned' => array(
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -165,10 +165,32 @@ $wgGroupPermissions['sysop']['deleterevision'] = true;
 ## Prevent anonymous users from edit pages
 $wgGroupPermissions['*']['edit'] = false;
 
-## Allow registered users to edit pages
-$wgGroupPermissions['user']['edit'] = true;
+## Set when users become autoconfirmed users
+$wgAutoConfirmCount = 0;
+$wgAutoConfirmAge = 10800;
+$wgAutopromote = array(
+	"autoconfirmed" => array( "&",
+		array( APCOND_EDITCOUNT, &$wgAutoConfirmCount ),
+		array( APCOND_AGE, &$wgAutoConfirmAge ),
+	),
+);
+## Allow autoconfirmed users to edit pages
+$wgGroupPermissions['user']['edit'] = false;
+$wgGroupPermissions['autoconfirmed']['edit'] = true;
 $wgGroupPermissions['seeder']['edit'] = true;
 $wgGroupPermissions['bureaucrat']['edit'] = true;
+
+## Add `restricted-sysop` group
+$wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
+$wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
+$wgGroupPermissions['restricted-sysop']['deletelogentry'] = false;
+$wgGroupPermissions['restricted-sysop']['deleterevision'] = false;
+$wgGroupPermissions['restricted-sysop']['editinterface'] = false;
+$wgGroupPermissions['restricted-sysop']['editusercss'] = false;
+$wgGroupPermissions['restricted-sysop']['edituserjs'] = false;
+$wgGroupPermissions['restricted-sysop']['managechangetags'] = false;
+$wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
+$wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
 ## But only seeders can edit major namespaces
 //$wgNamespaceProtection[NS_MAIN] = array('edit-main');
@@ -231,6 +253,7 @@ require_once "$IP/extensions/TemplateData/TemplateData.php";
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
+$wgHiddenPrefs[] = 'realname';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 $wgVirtualRestConfig['modules']['parsoid'] = array(
     'url' => 'http://PARSOID:8142',
@@ -255,10 +278,6 @@ wfLoadExtension('Thanks');
 ## Scribunto
 require_once "$IP/extensions/Scribunto/Scribunto.php";
 $wgScribuntoDefaultEngine = 'luastandalone';
-
-## Realnames
-require_once("$IP/extensions/Realnames/Realnames.php");
-$wgRealnamesLinkStyle = "femiwiki";
 
 ## Flow
 require_once "$IP/extensions/Flow/Flow.php";
@@ -321,7 +340,7 @@ require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 wfLoadExtension( 'FacetedCategory' );
 
 ## ExtendedSpecialPagesForFemiwiki --it needs the CategoryTree
-wfLoadExtension( 'ExtendedSpecialPagesForFemiwiki' );
+wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
 $wgSpecialPages['Whatlinkshere'] = [SpecialOrderedWhatlinkshere::class];
 
@@ -331,8 +350,10 @@ wfLoadExtension( 'CategoryIntersectionSearch' );
 ## Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = array(
     NS_TALK => 'noindex,nofollow',
+    NS_USER => 'noindex,nofollow',
     NS_USER_TALK => 'noindex,nofollow',
     NS_PROJECT_TALK => 'noindex,nofollow',
+    NS_TOPIC => 'noindex,nofollow',
 );
 
 ## SimpleMathJax
@@ -345,6 +366,10 @@ $wgHTMLTagsAttributes['link'] = array('href', 'itemprop');
 $wgHTMLTagsAttributes['meta'] = array('content', 'itemprop');
 $wgHTMLTagsAttributes['iframe'] = array('src', 'class', 'style');
 
+## Sanction
+wfLoadExtension( 'Sanctions' );
+
 # Misc.
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
 $wgDebugToolbar = ('HOST' != 'femiwiki.com');
+

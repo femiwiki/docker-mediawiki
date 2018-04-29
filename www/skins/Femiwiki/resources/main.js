@@ -20,39 +20,38 @@ var _FW = {
   BBS_NS: [3902, 3904]
 };
 
+
 $(function () {
-  // Let menu fill parent
   function menuResize(divId){
     var containerWidth = parseFloat($('#'+divId).css('width'))
       -parseFloat($('#'+divId).css('padding-left'))
       -parseFloat($('#'+divId).css('padding-right')),
-      itemPadding =
-        parseFloat($('#'+divId+' > div').css('padding-left'))
+      itemPadding
+        =parseFloat($('#'+divId+' > div').css('padding-left'))
         +parseFloat($('#'+divId+' > div').css('padding-right')),
-      itemMargin =
-        parseFloat($('#'+divId+' > div').css('margin-left'))
+      itemMargin
+        =parseFloat($('#'+divId+' > div').css('margin-left'))
         +parseFloat($('#'+divId+' > div').css('margin-right')),
       itemActualMinWidth = 
         parseFloat($('#'+divId+' > div').css('min-width'))
         +itemPadding+itemMargin,
-      itemLength = 
-          $('#'+divId+' > div').filter(function() {
-            return $(this).css('display') !== 'none';
-          }).length,
-      horizontalCapacity = 
-        Math.min(
-          Math.floor(containerWidth / itemActualMinWidth),
-          itemLength
-        );
+      itemLength = $('#'+divId+' > div').filter(function() {
+          return $(this).css('display') !== 'none';
+      }).length,
+      horizontalCapacity = Math.min(Math.floor(containerWidth / itemActualMinWidth),itemLength);
 
-    $('#'+divId+' > div').css("width",Math.floor(
-      containerWidth/horizontalCapacity
-      -itemPadding
-      -itemMargin
-    ));
+    $('#'+divId+' > div').css("width",Math.floor(containerWidth/horizontalCapacity-itemPadding-itemMargin));
   }
 
-  // Menu toggle
+  var searchInput = $('#searchInput'),
+   searchClearButton = $('#searchClearButton');
+  searchInput.on("input", function(){
+    searchClearButton.toggle(!!this.value);
+  });
+  searchClearButton.click(function () {
+    searchInput.val("").trigger('input').focus();
+  });
+
   $('#fw-menu-toggle').click(function () {
     $('#fw-menu').toggle();
     menuResize('fw-menu');
@@ -66,16 +65,6 @@ $(function () {
   $(window).resize(function() {
     menuResize('fw-menu');
     menuResize('p-actions-and-toolbox')
-  });
-
-  // Search claer button
-  var searchInput = $('#searchInput'),
-   searchClearButton = $('#searchClearButton');
-  searchInput.on("input", function(){
-    searchClearButton.toggle(!!this.value);
-  });
-  searchClearButton.click(function () {
-    searchInput.val("").trigger('input').focus();
   });
 
   // Notification badge
@@ -136,14 +125,13 @@ $(function () {
       $(this).removeClass('external');
     }
   })
-
   // Set Mathjax linebreaks configuration
   MathJax.Hub.Config({
     CommonHTML: { linebreaks: { automatic: true } },
     "HTML-CSS": { linebreaks: { automatic: true } },
            SVG: { linebreaks: { automatic: true } }
   });
-  
+
   // Center single Mathjax line
   MathJax.Hub.Queue(function () {
     $('#content p > span:only-child > span.MathJax,'

@@ -1,0 +1,61 @@
+{
+	"name": "Sanctions",
+	"version": "1.0.0",
+	"author": [
+		"Lens"
+	],
+	"descriptionmsg": "sanctions-desc",
+	"license-name": "GPL-2.0+",
+	"type": "specialpage",
+	"requires": {
+		"extensions": {
+			"Sanctions": "*",
+			"Flow": "*"
+		}
+	},
+	"AvailableRights": [
+		"sanctions-execute"
+	],
+	"AutoloadClasses": {
+		"SpacialSanctions": "specials/SpacialSanctions.php",
+		"SanctionsPager": "includes/SanctionsPager.php",
+		"Sanction": "includes/Sanction.php",
+		"SanctionsHooks": "Sanctions.hooks.php",
+		"SanctionsUtils": "includes/SanctionsUtils.php"
+	},
+	"ResourceModules": {
+		"ext.sanctions": {
+			"position": "top",
+			"styles": "ext.sanctions.css"
+		},
+		"ext.flow-default-board": {
+			"position": "top",
+			"styles": "ext.flow-default-board.css"
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "modules",
+		"remoteExtPath": "Sanctions/modules"
+	},
+	"Hooks": {
+		"LoadExtensionSchemaUpdates": "SanctionsHooks::onLoadExtensionSchemaUpdates",
+		"UserToolLinksEdit": "SanctionsHooks::onUserToolLinksEdit",
+		"DiffRevisionTools": "SanctionsHooks::onDiffRevisionTools",
+		"HistoryRevisionTools": "SanctionsHooks::onHistoryRevisionTools",
+		"FlowAddModules": "SanctionsHooks::onFlowAddModules"
+			
+	},
+	"SpecialPages": {
+		"Sanctions": "SpacialSanctions"
+	},
+	"MessagesDirs": {
+		"Sanctions": [
+			"i18n"
+		]
+	},
+	"ExtensionMessagesFiles": {
+		"SanctionsAlias": "Sanctions.alias.php",
+		"SanctionsMagic": "Sanctions.i18n.magic.php"
+	},
+	"manifest_version": 1
+}

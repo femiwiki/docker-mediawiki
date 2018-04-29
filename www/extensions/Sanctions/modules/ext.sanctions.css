@@ -1,0 +1,81 @@
+.sanction-empty {
+	text-align: center;
+}
+
+.sanction-execute-result {
+	text-align: center;
+}
+
+.sanction {
+	padding: 1em;
+	border-bottom: 1px solid #b9b5d9;
+}
+
+.sanction .sanction-expired,
+.sanction .sanction-pass-status,
+.sanction .sanction-vote-status,
+.sanction .sanction-timeLeft
+ {
+	margin: 0 .3em;
+	width: auto;
+	float: right;
+	padding: 0 .3em;
+}
+.sanction .sanction-expired,
+.sanction.not-voted .sanction-vote-status
+ {
+	background-color: #a5c831;
+	color: white;
+	border-radius: .3em;
+}
+.sanction .sanction-timeLeft{
+	width: auto;
+	float: right;
+	clear: right;
+}
+.sanction.expired .sanction-timeLeft,
+.sanction.expired .sanction-vote-status {
+	display: none;
+}
+.sanction .sanction-exectute-form {
+	float: right;
+	clear: right;
+	display: inline-block;
+	margin: .5em
+}
+.sanction .sanction-exectute-button{
+	padding: 0.3em;
+}
+
+.sanction .sanction-process {
+	display: inline-block;
+	width: auto;
+	padding: 0 .3em;
+	margin: 0 .3em;
+}
+.sanction:not(.emergency) .sanction-process-toggle-button{
+	background-color: red;
+}
+.sanction .sanction-process-toggle{
+	display: inline-block;
+	width: auto;
+}
+.sanction .sanction-process-toggle-button{
+	padding: 0.2em;
+}
+
+.sanction .sanction-title {
+	font-size: 1.2em;
+}
+
+.sanction.insulting-name .sanction-target {
+	text-decoration: line-through;
+}
+
+.sanction .sanction-type {
+	
+}
+
+#submit-button {
+	float:right;
+}
