@@ -95,6 +95,7 @@ $wgSessionCacheType = CACHE_MEMCACHED; # optional
 ## is writable, then set this to true:
 $wgEnableUploads = true;
 $wgFileExtensions[] = 'svg';
+$wgAllowTitlesInSVG = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 
