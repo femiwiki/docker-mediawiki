@@ -98,6 +98,7 @@ $wgFileExtensions[] = 'svg';
 $wgAllowTitlesInSVG = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
+$wgSVGConverter = 'rsvg';
 
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = true;
