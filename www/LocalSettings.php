@@ -94,6 +94,7 @@ $wgSessionCacheType = CACHE_MEMCACHED; # optional
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
 $wgEnableUploads = true;
+$wgFileExtensions[] = 'svg';
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
 
