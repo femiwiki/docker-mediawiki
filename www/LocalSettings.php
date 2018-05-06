@@ -170,7 +170,7 @@ $wgGroupPermissions['*']['edit'] = false;
 
 ## Set when users become autoconfirmed users
 $wgAutoConfirmCount = 0;
-$wgAutoConfirmAge = 10800;
+$wgAutoConfirmAge = 3600;
 $wgAutopromote = array(
 	"autoconfirmed" => array( "&",
 		array( APCOND_EDITCOUNT, &$wgAutoConfirmCount ),
