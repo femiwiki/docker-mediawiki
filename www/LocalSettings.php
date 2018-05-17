@@ -62,6 +62,7 @@ $wgEnableUserEmail = true; # UPO
 
 $wgEmergencyContact = "admin@femiwiki.com";
 $wgPasswordSender = "admin@femiwiki.com";
+$wgUserEmailUseReplyTo = true;
 
 $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
