@@ -90,7 +90,18 @@ class SanctionsPager extends IndexPager {
 
 		$isForInsultingName = $sanction->isForInsultingName();
 		$targetName = $target->getName();
-		$targetNameForDiplay = $isForInsultingName ? $sanction->getTargetOriginalName() : $targetName;
+
+		if ( $isForInsultingName ) {
+			$originalName = $sanction->getTargetOriginalName();
+			$length = mb_strlen($originalName, 'utf-8');
+			$targetNameForDiplay = 
+				mb_substr($originalName, 0, 1, 'utf-8')
+				.str_pad('', $length-2, '*');
+
+			if ( $length > 1 )
+				$targetNameForDiplay .= iconv_substr($originalName, $length-1, $length, 'utf-8');
+		} else 
+			$targetNameForDiplay = $targetName;
 
 		$topicTitle = $sanction->getTopic();
 

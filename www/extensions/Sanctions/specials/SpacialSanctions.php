@@ -122,24 +122,24 @@ class SpacialSanctions extends SpecialPage {
 			$error = $request->getVal( 'errorCode' );
 			if ( $error !== null )
 				$output->addHTML( Html::rawelement(
-	                'div',
-	                [ 'class' => 'sanction-execute-result' ],
-	                self::makeErrorMessage(
-	                	$request->getVal( 'errorCode' ),
-	                	$request->getVal( 'uuid' ),
-	                	$request->getVal( 'targetName' )
-	                )
-	            ) );
+					'div',
+					[ 'class' => 'sanction-execute-result' ],
+					self::makeErrorMessage(
+						$request->getVal( 'errorCode' ),
+						$request->getVal( 'uuid' ),
+						$request->getVal( 'targetName' )
+					)
+				) );
 			else
 				$output->addHTML( Html::rawelement(
-	                'div',
-	                [ 'class' => 'sanction-execute-result' ],
-	                self::makeMessage(
-	                	$request->getVal( 'code' ),
-	                	$request->getVal( 'uuid' ),
-	                	$request->getVal( 'targetName' )
-	                )
-	            ) );
+					'div',
+					[ 'class' => 'sanction-execute-result' ],
+					self::makeMessage(
+						$request->getVal( 'code' ),
+						$request->getVal( 'uuid' ),
+						$request->getVal( 'targetName' )
+					)
+				) );
 			
 			return false;
 		}
@@ -212,9 +212,10 @@ class SpacialSanctions extends SpecialPage {
 			break;
 			case 'toggle-emergency':
 				// 제재안 절차 변경( 일반 <-> 긴급 )
+				$user = $this->getUser();
 
 				// 차단 권한이 없다면 절차를 변경할 수 없습니다.
-				if ( !$this->getUser()->isAllowed( 'block' ) ) {
+				if ( !$user->isAllowed( 'block' ) ) {
 					list( $query['showResult'], $query['errorCode'] ) = [ true, 1 ];
 					// '권한이 없습니다.'
 					break;
@@ -223,7 +224,7 @@ class SpacialSanctions extends SpecialPage {
 				$sanctionId = $request->getVal( 'sanctionId' );
 				$sanction = Sanction::newFromId( $sanctionId );
 
-				if ( !$sanction || !$sanction->toggleEmergency() ) {
+				if ( !$sanction || !$sanction->toggleEmergency( $user ) ) {
 					list( $query['showResult'], $query['errorCode'], $query['uuid'] ) = [ true, 3, $sanction->getTopicUUID()->getAlphaDecimal() ];
 					// '절차 변경에 실패하였습니다.'
 					break;
@@ -310,10 +311,10 @@ class SpacialSanctions extends SpecialPage {
 
 		$out = '';
 		$out .= Xml::element(
-             'h2',
-             [],
-             $this->msg( 'sanctions-sactions-form-header' )->text()
-         );
+			 'h2',
+			 [],
+			 $this->msg( 'sanctions-sactions-form-header' )->text()
+		 );
 		$out .= Xml::tags(
 			'form',
 			[
