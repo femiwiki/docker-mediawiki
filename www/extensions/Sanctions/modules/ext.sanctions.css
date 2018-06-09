@@ -69,7 +69,7 @@
 }
 
 .sanction.insulting-name .sanction-target {
-	text-decoration: line-through;
+	/*text-decoration: line-through;*/
 }
 
 .sanction .sanction-type {
