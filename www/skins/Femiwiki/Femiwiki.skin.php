@@ -26,9 +26,6 @@ class SkinFemiwiki extends SkinTemplate
         $out->addMeta('twitter:title', $out->mPagetitle);
         if ( isset( $out->mDescription ) )
         	$out->addMeta('twitter:description', $out->mDescription);
-        if ( array_key_exists( 'og:image', $metaTags ) )
-        	$out->addMeta('twitter:image', $metaTags['og:image']);
-
 
         // Favicons
         $out->addHeadItem('fav0', "<link rel='apple-touch-icon' sizes='57x75' href='/fw-resources/favicons/apple-icon-57x57.png'>");
