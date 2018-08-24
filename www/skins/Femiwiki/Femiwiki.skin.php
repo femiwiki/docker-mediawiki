@@ -21,7 +21,7 @@ class SkinFemiwiki extends SkinTemplate
         $out->addMeta('viewport', 'width=device-width, initial-scale=1.0');
 
         // Twitter card
-        $out->addMeta('twitter:card', 'summary');
+        $out->addMeta('twitter:card', 'summary_large_image');
         $out->addMeta('twitter:site', '@femiwikidotcome');
         $out->addMeta('twitter:title', $out->mPagetitle);
         if ( isset( $out->mDescription ) )
