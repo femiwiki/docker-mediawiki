@@ -198,7 +198,7 @@ class SpacialSanctions extends SpecialPage {
 					}
 				}
 				
-				$sanction = Sanction::write( $this->getUser(), $target, $forInsultingName, $content );
+				$sanction = Sanction::write( $user, $target, $forInsultingName, $content );
 
 				if ( !$sanction ) {
 					list( $query['showResult'], $query['errorCode'] ) = [ true, 2 ];

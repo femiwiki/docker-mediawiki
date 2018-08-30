@@ -39,6 +39,7 @@ class SanctionsPager extends IndexPager {
 			 ],
 			'fields' => [
 				'st_id',
+				'st_author',
 				'st_expiry',
 				'not_expired' => 'st_expiry > '.wfTimestamp(TS_MW),
 			],
@@ -68,6 +69,9 @@ class SanctionsPager extends IndexPager {
 		if ( $this->getUserHasVoteRight() )
 			$isVoted = $row->voted_from != null;
 		
+		$author = $sanction->getAuthor();
+		$isMySanction = $author->equals( $this->getUser() );
+
 		$expiry = $sanction->getExpiry();
 		$expired = $sanction->isExpired();
 
@@ -114,10 +118,11 @@ class SanctionsPager extends IndexPager {
 		$rowTitle .= linker::link( $topicTitle, $isForInsultingName ? '부적절한 사용자명 변경 건의' : '편집 차단 건의', [ 'class'=>'sanction-type' ] );
 
 		$class = 'sanction';
-		$class .= ( $isForInsultingName ? ' insulting-name' : ' block' )
+		$class .=  ( $isMySanction ? ' my-sanction': '' )
+			.( $isForInsultingName ? ' insulting-name' : ' block' )
 			.( $sanction->isEmergency() ? ' emergency' : '' )
 			.( $expired ? ' expired' : '' );
-		if ( $this->getUserHasVoteRight() )
+		if ( $this->getUserHasVoteRight() && !$isMySanction )
 			$class .= $isVoted ? ' voted' : ' not-voted';
 
 		$out = Html::openElement(
@@ -140,7 +145,7 @@ class SanctionsPager extends IndexPager {
 			$out .= Html::rawelement(
                 'div',
                 [ 'class' => 'sanction-vote-status' ],
-                $isVoted ? '참여함' : '참여 전'
+                $isMySanction ? '내 제재안' : ( $isVoted ? '참여함' : '참여 전' )
             );
 		if( !$expired )
 			$out .= Html::rawelement(

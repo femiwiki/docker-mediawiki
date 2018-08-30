@@ -11,6 +11,10 @@ class Sanction {
 	/**
 	 * @var UUID
 	 */
+	protected $mAuthor;
+	/**
+	 * @var String
+	 */
 	protected $mTopic;
 
 	/**
@@ -69,6 +73,8 @@ class Sanction {
 	 * @return Sanction 작성된 제재안.
 	 */
 	public static function write( $user, $target, $forInsultingName, $content ) {
+		$authorId = $user->getId();
+
 		$targetId = $target->getId();
 		$targetName = $target->getName();
 
@@ -120,6 +126,7 @@ class Sanction {
 
 		$uuid = UUID::create( $topicId )->getBinary();
 		$data = array(
+			'st_author'=> $authorId,
 			'st_target'=> $targetId,
 			'st_topic'=> $uuid,
 			'st_expiry'=> $expiry,
@@ -547,6 +554,7 @@ class Sanction {
 
 		try {
 			$this->mId = $row->st_id;
+			$this->mAuthor = User::newFromId( $row->st_author );
 			$topicUUIDBinary = $row->st_topic;
 			$this->mTopic = UUID::create( $topicUUIDBinary );
 			$this->mTarget = User::newFromId( $row->st_target );
@@ -645,6 +653,10 @@ class Sanction {
 
 	public function getId() {
 		return $this->mId;
+	}
+
+	public function getAuthor() {
+		return $this->mAuthor;
 	}
 
 	public function getExpiry() {
