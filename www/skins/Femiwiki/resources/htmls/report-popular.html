@@ -67,11 +67,12 @@
             var time = data.getValue(i, 1);
             var pageview = data.getValue(i, 2);
             var url = '/w/' + encodeTitle(title);
+            var anchor = '<a href="' + url + '" target="_parent" title="' + title + '">' + title.substr(0, 15) + ( title.length > 15 ? '…' : '' ) + '</a>';
             html.push(
               '<tr>' +
               '<td class="time">' + time + '</td>' +
               '<td class="pageview">' + pageview + '</td>' +
-              '<td class="title"><a href="' + url + '" target="_parent">' + title.substr(0, 15) + '</a></td>' +
+              '<td class="title">' + anchor + '</td>' +
               '</tr>'
             );
           } catch(e) {
