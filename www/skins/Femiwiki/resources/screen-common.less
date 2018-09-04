@@ -225,11 +225,40 @@ button {
       display: inline-block;
       margin-top: 0;
     }
-    #p-links-toggle {
-      background-color: transparent;
-      color: #252525;
-      float:right;
-      padding: .4rem;
+    #p-title-buttons {
+      float: right;
+      margin: 0;
+      padding: 0;
+
+      .p-title-button {
+        display: inline-block;
+        float:right;
+        margin: .4em;
+      }
+    }
+
+    .fw-icon {
+      min-width: 1.5em;
+      min-height: 1.5em;
+    }
+
+    .fw-icon:before {
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+      background-size: 100% auto;
+      float: left;
+      display: block;
+      min-width: 1.5em;
+      min-height: 1.5em;
+      content: '';
+    }
+
+    .fw-icon-ellipsis:before {
+        background-image: url("/resources/lib/oojs-ui/themes/mediawiki/images/icons/ellipsis.png");
+    }
+
+    .fw-icon-share:before {
+        background-image: url("images/icon-share.png");
     }
   }
   #lastmod-and-views {

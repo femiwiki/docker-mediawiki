@@ -112,17 +112,21 @@ class FemiwikiTemplate extends BaseTemplate
                     $this->get( 'title' )
                 );
                 ?>
-                <button id='p-links-toggle'>
-                    <span id='p-links-toggle-text'>•••</span>
-                </button>
+
+                <ul id='p-title-buttons'>
+                    <li id="p-menu-toggle" class="p-title-button"><a href="#"><span class="fw-icon fw-icon-ellipsis" title="더 보기"></span></a></li>
+                    <?php
+                    if ( isset( $this->data['articleid']) && $this->data['articleid'] != 0 )
+                        echo '<li id="p-share" class="p-title-button"><a href="#"><span class="fw-icon fw-icon-share" title="공유하기"></span></a></li>'
+                    ?>
+                </ul>
+                
                 <?php
                 echo Html::openElement(
                     'div',
                     array( 'id' => 'p-actions-and-toolbox' )
                 );
                 echo $this->renderPortal( 'page-tb', $this->getToolbox(), 'toolbox' );
-                if ( isset( $this->data['articleid']) && $this->data['articleid'] != 0 )
-                    echo $this->renderPortal( 'share-tb', $this->getShareToolbox(), '공유하기', 'SkinTemplateToolboxEnd' );
                 echo $this->getPortlet( array(
                     'id' => 'p-actions',
                     'headerMessage' => 'actions',
@@ -447,49 +451,6 @@ class FemiwikiTemplate extends BaseTemplate
         }
 
         return $toolbox;
-    }
-
-    function getShareToolbox() {
-        $toolbox = [];
-        global $wgServer; //$wgServer = 'https://femiwiki.com';
-        $canonicalLink = $wgServer.'/w/'.str_replace( '%2F','/',urlencode( $this->get( 'titleprefixeddbkey' ) ) ).'?utm_campaign=share';
-
-        $toolbox['copy'] = [];
-        $toolbox['copy']['id'] = 'share-copy';
-        $toolbox['copy']['href'] = self::shortenURL( $canonicalLink );
-        $toolbox['copy']['text'] = 'URL 복사';
-
-        $toolbox['facebook'] = [];
-        $toolbox['facebook']['id'] = 'share-facebook';
-        $toolbox['facebook']['target'] = '_blank';
-        $link = $this->shortenURL( $canonicalLink.'&utm_source=facebook&utm_medium=post' );
-        $toolbox['facebook']['href'] = $link;
-        $toolbox['facebook']['text'] = '페이스북';
-
-        $toolbox['twitter'] = [];
-        $toolbox['twitter']['id'] = 'share-twitter';
-        $toolbox['twitter']['target'] = '_blank';
-        $link = $this->shortenURL( $canonicalLink.'&utm_source=twitter&utm_medium=tweet' );
-        $tweet = $this->get( 'title' ).' '.$link.' #'.$this->get( 'sitename' );
-        $toolbox['twitter']['href'] = 'https://twitter.com/intent/tweet?text='.urlencode( $tweet );
-        $toolbox['twitter']['text'] = '트위터';
-
-        return $toolbox;
-    }
-
-    static function shortenURL( $longURL ){
-        $ch = curl_init();
-
-        curl_setopt( $ch, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url'.'?key='.self::$googleApiKey );
-        curl_setopt( $ch, CURLOPT_POST, 1 );
-        curl_setopt( $ch, CURLOPT_POSTFIELDS,json_encode( array( "longUrl"=>$longURL ) ) );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER,array( "Content-Type: application/json" ) );
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-
-        $result = curl_exec( $ch );
-        curl_close( $ch );
-        if ( $result !== null && !isset( json_decode( $result )->{ 'id' } ) ) return $longURL;
-        return json_decode( $result )->{ 'id' };
     }
 
     /**
