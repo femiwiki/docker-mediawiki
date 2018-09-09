@@ -23,9 +23,6 @@ class SkinFemiwiki extends SkinTemplate
         // Twitter card
         $out->addMeta('twitter:card', 'summary_large_image');
         $out->addMeta('twitter:site', '@femiwikidotcome');
-        $out->addMeta('twitter:title', $out->mPagetitle);
-        if ( isset( $out->mDescription ) )
-        	$out->addMeta('twitter:description', $out->mDescription);
 
         // Favicons
         $out->addHeadItem('fav0', "<link rel='apple-touch-icon' sizes='57x75' href='/fw-resources/favicons/apple-icon-57x57.png'>");
