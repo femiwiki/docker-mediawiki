@@ -351,6 +351,9 @@ require_once "$IP/extensions/Description2/Description2.php";
 ## OpenGraphMeta
 require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
 
+## PageImages
+require_once( "$IP/extensions/PageImages/PageImages.php" );
+
 ## FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 

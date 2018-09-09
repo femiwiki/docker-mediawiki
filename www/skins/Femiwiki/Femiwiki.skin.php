@@ -23,6 +23,8 @@ class SkinFemiwiki extends SkinTemplate
         // Twitter card
         $out->addMeta('twitter:card', 'summary_large_image');
         $out->addMeta('twitter:site', '@femiwikidotcome');
+        
+        self::PageImage( $out );
 
         // Favicons
         $out->addHeadItem('fav0', "<link rel='apple-touch-icon' sizes='57x75' href='/fw-resources/favicons/apple-icon-57x57.png'>");
@@ -52,6 +54,20 @@ class SkinFemiwiki extends SkinTemplate
         $out->addModules(array(
             'skins.femiwiki.js'
         ));
+    }
+
+    protected function PageImage( OutputPage $out )
+    {
+        $imageFile = PageImages::getPageImage( $out->getContext()->getTitle() );
+        if ( !$imageFile ) {
+            return;
+        }
+        // See https://developers.facebook.com/docs/sharing/best-practices?locale=en_US#tags
+        $thumb = $imageFile->transform( [ 'width' => 1200 ] );
+        if ( !$thumb ) {
+            return;
+        }
+        $out->addMeta( 'og:image', wfExpandUrl( $thumb->getUrl(), PROTO_CANONICAL ) );
     }
 
     /**
