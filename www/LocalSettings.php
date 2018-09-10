@@ -269,6 +269,13 @@ $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
+
+// Hide nonworking Preference
+// @see https://github.com/femiwiki/femiwiki.com/issues/149
+// @See https://phabricator.wikimedia.org/T137954
+if ( version_compare( $wgVersion, '1.28', '<' ) )
+    $wgHiddenPrefs[] = 'echo-show-alert';
+
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 $wgVirtualRestConfig['modules']['parsoid'] = array(
     'url' => 'http://PARSOID:8142',
