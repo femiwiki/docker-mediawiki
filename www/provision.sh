@@ -50,9 +50,9 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     rm TemplateData-REL1_27-eeaba01.tar.gz
 
     ## Echo
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Echo-REL1_27-b87fa2f.tar.gz
-    sudo tar -xzf Echo-REL1_27-b87fa2f.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Echo-REL1_27-b87fa2f.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Echo-REL1_27-128008d.tar.gz
+    sudo tar -xzf Echo-REL1_27-128008d.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Echo-REL1_27-128008d.tar.gz
 
     ## Thanks
     wget -nv https://extdist.wmflabs.org/dist/extensions/Thanks-REL1_27-61b9af7.tar.gz
