@@ -336,6 +336,9 @@ $wgGroupPermissions['sysop']['abusefilter-private'] = true;
 $wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
+## CheckUser
+wfLoadExtension( 'CheckUser' );
+
 ## UserMerge
 wfLoadExtension('UserMerge');
 

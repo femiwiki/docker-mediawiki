@@ -88,6 +88,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf AbuseFilter-REL1_27-2072d2f.tar.gz -C /var/www/femiwiki.com/extensions
     rm AbuseFilter-REL1_27-2072d2f.tar.gz
 
+    ## CheckUser
+    wget -nv https://extdist.wmflabs.org/dist/extensions/CheckUser-REL1_27-fd5c25f.tar.gz
+    sudo tar -xzf CheckUser-REL1_27-fd5c25f.tar.gz -C /var/www/femiwiki.com/extensions
+    rm CheckUser-REL1_27-fd5c25f.tar.gz
+
     ## UserMerge
     wget -nv https://extdist.wmflabs.org/dist/extensions/UserMerge-REL1_27-31ea86d.tar.gz
     sudo tar -xzf UserMerge-REL1_27-31ea86d.tar.gz -C /var/www/femiwiki.com/extensions
