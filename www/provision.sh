@@ -114,6 +114,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf OpenGraphMeta-REL1_27-e745bf8.tar.gz -C /var/www/femiwiki.com/extensions
     rm OpenGraphMeta-REL1_27-e745bf8.tar.gz
 
+    ## PageImages
+    wget -nv https://extdist.wmflabs.org/dist/extensions/PageImages-REL1_27-c565a79.tar.gz
+    sudo tar -xzf PageImages-REL1_27-c565a79.tar.gz -C /var/www/femiwiki.com/extensions
+    rm PageImages-REL1_27-c565a79.tar.gz
+
     ## SimpleMathJax
     wget -nv https://github.com/jmnote/SimpleMathJax/archive/master.zip
     sudo unzip master.zip
