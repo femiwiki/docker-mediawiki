@@ -80,7 +80,7 @@
   function updateURL( url ) {
     $('textarea#share-text').html(url).select();
 
-    var tweet = mw.config.get( 'wgPageName' ) + ' ' + url + ' #페미위키';
+    var tweet = mw.config.get( 'wgPageName' ).replace( /_/g, ' ' ) + ' ' + url + ' #페미위키';
 
     $('#share-twitter a').attr('href', 'https://twitter.com/intent/tweet?text=' + encodeURIComponent( tweet ) );
   }
