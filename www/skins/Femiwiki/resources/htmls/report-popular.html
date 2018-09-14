@@ -79,7 +79,6 @@
 
       function prepareChart() {
         var sheetName = period+' '+(orderBy=='time'?'longest time spent':'most viewed');
-        console.log(sheetName);
         var url = 'https://docs.google.com/spreadsheets/d/1X3m2r7n6Gww8ZaCiKvYxgH1oPKSmbi2zArwEsZ1jCxQ/gviz/tq?sheet='+sheetName+'&headers=15';
 
         google.charts.load('current', {'packages':['corechart']});
