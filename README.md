@@ -77,7 +77,7 @@ sudo docker run --detach \
   joshix/caddy
 ```
 
-테스트서버
+페미위키 실서버/테스트서버
 --------
 ```sh
 # 이미 있는 리눅스 인스턴스에 ENA를 활성화하는 과정이 필요함
