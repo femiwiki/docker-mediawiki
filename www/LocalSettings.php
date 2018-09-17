@@ -307,8 +307,14 @@ if ( defined( 'NS_MODULE_TALK' ) ) $wgNamespaceContentModels[NS_MODULE_TALK] = '
 $wgNamespaceContentModels[NS_BBS] = 'flow-board';
 $wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
 
+## TemplateStyles
+wfLoadExtension( 'TemplateStyles' );
+
 ## CategoryTree
 wfLoadExtension( 'CategoryTree' );
+
+## Disambiguator
+wfLoadExtension( 'Disambiguator' );
 
 ## Cite
 wfLoadExtension('Cite');

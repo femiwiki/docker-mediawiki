@@ -69,10 +69,20 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf Scribunto-REL1_31-106fbf4.tar.gz -C /var/www/femiwiki.com/extensions
     rm Scribunto-REL1_31-106fbf4.tar.gz
 
+    ## TemplateStyles
+    wget -nv https://extdist.wmflabs.org/dist/extensions/TemplateStyles-REL1_31-e5da5c0.tar.gz
+    sudo tar -xzf TemplateStyles-REL1_31-e5da5c0.tar.gz -C /var/www/femiwiki.com/extensions
+    rm TemplateStyles-REL1_31-e5da5c0.tar.gz
+
     ## CategoryTree
     wget -nv https://extdist.wmflabs.org/dist/extensions/CategoryTree-REL1_31-c24e5ed.tar.gz
     sudo tar -xzf CategoryTree-REL1_31-c24e5ed.tar.gz -C /var/www/femiwiki.com/extensions
     rm CategoryTree-REL1_31-c24e5ed.tar.gz
+
+    ## Disambiguator
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Disambiguator-REL1_31-c8645b6.tar.gz
+    sudo tar -xzf Disambiguator-REL1_31-c8645b6.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Disambiguator-REL1_31-c8645b6.tar.gz
 
     ## CodeEditor
     wget -nv https://extdist.wmflabs.org/dist/extensions/CodeEditor-REL1_31-886d797.tar.gz
