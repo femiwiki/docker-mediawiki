@@ -69,10 +69,10 @@ $(function () {
   });
 
   // Notification badge
-  var alerts = +$('#pt-notifications-alert').text();
-  var messages = +$('#pt-notifications-message').text();
-  var badge = alerts + messages;
-  if (badge !== 0) {
+  var alerts = +$('#pt-notifications-alert a').attr( 'data-counter-num' );
+  var notice = +$('#pt-notifications-notice a').attr( 'data-counter-num' );
+  var badge = alerts + notice;
+  if (!isNaN(badge) && badge !== 0) {
     $('#fw-menu-toggle .badge')
       .addClass('active')
       .text(badge > 10 ? '+9' : badge)

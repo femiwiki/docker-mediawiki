@@ -170,10 +170,10 @@ $wgGroupPermissions['*']['edit'] = false;
 $wgAutoConfirmCount = 0;
 $wgAutoConfirmAge = 3600;
 $wgAutopromote = array(
-	"autoconfirmed" => array( "&",
-		array( APCOND_EDITCOUNT, &$wgAutoConfirmCount ),
-		array( APCOND_AGE, &$wgAutoConfirmAge ),
-	),
+    "autoconfirmed" => array( "&",
+        array( APCOND_EDITCOUNT, &$wgAutoConfirmCount ),
+        array( APCOND_AGE, &$wgAutoConfirmAge ),
+    ),
 );
 ## Allow autoconfirmed users to edit pages
 $wgGroupPermissions['user']['edit'] = false;
