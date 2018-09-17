@@ -278,7 +278,7 @@ if ( version_compare( $wgVersion, '1.28', '<' ) )
 
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 $wgVirtualRestConfig['modules']['parsoid'] = array(
-    'url' => 'https://PARSOID',
+    'url' => 'PROTOCOL://PARSOID',
     'domain' => 'HOST',
     'prefix' => 'HOST'
 );
