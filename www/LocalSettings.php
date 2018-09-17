@@ -181,7 +181,7 @@ $wgGroupPermissions['autoconfirmed']['edit'] = true;
 $wgGroupPermissions['seeder']['edit'] = true;
 $wgGroupPermissions['bureaucrat']['edit'] = true;
 
-## Add `restricted-sysop` group
+## Add restricted-sysop group
 $wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
 $wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
 $wgGroupPermissions['restricted-sysop']['deletelogentry'] = false;
