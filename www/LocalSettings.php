@@ -303,7 +303,7 @@ $wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_MODULE_TALK] = 'flow-board';
+if ( defined( 'NS_MODULE_TALK' ) ) $wgNamespaceContentModels[NS_MODULE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_BBS] = 'flow-board';
 $wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
 
@@ -366,13 +366,13 @@ $wgSpecialPages['Whatlinkshere'] = [SpecialOrderedWhatlinkshere::class];
 wfLoadExtension( 'CategoryIntersectionSearch' );
 
 ## Prevent Search for some namespaces
-$wgNamespaceRobotPolicies = array(
+$wgNamespaceRobotPolicies = [
     NS_TALK => 'noindex,nofollow',
     NS_USER => 'noindex,nofollow',
     NS_USER_TALK => 'noindex,nofollow',
     NS_PROJECT_TALK => 'noindex,nofollow',
-    NS_TOPIC => 'noindex,nofollow',
-);
+];
+if ( defined( 'NS_TOPIC' ) ) $wgNamespaceRobotPolicies[NS_TOPIC] = 'noindex,nofollow';
 
 ## SimpleMathJax
 wfLoadExtension( 'SimpleMathJax' );
