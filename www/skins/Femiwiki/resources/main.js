@@ -78,9 +78,6 @@ $(function () {
       .text(badge > 10 ? '+9' : badge)
   }
 
-  $('#pt-notifications-alert a').text('알림: ' + alerts);
-  $('#pt-notifications-message a').text('메시지: ' + messages);
-
   // Collapsible category links
   var catlinksToggle = $('<button></button>');
   catlinksToggle.text("►");
