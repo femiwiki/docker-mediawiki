@@ -259,6 +259,8 @@ $wgVisualEditorAvailableNamespaces = array(
     NS_CATEGORY_TALK => true,
     "_merge_strategy" => "array_plus",
 );
+$wgVisualEditorEnableWikitext = true;
+$wgVisualEditorEnableDiffPageBetaFeature = true;
 
 wfLoadExtension( 'TemplateData' );
 
@@ -392,6 +394,9 @@ $wgHTMLTagsAttributes['iframe'] = array('src', 'class', 'style');
 
 ## Sanction
 wfLoadExtension( 'Sanctions' );
+
+## BetaFeatures
+wfLoadExtension( 'BetaFeatures' );
 
 # Misc.
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');

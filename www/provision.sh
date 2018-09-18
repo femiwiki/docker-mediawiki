@@ -141,6 +141,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf HTMLTags-REL1_31-b7377b0.tar.gz -C /var/www/femiwiki.com/extensions
     rm HTMLTags-REL1_31-b7377b0.tar.gz
 
+    ## BetaFeatures
+    wget -nv https://extdist.wmflabs.org/dist/extensions/BetaFeatures-REL1_31-ec757a5.tar.gz
+    sudo tar -xzf BetaFeatures-REL1_31-ec757a5.tar.gz -C /var/www/femiwiki.com/extensions
+    rm BetaFeatures-REL1_31-ec757a5.tar.gz
+
     # Initialize and generate LocalSettings.php
     php /var/www/femiwiki.com/maintenance/install.php --scriptpath "/w" --dbtype mysql --dbname femiwiki --dbserver localhost --dbuser root --dbpass root --installdbuser root --installdbpass root --server https://femiwiki.com --lang ko --pass "$4" "페미위키" Admin
 
