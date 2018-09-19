@@ -265,6 +265,7 @@ $wgVisualEditorEnableDiffPageBetaFeature = true;
 wfLoadExtension( 'TemplateData' );
 
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
+$wgDefaultUserOptions['visualeditor-visualdiffpage'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
