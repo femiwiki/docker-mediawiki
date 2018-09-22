@@ -260,7 +260,7 @@ $wgVisualEditorAvailableNamespaces = array(
     "_merge_strategy" => "array_plus",
 );
 $wgVisualEditorEnableWikitext = true;
-$wgVisualEditorEnableDiffPageBetaFeature = true;
+$VisualEditorEnableDiffPage = true;
 
 wfLoadExtension( 'TemplateData' );
 
