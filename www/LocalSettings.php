@@ -260,12 +260,11 @@ $wgVisualEditorAvailableNamespaces = array(
     "_merge_strategy" => "array_plus",
 );
 $wgVisualEditorEnableWikitext = true;
-$VisualEditorEnableDiffPage = true;
+$wgVisualEditorEnableDiffPage = true;
 
 wfLoadExtension( 'TemplateData' );
 
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
-$wgDefaultUserOptions['visualeditor-visualdiffpage'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
