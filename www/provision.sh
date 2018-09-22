@@ -26,10 +26,10 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo apt-get --purge autoremove -y
 
     # Download Mediawiki source
-    wget -nv https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.0.tar.gz
+    wget -nv https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.1.tar.gz
     sudo mkdir /var/www/femiwiki.com
-    sudo tar -xzf mediawiki-1.31.0.tar.gz --strip-components 1 -C /var/www/femiwiki.com
-    rm mediawiki-1.31.0.tar.gz
+    sudo tar -xzf mediawiki-1.31.1.tar.gz --strip-components 1 -C /var/www/femiwiki.com
+    rm mediawiki-1.31.1.tar.gz
 
     sudo chown -R www-data:www-data /var/www/femiwiki.com
 
