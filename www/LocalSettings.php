@@ -229,11 +229,6 @@ $wgAllowImageTag = true;
 $wgArticleCountMethod = 'any';
 
 # Plugins
-## AWS
-wfLoadExtension( 'AWS' );
-$wgAWSRegion = 'ap-northeast-1';
-$wgAWSBucketPrefix = "femiwiki-uploaded-files";
-
 ## ParserFunction
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
