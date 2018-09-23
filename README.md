@@ -28,53 +28,9 @@ sudo apt-get update
 sudo apt-get install docker-ce
 
 #
-# 파소이드 구동
+# 서비스 시작
 #
-sudo docker run --detach \
-  --name parsoid \
-  --restart always \
-  femiwiki/parsoid
-
-#
-# caddy 구동
-#
-sudo mkdir -p /srv/caddy/config
-cat <<'EOF' | sudo tee /srv/caddy/config/Caddyfile
-(common) {
-  gzip
-
-  # Strict security headers
-  header / {
-    # Enable HSTS. https://mdn.io/HSTS
-    Strict-Transport-Security "max-age=15768000"
-    # Enable stricter XSS protection. https://mdn.io/X-XSS-Protection
-    X-XSS-Protection "1; mode=block"
-    # Prevent MIME-sniffing. https://mdn.io/X-Content-Type-Options
-    X-Content-Type-Options "nosniff"
-    # Prevent clickjacking. https://mdn.io/X-Frame-Options
-    X-Frame-Options "DENY"
-  }
-
-  log stdout
-}
-
-parsoid.femiwiki.com, :80 {
-  import common
-  proxy / parsoid:8000 {
-    transparent
-  }
-}
-EOF
-
-sudo docker run --detach \
-  --name caddy \
-  --restart always \
-  --publish 80:80 \
-  --publish 443:443 \
-  --volume /srv/caddy/config:/var/www/html:ro \
-  --volume /srv/caddy/data:/.caddy:rw \
-  --link parsoid \
-  joshix/caddy
+sudo docker stack deploy -c parsoid.yml parsoid
 ```
 
 페미위키 실서버/테스트서버
