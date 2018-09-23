@@ -30,7 +30,9 @@ sudo apt-get install docker-ce
 #
 # 서비스 시작
 #
-sudo docker stack deploy -c parsoid.yml parsoid
+git clone https://github.com/femiwiki/swarm.git ~/swarm
+sudo docker swarm init
+sudo docker stack deploy -c ~/swarm/parsoid.yml parsoid
 ```
 
 페미위키 실서버/테스트서버
