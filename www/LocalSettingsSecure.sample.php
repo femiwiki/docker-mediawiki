@@ -1,4 +1,10 @@
 <?php
+# Database settings
+$wgDBserver = "localhost";
+$wgDBname = "femiwiki";
+$wgDBuser = "root";
+$wgDBpassword = "root";
+
 # Mail
 $wgSMTP = array(
     'host' => "SMTP-HOST-NAME",
