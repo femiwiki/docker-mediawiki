@@ -37,18 +37,18 @@ $wgEnableCanonicalServerLink = true;
 $wgResourceBasePath = $wgScriptPath;
 
 $wgStyleVersion = '20180922_0';
-$wgResourceLoaderMaxage = array(
-    'versioned' => array(
+$wgResourceLoaderMaxage = [
+    'versioned' => [
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
         'server' => 90 * 24 * 60 * 60, // 90 days
         // On the client side (e.g. in the browser cache).
         'client' => 90 * 24 * 60 * 60, // 90 days
-    ),
-    'unversioned' => array(
+    ],
+    'unversioned' => [
         'server' => 3 * 60, // 3 mins
         'client' => 3 * 60, // 3 mins
-    ),
-);
+    ],
+];
 
 ## The URL path to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
@@ -86,7 +86,7 @@ $wgDBmysql5 = false;
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgParserCacheType = CACHE_MEMCACHED; # optional
 $wgMessageCacheType = CACHE_MEMCACHED; # optional
-$wgMemCachedServers = array( "127.0.0.1:11211" );
+$wgMemCachedServers = ["127.0.0.1:11211"];
 $wgSessionsInObjectCache = true; # optional
 $wgSessionCacheType = CACHE_MEMCACHED; # optional
 
@@ -170,12 +170,12 @@ $wgGroupPermissions['*']['edit'] = false;
 ## Set when users become autoconfirmed users
 $wgAutoConfirmCount = 0;
 $wgAutoConfirmAge = 3600;
-$wgAutopromote = array(
-	"autoconfirmed" => array( "&",
-		array( APCOND_EDITCOUNT, &$wgAutoConfirmCount ),
-		array( APCOND_AGE, &$wgAutoConfirmAge ),
-	),
-);
+$wgAutopromote = [
+	"autoconfirmed" => ["&",
+		[APCOND_EDITCOUNT, &$wgAutoConfirmCount],
+		[APCOND_AGE, &$wgAutoConfirmAge],
+	],
+];
 ## Allow autoconfirmed users to edit pages
 $wgGroupPermissions['user']['edit'] = false;
 $wgGroupPermissions['autoconfirmed']['edit'] = true;
@@ -195,12 +195,12 @@ $wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
 $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
 ## But only seeders can edit major namespaces
-//$wgNamespaceProtection[NS_MAIN] = array('edit-main');
-//$wgNamespaceProtection[NS_CATEGORY] = array('edit-main');
-//$wgNamespaceProtection[NS_HELP] = array('edit-main');
-//$wgNamespaceProtection[NS_PROJECT] = array('edit-main');
-//$wgNamespaceProtection[NS_TEMPLATE] = array('edit-main');
-//$wgNamespaceProtection[NS_BBSFREE] = array('edit-main');
+//$wgNamespaceProtection[NS_MAIN] = ['edit-main'];
+//$wgNamespaceProtection[NS_CATEGORY] = ['edit-main'];
+//$wgNamespaceProtection[NS_HELP] = ['edit-main'];
+//$wgNamespaceProtection[NS_PROJECT] = ['edit-main'];
+//$wgNamespaceProtection[NS_TEMPLATE] = ['edit-main'];
+//$wgNamespaceProtection[NS_BBSFREE] = ['edit-main'];
 //$wgGroupPermissions['seeder']['edit-main'] = true;
 //$wgGroupPermissions['bot']['edit-main'] = true;
 //$wgGroupPermissions['bureaucrat']['edit-main'] = true;
@@ -240,7 +240,7 @@ $wgPFEnableStringFunctions = true;
 
 ## VisualEditor
 require_once "$IP/extensions/VisualEditor/VisualEditor.php";
-$wgVisualEditorAvailableNamespaces = array(
+$wgVisualEditorAvailableNamespaces = [
     NS_SPECIAL => true,
     NS_MAIN => true,
     NS_TALK => true,
@@ -259,7 +259,7 @@ $wgVisualEditorAvailableNamespaces = array(
     NS_CATEGORY => true,
     NS_CATEGORY_TALK => true,
     "_merge_strategy" => "array_plus",
-);
+];
 
 require_once "$IP/extensions/TemplateData/TemplateData.php";
 
@@ -275,19 +275,19 @@ if ( version_compare( $wgVersion, '1.28', '<' ) )
     $wgHiddenPrefs[] = 'echo-show-alert';
 
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
-$wgVirtualRestConfig['modules']['parsoid'] = array(
-    'url' => 'PROTOCOL://PARSOID',
-    'domain' => 'HOST',
-    'prefix' => 'HOST'
-);
+$wgVirtualRestConfig['modules']['parsoid'] = [
+    'url' => 'https://parsoid.femiwiki.com',
+    'domain' => 'femiwiki.com',
+    'prefix' => 'femiwiki.com'
+];
 $wgSessionsInObjectCache = true;
 $wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;
 $wgVisualEditorSupportedSkins[] = 'femiwiki';
 
-$wgNamespaceAliases = array(
-        '도' => NS_HELP,
-        '페' => NS_PROJECT
-    );
+$wgNamespaceAliases = [
+    '도' => NS_HELP,
+    '페' => NS_PROJECT
+];
 
 ## Echo
 require_once "$IP/extensions/Echo/Echo.php";
@@ -301,7 +301,7 @@ $wgScribuntoDefaultEngine = 'luastandalone';
 
 ## Flow
 require_once "$IP/extensions/Flow/Flow.php";
-$wgFlowEditorList = array( 'visualeditor', 'none' );
+$wgFlowEditorList = ['visualeditor', 'none'];
 $wgFlowContentFormat = 'html';
 $wgNamespaceContentModels[NS_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_USER_TALK] = 'flow-board';
@@ -374,23 +374,23 @@ $wgSpecialPages['Whatlinkshere'] = [SpecialOrderedWhatlinkshere::class];
 wfLoadExtension( 'CategoryIntersectionSearch' );
 
 ## Prevent Search for some namespaces
-$wgNamespaceRobotPolicies = array(
+$wgNamespaceRobotPolicies = [
     NS_TALK => 'noindex,nofollow',
     NS_USER => 'noindex,nofollow',
     NS_USER_TALK => 'noindex,nofollow',
     NS_PROJECT_TALK => 'noindex,nofollow',
     NS_TOPIC => 'noindex,nofollow',
-);
+];
 
 ## SimpleMathJax
 require_once "$IP/extensions/SimpleMathJax/SimpleMathJax.php";
 
 ## HTMLTags
 require_once "$IP/extensions/HTMLTags/HTMLTags.php";
-$wgHTMLTagsAttributes['a'] = array( 'href', 'class', 'itemprop' );
-$wgHTMLTagsAttributes['link'] = array('href', 'itemprop');
-$wgHTMLTagsAttributes['meta'] = array('content', 'itemprop');
-$wgHTMLTagsAttributes['iframe'] = array('src', 'class', 'style');
+$wgHTMLTagsAttributes['a'] = ['href', 'class', 'itemprop'];
+$wgHTMLTagsAttributes['link'] = ['href', 'itemprop'];
+$wgHTMLTagsAttributes['meta'] = ['content', 'itemprop'];
+$wgHTMLTagsAttributes['iframe'] = ['src', 'class', 'style'];
 
 ## Sanction
 wfLoadExtension( 'Sanctions' );
