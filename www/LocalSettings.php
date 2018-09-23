@@ -229,6 +229,10 @@ $wgAllowImageTag = true;
 $wgArticleCountMethod = 'any';
 
 # Plugins
+## AWS
+wfLoadExtension( 'AWS' );
+$wgAWSRegion = 'us-east-1';
+
 ## ParserFunction
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;

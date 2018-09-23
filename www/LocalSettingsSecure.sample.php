@@ -11,7 +11,6 @@ $wgAWSCredentials = [
         'secret' => '<something>',
         'token' => false
 ];
-$wgAWSRegion = 'us-east-1';
 $wgAWSBucketPrefix = "<something>";
 
 # Mail
