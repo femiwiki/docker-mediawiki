@@ -5,14 +5,6 @@ $wgDBname = "femiwiki";
 $wgDBuser = "root";
 $wgDBpassword = "root";
 
-# AWS
-$wgAWSCredentials = [
-        'key' => '<something>',
-        'secret' => '<something>',
-        'token' => false
-];
-$wgAWSBucketPrefix = "<something>";
-
 # Mail
 $wgSMTP = array(
     'host' => "SMTP-HOST-NAME",

@@ -231,7 +231,8 @@ $wgArticleCountMethod = 'any';
 # Plugins
 ## AWS
 wfLoadExtension( 'AWS' );
-$wgAWSRegion = 'us-east-1';
+$wgAWSRegion = 'ap-northeast-1';
+$wgAWSBucketPrefix = "femiwiki-uploaded-files";
 
 ## ParserFunction
 wfLoadExtension( 'ParserFunctions' );
