@@ -68,28 +68,29 @@ Debian stretch
 # 도커 설치
 # Reference: https://docs.docker.com/install/linux/docker-ce/debian/
 #
-sudo apt-get update
-sudo apt-get install \
-  apt-transport-https \
-  ca-certificates \
-  curl \
-  gnupg2 \
-  software-properties-common
+sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-
 sudo add-apt-repository \
   "deb [arch=amd64] https://download.docker.com/linux/debian \
   $(lsb_release -cs) \
   stable"
+sudo apt-get update && sudo apt-get install -y docker-ce
 
-sudo apt-get update
-sudo apt-get install docker-ce
+#
+# 스왑 메모리 생성
+#
+sudo fallocate -l 3G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+sudo swapon
 
 #
 # 서비스 시작
 #
 git clone https://github.com/femiwiki/swarm.git ~/swarm
 sudo docker swarm init
+sudo mkdir /srv/mysql
 sudo docker stack deploy -c ~/swarm/parsoid.yml parsoid
 ```
 
