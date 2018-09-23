@@ -1,0 +1,18 @@
+version: '3'
+services:
+  parsoid:
+    image: femiwiki/parsoid
+    networks:
+      - parsoid-network
+  caddy:
+    image: joshix/caddy
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./caddy:/var/www/html:ro
+      - /srv/caddy:/.caddy:rw
+    networks:
+      - parsoid-network
+networks:
+  parsoid-network:
