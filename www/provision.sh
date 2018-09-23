@@ -42,7 +42,7 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     # Plugins
 
     ## AWS
-    sudo git clone --depth 1 https://github.com/edwardspec/mediawiki-aws-s3.git /var/www/femiwiki.com/extensions/AWS
+    sudo git clone --depth 1 https://github.com/femiwiki/mediawiki-aws-s3.git /var/www/femiwiki.com/extensions/AWS
     sudo ~/composer.phar install -d /var/www/femiwiki.com/extensions/AWS
 
     ## ParserFunction
