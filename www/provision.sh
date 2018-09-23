@@ -40,6 +40,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo chown -R www-data:www-data /var/www/femiwiki.com
 
     # Plugins
+
+    ## AWS
+    sudo git clone --depth 1 https://github.com/edwardspec/mediawiki-aws-s3.git /var/www/femiwiki.com/extensions/AWS
+    ~/composer.phar install -d /var/www/femiwiki.com/extensions/AWS
+
     ## ParserFunction
     wget -nv https://extdist.wmflabs.org/dist/extensions/ParserFunctions-REL1_31-7ec426b.tar.gz
     sudo tar -xzf ParserFunctions-REL1_31-7ec426b.tar.gz -C /var/www/femiwiki.com/extensions
