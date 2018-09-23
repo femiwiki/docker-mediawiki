@@ -15,8 +15,6 @@ if (!defined('MEDIAWIKI')) {
     exit;
 }
 
-require_once "/opt/femiwiki/LocalSettingsSecure.php";
-
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
@@ -401,3 +399,4 @@ wfLoadExtension( 'Sanctions' );
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
 $wgDebugToolbar = ('HOST' != 'femiwiki.com');
 
+require_once "/opt/femiwiki/LocalSettingsSecure.php";
