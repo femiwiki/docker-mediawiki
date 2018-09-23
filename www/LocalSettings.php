@@ -68,10 +68,7 @@ $wgEmailAuthentication = true;
 
 # Database settings
 $wgDBtype = "mysql";
-$wgDBserver = "localhost";
 $wgDBname = "femiwiki";
-$wgDBuser = "root";
-$wgDBpassword = "root";
 
 # MySQL specific settings
 $wgDBprefix = "";
