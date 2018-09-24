@@ -36,7 +36,8 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20180922_0';
+
+$wgStyleVersion = '20180924_0';
 $wgResourceLoaderMaxage = [
     'versioned' => [
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -151,9 +152,6 @@ define("NS_BBSINTRO_TALK", 3905);
 $wgExtraNamespaces[NS_BBSINTRO] = "가입인사게시판";
 $wgExtraNamespaces[NS_BBSINTRO_TALK] = "가입인사게시판토론";
 
-## Misc. ns settings
-$wgNamespacesWithSubpages[NS_TEMPLATE] = true;
-
 # Permission
 $wgGroupPermissions['*']['createaccount'] = true;
 $wgGroupPermissions['bureaucrat']['usermerge'] = true;
@@ -167,6 +165,7 @@ $wgGroupPermissions['*']['edit'] = false;
 ## Set when users become autoconfirmed users
 $wgAutoConfirmCount = 0;
 $wgAutoConfirmAge = 3600;
+
 $wgAutopromote = [
 	"autoconfirmed" => ["&",
 		[APCOND_EDITCOUNT, &$wgAutoConfirmCount],
@@ -179,7 +178,7 @@ $wgGroupPermissions['autoconfirmed']['edit'] = true;
 $wgGroupPermissions['seeder']['edit'] = true;
 $wgGroupPermissions['bureaucrat']['edit'] = true;
 
-## Add `restricted-sysop` group
+## Add restricted-sysop group
 $wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
 $wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
 $wgGroupPermissions['restricted-sysop']['deletelogentry'] = false;
@@ -236,7 +235,7 @@ wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
 
 ## VisualEditor
-require_once "$IP/extensions/VisualEditor/VisualEditor.php";
+wfLoadExtension( 'VisualEditor' );
 $wgVisualEditorAvailableNamespaces = [
     NS_SPECIAL => true,
     NS_MAIN => true,
@@ -257,20 +256,15 @@ $wgVisualEditorAvailableNamespaces = [
     NS_CATEGORY_TALK => true,
     "_merge_strategy" => "array_plus",
 ];
+$wgVisualEditorEnableWikitext = true;
+$wgVisualEditorEnableDiffPage = true;
 
-require_once "$IP/extensions/TemplateData/TemplateData.php";
+wfLoadExtension( 'TemplateData' );
 
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
-
-// Hide nonworking Preference
-// @see https://github.com/femiwiki/femiwiki.com/issues/149
-// @See https://phabricator.wikimedia.org/T137954
-if ( version_compare( $wgVersion, '1.28', '<' ) )
-    $wgHiddenPrefs[] = 'echo-show-alert';
-
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 $wgVirtualRestConfig['modules']['parsoid'] = [
     'url' => 'https://parsoid.femiwiki.com',
@@ -287,17 +281,18 @@ $wgNamespaceAliases = [
 ];
 
 ## Echo
-require_once "$IP/extensions/Echo/Echo.php";
+wfLoadExtension( 'Echo' );
 
 ## Thanks
 wfLoadExtension('Thanks');
 
 ## Scribunto
-require_once "$IP/extensions/Scribunto/Scribunto.php";
+wfLoadExtension( 'Scribunto' );
 $wgScribuntoDefaultEngine = 'luastandalone';
 
 ## Flow
-require_once "$IP/extensions/Flow/Flow.php";
+
+wfLoadExtension( 'Flow' );
 $wgFlowEditorList = ['visualeditor', 'none'];
 $wgFlowContentFormat = 'html';
 $wgNamespaceContentModels[NS_TALK] = 'flow-board';
@@ -308,12 +303,18 @@ $wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_MODULE_TALK] = 'flow-board';
+if ( defined( 'NS_MODULE_TALK' ) ) $wgNamespaceContentModels[NS_MODULE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_BBS] = 'flow-board';
 $wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
 
+## TemplateStyles
+wfLoadExtension( 'TemplateStyles' );
+
 ## CategoryTree
-require_once "$IP/extensions/CategoryTree/CategoryTree.php";
+wfLoadExtension( 'CategoryTree' );
+
+## Disambiguator
+wfLoadExtension( 'Disambiguator' );
 
 ## Cite
 wfLoadExtension('Cite');
@@ -351,13 +352,13 @@ wfLoadExtension( 'Renameuser' );
 wfLoadExtension('EmbedVideo');
 
 ## Description2
-require_once "$IP/extensions/Description2/Description2.php";
+wfLoadExtension( 'Description2' );
 
 ## OpenGraphMeta
-require_once( "$IP/extensions/OpenGraphMeta/OpenGraphMeta.php" );
+wfLoadExtension( 'OpenGraphMeta' );
 
 ## PageImages
-require_once( "$IP/extensions/PageImages/PageImages.php" );
+wfLoadExtension( 'PageImages' );
 
 ## FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
@@ -376,11 +377,11 @@ $wgNamespaceRobotPolicies = [
     NS_USER => 'noindex,nofollow',
     NS_USER_TALK => 'noindex,nofollow',
     NS_PROJECT_TALK => 'noindex,nofollow',
-    NS_TOPIC => 'noindex,nofollow',
 ];
+if ( defined( 'NS_TOPIC' ) ) $wgNamespaceRobotPolicies[NS_TOPIC] = 'noindex,nofollow';
 
 ## SimpleMathJax
-require_once "$IP/extensions/SimpleMathJax/SimpleMathJax.php";
+wfLoadExtension( 'SimpleMathJax' );
 
 ## HTMLTags
 require_once "$IP/extensions/HTMLTags/HTMLTags.php";
@@ -391,6 +392,9 @@ $wgHTMLTagsAttributes['iframe'] = ['src', 'class', 'style'];
 
 ## Sanction
 wfLoadExtension( 'Sanctions' );
+
+## BetaFeatures
+wfLoadExtension( 'BetaFeatures' );
 
 # Misc.
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');

@@ -69,17 +69,14 @@ $(function () {
   });
 
   // Notification badge
-  var alerts = +$('#pt-notifications-alert').text();
-  var messages = +$('#pt-notifications-message').text();
-  var badge = alerts + messages;
-  if (badge !== 0) {
+  var alerts = +$('#pt-notifications-alert a').attr( 'data-counter-num' );
+  var notice = +$('#pt-notifications-notice a').attr( 'data-counter-num' );
+  var badge = alerts + notice;
+  if (!isNaN(badge) && badge !== 0) {
     $('#fw-menu-toggle .badge')
       .addClass('active')
       .text(badge > 10 ? '+9' : badge)
   }
-
-  $('#pt-notifications-alert a').text('알림: ' + alerts);
-  $('#pt-notifications-message a').text('메시지: ' + messages);
 
   // Collapsible category links
   var catlinksToggle = $('<button></button>');
@@ -125,22 +122,24 @@ $(function () {
     } else {
       $(this).removeClass('external');
     }
-  })
+  });
   // Set Mathjax linebreaks configuration
-  MathJax.Hub.Config({
-    CommonHTML: { linebreaks: { automatic: true } },
-    "HTML-CSS": { linebreaks: { automatic: true } },
-           SVG: { linebreaks: { automatic: true } }
-  });
-
-  // Center single Mathjax line
-  MathJax.Hub.Queue(function () {
-    $('#content p > span:only-child > span.MathJax,'
-    +'#content p > span.mathjax-wrapper:only-child > div').each(function(){
-      if(!$(this).parent().parent().clone().children().remove().end().text().trim().length) {
-        $(this).parent().css('display','block');
-        $(this).parent().css('text-align','center');
-      }
+  if(typeof MathJax !== 'undefined') {
+    MathJax.Hub.Config({
+      CommonHTML: { linebreaks: { automatic: true } },
+      "HTML-CSS": { linebreaks: { automatic: true } },
+             SVG: { linebreaks: { automatic: true } }
     });
-  });
+
+    // Center single Mathjax line
+    MathJax.Hub.Queue(function () {
+      $('#content p > span:only-child > span.MathJax,'
+      +'#content p > span.mathjax-wrapper:only-child > div').each(function(){
+        if(!$(this).parent().parent().clone().children().remove().end().text().trim().length) {
+          $(this).parent().css('display','block');
+          $(this).parent().css('text-align','center');
+        }
+      });
+    });
+  }
 });

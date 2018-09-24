@@ -228,13 +228,23 @@
     display: none;
   }
 
-  #pt-notifications-alert .mw-echo-notifications-badge, #pt-notifications-message .mw-echo-notifications-badge {
-    font-weight: inherit;
-    margin: 0;
-    padding: 0;
-    height: inherit;
-    min-height: inherit;
-    text-decoration: inherit;
+  .mw-echo-notifications-badge {
+    position: auto;
+    width: auto;
+    height: auto;
+    margin: auto;
+    top: auto;
+    cursor: pointer;
+    line-height: unset;
+
+    &.mw-echo-notifications-badge-all-read {
+      opacity: unset;
+    }
+
+    // Disable background icon and counter
+    &:before, &:after {
+      content: none;
+    }
   }
 }
 

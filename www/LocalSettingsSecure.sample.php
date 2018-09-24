@@ -1,5 +1,4 @@
 <?php
-
 # Database settings
 $wgDBserver = 'hostname';
 $wgDBuser = 'username';

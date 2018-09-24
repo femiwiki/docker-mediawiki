@@ -26,115 +26,126 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo apt-get --purge autoremove -y
 
     # Download Mediawiki source
-    wget -nv https://releases.wikimedia.org/mediawiki/1.27/mediawiki-1.27.1.tar.gz
+    wget -nv https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.1.tar.gz
     sudo mkdir /var/www/femiwiki.com
-    sudo tar -xzf mediawiki-1.27.1.tar.gz --strip-components 1 -C /var/www/femiwiki.com
-    rm mediawiki-1.27.1.tar.gz
+    sudo tar -xzf mediawiki-1.31.1.tar.gz --strip-components 1 -C /var/www/femiwiki.com
+    rm mediawiki-1.31.1.tar.gz
 
     sudo chown -R www-data:www-data /var/www/femiwiki.com
 
     # Plugins
+
     ## ParserFunction
-    wget -nv https://extdist.wmflabs.org/dist/extensions/ParserFunctions-REL1_27-d0a5d10.tar.gz
-    sudo tar -xzf ParserFunctions-REL1_27-d0a5d10.tar.gz -C /var/www/femiwiki.com/extensions
-    rm ParserFunctions-REL1_27-d0a5d10.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/ParserFunctions-REL1_31-7ec426b.tar.gz
+    sudo tar -xzf ParserFunctions-REL1_31-7ec426b.tar.gz -C /var/www/femiwiki.com/extensions
+    rm ParserFunctions-REL1_31-7ec426b.tar.gz
 
     ## VisualEditor
-    wget -nv https://extdist.wmflabs.org/dist/extensions/VisualEditor-REL1_27-9da5996.tar.gz
-    sudo tar -xzf VisualEditor-REL1_27-9da5996.tar.gz -C /var/www/femiwiki.com/extensions
-    rm VisualEditor-REL1_27-9da5996.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/VisualEditor-REL1_31-13a585a.tar.gz
+    sudo tar -xzf VisualEditor-REL1_31-13a585a.tar.gz -C /var/www/femiwiki.com/extensions
+    rm VisualEditor-REL1_31-13a585a.tar.gz
 
     ## TemplateData
-    wget -nv https://extdist.wmflabs.org/dist/extensions/TemplateData-REL1_27-eeaba01.tar.gz
-    sudo tar -xzf TemplateData-REL1_27-eeaba01.tar.gz -C /var/www/femiwiki.com/extensions
-    rm TemplateData-REL1_27-eeaba01.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/TemplateData-REL1_31-61adb16.tar.gz
+    sudo tar -xzf TemplateData-REL1_31-61adb16.tar.gz -C /var/www/femiwiki.com/extensions
+    rm TemplateData-REL1_31-61adb16.tar.gz
 
     ## Echo
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Echo-REL1_27-128008d.tar.gz
-    sudo tar -xzf Echo-REL1_27-128008d.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Echo-REL1_27-128008d.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Echo-REL1_31-249ed89.tar.gz
+    sudo tar -xzf Echo-REL1_31-249ed89.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Echo-REL1_31-249ed89.tar.gz
 
     ## Thanks
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Thanks-REL1_27-61b9af7.tar.gz
-    sudo tar -xzf Thanks-REL1_27-61b9af7.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Thanks-REL1_27-61b9af7.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Thanks-REL1_31-a845a46.tar.gz
+    sudo tar -xzf Thanks-REL1_31-a845a46.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Thanks-REL1_31-a845a46.tar.gz
 
     ## Flow
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Flow-REL1_27-6ecdef3.tar.gz
-    sudo tar -xzf Flow-REL1_27-6ecdef3.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Flow-REL1_27-6ecdef3.tar.gz
-    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=page
-    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=revision
-    sudo php /var/www/femiwiki.com/maintenance/populateContentModel.php --ns=all --table=archive
-    sudo php /var/www/femiwiki.com/extensions/Flow/maintenance/FlowUpdateRevContentModelFromOccupyPages.php
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Flow-REL1_31-5a58ab8.tar.gz
+    sudo tar -xzf Flow-REL1_31-5a58ab8.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Flow-REL1_31-5a58ab8.tar.gz
 
     ## Scribunto
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Scribunto-REL1_27-3ada945.tar.gz
-    sudo tar -xzf Scribunto-REL1_27-3ada945.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Scribunto-REL1_27-3ada945.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Scribunto-REL1_31-106fbf4.tar.gz
+    sudo tar -xzf Scribunto-REL1_31-106fbf4.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Scribunto-REL1_31-106fbf4.tar.gz
+
+    ## TemplateStyles
+    wget -nv https://extdist.wmflabs.org/dist/extensions/TemplateStyles-REL1_31-e5da5c0.tar.gz
+    sudo tar -xzf TemplateStyles-REL1_31-e5da5c0.tar.gz -C /var/www/femiwiki.com/extensions
+    rm TemplateStyles-REL1_31-e5da5c0.tar.gz
 
     ## CategoryTree
-    wget -nv https://extdist.wmflabs.org/dist/extensions/CategoryTree-REL1_27-b454f2c.tar.gz
-    sudo tar -xzf CategoryTree-REL1_27-b454f2c.tar.gz -C /var/www/femiwiki.com/extensions
-    rm CategoryTree-REL1_27-b454f2c.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/CategoryTree-REL1_31-c24e5ed.tar.gz
+    sudo tar -xzf CategoryTree-REL1_31-c24e5ed.tar.gz -C /var/www/femiwiki.com/extensions
+    rm CategoryTree-REL1_31-c24e5ed.tar.gz
+
+    ## Disambiguator
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Disambiguator-REL1_31-c8645b6.tar.gz
+    sudo tar -xzf Disambiguator-REL1_31-c8645b6.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Disambiguator-REL1_31-c8645b6.tar.gz
 
     ## CodeEditor
-    wget -nv https://extdist.wmflabs.org/dist/extensions/CodeEditor-REL1_27-5e8053d.tar.gz
-    sudo tar -xzf CodeEditor-REL1_27-5e8053d.tar.gz -C /var/www/femiwiki.com/extensions
-    rm CodeEditor-REL1_27-5e8053d.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/CodeEditor-REL1_31-886d797.tar.gz
+    sudo tar -xzf CodeEditor-REL1_31-886d797.tar.gz -C /var/www/femiwiki.com/extensions
+    rm CodeEditor-REL1_31-886d797.tar.gz
 
     ## AbuseFilter
-    wget -nv https://extdist.wmflabs.org/dist/extensions/AbuseFilter-REL1_27-2072d2f.tar.gz
-    sudo tar -xzf AbuseFilter-REL1_27-2072d2f.tar.gz -C /var/www/femiwiki.com/extensions
-    rm AbuseFilter-REL1_27-2072d2f.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/AbuseFilter-REL1_31-9fc6235.tar.gz
+    sudo tar -xzf AbuseFilter-REL1_31-9fc6235.tar.gz -C /var/www/femiwiki.com/extensions
+    rm AbuseFilter-REL1_31-9fc6235.tar.gz
 
     ## CheckUser
-    wget -nv https://extdist.wmflabs.org/dist/extensions/CheckUser-REL1_27-fd5c25f.tar.gz
-    sudo tar -xzf CheckUser-REL1_27-fd5c25f.tar.gz -C /var/www/femiwiki.com/extensions
-    rm CheckUser-REL1_27-fd5c25f.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/CheckUser-REL1_31-b98e6a4.tar.gz
+    sudo tar -xzf CheckUser-REL1_31-b98e6a4.tar.gz -C /var/www/femiwiki.com/extensions
+    rm CheckUser-REL1_31-b98e6a4.tar.gz
 
     ## UserMerge
-    wget -nv https://extdist.wmflabs.org/dist/extensions/UserMerge-REL1_27-31ea86d.tar.gz
-    sudo tar -xzf UserMerge-REL1_27-31ea86d.tar.gz -C /var/www/femiwiki.com/extensions
-    rm UserMerge-REL1_27-31ea86d.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/UserMerge-REL1_31-a641f0c.tar.gz
+    sudo tar -xzf UserMerge-REL1_31-a641f0c.tar.gz -C /var/www/femiwiki.com/extensions
+    rm UserMerge-REL1_31-a641f0c.tar.gz
 
     ## Renameuser
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Renameuser-REL1_27-615d761.tar.gz
-    sudo tar -xzf Renameuser-REL1_27-615d761.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Renameuser-REL1_27-615d761.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Renameuser-REL1_31-f8e5157.tar.gz
+    sudo tar -xzf Renameuser-REL1_31-f8e5157.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Renameuser-REL1_31-f8e5157.tar.gz
 
     ## EmbedVideo
-    wget -nv https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.4.1.zip
-    unzip v2.4.1.zip
-    sudo mv mediawiki-embedvideo-2.4.1 /var/www/femiwiki.com/extensions/EmbedVideo
-    rm v2.4.1.zip
+    wget -nv https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.zip
+    unzip v2.7.4.zip
+    sudo mv mediawiki-embedvideo-2.7.4 /var/www/femiwiki.com/extensions/EmbedVideo
+    rm v2.7.4.zip
 
     ## Description2
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Description2-REL1_27-e4e123a.tar.gz
-    sudo tar -xzf Description2-REL1_27-e4e123a.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Description2-REL1_27-e4e123a.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/Description2-REL1_31-06229d2.tar.gz
+    sudo tar -xzf Description2-REL1_31-06229d2.tar.gz -C /var/www/femiwiki.com/extensions
+    rm Description2-REL1_31-06229d2.tar.gz
 
     ## OpenGraphMeta
-    wget -nv https://extdist.wmflabs.org/dist/extensions/OpenGraphMeta-REL1_27-e745bf8.tar.gz
-    sudo tar -xzf OpenGraphMeta-REL1_27-e745bf8.tar.gz -C /var/www/femiwiki.com/extensions
-    rm OpenGraphMeta-REL1_27-e745bf8.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/OpenGraphMeta-REL1_31-54270b0.tar.gz
+    sudo tar -xzf OpenGraphMeta-REL1_31-54270b0.tar.gz -C /var/www/femiwiki.com/extensions
+    rm OpenGraphMeta-REL1_31-54270b0.tar.gz
 
     ## PageImages
-    wget -nv https://extdist.wmflabs.org/dist/extensions/PageImages-REL1_27-c565a79.tar.gz
-    sudo tar -xzf PageImages-REL1_27-c565a79.tar.gz -C /var/www/femiwiki.com/extensions
-    rm PageImages-REL1_27-c565a79.tar.gz
+    wget -nv https://extdist.wmflabs.org/dist/extensions/PageImages-REL1_31-34b0dd5.tar.gz
+    sudo tar -xzf PageImages-REL1_31-34b0dd5.tar.gz -C /var/www/femiwiki.com/extensions
+    rm PageImages-REL1_31-34b0dd5.tar.gz
 
     ## SimpleMathJax
-    wget -nv https://github.com/jmnote/SimpleMathJax/archive/master.zip
-    sudo unzip master.zip
-    sudo mv SimpleMathJax-master /var/www/femiwiki.com/extensions/SimpleMathJax
-    rm master.zip
+    wget -nv https://github.com/jmnote/SimpleMathJax/archive/v0.7.3.zip
+    sudo unzip v0.7.3.zip
+    sudo mv SimpleMathJax-0.7.3 /var/www/femiwiki.com/extensions/SimpleMathJax
+    rm v0.7.3.zip
 
     ## HTMLTags
-    wget -nv https://github.com/wikimedia/mediawiki-extensions-HTMLTags/archive/c09635d70857ba47b18bc5aed1289b5f9f4d9bf6.zip -O HTMLTags.zip
-    sudo unzip HTMLTags.zip
-    sudo mv mediawiki-extensions-HTMLTags-c09635d70857ba47b18bc5aed1289b5f9f4d9bf6 /var/www/femiwiki.com/extensions/HTMLTags
-    rm HTMLTags.zip
+    wget -nv https://extdist.wmflabs.org/dist/extensions/HTMLTags-REL1_31-b7377b0.tar.gz
+    sudo tar -xzf HTMLTags-REL1_31-b7377b0.tar.gz -C /var/www/femiwiki.com/extensions
+    rm HTMLTags-REL1_31-b7377b0.tar.gz
+
+    ## BetaFeatures
+    wget -nv https://extdist.wmflabs.org/dist/extensions/BetaFeatures-REL1_31-ec757a5.tar.gz
+    sudo tar -xzf BetaFeatures-REL1_31-ec757a5.tar.gz -C /var/www/femiwiki.com/extensions
+    rm BetaFeatures-REL1_31-ec757a5.tar.gz
 
     # Initialize and generate LocalSettings.php
     php /var/www/femiwiki.com/maintenance/install.php --scriptpath "/w" --dbtype mysql --dbname femiwiki --dbserver localhost --dbuser root --dbpass root --installdbuser root --installdbpass root --server https://femiwiki.com --lang ko --pass "$4" "페미위키" Admin
