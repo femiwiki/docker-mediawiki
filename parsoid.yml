@@ -19,7 +19,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./caddy:/var/www/html:ro
+      - ./caddy-parsoid:/var/www/html:ro
       - caddy-certificates:/.caddy:rw
     networks:
       - parsoid-network
