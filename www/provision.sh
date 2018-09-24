@@ -1,25 +1,19 @@
-#!/usr/bin/env bash
+# WARNING!
+#
+# 제대로 관리되지 않아 작동하지 않는 스크립트이다. 사용하지 말것. 문서 용도로만
+# 참고하라. MySQL과 Caddy 세팅은 언급되어있지 않다.
+
 if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo timedatectl set-timezone Asia/Seoul
 
-    sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
-    sudo add-apt-repository -y 'deb [arch=amd64,i386,ppc64el] http://ftp.kaist.ac.kr/mariadb/repo/10.1/ubuntu trusty main'
+    # Install PHP
     LC_ALL=C.UTF-8 sudo add-apt-repository -y ppa:ondrej/php
-
     sudo apt-get update
-
-    # Install mariadb-server
-    debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
-    debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
-    sudo apt-get install -y --force-yes mariadb-server
-
-    # Install Apache and PHP
     sudo apt-get install -y --force-yes \
         build-essential \
         software-properties-common \
         git \
         unzip \
-        apache2 \
         memcached \
         php7.0 php7.0-mysql php7.0-mbstring php7.0-xml php7.0-curl php7.0-intl php-apcu \
         librsvg2-bin
@@ -148,20 +142,12 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     rm BetaFeatures-REL1_31-ec757a5.tar.gz
 
     # Initialize and generate LocalSettings.php
-    php /var/www/femiwiki.com/maintenance/install.php --scriptpath "/w" --dbtype mysql --dbname femiwiki --dbserver localhost --dbuser root --dbpass root --installdbuser root --installdbpass root --server https://femiwiki.com --lang ko --pass "$4" "페미위키" Admin
-
-    # Enable SSL
-    if [ "$1" = "https" ];
-    then
-        wget -nv https://dl.eff.org/certbot-auto
-        sudo mv certbot-auto /usr/local/sbin/
-        sudo chmod a+x /usr/local/sbin/certbot-auto
-        certbot-auto --noninteractive --apache -d $2 -m admin@femiwiki.com --agree-tos
-        sudo ln -sf /etc/apache2/mods-available/ssl.conf /etc/apache2/mods-enabled/
-        sudo ln -sf /etc/apache2/mods-available/ssl.load /etc/apache2/mods-enabled/
-        sudo crontab -l 2>/dev/null; echo "30 2 * * 1 /usr/local/sbin/certbot-auto renew >> /var/log/le-renew.log" | sudo crontab -
-    fi
-    sudo rm /etc/apache2/sites-enabled/*.conf
+    # TODO: DB 설정 틀렸음
+    php /var/www/femiwiki.com/maintenance/install.php \
+        --scriptpath "/w" \
+        --dbtype mysql --dbname femiwiki --dbserver localhost --dbuser root \
+        --dbpass root --installdbuser root --installdbpass root \
+        --server https://femiwiki.com --lang ko --pass "$4" "페미위키" Admin
 
     # Link directories only in development mode
     if [ "$1" = "http" ];
@@ -218,14 +204,3 @@ sudo chown -R www-data:www-data /var/www/femiwiki.com
 
 # Run update script
 sudo /var/www/femiwiki.com/maintenance/update.php --quick
-
-# Configure Apache
-sudo cp /vagrant/www/apache.$1.conf /etc/apache2/sites-available/femiwiki.conf
-sudo sed -i s/HOST/$2/ /etc/apache2/sites-available/femiwiki.conf
-
-sudo ln -sf /etc/apache2/sites-available/femiwiki.conf /etc/apache2/sites-enabled/femiwiki.conf
-sudo ln -sf /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
-sudo ln -sf /etc/apache2/mods-available/socache_shmcb.load /etc/apache2/mods-enabled/
-sudo ln -sf /etc/apache2/mods-available/expires.load /etc/apache2/mods-enabled/
-sudo service apache2 reload
-
