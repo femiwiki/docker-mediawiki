@@ -66,3 +66,27 @@ aws ec2 describe-images --image-id "${AMI_ID}" --query 'Images[].EnaSupport'
 ```
 
 이후 인스턴스 재시작
+
+```sh
+#
+# Caddy 세팅
+#
+sudo apt-get install php7.0-fpm
+
+# /usr/local/bin/caddy 에 바이너리 준비
+# /etc/init/caddy.conf 에 서비스파일 준비
+sudo setcap cap_net_bind_service=+ep /usr/local/bin/caddy
+cat <<'EOF' | sudo tee /etc/caddy/Caddyfile
+*:80 {
+  root /var/www/femiwiki.com
+  index index.php
+  fastcgi / unix:/var/run/php/php7.0-fpm.sock php
+  rewrite /w {
+    r  /(.*)
+    to /index.php?title={1}
+  }
+}
+EOF
+
+sudo service caddy start
+```
