@@ -103,7 +103,7 @@ $wgUseInstantCommons = true;
 ## If you use ImageMagick (or any other shell command) on a
 ## Linux server, this will need to be set to the name of an
 ## available UTF-8 locale
-$wgShellLocale = "en_US.utf8";
+$wgShellLocale = "C.UTF-8";
 
 ## Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
