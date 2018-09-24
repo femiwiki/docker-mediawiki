@@ -1,4 +1,7 @@
 <?php
+
+use MediaWiki\Linker\LinkRenderer;
+
 class FacetedCategoryPager extends AlphabeticPager {
 
 	protected $linkRenderer;
@@ -8,7 +11,7 @@ class FacetedCategoryPager extends AlphabeticPager {
 	private $includeNotExactlyMatched;
 	private $including;
 
-	public function __construct( IContextSource $context, $facetName, $facetMember, $includeNotExactlyMatched, PageLinkRenderer $linkRenderer, $including
+	public function __construct( IContextSource $context, $facetName, $facetMember, $includeNotExactlyMatched, LinkRenderer $linkRenderer, $including
 	) {
 		parent::__construct( $context );
 		$facetName = str_replace( ' ', '_', $facetName );
