@@ -15,7 +15,7 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
         git \
         unzip \
         memcached \
-        php7.0 php7.0-mysql php7.0-mbstring php7.0-xml php7.0-curl php7.0-intl php-apcu \
+        php7.2-fpm php7.2-mysql php7.2-curl php7.2-intl php7.2-apcu \
         librsvg2-bin
     sudo apt-get --purge autoremove -y
 
