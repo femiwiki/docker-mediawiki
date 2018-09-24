@@ -14,8 +14,7 @@
 	},
 	"AutoloadClasses": {
 		"SpecialFacetedCategories": "specials/SpecialFacetedCategories.php",
-		"FacetedCategoryPager": "includes/FacetedCategoryPager.php",
-		"SpecialFacets": "specials/SpecialFacets.php"
+		"FacetedCategoryPager": "includes/FacetedCategoryPager.php"
 	},
 	"MessagesDirs": {
 		"FacetedCategory": [
@@ -23,8 +22,7 @@
 		]
 	},
 	"SpecialPages": {
-		"FacetedCategories": "SpecialFacetedCategories",
-		"Facets": "SpecialFacets"
+		"FacetedCategories": "SpecialFacetedCategories"
 	},
 	"ExtensionMessagesFiles": {
 		"FacetedCategoriesAlias": "FacetedCategories.alias.php",
