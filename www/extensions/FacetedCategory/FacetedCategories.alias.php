@@ -4,12 +4,10 @@ $specialPageAliases = array();
 
 /** English (English) */
 $specialPageAliases['en'] = array(
-	'FacetedCategories' => array( 'FacetedCategories' ),
-	'Facets' => array( 'Facets' ),
+	'FacetedCategories' => array( 'FacetedCategories' )
 );
 
 /** Korean (한국어) */
 $specialPageAliases['ko'] = array(
-	'FacetedCategories' => array( '다면분류' ),
-	'Facets' => array( '패싯목록' ),
+	'FacetedCategories' => array( '다면분류' )
 );

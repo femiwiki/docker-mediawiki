@@ -2,29 +2,12 @@
 
 class SpecialFacetedCategories extends IncludableSpecialPage {
 
-	protected $linkRenderer = null;
-
 	public function __construct() {
 		parent::__construct( 'FacetedCategories' );
-	}
-    
-    public function setPageLinkRenderer(
-        PageLinkRenderer $linkRenderer
-    ) {
-        $this->linkRenderer = $linkRenderer;
-    }
-    
-	private function initServices() {
-	    if ( !$this->linkRenderer ) {
-	        $lang = $this->getContext()->getLanguage();
-	        $titleFormatter = new MediaWikiTitleCodec( $lang, GenderCache::singleton() );
-	        $this->linkRenderer = new MediaWikiPageLinkRenderer( $titleFormatter );
-	    }
 	}
 
 
 	public function execute( $par ) {
-		$this->initServices();
 
 		$this->setHeaders();
 		$this->outputHeader();
@@ -43,7 +26,7 @@ class SpecialFacetedCategories extends IncludableSpecialPage {
 			$facetName,
 			$facetMember,
 			$includeNotExactlyMatched,
-			$this->linkRenderer,
+			$this->getLinkRenderer(),
 			$this->including()
 		);
 		$cap->doQuery();
