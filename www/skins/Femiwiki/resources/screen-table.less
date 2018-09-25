@@ -34,12 +34,13 @@ td {
   }
 }
 
-.wikitable {
+table.wikitable {
   /*!
   // IE needs inline-block to position scrolling shadows otherwise use:
   // display: block;
   // max-width: min-content;
   */
+  background-color: transparent;
   display: inline-block;
   vertical-align: top;
   max-width: 100%;
@@ -152,4 +153,10 @@ td {
 .wikitable--flip th:not(:last-child),
 .wikitable--flip td:not(:last-child) {
   border-bottom: 0;
+}
+
+table.wikitable > * > tr > th,
+table.wikitable > * > tr > td {
+  background-color: transparent;
+  border: 1px solid #DDD;
 }
