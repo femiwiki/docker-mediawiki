@@ -17,4 +17,19 @@ class FemiwikiHooks {
 
 		return true;
 	}
+
+	/**
+	 * 페미위키로 통하는 외부 링크는 내부 링크로 취급합니다.
+	 */
+	public static function onLinkerMakeExternalLink( &$url, &$text, &$link, &$attribs, $linktype ) {
+		global $wgCanonicalServer;
+		if ( preg_match( '^'.$wgCanonicalServer, $url === 0 ) )
+			return true;
+
+		$attribs['class'] = str_replace( 'external', '', $attribs['class'] );
+		$attribs['href'] = $url;
+
+		$link = Html::rawElement( 'a', $attribs, $text );
+		return false;
+	}
 }
