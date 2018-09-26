@@ -21,13 +21,16 @@ class FemiwikiHooks {
 	/**
 	 * 페미위키로 통하는 외부 링크는 내부 링크로 취급합니다.
 	 */
-	public static function onLinkerMakeExternalLink( &$url, &$text, &$link, &$attribs, $linktype ) {
+	public static function onLinkerMakeExternalLink( &$url, &$text, &$link, &$attribs, $linktype ) { 
 		global $wgCanonicalServer;
-		if ( preg_match( '^'.$wgCanonicalServer, $url === 0 ) )
+
+		if ( strpos( $wgCanonicalServer, parse_url( $url, PHP_URL_HOST )) === false ) {
 			return true;
+		}
 
 		$attribs['class'] = str_replace( 'external', '', $attribs['class'] );
 		$attribs['href'] = $url;
+		unset( $attribs['target'] );
 
 		$link = Html::rawElement( 'a', $attribs, $text );
 		return false;
