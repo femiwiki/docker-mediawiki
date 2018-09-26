@@ -107,11 +107,6 @@ $(function () {
     $('#mw-normal-catlinks').prepend(catlinksToggle);
   }
 
-  // Do not show edit page when user clicks red link
-  $('#bodyContent a').each(function() {
-    this.href = this.href.replace('&action=edit&redlink=1', '&redlink=1');
-  });
-
   // Open external links in new tab
   $('#bodyContent a').each(function() {
     var external = this.href.match('^https?://') && !this.href.match('^https?://' + location.hostname);
