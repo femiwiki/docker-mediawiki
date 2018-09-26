@@ -266,6 +266,7 @@ $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
+$wgDefaultUserOptions['twocolconflict'] = true;
 $wgVirtualRestConfig['modules']['parsoid'] = [
     'url' => 'https://parsoid.femiwiki.com',
     'domain' => 'femiwiki.com',
@@ -282,6 +283,10 @@ $wgNamespaceAliases = [
 
 ## Echo
 wfLoadExtension( 'Echo' );
+
+## TwoColConflict
+wfLoadExtension( 'TwoColConflict' );
+$wgDefaultUserOptions['twocolconft'] = true;
 
 ## Thanks
 wfLoadExtension('Thanks');
