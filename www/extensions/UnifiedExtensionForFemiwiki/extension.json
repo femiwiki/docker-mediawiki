@@ -18,7 +18,8 @@
 		"FemiwikiHooks": "Hooks.php"
 	},
 	"Hooks": {
-		"SkinTemplateOutputPageBeforeExec": "FemiwikiHooks::onSkinTemplateOutputPageBeforeExec"
+		"SkinTemplateOutputPageBeforeExec": "FemiwikiHooks::onSkinTemplateOutputPageBeforeExec",
+		"LinkerMakeExternalLink": "FemiwikiHooks::onLinkerMakeExternalLink"
 	},
 	"MessagesDirs": {
 		"UnifiedExtensionForFemiwiki": [
