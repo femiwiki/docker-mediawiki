@@ -257,6 +257,8 @@ $wgVisualEditorAvailableNamespaces = [
 ];
 $wgVisualEditorEnableWikitext = true;
 $wgVisualEditorEnableDiffPage = true;
+$wgVisualEditorUseSingleEditTab = true;
+$wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
