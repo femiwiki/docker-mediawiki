@@ -112,17 +112,6 @@ $(function () {
     this.href = this.href.replace('&action=edit&redlink=1', '&redlink=1');
   });
 
-  // Open external links in new tab
-  $('#bodyContent a').each(function() {
-    var external = this.href.match('^https?://') && !this.href.match('^https?://' + location.hostname);
-    if(external) {
-      $(this)
-        .addClass('external')
-        .attr('target', '_blank');
-    } else {
-      $(this).removeClass('external');
-    }
-  });
   // Set Mathjax linebreaks configuration
   if(typeof MathJax !== 'undefined') {
     MathJax.Hub.Config({
