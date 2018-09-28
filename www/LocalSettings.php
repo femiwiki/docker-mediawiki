@@ -258,8 +258,6 @@ $wgVisualEditorAvailableNamespaces = [
 $wgVisualEditorEnableWikitext = true;
 $wgVisualEditorEnableDiffPage = true;
 
-wfLoadExtension( 'TemplateData' );
-
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
@@ -278,6 +276,12 @@ $wgNamespaceAliases = [
     '도' => NS_HELP,
     '페' => NS_PROJECT
 ];
+
+## TemplateData
+wfLoadExtension( 'TemplateData' );
+
+## RevisionSlider
+wfLoadExtension( 'RevisionSlider' );
 
 ## Echo
 wfLoadExtension( 'Echo' );
