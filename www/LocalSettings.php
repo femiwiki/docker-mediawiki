@@ -37,7 +37,7 @@ $wgEnableCanonicalServerLink = true;
 $wgResourceBasePath = $wgScriptPath;
 
 
-$wgStyleVersion = '20180924_0';
+$wgStyleVersion = '20180926_0';
 $wgResourceLoaderMaxage = [
     'versioned' => [
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -209,8 +209,7 @@ $wgDefaultUserOptions['numberheadings'] = 1;
 $wgRestrictDisplayTitle = false;
 
 # Open external links in new tab
-# $wgExternalLinkTarget = '_blank';
-# Implemented using JS in order to open links starts with https://femiwiki.com on the current window.
+$wgExternalLinkTarget = '_blank';
 
 # Copyright
 $wgRightsPage = "페미위키:저작권";
@@ -259,8 +258,6 @@ $wgVisualEditorAvailableNamespaces = [
 $wgVisualEditorEnableWikitext = true;
 $wgVisualEditorEnableDiffPage = true;
 
-wfLoadExtension( 'TemplateData' );
-
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgHiddenPrefs[] = 'gender';
@@ -280,6 +277,12 @@ $wgNamespaceAliases = [
     '도' => NS_HELP,
     '페' => NS_PROJECT
 ];
+
+## TemplateData
+wfLoadExtension( 'TemplateData' );
+
+## RevisionSlider
+wfLoadExtension( 'RevisionSlider' );
 
 ## Echo
 wfLoadExtension( 'Echo' );

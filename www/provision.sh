@@ -49,6 +49,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf TwoColConflict-REL1_31-5c02080.tar.gz -C /var/www/femiwiki.com/extensions
     rm TwoColConflict-REL1_31-5c02080.tar.gz
 
+    ## RevisionSlider
+    wget -nv https://extdist.wmflabs.org/dist/extensions/RevisionSlider-REL1_31-0ba3b58.tar.gz
+    sudo tar -xzf RevisionSlider-REL1_31-0ba3b58.tar.gz -C /var/www/femiwiki.com/extensions
+    rm RevisionSlider-REL1_31-0ba3b58.tar.gz
+
     ## Echo
     wget -nv https://extdist.wmflabs.org/dist/extensions/Echo-REL1_31-249ed89.tar.gz
     sudo tar -xzf Echo-REL1_31-249ed89.tar.gz -C /var/www/femiwiki.com/extensions
