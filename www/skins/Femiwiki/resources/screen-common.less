@@ -147,12 +147,12 @@ button {
 
   #p-namespaces {
     float:left;
-    margin-right: 0.5rem;
     ul {
       float:left;
       li {
         display: block;
         float:left;
+        margin-right: 0.5rem;
       }
       li.selected {
         display: none;
@@ -799,6 +799,10 @@ body.action-submit #content .fw-catlinks {
 html.ve-active {
   #siteNotice {
     display: none;
+  }
+
+  #p-navigation-and-watch #p-namespaces ul li.selected {
+    display: block;
   }
 
   #content {
