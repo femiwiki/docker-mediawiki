@@ -26,6 +26,9 @@
         "resources/screen-common.less": {
           "media": "screen"
         },
+        "resources/oojs-ui-core-femiwiki.css": {
+          "media": "screen"
+        },
         "resources/screen-dialog.less": {
           "media": "screen"
         },
@@ -70,6 +73,9 @@
   "AutoloadClasses": {
     "SkinFemiwiki": "Femiwiki.skin.php",
     "FemiwikiTemplate": "FemiwikiTemplate.php"
+  },
+  "SkinOOUIThemes": {
+    "femiwiki": "WikimediaUI"
   },
   "manifest_version": 1
 }
