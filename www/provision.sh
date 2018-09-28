@@ -29,11 +29,6 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
 
     # Plugins
 
-    ## ParserFunction
-    wget -nv https://extdist.wmflabs.org/dist/extensions/ParserFunctions-REL1_31-7ec426b.tar.gz
-    sudo tar -xzf ParserFunctions-REL1_31-7ec426b.tar.gz -C /var/www/femiwiki.com/extensions
-    rm ParserFunctions-REL1_31-7ec426b.tar.gz
-
     ## VisualEditor
     wget -nv https://extdist.wmflabs.org/dist/extensions/VisualEditor-REL1_31-13a585a.tar.gz
     sudo tar -xzf VisualEditor-REL1_31-13a585a.tar.gz -C /var/www/femiwiki.com/extensions
@@ -89,11 +84,6 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf Disambiguator-REL1_31-c8645b6.tar.gz -C /var/www/femiwiki.com/extensions
     rm Disambiguator-REL1_31-c8645b6.tar.gz
 
-    ## CodeEditor
-    wget -nv https://extdist.wmflabs.org/dist/extensions/CodeEditor-REL1_31-886d797.tar.gz
-    sudo tar -xzf CodeEditor-REL1_31-886d797.tar.gz -C /var/www/femiwiki.com/extensions
-    rm CodeEditor-REL1_31-886d797.tar.gz
-
     ## AbuseFilter
     wget -nv https://extdist.wmflabs.org/dist/extensions/AbuseFilter-REL1_31-9fc6235.tar.gz
     sudo tar -xzf AbuseFilter-REL1_31-9fc6235.tar.gz -C /var/www/femiwiki.com/extensions
@@ -108,11 +98,6 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     wget -nv https://extdist.wmflabs.org/dist/extensions/UserMerge-REL1_31-a641f0c.tar.gz
     sudo tar -xzf UserMerge-REL1_31-a641f0c.tar.gz -C /var/www/femiwiki.com/extensions
     rm UserMerge-REL1_31-a641f0c.tar.gz
-
-    ## Renameuser
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Renameuser-REL1_31-f8e5157.tar.gz
-    sudo tar -xzf Renameuser-REL1_31-f8e5157.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Renameuser-REL1_31-f8e5157.tar.gz
 
     ## EmbedVideo
     wget -nv https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.zip
