@@ -258,6 +258,8 @@ $wgVisualEditorAvailableNamespaces = [
 ];
 $wgVisualEditorEnableWikitext = true;
 $wgVisualEditorEnableDiffPage = true;
+$wgVisualEditorUseSingleEditTab = true;
+$wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 
 wfLoadExtension( 'TemplateData' );
 
