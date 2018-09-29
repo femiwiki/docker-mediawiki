@@ -267,9 +267,9 @@ $wgHiddenPrefs[] = 'realname';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 $wgDefaultUserOptions['twocolconflict'] = true;
 $wgVirtualRestConfig['modules']['parsoid'] = [
-    'url' => 'https://parsoid.femiwiki.com',
-    'domain' => 'femiwiki.com',
-    'prefix' => 'femiwiki.com'
+    'url' => 'PROTOCOL://PARSOID',
+    'domain' => 'HOST',
+    'prefix' => 'HOST'
 ];
 $wgSessionsInObjectCache = true;
 $wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;

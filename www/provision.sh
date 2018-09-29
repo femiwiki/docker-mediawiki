@@ -6,6 +6,16 @@
 if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo timedatectl set-timezone Asia/Seoul
 
+	# Install mariadb-server if db sever is localhost
+    if [ "$3" = "localhost" ];
+    then
+	    sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+	    sudo add-apt-repository -y 'deb [arch=amd64,i386,ppc64el] http://ftp.kaist.ac.kr/mariadb/repo/10.1/ubuntu trusty main'
+	    debconf-set-selections <<< "mysql-server mysql-server/root_password password $4"
+	    debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $4"
+	    sudo apt-get install -y --force-yes mariadb-server
+    fi
+
     # Install PHP
     LC_ALL=C.UTF-8 sudo add-apt-repository -y ppa:ondrej/php
     sudo apt-get update
@@ -19,85 +29,98 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
         librsvg2-bin
     sudo apt-get --purge autoremove -y
 
-    # Download Mediawiki source
-    wget -nv https://releases.wikimedia.org/mediawiki/1.31/mediawiki-1.31.1.tar.gz
-    sudo mkdir /var/www/femiwiki.com
-    sudo tar -xzf mediawiki-1.31.1.tar.gz --strip-components 1 -C /var/www/femiwiki.com
-    rm mediawiki-1.31.1.tar.gz
+    # Install Composer
+    EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")"
 
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]
+    then
+        >&2 echo 'ERROR: Invalid installer signature'
+        rm composer-setup.php
+        exit 1
+    fi
+
+    sudo mkdir /etc/composer
+    php composer-setup.php --install-dir=/etc/composer --quiet
+    rm composer-setup.php
+
+    # Download Mediawiki source
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/mediawiki/core.git -b REL1_31 /var/www/femiwiki.com
     sudo chown -R www-data:www-data /var/www/femiwiki.com
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com
 
     # Plugins
 
     ## VisualEditor
-    wget -nv https://extdist.wmflabs.org/dist/extensions/VisualEditor-REL1_31-13a585a.tar.gz
-    sudo tar -xzf VisualEditor-REL1_31-13a585a.tar.gz -C /var/www/femiwiki.com/extensions
-    rm VisualEditor-REL1_31-13a585a.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/VisualEditor
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/VisualEditor
 
     ## TemplateData
-    wget -nv https://extdist.wmflabs.org/dist/extensions/TemplateData-REL1_31-61adb16.tar.gz
-    sudo tar -xzf TemplateData-REL1_31-61adb16.tar.gz -C /var/www/femiwiki.com/extensions
-    rm TemplateData-REL1_31-61adb16.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TemplateData \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/TemplateData
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/TemplateData
 
     ## TwoColConflict
-    wget -nv https://extdist.wmflabs.org/dist/extensions/TwoColConflict-REL1_31-5c02080.tar.gz
-    sudo tar -xzf TwoColConflict-REL1_31-5c02080.tar.gz -C /var/www/femiwiki.com/extensions
-    rm TwoColConflict-REL1_31-5c02080.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TwoColConflict \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/TwoColConflict
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/TwoColConflict
 
     ## RevisionSlider
-    wget -nv https://extdist.wmflabs.org/dist/extensions/RevisionSlider-REL1_31-0ba3b58.tar.gz
-    sudo tar -xzf RevisionSlider-REL1_31-0ba3b58.tar.gz -C /var/www/femiwiki.com/extensions
-    rm RevisionSlider-REL1_31-0ba3b58.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/RevisionSlider \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/RevisionSlider
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/RevisionSlider
 
     ## Echo
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Echo-REL1_31-249ed89.tar.gz
-    sudo tar -xzf Echo-REL1_31-249ed89.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Echo-REL1_31-249ed89.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Echo \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/Echo
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Echo
 
     ## Thanks
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Thanks-REL1_31-a845a46.tar.gz
-    sudo tar -xzf Thanks-REL1_31-a845a46.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Thanks-REL1_31-a845a46.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Thanks \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/Thanks
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Thanks
 
     ## Flow
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Flow-REL1_31-5a58ab8.tar.gz
-    sudo tar -xzf Flow-REL1_31-5a58ab8.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Flow-REL1_31-5a58ab8.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Flow \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/Flow
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Flow
 
     ## Scribunto
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Scribunto-REL1_31-106fbf4.tar.gz
-    sudo tar -xzf Scribunto-REL1_31-106fbf4.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Scribunto-REL1_31-106fbf4.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Scribunto \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/Scribunto
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Scribunto
 
     ## TemplateStyles
-    wget -nv https://extdist.wmflabs.org/dist/extensions/TemplateStyles-REL1_31-e5da5c0.tar.gz
-    sudo tar -xzf TemplateStyles-REL1_31-e5da5c0.tar.gz -C /var/www/femiwiki.com/extensions
-    rm TemplateStyles-REL1_31-e5da5c0.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TemplateStyles \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/TemplateStyles
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/TemplateStyles
 
     ## CategoryTree
-    wget -nv https://extdist.wmflabs.org/dist/extensions/CategoryTree-REL1_31-c24e5ed.tar.gz
-    sudo tar -xzf CategoryTree-REL1_31-c24e5ed.tar.gz -C /var/www/femiwiki.com/extensions
-    rm CategoryTree-REL1_31-c24e5ed.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CategoryTree \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/CategoryTree
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/CategoryTree
 
     ## Disambiguator
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Disambiguator-REL1_31-c8645b6.tar.gz
-    sudo tar -xzf Disambiguator-REL1_31-c8645b6.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Disambiguator-REL1_31-c8645b6.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Disambiguator \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/Disambiguator
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Disambiguator
 
     ## AbuseFilter
-    wget -nv https://extdist.wmflabs.org/dist/extensions/AbuseFilter-REL1_31-9fc6235.tar.gz
-    sudo tar -xzf AbuseFilter-REL1_31-9fc6235.tar.gz -C /var/www/femiwiki.com/extensions
-    rm AbuseFilter-REL1_31-9fc6235.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/AbuseFilter \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/AbuseFilter
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/AbuseFilter
 
     ## CheckUser
-    wget -nv https://extdist.wmflabs.org/dist/extensions/CheckUser-REL1_31-b98e6a4.tar.gz
-    sudo tar -xzf CheckUser-REL1_31-b98e6a4.tar.gz -C /var/www/femiwiki.com/extensions
-    rm CheckUser-REL1_31-b98e6a4.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CheckUser \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/CheckUser
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/CheckUser
 
     ## UserMerge
-    wget -nv https://extdist.wmflabs.org/dist/extensions/UserMerge-REL1_31-a641f0c.tar.gz
-    sudo tar -xzf UserMerge-REL1_31-a641f0c.tar.gz -C /var/www/femiwiki.com/extensions
-    rm UserMerge-REL1_31-a641f0c.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/UserMerge \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/UserMerge
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/UserMerge
 
     ## EmbedVideo
     wget -nv https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.zip
@@ -106,19 +129,19 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     rm v2.7.4.zip
 
     ## Description2
-    wget -nv https://extdist.wmflabs.org/dist/extensions/Description2-REL1_31-06229d2.tar.gz
-    sudo tar -xzf Description2-REL1_31-06229d2.tar.gz -C /var/www/femiwiki.com/extensions
-    rm Description2-REL1_31-06229d2.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Description2 \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/Description2
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Description2
 
     ## OpenGraphMeta
-    wget -nv https://extdist.wmflabs.org/dist/extensions/OpenGraphMeta-REL1_31-54270b0.tar.gz
-    sudo tar -xzf OpenGraphMeta-REL1_31-54270b0.tar.gz -C /var/www/femiwiki.com/extensions
-    rm OpenGraphMeta-REL1_31-54270b0.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/OpenGraphMeta \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/OpenGraphMeta
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/OpenGraphMeta
 
     ## PageImages
-    wget -nv https://extdist.wmflabs.org/dist/extensions/PageImages-REL1_31-34b0dd5.tar.gz
-    sudo tar -xzf PageImages-REL1_31-34b0dd5.tar.gz -C /var/www/femiwiki.com/extensions
-    rm PageImages-REL1_31-34b0dd5.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageImages \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/PageImages
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/PageImages
 
     ## SimpleMathJax
     wget -nv https://github.com/jmnote/SimpleMathJax/archive/v0.7.3.zip
@@ -132,17 +155,16 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     rm HTMLTags-REL1_31-b7377b0.tar.gz
 
     ## BetaFeatures
-    wget -nv https://extdist.wmflabs.org/dist/extensions/BetaFeatures-REL1_31-ec757a5.tar.gz
-    sudo tar -xzf BetaFeatures-REL1_31-ec757a5.tar.gz -C /var/www/femiwiki.com/extensions
-    rm BetaFeatures-REL1_31-ec757a5.tar.gz
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/BetaFeatures \
+    	-b REL1_31 /var/www/femiwiki.com/extensions/BetaFeatures
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/BetaFeatures
 
     # Initialize and generate LocalSettings.php
-    # TODO: DB 설정 틀렸음
     php /var/www/femiwiki.com/maintenance/install.php \
         --scriptpath "/w" \
-        --dbtype mysql --dbname femiwiki --dbserver localhost --dbuser root \
-        --dbpass root --installdbuser root --installdbpass root \
-        --server https://femiwiki.com --lang ko --pass "$4" "페미위키" Admin
+        --dbtype mysql --dbname femiwiki --dbserver "$3" --dbuser root \
+        --dbpass $4 --installdbuser root --installdbpass root \
+        --server $1://$2 --lang ko --pass root "페미위키" Admin
 
     # Link directories only in development mode
     if [ "$1" = "http" ];
@@ -185,7 +207,7 @@ fi
 sudo cp /vagrant/www/LocalSettings.php /var/www/femiwiki.com/LocalSettings.php
 sudo sed -i s/PROTOCOL/$1/ /var/www/femiwiki.com/LocalSettings.php
 sudo sed -i s/HOST/$2/ /var/www/femiwiki.com/LocalSettings.php
-sudo sed -i s/PARSOID/$3/ /var/www/femiwiki.com/LocalSettings.php
+sudo sed -i s/PARSOID/$5/ /var/www/femiwiki.com/LocalSettings.php
 
 # Copy directories only in production mode
 if [ "$1" = "https" ];

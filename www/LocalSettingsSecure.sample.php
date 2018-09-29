@@ -1,8 +1,8 @@
 <?php
 # Database settings
-$wgDBserver = 'hostname';
-$wgDBuser = 'username';
-$wgDBpassword = 'password';
+$wgDBserver = 'localhost';
+$wgDBuser = 'root';
+$wgDBpassword = 'root';
 
 # Mail
 $wgSMTP = [
