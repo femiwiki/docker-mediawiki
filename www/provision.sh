@@ -1,7 +1,7 @@
 # WARNING!
 #
 # 제대로 관리되지 않아 작동하지 않는 스크립트이다. 사용하지 말것. 문서 용도로만
-# 참고하라. MySQL과 Caddy 세팅은 언급되어있지 않다.
+# 참고하라. MySQL과 Caddy, PEAR's Mail 세팅은 언급되어있지 않다.
 
 if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo timedatectl set-timezone Asia/Seoul
