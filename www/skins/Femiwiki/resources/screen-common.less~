@@ -53,7 +53,6 @@ a.new {
 // Pre
 pre {
 font-family: inherit;
-overflow: hidden;
 border: none;
 background-color: #f0f0f0;
 }
