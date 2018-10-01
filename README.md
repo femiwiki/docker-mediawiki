@@ -80,10 +80,13 @@ cat <<'EOF' | sudo tee /etc/caddy/Caddyfile
 *:80 {
   root /var/www/femiwiki.com
   index index.php
-  fastcgi / unix:/var/run/php/php7.0-fpm.sock php
+  fastcgi / unix:/var/run/php/php7.2-fpm.sock php
+  rewrite /w/api.php {
+    to /api.php
+  }
   rewrite /w {
     r  /(.*)
-    to /index.php?title={1}
+    to /index.php
   }
 }
 EOF
