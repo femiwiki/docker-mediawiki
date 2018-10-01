@@ -1,0 +1,3 @@
+[submodule "www/extensions/Sanctions"]
+	path = www/extensions/Sanctions
+	url = git@github.com:femiwiki/sanctions.git
