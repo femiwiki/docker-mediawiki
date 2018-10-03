@@ -149,6 +149,12 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo mv SimpleMathJax-0.7.3 /var/www/femiwiki.com/extensions/SimpleMathJax
     rm v0.7.3.zip
 
+    ## Sanctions
+    wget -nv https://github.com/femiwiki/sanctions/archive/master.tar.gz
+    sudo tar -xzf master.tar.gz -C /var/www/femiwiki.com/extensions
+    sudo mv /var/www/femiwiki.com/extensions/sanctions-master /var/www/femiwiki.com/extensions/Sanctions
+    rm master.tar.gz
+
     ## HTMLTags
     wget -nv https://extdist.wmflabs.org/dist/extensions/HTMLTags-REL1_31-b7377b0.tar.gz
     sudo tar -xzf HTMLTags-REL1_31-b7377b0.tar.gz -C /var/www/femiwiki.com/extensions
