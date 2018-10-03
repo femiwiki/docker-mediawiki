@@ -28,7 +28,7 @@
 
 MacOS 설치 예시:
 
-    git clone --recurse-submodules https://github.com/femiwiki/femiwiki.com.git
+    git clone https://github.com/femiwiki/femiwiki.com.git
     cd femiwiki.com
     cp www/LocalSettingsSecure.sample.php www/LocalSettingsSecure.php
     DB_PW=root vagrant up dev-www
