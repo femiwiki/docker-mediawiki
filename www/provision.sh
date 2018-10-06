@@ -52,6 +52,9 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
 
     # Plugins
 
+    ## AWS
+    # TODO: https://github.com/edwardspec/mediawiki-aws-s3 이거 설치했음
+
     ## VisualEditor
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor \
     	-b REL1_31 /var/www/femiwiki.com/extensions/VisualEditor
