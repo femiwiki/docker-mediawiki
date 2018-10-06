@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # WARNING!
 #
 # 제대로 관리되지 않아 작동하지 않는 스크립트이다. 사용하지 말것. 문서 용도로만
@@ -6,14 +8,14 @@
 if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo timedatectl set-timezone Asia/Seoul
 
-	# Install mariadb-server if db sever is localhost
+    # Install mariadb-server if db sever is localhost
     if [ "$3" = "localhost" ];
     then
-	    sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
-	    sudo add-apt-repository -y 'deb [arch=amd64,i386,ppc64el] http://ftp.kaist.ac.kr/mariadb/repo/10.1/ubuntu trusty main'
-	    debconf-set-selections <<< "mysql-server mysql-server/root_password password $4"
-	    debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $4"
-	    sudo apt-get install -y --force-yes mariadb-server
+        sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+        sudo add-apt-repository -y 'deb [arch=amd64,i386,ppc64el] http://ftp.kaist.ac.kr/mariadb/repo/10.1/ubuntu trusty main'
+        debconf-set-selections <<< "mysql-server mysql-server/root_password password $4"
+        debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $4"
+        sudo apt-get install -y --force-yes mariadb-server
     fi
 
     # Install PHP
@@ -57,72 +59,72 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
 
     ## VisualEditor
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/VisualEditor
+        -b REL1_31 /var/www/femiwiki.com/extensions/VisualEditor
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/VisualEditor
 
     ## TemplateData
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TemplateData \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/TemplateData
+        -b REL1_31 /var/www/femiwiki.com/extensions/TemplateData
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/TemplateData
 
     ## TwoColConflict
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TwoColConflict \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/TwoColConflict
+        -b REL1_31 /var/www/femiwiki.com/extensions/TwoColConflict
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/TwoColConflict
 
     ## RevisionSlider
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/RevisionSlider \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/RevisionSlider
+        -b REL1_31 /var/www/femiwiki.com/extensions/RevisionSlider
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/RevisionSlider
 
     ## Echo
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Echo \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/Echo
+        -b REL1_31 /var/www/femiwiki.com/extensions/Echo
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Echo
 
     ## Thanks
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Thanks \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/Thanks
+        -b REL1_31 /var/www/femiwiki.com/extensions/Thanks
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Thanks
 
     ## Flow
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Flow \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/Flow
+        -b REL1_31 /var/www/femiwiki.com/extensions/Flow
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Flow
 
     ## Scribunto
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Scribunto \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/Scribunto
+        -b REL1_31 /var/www/femiwiki.com/extensions/Scribunto
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Scribunto
 
     ## TemplateStyles
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TemplateStyles \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/TemplateStyles
+        -b REL1_31 /var/www/femiwiki.com/extensions/TemplateStyles
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/TemplateStyles
 
     ## CategoryTree
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CategoryTree \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/CategoryTree
+        -b REL1_31 /var/www/femiwiki.com/extensions/CategoryTree
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/CategoryTree
 
     ## Disambiguator
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Disambiguator \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/Disambiguator
+        -b REL1_31 /var/www/femiwiki.com/extensions/Disambiguator
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Disambiguator
 
     ## AbuseFilter
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/AbuseFilter \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/AbuseFilter
+        -b REL1_31 /var/www/femiwiki.com/extensions/AbuseFilter
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/AbuseFilter
 
     ## CheckUser
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CheckUser \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/CheckUser
+        -b REL1_31 /var/www/femiwiki.com/extensions/CheckUser
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/CheckUser
 
     ## UserMerge
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/UserMerge \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/UserMerge
+        -b REL1_31 /var/www/femiwiki.com/extensions/UserMerge
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/UserMerge
 
     ## EmbedVideo
@@ -133,17 +135,17 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
 
     ## Description2
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Description2 \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/Description2
+        -b REL1_31 /var/www/femiwiki.com/extensions/Description2
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Description2
 
     ## OpenGraphMeta
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/OpenGraphMeta \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/OpenGraphMeta
+        -b REL1_31 /var/www/femiwiki.com/extensions/OpenGraphMeta
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/OpenGraphMeta
 
     ## PageImages
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageImages \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/PageImages
+        -b REL1_31 /var/www/femiwiki.com/extensions/PageImages
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/PageImages
 
     ## SimpleMathJax
@@ -165,7 +167,7 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
 
     ## BetaFeatures
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/BetaFeatures \
-    	-b REL1_31 /var/www/femiwiki.com/extensions/BetaFeatures
+        -b REL1_31 /var/www/femiwiki.com/extensions/BetaFeatures
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/BetaFeatures
 
     # Initialize and generate LocalSettings.php
