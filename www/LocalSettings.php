@@ -406,6 +406,12 @@ wfLoadExtension( 'Sanctions' );
 ## BetaFeatures
 wfLoadExtension( 'BetaFeatures' );
 
+## AWS
+wfLoadExtension( 'AWS' );
+$wgAWSRegion = 'ap-northeast-1';
+$wgAWSBucketPrefix = "femiwiki-uploaded-files";
+$wgAWSRepoHashLevels = 2;
+
 # Misc.
 $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
 $wgDebugToolbar = ('HOST' != 'femiwiki.com');
