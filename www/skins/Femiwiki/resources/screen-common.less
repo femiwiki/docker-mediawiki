@@ -53,6 +53,7 @@ a.new {
 // Pre
 pre {
 font-family: inherit;
+overflow: hidden;
 border: none;
 background-color: #f0f0f0;
 }
@@ -666,10 +667,6 @@ body.ns-3 {
   }
 }
 
-.flow-board {
-  padding-right: 0px;
-}
-
 // Footer
 #mw-footer {
   padding: 0.4rem 1.3rem 0;
@@ -907,16 +904,11 @@ html.ve-active {
   #content {
     pre,
     .mw-gallery-traditional,
-    .mw-changeslist div,
-    .flow-topic-titlebar
-    {
+    .mw-changeslist div {
       width: ~"calc(100% + 2.6rem)";
       margin-left: -1.3rem;
     }
-    
-    .flow-topic-titlebar {
-      padding-left: 1.3rem;
-    }
+
     .thumb {
       float: none;
       margin: 1rem auto;
@@ -1033,8 +1025,7 @@ html.ve-active {
     }
   }
 
-  html.ve-active, div.flow-board, .oo-ui-window-frame {
-    
+  html.ve-active, .oo-ui-window-frame {
     div.oo-ui-popupWidget-popup {
       min-width: 16rem;
       min-height: 10rem;
