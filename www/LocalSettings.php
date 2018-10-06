@@ -158,6 +158,7 @@ $wgGroupPermissions['bureaucrat']['usermerge'] = true;
 $wgGroupPermissions['bureaucrat']['renameuser'] = true;
 $wgGroupPermissions['sysop']['deletelogentry'] = true;
 $wgGroupPermissions['sysop']['deleterevision'] = true;
+$wgGroupPermissions['sysop']['interwiki'] = true;
 
 ## Prevent anonymous users from edit pages
 $wgGroupPermissions['*']['edit'] = false;
@@ -292,6 +293,9 @@ wfLoadExtension( 'Echo' );
 ## TwoColConflict
 wfLoadExtension( 'TwoColConflict' );
 $wgDefaultUserOptions['twocolconft'] = true;
+
+## Interwiki
+wfLoadExtension( 'Interwiki' );
 
 ## Thanks
 wfLoadExtension('Thanks');
