@@ -32,6 +32,12 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
         librsvg2-bin
     sudo apt-get --purge autoremove -y
 
+    # 업로드 용량제한 2MiB에서 10MiB로 늘림
+    sudo sed -ri \
+      '/^\s*(post_max_size|upload_max_filesize)\s*=\s*.+?\s*$/s/=.*$/= 10M/' \
+      /etc/php/7.2/fpm/php.ini
+    sudo service php7.2-fpm reload
+
     # Install Composer
     EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
