@@ -307,14 +307,6 @@ $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 # Enable twocolconflict to opt-out
 $wgDefaultUserOptions['twocolconflict'] = true;
 
-# This feature requires a non-locking session store. The default session store will not work and
-# will cause deadlocks (connection timeouts from Parsoid) when trying to use this feature. Only required for MediaWiki 1.26.x and earlier!
-$wgSessionsInObjectCache = true;
-# Forward users' Cookie: headers to Parsoid. Required for private wikis (login required to read).
-# If the wiki is not private (i.e. $wgGroupPermissions['*']['read'] is true) this configuration
-# variable will be ignored.
-$wgVirtualRestConfig['modules']['parsoid']['forwardCookies'] = true;
-
 ## TemplateData
 wfLoadExtension( 'TemplateData' );
 
