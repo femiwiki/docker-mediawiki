@@ -61,6 +61,12 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
 
     # Plugins
 
+    ## Femiwiki (Skin)
+    wget -nv https://github.com/femiwiki/skin/archive/master.tar.gz
+    sudo tar -xzf master.tar.gz -C /var/www/femiwiki.com/skins
+    sudo mv /var/www/femiwiki.com/skins/skin-master /var/www/femiwiki.com/skins/Femiwiki
+    rm master.tar.gz
+
     ## AWS
     # TODO: https://github.com/edwardspec/mediawiki-aws-s3 이거 설치했음
 
