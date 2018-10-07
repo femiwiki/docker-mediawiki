@@ -66,6 +66,8 @@ $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
 
+$wgStructuredChangeFiltersShowPreference = true; # UPO
+
 # Database settings
 $wgDBtype = "mysql";
 $wgDBname = "femiwiki";
@@ -202,6 +204,9 @@ $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
+
+# Disable Enhanced RecentChange Filters
+$wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
 
 # Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
