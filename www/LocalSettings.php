@@ -339,7 +339,6 @@ wfLoadExtension( 'Scribunto' );
 $wgScribuntoDefaultEngine = 'luastandalone';
 
 ## Flow
-
 wfLoadExtension( 'Flow' );
 $wgFlowEditorList = ['visualeditor', 'none'];
 $wgFlowContentFormat = 'html';
