@@ -358,6 +358,9 @@ wfLoadExtension( 'Disambiguator' );
 ## Cite
 wfLoadExtension('Cite');
 
+## CiteThisPage
+wfLoadExtension( 'CiteThisPage' );
+
 ## CodeEditor
 wfLoadExtension('CodeEditor');
 
