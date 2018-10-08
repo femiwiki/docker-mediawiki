@@ -66,7 +66,9 @@ $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
 
-$wgStructuredChangeFiltersShowPreference = true; # UPO
+## $wgStructuredChangeFiltersShowPreference do exists untli Mediawiki 1.32.
+if ( version_compare( $wgVersion, '1.32', '<' ) )
+    $wgStructuredChangeFiltersShowPreference = true; # UPO
 
 # Database settings
 $wgDBtype = "mysql";
