@@ -188,18 +188,6 @@ $wgGroupPermissions['restricted-sysop']['managechangetags'] = false;
 $wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
 $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
-## But only seeders can edit major namespaces
-//$wgNamespaceProtection[NS_MAIN] = ['edit-main'];
-//$wgNamespaceProtection[NS_CATEGORY] = ['edit-main'];
-//$wgNamespaceProtection[NS_HELP] = ['edit-main'];
-//$wgNamespaceProtection[NS_PROJECT] = ['edit-main'];
-//$wgNamespaceProtection[NS_TEMPLATE] = ['edit-main'];
-//$wgNamespaceProtection[NS_BBSFREE] = ['edit-main'];
-//$wgGroupPermissions['seeder']['edit-main'] = true;
-//$wgGroupPermissions['bot']['edit-main'] = true;
-//$wgGroupPermissions['bureaucrat']['edit-main'] = true;
-//$wgGroupPermissions['sysop']['edit-main'] = true;
-
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
 
