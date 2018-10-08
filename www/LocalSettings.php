@@ -321,7 +321,6 @@ $wgScribuntoDefaultEngine = 'luastandalone';
 ## Flow
 wfLoadExtension( 'Flow' );
 $wgFlowEditorList = ['visualeditor', 'none'];
-$wgFlowContentFormat = 'html';
 $wgNamespaceContentModels[NS_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_USER_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_PROJECT_TALK] = 'flow-board';
