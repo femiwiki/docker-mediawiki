@@ -1,4 +1,7 @@
 <?php
+/*
+ * See T4306.
+ */
 class SpecialOrderedWhatlinkshere extends SpecialWhatLinksHere {
 
 	function showIndirectLinks( $level, $target, $limit, $from = 0, $back = 0 ) {
