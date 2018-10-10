@@ -52,7 +52,7 @@ $wgResourceLoaderMaxage = [
 ## The URL path to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
 $wgLogo = "$wgResourceBasePath/skins/Femiwiki/images/logo-1200-630.png";
-# @todo Add $wgLogoHD 
+# @todo Add $wgLogoHD
 
 ## UPO means: this is also a user preference option
 $wgEnableEmail = true;
@@ -187,6 +187,9 @@ $wgGroupPermissions['restricted-sysop']['edituserjs'] = false;
 $wgGroupPermissions['restricted-sysop']['managechangetags'] = false;
 $wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
 $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
+
+## FemiwikiTeam is just a list of all Femiwiki team member
+$wgAddGroups['femiwiki-team'] = ['*'];
 
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
