@@ -381,6 +381,9 @@ $wgGroupPermissions['sysop']['abusefilter-private'] = true;
 $wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
+## Gadgets
+wfLoadExtension( 'Gadgets' );
+
 ## CheckUser
 wfLoadExtension( 'CheckUser' );
 
@@ -390,8 +393,17 @@ wfLoadExtension('UserMerge');
 ## Renameuser
 wfLoadExtension( 'Renameuser' );
 
+## Poem
+wfLoadExtension( 'Poem' );
+
+## SyntaxHighlight
+wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+
 ## EmbedVideo
 wfLoadExtension('EmbedVideo');
+
+## InputBox
+wfLoadExtension( 'InputBox' );
 
 ## Description2
 wfLoadExtension( 'Description2' );
@@ -405,7 +417,7 @@ wfLoadExtension( 'PageImages' );
 ## FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
-## ExtendedSpecialPagesForFemiwiki --it needs the CategoryTree
+## ExtendedSpecialPagesForFemiwiki --it requires the CategoryTree extension
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
 $wgSpecialPages['Whatlinkshere'] = [SpecialOrderedWhatlinkshere::class];
