@@ -66,6 +66,10 @@ $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
 
+## $wgStructuredChangeFiltersShowPreference do exists untli Mediawiki 1.32.
+if ( version_compare( $wgVersion, '1.32', '<' ) )
+    $wgStructuredChangeFiltersShowPreference = true; # UPO
+
 # Database settings
 $wgDBtype = "mysql";
 $wgDBname = "femiwiki";
@@ -190,6 +194,9 @@ $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
+
+# Disable Enhanced RecentChange Filters
+$wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
 
 # Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
