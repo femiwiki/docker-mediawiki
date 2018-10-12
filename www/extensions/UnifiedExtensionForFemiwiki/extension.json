@@ -19,7 +19,8 @@
 	},
 	"Hooks": {
 		"SkinTemplateOutputPageBeforeExec": "FemiwikiHooks::onSkinTemplateOutputPageBeforeExec",
-		"LinkerMakeExternalLink": "FemiwikiHooks::onLinkerMakeExternalLink"
+		"LinkerMakeExternalLink": "FemiwikiHooks::onLinkerMakeExternalLink",
+		"SidebarBeforeOutput": "FemiwikiHooks::onSidebarBeforeOutput"
 	},
 	"MessagesDirs": {
 		"UnifiedExtensionForFemiwiki": [
