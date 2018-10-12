@@ -189,7 +189,8 @@ $wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
 $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
 ## FemiwikiTeam is just a list of all Femiwiki team member
-$wgAddGroups['femiwiki-team'] = ['*'];
+$wgGroupPermissions['femiwiki-team']['read'] = true;
+
 
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
