@@ -156,9 +156,10 @@ $wgExtraNamespaces[NS_BBSINTRO_TALK] = "가입인사게시판토론";
 $wgGroupPermissions['*']['createaccount'] = true;
 $wgGroupPermissions['bureaucrat']['usermerge'] = true;
 $wgGroupPermissions['bureaucrat']['renameuser'] = true;
-$wgGroupPermissions['sysop']['deletelogentry'] = true;
-$wgGroupPermissions['sysop']['deleterevision'] = true;
+$wgGroupPermissions['oversight']['deletelogentry'] = true;
+$wgGroupPermissions['oversight']['deleterevision'] = true;
 $wgGroupPermissions['sysop']['interwiki'] = true;
+$wgGroupPermissions['bot']['patrolmarks'] = true;
 
 ## Prevent anonymous users from edit pages
 $wgGroupPermissions['*']['edit'] = false;
@@ -177,20 +178,19 @@ $wgAutopromote = [
 ## Allow autoconfirmed users to edit pages
 $wgGroupPermissions['user']['edit'] = false;
 $wgGroupPermissions['autoconfirmed']['edit'] = true;
-$wgGroupPermissions['seeder']['edit'] = true;
-$wgGroupPermissions['bureaucrat']['edit'] = true;
 
 ## Add restricted-sysop group
 $wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
 $wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
-$wgGroupPermissions['restricted-sysop']['deletelogentry'] = false;
-$wgGroupPermissions['restricted-sysop']['deleterevision'] = false;
 $wgGroupPermissions['restricted-sysop']['editinterface'] = false;
 $wgGroupPermissions['restricted-sysop']['editusercss'] = false;
 $wgGroupPermissions['restricted-sysop']['edituserjs'] = false;
 $wgGroupPermissions['restricted-sysop']['managechangetags'] = false;
 $wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
 $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
+
+## Remain commemorative Seeder group
+$wgGroupPermissions['seeder']['read'] = true;
 
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
