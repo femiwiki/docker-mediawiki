@@ -21,7 +21,7 @@ class FemiwikiHooks {
 	/**
 	 * 페미위키로 통하는 외부 링크는 내부 링크로 취급합니다.
 	 */
-	public static function onLinkerMakeExternalLink( &$url, &$text, &$link, &$attribs, $linktype ) { 
+	public static function onLinkerMakeExternalLink( &$url, &$text, &$link, &$attribs, $linktype ) {
 		global $wgCanonicalServer;
 
 		if ( strpos( $wgCanonicalServer, parse_url( $url, PHP_URL_HOST )) === false ) {
@@ -34,5 +34,23 @@ class FemiwikiHooks {
 
 		$link = Html::rawElement( 'a', $attribs, $text );
 		return false;
+	}
+
+	/**
+	 * Sidebar에서도 페미위키로 통하는 외부 링크는 내부 링크로 취급합니다.
+	 */
+	public static function onSidebarBeforeOutput( Skin $skin, &$bar ) {
+		global $wgCanonicalServer;
+
+		wfDebugLog( 'femiwiki', 'onSidebarBeforeOutput' );
+
+		foreach ( $bar as $heading => $content )
+			foreach ( $content as $key => $item ) {
+				if ( isset( $item['href'] ) && strpos( $wgCanonicalServer, parse_url( $item['href'], PHP_URL_HOST ) ) !== false ) {
+					unset( $bar[$heading][$key]['rel'] );
+					unset( $bar[$heading][$key]['target'] );
+				}
+			}
+		return true;
 	}
 }

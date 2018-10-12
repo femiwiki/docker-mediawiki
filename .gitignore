@@ -3,9 +3,15 @@
 .vagrant/
 fw.pem
 www/LocalSettingsSecure.php
+www/skins/Femiwiki/
+www/extensions/Sanctions/
 
 # OS related files
 .DS_Store
 
 # IDE related files
 .idea/
+
+# Editor related files
+*~
+.*.swp

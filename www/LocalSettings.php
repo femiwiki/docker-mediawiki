@@ -35,7 +35,7 @@ $wgEnableCanonicalServerLink = true;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20181007_0';
+$wgStyleVersion = '20181013_0';
 $wgResourceLoaderMaxage = [
     'versioned' => [
         // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -65,6 +65,10 @@ $wgUserEmailUseReplyTo = true;
 $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
+
+## $wgStructuredChangeFiltersShowPreference do exists untli Mediawiki 1.32.
+if ( version_compare( $wgVersion, '1.32', '<' ) )
+    $wgStructuredChangeFiltersShowPreference = true; # UPO
 
 # Database settings
 $wgDBtype = "mysql";
@@ -152,9 +156,10 @@ $wgExtraNamespaces[NS_BBSINTRO_TALK] = "가입인사게시판토론";
 $wgGroupPermissions['*']['createaccount'] = true;
 $wgGroupPermissions['bureaucrat']['usermerge'] = true;
 $wgGroupPermissions['bureaucrat']['renameuser'] = true;
-$wgGroupPermissions['sysop']['deletelogentry'] = true;
-$wgGroupPermissions['sysop']['deleterevision'] = true;
+$wgGroupPermissions['oversight']['deletelogentry'] = true;
+$wgGroupPermissions['oversight']['deleterevision'] = true;
 $wgGroupPermissions['sysop']['interwiki'] = true;
+$wgGroupPermissions['bot']['patrolmarks'] = true;
 
 ## Prevent anonymous users from edit pages
 $wgGroupPermissions['*']['edit'] = false;
@@ -173,14 +178,22 @@ $wgAutopromote = [
 ## Allow autoconfirmed users to edit pages
 $wgGroupPermissions['user']['edit'] = false;
 $wgGroupPermissions['autoconfirmed']['edit'] = true;
-$wgGroupPermissions['seeder']['edit'] = true;
-$wgGroupPermissions['bureaucrat']['edit'] = true;
+
+## Early adopt interface-admin that introduced in Mediawiki 1.32
+if ( version_compare( $wgVersion, '1.32', '<' ) ) {
+    $wgGroupPermissions['interface-admin']['editusercss'] = true;
+    $wgGroupPermissions['interface-admin']['edituserjson'] = true;
+    $wgGroupPermissions['interface-admin']['edituserjs'] = true;
+    $wgGroupPermissions['interface-admin']['editinterface'] = true;
+
+    $wgGroupPermissions['sysop']['editusercss'] = false;
+    $wgGroupPermissions['sysop']['edituserjson'] = false;
+    $wgGroupPermissions['sysop']['edituserjs'] = false;
+}
 
 ## Add restricted-sysop group
 $wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
 $wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
-$wgGroupPermissions['restricted-sysop']['deletelogentry'] = false;
-$wgGroupPermissions['restricted-sysop']['deleterevision'] = false;
 $wgGroupPermissions['restricted-sysop']['editinterface'] = false;
 $wgGroupPermissions['restricted-sysop']['editusercss'] = false;
 $wgGroupPermissions['restricted-sysop']['edituserjs'] = false;
@@ -191,9 +204,14 @@ $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 ## FemiwikiTeam is just a list of all Femiwiki team member
 $wgGroupPermissions['femiwiki-team']['editprotected'] = true;
 
+## Remain commemorative Seeder group
+$wgGroupPermissions['seeder']['read'] = true;
 
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
+
+# Disable Enhanced RecentChange Filters
+$wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
 
 # Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
@@ -349,6 +367,9 @@ wfLoadExtension( 'Disambiguator' );
 ## Cite
 wfLoadExtension('Cite');
 
+## CiteThisPage
+wfLoadExtension( 'CiteThisPage' );
+
 ## CodeEditor
 wfLoadExtension('CodeEditor');
 
@@ -369,6 +390,9 @@ $wgGroupPermissions['sysop']['abusefilter-private'] = true;
 $wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
+## Gadgets
+wfLoadExtension( 'Gadgets' );
+
 ## CheckUser
 wfLoadExtension( 'CheckUser' );
 
@@ -378,8 +402,17 @@ wfLoadExtension('UserMerge');
 ## Renameuser
 wfLoadExtension( 'Renameuser' );
 
+## Poem
+wfLoadExtension( 'Poem' );
+
+## SyntaxHighlight
+wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+
 ## EmbedVideo
 wfLoadExtension('EmbedVideo');
+
+## InputBox
+wfLoadExtension( 'InputBox' );
 
 ## Description2
 wfLoadExtension( 'Description2' );
@@ -393,7 +426,7 @@ wfLoadExtension( 'PageImages' );
 ## FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
-## ExtendedSpecialPagesForFemiwiki --it needs the CategoryTree
+## ExtendedSpecialPagesForFemiwiki --it requires the CategoryTree extension
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
 $wgSpecialPages['Whatlinkshere'] = [SpecialOrderedWhatlinkshere::class];
