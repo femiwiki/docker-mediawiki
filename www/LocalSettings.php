@@ -49,6 +49,10 @@ $wgResourceLoaderMaxage = [
     ],
 ];
 
+## Trust an X-Forwarded-For (XFF) header specifying a private IP in requests from a trusted forwarding proxy
+$wgUsePrivateIPs = true;
+$wgSquidServersNoPurge = [ '172.31.0.0/16' ];
+
 ## The URL path to the logo.  Make sure you change this from the default,
 ## or else you'll overwrite your logo when you upgrade!
 $wgLogo = "$wgResourceBasePath/skins/Femiwiki/images/logo-1200-630.png";
