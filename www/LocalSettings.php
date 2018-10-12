@@ -179,6 +179,18 @@ $wgAutopromote = [
 $wgGroupPermissions['user']['edit'] = false;
 $wgGroupPermissions['autoconfirmed']['edit'] = true;
 
+## Early adopt interface-admin that introduced in Mediawiki 1.32
+if ( version_compare( $wgVersion, '1.32', '<' ) ) {
+    $wgGroupPermissions['interface-admin']['editusercss'] = true;
+    $wgGroupPermissions['interface-admin']['edituserjson'] = true;
+    $wgGroupPermissions['interface-admin']['edituserjs'] = true;
+    $wgGroupPermissions['interface-admin']['editinterface'] = true;
+
+    $wgGroupPermissions['sysop']['editusercss'] = false;
+    $wgGroupPermissions['sysop']['edituserjson'] = false;
+    $wgGroupPermissions['sysop']['edituserjs'] = false;
+}
+
 ## Add restricted-sysop group
 $wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
 $wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
