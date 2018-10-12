@@ -186,7 +186,7 @@ $wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
 $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
 ## Remain commemorative Seeder group
-$wgAddGroups['seeder'] = ['*'];
+$wgGroupPermissions['seeder']['read'] = true;
 
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
