@@ -158,11 +158,11 @@ $wgExtraNamespaces[NS_BBSINTRO_TALK] = "가입인사게시판토론";
 
 # Permission
 $wgGroupPermissions['*']['createaccount'] = true;
-$wgGroupPermissions['bureaucrat']['usermerge'] = true;
-$wgGroupPermissions['bureaucrat']['renameuser'] = true;
+$wgGroupPermissions['sysop']['usermerge'] = true;
+$wgGroupPermissions['sysop']['renameuser'] = true;
+$wgGroupPermissions['sysop']['interwiki'] = true;
 $wgGroupPermissions['oversight']['deletelogentry'] = true;
 $wgGroupPermissions['oversight']['deleterevision'] = true;
-$wgGroupPermissions['sysop']['interwiki'] = true;
 $wgGroupPermissions['bot']['patrolmarks'] = true;
 
 ## Prevent anonymous users from edit pages
