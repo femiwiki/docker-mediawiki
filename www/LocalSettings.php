@@ -357,7 +357,9 @@ $wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
-if ( defined( 'NS_MODULE_TALK' ) ) $wgNamespaceContentModels[NS_MODULE_TALK] = 'flow-board';
+$wgNamespaceContentModels[829] = 'flow-board'; /* Module talk */
+$wgNamespaceContentModels[2301] = 'flow-board'; /* Gadget talk */
+$wgNamespaceContentModels[2303] = 'flow-board'; /* Gadget definition talk */
 $wgNamespaceContentModels[NS_BBS] = 'flow-board';
 $wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
 
