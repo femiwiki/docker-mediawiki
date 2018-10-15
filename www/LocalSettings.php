@@ -61,6 +61,7 @@ $wgLogo = "$wgResourceBasePath/skins/Femiwiki/images/logo-1200-630.png";
 ## UPO means: this is also a user preference option
 $wgEnableEmail = true;
 $wgEnableUserEmail = true; # UPO
+$wgAllowHTMLEmail = true;
 
 $wgEmergencyContact = "admin@femiwiki.com";
 $wgPasswordSender = "admin@femiwiki.com";
