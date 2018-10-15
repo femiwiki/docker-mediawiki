@@ -436,7 +436,7 @@ wfLoadExtension( 'PageImages' );
 ## FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
-## ExtendedSpecialPagesForFemiwiki --it requires the CategoryTree extension
+## UnifiedExtensionForFemiwiki --it requires the CategoryTree extension
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
 $wgSpecialPages['Whatlinkshere'] = [SpecialOrderedWhatlinkshere::class];
