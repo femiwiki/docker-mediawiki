@@ -424,6 +424,9 @@ wfLoadExtension( 'Poem' );
 ## SyntaxHighlight
 wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 
+## SyntaxHighlight
+wfLoadExtension( 'CharInsert' );
+
 ## EmbedVideo
 wfLoadExtension('EmbedVideo');
 

@@ -146,6 +146,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Widgets
     sudo chmod o+w /var/www/femiwiki.com/extensions/Widgets/compiled_templates
 
+    ## CharInsert
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CharInsert \
+        -b REL1_31 /var/www/femiwiki.com/extensions/CharInsert
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/CharInsert
+
     ## EmbedVideo
     wget -nv https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.zip
     unzip v2.7.4.zip
