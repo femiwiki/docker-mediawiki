@@ -141,8 +141,8 @@ class SpecialOrderedWhatlinkshere extends SpecialWhatLinksHere {
 		}
 
 		// Sort by key and then change the keys to 0-based indices
-		
-		
+
+
 		usort( $rows , function ($a, $b) use ($out) {
 			if(isset($a->page_title) && isset($b->page_title)){
 				return strcasecmp($a->page_title, $b->page_title);
