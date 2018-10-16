@@ -14,7 +14,8 @@ $wgSMTP = [
     'password' => "PASSWORD",
 ];
 
-$wgGoogleAnalyticsTrackingID = 'XX-XXXXXXXX-X';
+# Keys or IDs for Femiwiki Skin
+$wgFirebaseKey = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 
 # Other
 $wgSecretKey = "SECRET-KEY";

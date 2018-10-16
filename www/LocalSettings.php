@@ -136,6 +136,8 @@ $wgDefaultSkin = "femiwiki";
 # The following skins were automatically enabled:
 wfLoadSkin('Vector');
 wfLoadSkin('Femiwiki');
+$wgFacebookAppId = '1937597133150935';
+$wgGoogleAnalyticsTrackingID = 'UA-82072330-1';
 
 # End of automatically generated settings.
 # Add more configuration options below.
