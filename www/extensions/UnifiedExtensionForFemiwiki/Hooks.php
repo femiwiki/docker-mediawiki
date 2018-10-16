@@ -42,8 +42,6 @@ class FemiwikiHooks {
 	public static function onSidebarBeforeOutput( Skin $skin, &$bar ) {
 		global $wgCanonicalServer;
 
-		wfDebugLog( 'femiwiki', 'onSidebarBeforeOutput' );
-
 		foreach ( $bar as $heading => $content )
 			foreach ( $content as $key => $item ) {
 				if ( isset( $item['href'] ) && strpos( $wgCanonicalServer, parse_url( $item['href'], PHP_URL_HOST ) ) !== false ) {
