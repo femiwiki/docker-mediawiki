@@ -20,12 +20,16 @@
 	"Hooks": {
 		"SkinTemplateOutputPageBeforeExec": "FemiwikiHooks::onSkinTemplateOutputPageBeforeExec",
 		"LinkerMakeExternalLink": "FemiwikiHooks::onLinkerMakeExternalLink",
-		"SidebarBeforeOutput": "FemiwikiHooks::onSidebarBeforeOutput"
+		"SidebarBeforeOutput": "FemiwikiHooks::onSidebarBeforeOutput",
+		"BeforePageDisplay": "FemiwikiHooks::onBeforePageDisplay"
 	},
 	"MessagesDirs": {
 		"UnifiedExtensionForFemiwiki": [
 			"i18n"
 		]
+	},
+	"config": {
+		"GoogleAnalyticsTrackingID": ""
 	},
 	"manifest_version": 1
 }

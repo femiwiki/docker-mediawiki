@@ -14,6 +14,8 @@ $wgSMTP = [
     'password' => "PASSWORD",
 ];
 
+$wgGoogleAnalyticsTrackingID = 'XX-XXXXXXXX-X';
+
 # Other
 $wgSecretKey = "SECRET-KEY";
 

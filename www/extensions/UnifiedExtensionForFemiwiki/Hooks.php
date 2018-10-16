@@ -53,4 +53,29 @@ class FemiwikiHooks {
 			}
 		return true;
 	}
+
+	/**
+	 * 모든 페이지에 Google Tag Manager를 추가합니다.
+	 */
+	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
+		global $wgGoogleAnalyticsTrackingID;
+
+			if ( $wgGoogleAnalyticsTrackingID == '' )
+				return true;
+
+			$googleGlobalSiteTag = <<<EOF
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={$wgGoogleAnalyticsTrackingID}"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', '{$wgGoogleAnalyticsTrackingID}');
+</script>
+EOF;
+		$out->addHeadItems( $googleGlobalSiteTag );
+
+		return true;
+	}
 }
