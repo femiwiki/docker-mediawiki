@@ -427,6 +427,9 @@ wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 ## CharInsert
 wfLoadExtension( 'CharInsert' );
 
+## CodeMirror
+wfLoadExtension( 'CodeMirror' );
+
 ## EmbedVideo
 wfLoadExtension('EmbedVideo');
 
