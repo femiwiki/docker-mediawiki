@@ -224,7 +224,7 @@ $wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
 # Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
-# @See https://github.com/femiwiki/femiwiki.com/issues/210
+## @See https://github.com/femiwiki/femiwiki.com/issues/210
 $wgHiddenPrefs[] = 'showtoolbar';
 $wgHiddenPrefs[] = 'usebetatoolbar';
 
