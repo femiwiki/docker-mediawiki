@@ -194,6 +194,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo tar -xzf HTMLTags-REL1_31-b7377b0.tar.gz -C /var/www/femiwiki.com/extensions
     rm HTMLTags-REL1_31-b7377b0.tar.gz
 
+    ## Josa
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Josa \
+        -b REL1_31 /var/www/femiwiki.com/extensions/Josa
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Josa
+
     ## BetaFeatures
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/BetaFeatures \
         -b REL1_31 /var/www/femiwiki.com/extensions/BetaFeatures

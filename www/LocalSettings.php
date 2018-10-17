@@ -467,6 +467,9 @@ $wgHTMLTagsAttributes['link'] = ['href', 'itemprop'];
 $wgHTMLTagsAttributes['meta'] = ['content', 'itemprop'];
 $wgHTMLTagsAttributes['iframe'] = ['src', 'class', 'style'];
 
+## Josa
+wfLoadExtension( 'Josa' );
+
 ## Sanction
 wfLoadExtension( 'Sanctions' );
 
