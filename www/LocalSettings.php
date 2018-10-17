@@ -227,6 +227,8 @@ $wgHiddenPrefs[] = 'realname';
 ## @See https://github.com/femiwiki/femiwiki.com/issues/210
 $wgHiddenPrefs[] = 'showtoolbar';
 $wgHiddenPrefs[] = 'usebetatoolbar';
+## @See https://github.com/femiwiki/femiwiki.com/issues/211
+$wgHiddenPrefs[] = 'numberheadings';
 
 # Allow display titles not only to titles that normalize to the same canonical DB key as the real page title.
 $wgRestrictDisplayTitle = false;
