@@ -406,6 +406,24 @@ $wgGroupPermissions['sysop']['abusefilter-private'] = true;
 $wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
+## ConfirmEdit
+wfLoadExtensions([ 'ConfirmEdit', 'ConfirmEdit/QuestyCaptcha' ]);
+$wgCaptchaQuestions = [ '나는 페미니스트입니다.' => [
+    /* 마침표 있음 */
+    '나는 페미니스트입니다.',
+    '나는페미니스트입니다.',
+    '나는페미니스트 입니다.',
+    /* 마침표 없음*/
+    '나는 페미니스트입니다',
+    '나는페미니스트입니다',
+    '나는페미니스트 입니다'
+] ];
+$wgCaptchaTriggers['edit'] = false; 
+$wgCaptchaTriggers['create'] = false; 
+$wgCaptchaTriggers['addurl'] = false; 
+$wgCaptchaTriggers['createaccount'] = true;
+$wgCaptchaTriggers['badlogin'] = false;
+
 ## Gadgets
 wfLoadExtension( 'Gadgets' );
 $wgGadgetsRepoClass = "GadgetDefinitionNamespaceRepo";
