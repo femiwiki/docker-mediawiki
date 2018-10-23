@@ -189,6 +189,24 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
     sudo mv /var/www/femiwiki.com/extensions/sanctions-master /var/www/femiwiki.com/extensions/Sanctions
     rm master.tar.gz
 
+    ## CategoryIntersectionSearch
+    wget -nv https://github.com/femiwiki/categoryIntersectionSearch/archive/master.tar.gz
+    sudo tar -xzf master.tar.gz -C /var/www/femiwiki.com/extensions
+    sudo mv /var/www/femiwiki.com/extensions/categoryIntersectionSearch-master /var/www/femiwiki.com/extensions/CategoryIntersectionSearch
+    rm master.tar.gz
+
+    ## FacetedCategory
+    wget -nv https://github.com/femiwiki/facetedCategory/archive/master.tar.gz
+    sudo tar -xzf master.tar.gz -C /var/www/femiwiki.com/extensions
+    sudo mv /var/www/femiwiki.com/extensions/facetedCategory-master /var/www/femiwiki.com/extensions/FacetedCategory
+    rm master.tar.gz
+
+    ## UnifiedExtensionForFemiwiki
+    wget -nv https://github.com/femiwiki/unifiedExtensionForFemiwiki/archive/master.tar.gz
+    sudo tar -xzf master.tar.gz -C /var/www/femiwiki.com/extensions
+    sudo mv /var/www/femiwiki.com/extensions/unifiedExtensionForFemiwiki-master /var/www/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
+    rm master.tar.gz
+
     ## HTMLTags
     wget -nv https://extdist.wmflabs.org/dist/extensions/HTMLTags-REL1_31-b7377b0.tar.gz
     sudo tar -xzf HTMLTags-REL1_31-b7377b0.tar.gz -C /var/www/femiwiki.com/extensions
