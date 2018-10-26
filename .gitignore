@@ -5,6 +5,9 @@ fw.pem
 www/LocalSettingsSecure.php
 www/skins/Femiwiki/
 www/extensions/Sanctions/
+www/extensions/CategoryIntersectionSearch/
+www/extensions/FacetedCategory/
+www/extensions/UnifiedExtensionForFemiwiki/
 
 # OS related files
 .DS_Store
