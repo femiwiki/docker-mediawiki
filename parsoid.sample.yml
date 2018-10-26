@@ -23,6 +23,26 @@ services:
       - caddy-certificates:/.caddy:rw
     networks:
       - parsoid-network
+  tweetbot:
+    image: femiwiki/tweetbot
+    restart: always
+    volumes:
+      - /var/tweetbot:/var/tweetbot:rw
+    environment:
+      TZ: Asia/Seoul
+      TWITTER_CONSUMER_KEY: xxxxxxxx
+      TWITTER_CONSUMER_SECRET: xxxxxxxx
+      TWITTER_ACCESS_TOKEN: xxxxxxxx
+      TWITTER_ACCESS_TOKEN_SECRET: xxxxxxxx
+      WIKI_PASSWORD: xxxxxxxx
+  ranking-bot:
+    image: femiwiki/ranking-bot
+    restart: always
+    volumes:
+      - /var/ranking-bot:/var/ranking-bot:rw
+    environment:
+      TZ: Asia/Seoul
+      BOT_PW: xxxxxxxx
 volumes:
   caddy-certificates:
 networks:
