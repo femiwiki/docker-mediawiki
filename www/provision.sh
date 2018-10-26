@@ -125,6 +125,11 @@ if [ ! -f /opt/femiwiki-provisioned ]; then
         -b REL1_31 /var/www/femiwiki.com/extensions/Disambiguator
     sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/Disambiguator
 
+    ## CreateUserPage
+    sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CreateUserPage \
+        -b REL1_31 /var/www/femiwiki.com/extensions/CreateUserPage
+    sudo /etc/composer/composer.phar update --no-dev -d /var/www/femiwiki.com/extensions/CreateUserPage
+
     ## AbuseFilter
     sudo git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/AbuseFilter \
         -b REL1_31 /var/www/femiwiki.com/extensions/AbuseFilter
