@@ -1,5 +1,1 @@
-# secret
-/configs/secret.php
-
-# Composer
-/vendor
+parsoid.yml
