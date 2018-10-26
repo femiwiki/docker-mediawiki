@@ -25,7 +25,6 @@ services:
       - parsoid-network
   tweetbot:
     image: femiwiki/tweetbot
-    restart: always
     volumes:
       - /var/tweetbot:/var/tweetbot:rw
     environment:
@@ -37,7 +36,6 @@ services:
       WIKI_PASSWORD: xxxxxxxx
   ranking-bot:
     image: femiwiki/ranking-bot
-    restart: always
     volumes:
       - /var/ranking-bot:/var/ranking-bot:rw
     environment:
