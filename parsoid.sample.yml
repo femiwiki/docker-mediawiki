@@ -28,9 +28,6 @@ services:
     restart: always
     volumes:
       - /var/tweetbot:/var/tweetbot:rw
-    deploy:
-      placement:
-        constraints: [node.role == manager]
     environment:
       TWITTER_CONSUMER_KEY: xxxxxxxx
       TWITTER_CONSUMER_SECRET: xxxxxxxx
@@ -42,9 +39,6 @@ services:
     restart: always
     volumes:
       - /var/ranking-bot:/var/ranking-bot:rw
-    deploy:
-      placement:
-        constraints: [node.role == manager]
     environment:
       BOT_PW: xxxxxxxx
 volumes:
