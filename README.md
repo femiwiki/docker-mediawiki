@@ -89,7 +89,6 @@ sudo swapon
 # 서비스 시작
 #
 git clone https://github.com/femiwiki/swarm.git ~/swarm
-sudo docker swarm init
 cp ~/swarm/parsoid.sample.yml ~/swarm/parsoid.yml
 # ~/swarm/parsoid.yml를 수정하세요
 sudo docker swarm init
