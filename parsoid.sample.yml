@@ -1,0 +1,53 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql:/etc/mysql/conf.d:ro
+      - /srv/mysql:/var/lib/mysql
+  parsoid:
+    image: femiwiki/parsoid
+    networks:
+      - parsoid-network
+  caddy:
+    image: joshix/caddy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./caddy-parsoid:/var/www/html:ro
+      - caddy-certificates:/.caddy:rw
+    networks:
+      - parsoid-network
+  tweetbot:
+    image: femiwiki/tweetbot
+    restart: always
+    volumes:
+      - /var/tweetbot:/var/tweetbot:rw
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      TWITTER_CONSUMER_KEY: xxxxxxxx
+      TWITTER_CONSUMER_SECRET: xxxxxxxx
+      TWITTER_ACCESS_TOKEN: xxxxxxxx
+      TWITTER_ACCESS_TOKEN_SECRET: xxxxxxxx
+      WIKI_PASSWORD: xxxxxxxx
+  ranking-bot:
+    image: femiwiki/ranking-bot
+    restart: always
+    volumes:
+      - /var/ranking-bot:/var/ranking-bot:rw
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      BOT_PW: xxxxxxxx
+volumes:
+  caddy-certificates:
+networks:
+  parsoid-network:
