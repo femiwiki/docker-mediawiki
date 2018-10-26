@@ -29,6 +29,7 @@ services:
     volumes:
       - /var/tweetbot:/var/tweetbot:rw
     environment:
+      TZ: Asia/Seoul
       TWITTER_CONSUMER_KEY: xxxxxxxx
       TWITTER_CONSUMER_SECRET: xxxxxxxx
       TWITTER_ACCESS_TOKEN: xxxxxxxx
@@ -40,6 +41,7 @@ services:
     volumes:
       - /var/ranking-bot:/var/ranking-bot:rw
     environment:
+      TZ: Asia/Seoul
       BOT_PW: xxxxxxxx
 volumes:
   caddy-certificates:
