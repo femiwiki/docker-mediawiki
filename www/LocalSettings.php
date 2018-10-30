@@ -225,8 +225,9 @@ $wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
 ## @See https://github.com/femiwiki/femiwiki.com/issues/210
-$wgHiddenPrefs[] = 'showtoolbar';
-$wgHiddenPrefs[] = 'usebetatoolbar';
+if ( version_compare( $wgVersion, '1.32', '<' ) ) {
+    $wgHiddenPrefs[] = 'showtoolbar';
+}
 ## @See https://github.com/femiwiki/femiwiki.com/issues/211
 $wgHiddenPrefs[] = 'numberheadings';
 
@@ -398,6 +399,7 @@ $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
+$wgHiddenPrefs[] = 'usebetatoolbar';
 
 ## AbuseFilter
 wfLoadExtension( 'AbuseFilter' );
