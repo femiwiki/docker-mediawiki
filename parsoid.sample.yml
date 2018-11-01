@@ -5,7 +5,7 @@ services:
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
-      - 3306:3306
+      - 127.0.0.1:3306:3306
     volumes:
       - ./mysql:/etc/mysql/conf.d:ro
       - /srv/mysql:/var/lib/mysql
