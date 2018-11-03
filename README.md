@@ -31,11 +31,13 @@ sudo swapon
 # 서비스 시작
 #
 git clone https://github.com/femiwiki/swarm.git ~/swarm
-cp ~/swarm/parsoid.sample.yml ~/swarm/parsoid.yml
-# ~/swarm/parsoid.yml를 수정하세요
+cp ~/swarm/secret.sample ~/swarm/secret
+vim ~/swarm/secret
+# 시크릿을 입력해주세요
+
 sudo docker swarm init
-sudo mkdir /srv/mysql /var/tweetbot /var/ranking-bot
 sudo docker stack deploy -c ~/swarm/parsoid.yml parsoid
+sudo docker stack deploy -c ~/swarm/bots.yml bots
 ```
 
 페미위키 실서버/테스트서버

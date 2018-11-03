@@ -1,0 +1,12 @@
+version: '3'
+services:
+  tweetbot:
+    image: femiwiki/tweetbot
+    volumes:
+      - /srv/tweetbot:/var/tweetbot
+    env_file:
+      - secret
+  ranking-bot:
+    image: femiwiki/rankingbot
+    env_file:
+      - secret
