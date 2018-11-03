@@ -17,19 +17,5 @@ services:
     volumes:
       - ./caddy-parsoid:/var/www/html:ro
       - caddy-certificates:/.caddy
-  tweetbot:
-    image: femiwiki/tweetbot
-    volumes:
-      - /srv/tweetbot:/var/tweetbot
-    environment:
-      TWITTER_CONSUMER_KEY: xxxxxxxx
-      TWITTER_CONSUMER_SECRET: xxxxxxxx
-      TWITTER_ACCESS_TOKEN: xxxxxxxx
-      TWITTER_ACCESS_TOKEN_SECRET: xxxxxxxx
-      WIKI_PASSWORD: xxxxxxxx
-  ranking-bot:
-    image: femiwiki/rankingbot
-    environment:
-      BOT_PW: xxxxxxxx
 volumes:
   caddy-certificates:
