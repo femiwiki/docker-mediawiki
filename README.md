@@ -60,6 +60,7 @@ ap-northeast-1
 ========
 
 parsoid 서버
+
 --------
 Debian stretch
 
@@ -94,12 +95,15 @@ vim ~/swarm/secret
 # 시크릿을 입력해주세요
 
 sudo docker swarm init
+sudo docker stack deploy -c ~/swarm/database.yml database
 sudo docker stack deploy -c ~/swarm/parsoid.yml parsoid
 sudo docker stack deploy -c ~/swarm/bots.yml bots
 ```
 
 페미위키 실서버/테스트서버
+
 --------
+
 ```sh
 # 이미 있는 리눅스 인스턴스에 ENA를 활성화하는 과정이 필요함
 
@@ -114,6 +118,7 @@ sudo poweroff
 ```
 
 이후 로컬에서 아래 커맨드 실행
+
 ```sh
 INSTANCE_ID='i-00ed7086ef9b999e6'
 
