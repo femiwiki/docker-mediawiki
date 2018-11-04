@@ -1,6 +1,0 @@
-#!/bin/bash
-if [ "$1" = "prod" ];
-then
-    rsync -avz --rsync-path="sudo rsync" * fw:/vagrant
-fi
-ADMIN_PW=$ADMIN_PW vagrant provision $1-www
