@@ -55,8 +55,7 @@ RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSIO
     && echo "${MEDIAWIKI_SHA512} *mediawiki.tar.gz" | sha512sum -c - \
     && mkdir -p /srv/femiwiki.com/ \
     && tar -xzf mediawiki.tar.gz --strip-components=1 --directory /srv/femiwiki.com/ \
-    && rm mediawiki.tar.gz \
-    && chown -R www-data:www-data /srv/femiwiki.com/extensions /srv/femiwiki.com/skins /srv/femiwiki.com/cache
+    && rm mediawiki.tar.gz
     # Download and compose Plugins
     # @Todo Avoid running Composer as root
     # @See https://getcomposer.org/doc/faqs/how-to-install-untrusted-packages-safely.md
@@ -189,10 +188,10 @@ RUN mkdir -p /srv/femiwiki.com/skins /srv/femiwiki.com/extensions \
         -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/BetaFeatures \
     && /root/composer.phar update --no-dev -d /srv/femiwiki.com/extensions/BetaFeatures
     # Remove composer
-RUN rm /root/composer.phar
-
-RUN mkdir -p /opt/femiwiki/cache \
-    && chown www-data:www-data /opt/femiwiki/cache /srv/femiwiki.com
+RUN rm /root/composer.phar \
+    # Change the owner
+    && mkdir -p /opt/femiwiki/cache \
+    && chown -R www-data:www-data /srv/femiwiki.com /opt/femiwiki/cache
 
 COPY robots.txt /srv/femiwiki.com/
 COPY google6a8c7f190836bc0d.html /srv/femiwiki.com/
