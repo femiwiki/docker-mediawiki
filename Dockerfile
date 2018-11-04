@@ -21,9 +21,21 @@ RUN apt-get update \
         wget \
     && apt-get --purge autoremove -y
     # Install the PHP extensions we need
-RUN docker-php-ext-install mysqli opcache intl \
-    # 업로드 용량제한 2MiB에서 10MiB로 늘림
-    && { \
+RUN docker-php-ext-install mysqli opcache intl
+    # Install the default object cache.
+RUN pecl channel-update pecl.php.net \
+    && pecl install apcu \
+    && docker-php-ext-enable apcu
+    # set recommended PHP.ini settings
+    # see https://secure.php.net/manual/en/opcache.installation.php
+RUN { \
+        echo 'opcache.memory_consumption=128'; \
+        echo 'opcache.interned_strings_buffer=8'; \
+        echo 'opcache.max_accelerated_files=4000'; \
+        echo 'opcache.revalidate_freq=60'; \
+        echo 'opcache.fast_shutdown=1'; \
+        echo 'opcache.enable_cli=1'; \
+        # 업로드 용량제한 2MiB에서 10MiB로 늘림
         echo 'opcache.post_max_size=10M'; \
         echo 'opcache.upload_max_filesize=10M'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
