@@ -39,6 +39,12 @@ RUN { \
         echo 'opcache.post_max_size=10M'; \
         echo 'opcache.upload_max_filesize=10M'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+    # MediaWiki setup
+RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz \
+    && echo "${MEDIAWIKI_SHA512} *mediawiki.tar.gz" | sha512sum -c - \
+    && mkdir -p /srv/femiwiki.com/ \
+    && tar -xzf mediawiki.tar.gz --strip-components=1 --directory /srv/femiwiki.com/ \
+    && rm mediawiki.tar.gz
     # Install Composer
 RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)" \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -50,12 +56,6 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
     ; fi \
     && php composer-setup.php --install-dir=/root --quiet \
     && rm composer-setup.php
-    # MediaWiki setup
-RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz \
-    && echo "${MEDIAWIKI_SHA512} *mediawiki.tar.gz" | sha512sum -c - \
-    && mkdir -p /srv/femiwiki.com/ \
-    && tar -xzf mediawiki.tar.gz --strip-components=1 --directory /srv/femiwiki.com/ \
-    && rm mediawiki.tar.gz
     # Download and compose Plugins
     # @Todo Avoid running Composer as root
     # @See https://getcomposer.org/doc/faqs/how-to-install-untrusted-packages-safely.md
