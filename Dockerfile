@@ -190,6 +190,7 @@ COPY favicon.ico /srv/femiwiki.com/
 COPY LocalSettings.php /opt/femiwiki/LocalSettings.php
 COPY LocalSettingsSecure.php /opt/femiwiki/LocalSettingsSecure.php
 
+WORKDIR /srv/femiwiki.com
 EXPOSE 9000
 CMD php /srv/femiwiki.com/maintenance/install.php \
         --scriptpath "/w" \
