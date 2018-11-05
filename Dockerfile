@@ -227,8 +227,8 @@ RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 
 # Store femiwiki resources
 COPY resources /srv/femiwiki.com/
-# Copy config files
-COPY configs /opt/femiwiki/
+# Copy LocalSettings.php file
+COPY configs/LocalSettings.php /opt/femiwiki/
 
 WORKDIR /srv/femiwiki.com
 EXPOSE 9000

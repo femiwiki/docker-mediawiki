@@ -16,6 +16,7 @@ docker run \
   --name femiwiki.com \
   --network mynetwork \
   -p 9000:9000 \
+  --volume ${PWD}/configs/LocalSettingsSecure.php:/opt/femiwiki/LocalSettingsSecure.php \
   -e 'PROTOCOL=https' \
   -e 'HOST=femiwiki.com' \
   -e 'DB=localhost' \
