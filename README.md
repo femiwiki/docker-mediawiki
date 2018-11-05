@@ -2,7 +2,6 @@ ap-northeast-1
 ========
 
 parsoid 서버
-
 --------
 Debian stretch
 
@@ -43,7 +42,6 @@ sudo docker stack deploy -c ~/swarm/bots.yml bots
 ```
 
 페미위키 실서버/테스트서버
-
 --------
 
 ```sh
