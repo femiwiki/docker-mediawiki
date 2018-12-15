@@ -3,4 +3,4 @@ services:
   parsoid:
     image: femiwiki/parsoid
     ports:
-      - 80:80
+      - 80:8000
