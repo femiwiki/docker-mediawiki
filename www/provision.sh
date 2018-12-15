@@ -275,7 +275,6 @@ fi
 sudo cp /vagrant/www/LocalSettings.php /var/www/femiwiki.com/LocalSettings.php
 sudo sed -i s/PROTOCOL/$1/ /var/www/femiwiki.com/LocalSettings.php
 sudo sed -i s/HOST/$2/ /var/www/femiwiki.com/LocalSettings.php
-sudo sed -i s/PARSOID/$5/ /var/www/femiwiki.com/LocalSettings.php
 
 # Copy directories only in production mode
 if [ "$1" = "https" ];

@@ -14,6 +14,13 @@ $wgSMTP = [
     'password' => "PASSWORD",
 ];
 
+# Parsoid server Setting
+$wgVirtualRestConfig['modules']['parsoid'] = [
+    'url' => 'PROTOCOL://PARSOID',
+    'domain' => 'HOST',
+    'prefix' => 'HOST'
+];
+
 # Keys or IDs for Femiwiki Skin
 $wgFirebaseKey = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 

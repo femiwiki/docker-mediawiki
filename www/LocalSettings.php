@@ -269,13 +269,6 @@ $wgNamespaceAliases = [
     '페' => NS_PROJECT
 ];
 
-# Parsoid server Setting
-$wgVirtualRestConfig['modules']['parsoid'] = [
-    'url' => 'PROTOCOL://PARSOID',
-    'domain' => 'HOST',
-    'prefix' => 'HOST'
-];
-
 # Plugins
 ## ParserFunction
 wfLoadExtension( 'ParserFunctions' );
