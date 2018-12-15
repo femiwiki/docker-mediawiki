@@ -2,13 +2,5 @@ version: '3'
 services:
   parsoid:
     image: femiwiki/parsoid
-  caddy:
-    image: joshix/caddy
     ports:
       - 80:80
-      - 443:443
-    volumes:
-      - ./caddy-parsoid:/var/www/html:ro
-      - caddy-certificates:/.caddy
-volumes:
-  caddy-certificates:
