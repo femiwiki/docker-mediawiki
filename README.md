@@ -136,7 +136,7 @@ aws ec2 describe-images --image-id "${AMI_ID}" --query 'Images[].EnaSupport'
 #
 # Caddy 세팅
 #
-sudo apt-get install php7.0-fpm
+sudo apt-get install php7.2-fpm
 
 # /usr/local/bin/caddy 에 바이너리 준비
 # /etc/init/caddy.conf 에 서비스파일 준비
