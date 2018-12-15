@@ -16,7 +16,7 @@
   log stdout
 }
 
-parsoid.femiwiki.com, :80 {
+:80 {
   import common
   proxy / parsoid:8000 {
     transparent
