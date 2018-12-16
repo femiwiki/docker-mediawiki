@@ -274,6 +274,8 @@ ENTRYPOINT ["/tini", "--"]
 COPY --chown=www-data:www-data resources /srv/femiwiki.com/
 # Copy LocalSettings.php file
 COPY configs/LocalSettings.php /tmp/
+# secret.php should be mounted to '/a/secret.php'
+VOLUME /a
 
 WORKDIR /srv/femiwiki.com
 EXPOSE 9000
