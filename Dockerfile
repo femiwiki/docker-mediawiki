@@ -183,55 +183,56 @@ RUN \
       -b v0.9.0 /srv/femiwiki.com/extensions/AWS &&\
     composer update --no-dev -d /srv/femiwiki.com/extensions/AWS &&\
     # EmbedVideo
-    wget -nv https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.tar.gz &&\
+    wget -nv https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.tar.gz -O /tmp/tarball.tgz &&\
     mkdir -p /srv/femiwiki.com/extensions/EmbedVideo &&\
-    tar -xzf v2.7.4.tar.gz --strip-components=1 --directory /srv/femiwiki.com/extensions/EmbedVideo &&\
-    rm v2.7.4.tar.gz &&\
+    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/EmbedVideo &&\
+    rm /tmp/tarball.tgz &&\
     # SimpleMathJax
-    wget -nv https://github.com/jmnote/SimpleMathJax/archive/v0.7.3.tar.gz &&\
+    wget -nv https://github.com/jmnote/SimpleMathJax/archive/v0.7.3.tar.gz -O /tmp/tarball.tgz &&\
     mkdir -p /srv/femiwiki.com/extensions/SimpleMathJax &&\
-    tar -xzf v0.7.3.tar.gz --strip-components=1 --directory /srv/femiwiki.com/extensions/SimpleMathJax &&\
-    rm v0.7.3.tar.gz &&\
+    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/SimpleMathJax &&\
+    rm /tmp/tarball.tgz &&\
     # Sanctions
-    wget -nv https://github.com/femiwiki/sanctions/archive/master.tar.gz &&\
+    wget -nv https://github.com/femiwiki/sanctions/archive/master.tar.gz -O /tmp/tarball.tgz &&\
     mkdir -p /srv/femiwiki.com/extensions/Sanctions &&\
-    tar -xzf master.tar.gz --strip-components=1 --directory /srv/femiwiki.com/extensions/Sanctions &&\
-    rm master.tar.gz &&\
+    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/Sanctions &&\
+    rm /tmp/tarball.tgz &&\
     # CategoryIntersectionSearch
-    wget -nv https://github.com/femiwiki/categoryIntersectionSearch/archive/master.tar.gz &&\
+    wget -nv https://github.com/femiwiki/categoryIntersectionSearch/archive/master.tar.gz -O /tmp/tarball.tgz &&\
     mkdir -p /srv/femiwiki.com/extensions/CategoryIntersectionSearch &&\
-    tar -xzf master.tar.gz --strip-components=1 --directory /srv/femiwiki.com/extensions/CategoryIntersectionSearch &&\
-    rm master.tar.gz &&\
+    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/CategoryIntersectionSearch &&\
+    rm /tmp/tarball.tgz &&\
     # FacetedCategory
-    wget -nv https://github.com/femiwiki/facetedCategory/archive/master.tar.gz &&\
+    wget -nv https://github.com/femiwiki/facetedCategory/archive/master.tar.gz -O /tmp/tarball.tgz &&\
     mkdir -p /srv/femiwiki.com/extensions/FacetedCategory &&\
-    tar -xzf master.tar.gz --strip-components=1 --directory /srv/femiwiki.com/extensions/FacetedCategory &&\
-    rm master.tar.gz &&\
+    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/FacetedCategory &&\
+    rm /tmp/tarball.tgz &&\
     # UnifiedExtensionForFemiwiki
-    wget -nv https://github.com/femiwiki/unifiedExtensionForFemiwiki/archive/master.tar.gz &&\
+    wget -nv https://github.com/femiwiki/unifiedExtensionForFemiwiki/archive/master.tar.gz -O /tmp/tarball.tgz &&\
     mkdir -p /srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki &&\
-    tar -xzf master.tar.gz --strip-components=1 --directory /srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki &&\
-    rm master.tar.gz &&\
+    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki &&\
+    rm /tmp/tarball.tgz &&\
     # HTMLTags
-    wget -nv https://extdist.wmflabs.org/dist/extensions/HTMLTags-REL1_31-b7377b0.tar.gz &&\
-    tar -xzf HTMLTags-REL1_31-b7377b0.tar.gz -C /srv/femiwiki.com/extensions &&\
-    rm HTMLTags-REL1_31-b7377b0.tar.gz &&\
+    wget -nv https://extdist.wmflabs.org/dist/extensions/HTMLTags-REL1_31-b7377b0.tar.gz -O /tmp/tarball.tgz &&\
+    mkdir -p /srv/femiwiki.com/extensions/HTMLTags &&\
+    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/HTMLTags &&\
+    rm /tmp/tarball.tgz &&\
     echo 'Installed all third-party extensions'
 
 # Install femiwiki skin
-RUN mkdir -p /srv/femiwiki.com/skins/Femiwiki /srv/femiwiki.com/extensions &&\
-    wget -nv https://github.com/femiwiki/skin/archive/master.tar.gz &&\
-    tar -xzf master.tar.gz --strip-components=1 --directory /srv/femiwiki.com/skins/Femiwiki &&\
-    rm master.tar.gz
+RUN \
+    wget -nv https://github.com/femiwiki/skin/archive/master.tar.gz -O /tmp/tarball.tgz &&\
+    mkdir -p /srv/femiwiki.com/skins/Femiwiki &&\
+    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/skins/Femiwiki &&\
+    rm /tmp/tarball.tgz
 
 # Create a cache directory
 RUN mkdir -p /tmp/cache
 
 USER root
 
-# Remove composer
-RUN rm /usr/local/bin/composer
-# RUN rm -rf /tmp/composer
+# Remove composer and its caches
+RUN rm -rf /usr/local/bin/composer /tmp/composer
 
 # Web server should be able to write 'extensions/Widgets/compiled_templates'
 # directory Required by 'Widgets' extension
