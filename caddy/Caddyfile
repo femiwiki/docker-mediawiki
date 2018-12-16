@@ -1,7 +1,7 @@
 *:80
 root /srv/femiwiki.com
 index index.php
-fastcgi / fastcgi:9000
+fastcgi / fastcgi:9000 php
 rewrite /w/api.php {
   to /api.php
 }

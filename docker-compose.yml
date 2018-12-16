@@ -6,13 +6,17 @@ services:
       - 80:80
     volumes:
       - ./caddy:/var/www/html:ro
+      - files:/srv/femiwiki.com
   fastcgi:
     image: femiwiki/mediawiki
     volumes:
       - ./configs:/a:ro
+      - files:/srv/femiwiki.com
     env_file:
       - configs/env
   cache:
     image: memcached:1-alpine
   parsoid:
     image: femiwiki/parsoid
+volumes:
+  files:
