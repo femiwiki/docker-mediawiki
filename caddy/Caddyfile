@@ -1,0 +1,11 @@
+*:80 {
+  index index.php
+  fastcgi / fastcgi:9000 php
+  rewrite /w/api.php {
+    to /api.php
+  }
+  rewrite /w {
+    r  /(.*)
+    to /index.php
+  }
+}

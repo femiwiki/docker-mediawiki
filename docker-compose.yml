@@ -1,0 +1,21 @@
+version: '3'
+services:
+  http:
+    image: joshix/caddy
+    ports:
+      - 80:80
+    volumes:
+      - ./caddy:/var/www/html:ro
+  fastcgi:
+    image: femiwiki/mediawiki
+    volumes:
+      - ./configs:/a:ro
+    # TODO
+    # --env 'PROTOCOL=https' \
+    # --env 'HOST=femiwiki.com' \
+    # --env 'DB=localhost' \
+    # --env 'DB_PW=root' \
+  cache:
+    image: memcached:1-alpine
+  parsoid:
+    image: femiwiki/parsoid

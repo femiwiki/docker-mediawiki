@@ -89,7 +89,7 @@ $wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgParserCacheType = CACHE_MEMCACHED; # optional
 $wgMessageCacheType = CACHE_MEMCACHED; # optional
-$wgMemCachedServers = ["127.0.0.1:11211"];
+$wgMemCachedServers = ["cache:11211"];
 $wgSessionsInObjectCache = true; # optional
 $wgSessionCacheType = CACHE_MEMCACHED; # optional
 
@@ -267,6 +267,13 @@ if ( defined( 'NS_TOPIC' ) ) $wgNamespaceRobotPolicies[NS_TOPIC] = 'noindex,nofo
 $wgNamespaceAliases = [
     '도' => NS_HELP,
     '페' => NS_PROJECT
+];
+
+# Parsoid server Setting
+$wgVirtualRestConfig['modules']['parsoid'] = [
+    'url' => 'http://parsoid:8000',
+    'domain' => 'HOST',
+    'prefix' => 'HOST'
 ];
 
 # Plugins
