@@ -63,7 +63,8 @@ RUN { \
 RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
     echo "${MEDIAWIKI_SHA512} *mediawiki.tar.gz" | sha512sum -c - &&\
     mkdir -p /srv/femiwiki.com/ &&\
-    tar -xzf mediawiki.tar.gz --strip-components=1 --directory /srv/femiwiki.com/ &&\
+    chown www-data:www-data /srv/femiwiki.com/ &&\
+    sudo -u www-data tar -xzf mediawiki.tar.gz --strip-components=1 --directory /srv/femiwiki.com/ &&\
     rm mediawiki.tar.gz
 
 # Install Composer
@@ -77,6 +78,11 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
     fi &&\
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet &&\
     rm composer-setup.php
+
+# Change user
+USER www-data
+# '/var/www/.composer' is not writable for www-data. Change $COMPOSER_HOME
+ENV COMPOSER_HOME=/tmp/composer
 
 # Install official mediawiki extensions
 RUN \
@@ -218,16 +224,17 @@ RUN mkdir -p /srv/femiwiki.com/skins/Femiwiki /srv/femiwiki.com/extensions &&\
     tar -xzf master.tar.gz --strip-components=1 --directory /srv/femiwiki.com/skins/Femiwiki &&\
     rm master.tar.gz
 
+# Create a cache directory
+RUN mkdir -p /tmp/cache
+
+USER root
+
 # Remove composer
 RUN rm /usr/local/bin/composer
+# RUN rm -rf /tmp/composer
 
-# Create a cache directory
-RUN sudo -u www-data mkdir -p /tmp/cache
-# PHP process should be able to access source code of femiwiki
-RUN chown -R www-data:www-data /srv/femiwiki.com
-# PHP process should be able to write 'extensions/Widgets/compiled_templates' directory
-# Required by 'Widgets' extension
-#
+# Web server should be able to write 'extensions/Widgets/compiled_templates'
+# directory Required by 'Widgets' extension
 # Reference: https://www.mediawiki.org/wiki/Extension:Widgets
 RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 
