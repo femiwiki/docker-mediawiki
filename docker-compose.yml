@@ -10,11 +10,8 @@ services:
     image: femiwiki/mediawiki
     volumes:
       - ./configs:/a:ro
-    # TODO
-    # --env 'PROTOCOL=https' \
-    # --env 'HOST=femiwiki.com' \
-    # --env 'DB=localhost' \
-    # --env 'DB_PW=root' \
+    env_file:
+      - configs/env
   cache:
     image: memcached:1-alpine
   parsoid:

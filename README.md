@@ -5,6 +5,7 @@
 
 ```bash
 cp configs/secret.php.example configs/secret.php
+cp configs/env.example configs/env
 # configs/secret.php 를 적절히 수정해주세요
 
 # DB는 별도의 방법으로 적절히 띄워주세요
