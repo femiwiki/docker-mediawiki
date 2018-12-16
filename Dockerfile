@@ -21,13 +21,17 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
+      # Build dependencies
       build-essential \
       libicu-dev \
+      # Composer dependencies
       git \
-      memcached \
+      wget \
+      unzip \
+      # Runtime depenencies
       imagemagick \
       librsvg2-bin \
-      wget \
+      # Required utilities
       cron \
       sudo
 
@@ -233,6 +237,12 @@ USER root
 
 # Remove composer and its caches
 RUN rm -rf /usr/local/bin/composer /tmp/composer
+
+# Remove packages which is not needed anymore
+RUN apt-get autoremove -y --purge \
+      git \
+      wget \
+      unzip
 
 # Web server should be able to write 'extensions/Widgets/compiled_templates'
 # directory Required by 'Widgets' extension
