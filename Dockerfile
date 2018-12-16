@@ -288,7 +288,6 @@ CMD php /srv/femiwiki.com/maintenance/install.php \
     mv /tmp/LocalSettings.php /srv/femiwiki.com/LocalSettings.php &&\
     sed -i 's/PROTOCOL/'"${PROTOCOL:-https}"'/' /srv/femiwiki.com/LocalSettings.php &&\
     sed -i 's/HOST/'"${HOST:-femiwiki.com}"'/' /srv/femiwiki.com/LocalSettings.php &&\
-    sed -i 's/PARSOID/'"${PARSOID:-parsoid.femiwiki.com}"'/' /srv/femiwiki.com/LocalSettings.php &&\
     # Run update script
     /srv/femiwiki.com/maintenance/update.php --quick &&\
     # Run cron
