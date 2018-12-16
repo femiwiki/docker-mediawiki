@@ -224,11 +224,11 @@ $wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
 # Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
-## @See https://github.com/femiwiki/femiwiki.com/issues/210
+## @See https://github.com/femiwiki/mediawiki/issues/210
 if ( version_compare( $wgVersion, '1.32', '<' ) ) {
     $wgHiddenPrefs[] = 'showtoolbar';
 }
-## @See https://github.com/femiwiki/femiwiki.com/issues/211
+## @See https://github.com/femiwiki/mediawiki/issues/211
 $wgHiddenPrefs[] = 'numberheadings';
 
 # Allow display titles not only to titles that normalize to the same canonical DB key as the real page title.
