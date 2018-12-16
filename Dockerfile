@@ -1,10 +1,3 @@
-# TODOs
-# - Install PEAR's Mail
-# - Avoid running Composer as root. See https://getcomposer.org/doc/faqs/how-to-install-untrusted-packages-safely.md
-# - 모든 익스텐션 다 잘 설치되었는지 확인
-# - install.php 실행할때 /srv/femiwiki.com/LocalSettings.php 가 존재하면 안되는지
-# - /opt/femiwiki/LocalSettingsSecure.php 이 위치 마음에 안듦
-
 FROM php:7.2-fpm
 
 ENV MEDIAWIKI_MAJOR_VERSION=1.31
