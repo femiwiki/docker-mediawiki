@@ -9,14 +9,16 @@ ENV MEDIAWIKI_SHA512=ee49649cc37d0a7d45a7c6d90c822c2a595df290be2b5bf085affbec331
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install dependencies
+# Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
       build-essential \
       libicu-dev \
       git \
       memcached \
       librsvg2-bin \
-      wget
+      wget \
+      cron \
+      sudo
 
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 mysqli opcache intl
@@ -217,6 +219,18 @@ RUN chown -R www-data:www-data /srv/femiwiki.com /opt/femiwiki/cache
 #
 # Reference: https://www.mediawiki.org/wiki/Extension:Widgets
 RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
+
+
+#
+# Install and register cron
+#
+COPY cron/crontab /tmp/crontab
+RUN crontab /tmp/crontab && rm /tmp/crontab
+
+# Install 'generate-sitemap' script
+RUN sudo -u www-data mkdir -p /srv/femiwiki.com/sitemap
+COPY cron/generate-sitemap /usr/local/bin/generate-sitemap
+
 
 # Store femiwiki resources
 COPY resources /srv/femiwiki.com/

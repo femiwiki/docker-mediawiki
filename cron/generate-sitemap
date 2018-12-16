@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# 주기적으로 실행해야하는 스크립트. 검색엔진이 사이트를 더 잘 크롤링하도록
+# 도와준다.
+#
+# Reference:
+#   https://www.mediawiki.org/wiki/Manual:GenerateSitemap.php
+
+set -euo pipefail; IFS=$'\n\t'
+
+cd /srv/femiwiki.com
+
+sudo -u www-data php maintenance/generateSitemap.php \
+  --fspath sitemap \
+  --server 'https://femiwiki.com' \
+  --urlpath 'https://femiwiki.com/sitemap' \
+  --skip-redirects \
+  --compress=no
