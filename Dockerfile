@@ -272,7 +272,7 @@ ENTRYPOINT ["/tini", "--"]
 
 
 # Store femiwiki resources
-COPY resources /srv/femiwiki.com/
+COPY --chown=www-data:www-data resources /srv/femiwiki.com/
 # Copy LocalSettings.php file
 COPY configs/LocalSettings.php configs/secret.php /tmp/
 
