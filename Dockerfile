@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y \
       libicu-dev \
       git \
       memcached \
+      imagemagick \
       librsvg2-bin \
       wget \
       cron \
