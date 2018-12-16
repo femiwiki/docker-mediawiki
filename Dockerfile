@@ -232,6 +232,16 @@ RUN sudo -u www-data mkdir -p /srv/femiwiki.com/sitemap
 COPY cron/generate-sitemap /usr/local/bin/generate-sitemap
 
 
+#
+# Tini
+#
+# See https://github.com/krallin/tini for the further details
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
+
+
 # Store femiwiki resources
 COPY resources /srv/femiwiki.com/
 # Copy LocalSettings.php file
