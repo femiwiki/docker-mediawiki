@@ -4,8 +4,8 @@
 이미지입니다. 자세한 배포과정은 [femiwiki/swarm]을 참고해주세요.
 
 ```bash
-cp configs/LocalSettingsSecure.sample.php configs/LocalSettingsSecure.php
-# configs/LocalSettingsSecure.php 를 적절히 수정해주세요
+cp configs/secret.php.example configs/secret.php
+# configs/secret.php 를 적절히 수정해주세요
 
 # DB는 별도의 방법으로 적절히 띄워주세요
 

@@ -502,4 +502,4 @@ $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
 $wgDebugToolbar = ('HOST' != 'femiwiki.com');
 $wgShowDBErrorBacktrace = ('HOST' != 'femiwiki.com');
 
-require_once "/opt/femiwiki/LocalSettingsSecure.php";
+require_once "/tmp/secret.php";

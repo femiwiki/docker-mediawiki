@@ -5,6 +5,7 @@
 # /usr/local/bin         : 임의로 설치한 실행파일들
 # /tmp/cache             : 캐시 디렉토리
 # /tmp/LocalSettings.php : LocalSettings.php가 임시로 이 위치에 저장됨
+# /tmp/secret.php        : 각종 크레덴셜이 저장되어있는 파일
 # /tini                  : tini
 
 FROM php:7.2-fpm
@@ -254,7 +255,7 @@ ENTRYPOINT ["/tini", "--"]
 # Store femiwiki resources
 COPY resources /srv/femiwiki.com/
 # Copy LocalSettings.php file
-COPY configs/LocalSettings.php /tmp/
+COPY configs/LocalSettings.php configs/secret.php /tmp/
 
 WORKDIR /srv/femiwiki.com
 EXPOSE 9000
