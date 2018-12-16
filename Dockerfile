@@ -270,4 +270,7 @@ CMD php /srv/femiwiki.com/maintenance/install.php \
     sed -i 's/PARSOID/'"${PARSOID:-parsoid.femiwiki.com}"'/' /srv/femiwiki.com/LocalSettings.php &&\
     # Run update script
     /srv/femiwiki.com/maintenance/update.php --quick &&\
+    # Run cron
+    cron &&\
+    # Run php-fpm
     php-fpm
