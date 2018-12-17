@@ -30,6 +30,8 @@ RUN apt-get update && apt-get install -y \
       # Runtime depenencies
       imagemagick \
       librsvg2-bin \
+      # Required for SyntaxHighlighting
+      python3 \
       # Required utilities
       cron \
       sudo
