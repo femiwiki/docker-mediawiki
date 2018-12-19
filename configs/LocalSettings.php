@@ -272,8 +272,7 @@ $wgNamespaceAliases = [
 # Parsoid server Setting
 $wgVirtualRestConfig['modules']['parsoid'] = [
     'url' => 'http://parsoid:8000',
-    'domain' => 'HOST',
-    'prefix' => 'HOST'
+    'domain' => 'HOST'
 ];
 
 # Plugins
