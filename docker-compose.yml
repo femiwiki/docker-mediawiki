@@ -13,10 +13,12 @@ services:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
     env_file:
-      - configs/env
+      - configs/fastcgi.env
   cache:
     image: memcached:1-alpine
   parsoid:
     image: femiwiki/parsoid
+    env_file:
+      - configs/parsoid.env
 volumes:
   files:
