@@ -183,9 +183,9 @@ RUN \
 
 # Install third-party mediawiki extensions
 RUN \
-    # AWS (v0.9.0)
+    # AWS (v0.10.0)
     git clone --recurse-submodules --depth 1 https://github.com/edwardspec/mediawiki-aws-s3.git \
-      -b v0.9.0 /srv/femiwiki.com/extensions/AWS &&\
+      -b v0.10.0 /srv/femiwiki.com/extensions/AWS &&\
     composer update --no-dev -d /srv/femiwiki.com/extensions/AWS &&\
     # EmbedVideo
     wget -nv https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.tar.gz -O /tmp/tarball.tgz &&\

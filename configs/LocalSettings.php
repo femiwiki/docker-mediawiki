@@ -286,6 +286,7 @@ if ( 'HOST' == 'femiwiki.com' ) {
     $wgAWSRegion = 'ap-northeast-1';
     $wgAWSBucketPrefix = "femiwiki-uploaded-files";
     $wgAWSRepoHashLevels = 2;
+    $wgAWSRepoDeletedHashLevels = 2;
 }
 
 ## VisualEditor
