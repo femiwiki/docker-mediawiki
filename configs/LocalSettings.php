@@ -91,7 +91,7 @@ $wgParserCacheType = CACHE_MEMCACHED; # optional
 $wgMessageCacheType = CACHE_MEMCACHED; # optional
 $wgMemCachedServers = ["cache:11211"];
 $wgSessionsInObjectCache = true; # optional
-$wgSessionCacheType = CACHE_MEMCACHED; # optional
+$wgSessionCacheType = CACHE_DB; # optional
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
