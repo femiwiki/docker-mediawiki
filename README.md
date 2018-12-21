@@ -24,11 +24,12 @@ sudo usermod -a -G docker ec2-user
 
 #
 # 스왑 메모리 생성
+# 아마존 리눅스에서는 기본으로 XFS를 쓰는데, 이 경우 fallocate 명령어를 쓰지 못한다.
 #
-sudo fallocate -l 3G /swapfile
+sudo dd if=/dev/zero of=/swapfile bs=256M count=12
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
-echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
 sudo swapon -a
 
 #
