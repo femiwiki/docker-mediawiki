@@ -14,7 +14,7 @@ database+bots 서버
 # Reference: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html#install_docker
 #
 sudo yum update -y
-sudo amazon-linux-extras install docker
+sudo amazon-linux-extras install -y docker
 sudo systemctl enable docker
 sudo systemctl start docker
 sudo usermod -a -G docker ec2-user
@@ -33,6 +33,7 @@ sudo swapon -a
 #
 # 서비스 시작
 #
+sudo yum install -y git
 git clone https://github.com/femiwiki/swarm.git ~/swarm
 cp ~/swarm/secret.sample ~/swarm/secret
 vim ~/swarm/secret
