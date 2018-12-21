@@ -1,4 +1,4 @@
-Lightsail
+EC2
 ========
 
 database+bots 서버
