@@ -3,26 +3,29 @@ ap-northeast-1
 Lightsail
 ========
 
-database 서버
+database+bots 서버
 --------
 
 데이터베이스 및 봇 실행.
 
-- Debian stretch
+- amazon linux 2
 
 ```sh
 #
 # 도커 설치
-# Reference: https://docs.docker.com/install/linux/docker-ce/debian/
+# Reference: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html#install_docker
 #
-sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-sudo add-apt-repository \
-  "deb [arch=amd64] https://download.docker.com/linux/debian \
-  $(lsb_release -cs) \
-  stable"
-sudo apt-get update && sudo apt-get install -y docker-ce
+sudo yum update -y
+sudo amazon-linux-extras install docker
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+```
 
+Log out and log back in again to pick up the new docker group permissions.
+You can accomplish this by closing your current SSH terminal window and reconnecting to your instance in a new one.
+Your new SSH session will have the appropriate docker group permissions.
+
+```sh
 #
 # 스왑 메모리 생성
 #
@@ -31,6 +34,7 @@ sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 sudo swapon -a
+database 서버
 
 #
 # 서비스 시작
@@ -40,9 +44,9 @@ cp ~/swarm/secret.sample ~/swarm/secret
 vim ~/swarm/secret
 # 시크릿을 입력해주세요
 
-sudo docker swarm init
-sudo docker stack deploy -c ~/swarm/database.yml database
-sudo docker stack deploy -c ~/swarm/bots.yml bots
+docker swarm init
+docker stack deploy -c ~/swarm/database.yml database
+docker stack deploy -c ~/swarm/bots.yml bots
 ```
 
 mediawiki 서버
@@ -50,6 +54,7 @@ mediawiki 서버
 
 페미위키 실서버. 데이터베이스를 구성한 다음이어야 정상적으로 실행됨.
 
+- Debian stretch
 ```sh
 #
 # 도커 설치
