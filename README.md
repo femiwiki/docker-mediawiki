@@ -28,7 +28,6 @@ sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 sudo swapon -a
-database 서버
 
 #
 # 서비스 시작
