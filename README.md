@@ -1,19 +1,27 @@
-페미위키용 미디어위키 도커 [![Docker Hub Status]][Docker Hub Link]
+페미위키 미디어위키 서버 [![Docker Hub Status]][Docker Hub Link]
 ========
-한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 서버의 도커
-이미지입니다.
+한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 서버입니다.
+Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
+
+&nbsp;
+
+### 개발
+```bash
+# 도커 이미지 업데이트
+docker build -t femiwiki/mediawiki .
+docker push femiwiki/mediawiki
+```
+
+로컬에서 테스트하는 방법
 
 ```bash
 cp configs/secret.php.example configs/secret.php
 cp configs/env.example configs/env
+vim configs/{env,secret.php}
 # secret.php와 env 를 적절히 수정해주세요
 
-# DB는 별도의 방법으로 적절히 띄워주세요
-
-docker build -t femiwiki/mediawiki .
-
-# 'fw-resources', 'skins' 등을 볼륨으로 지정하면 편하게 변경 사항을 바로바로
-# 확인하실 수 있습니다.
+# DB를 별도의 방법으로 적절히 띄운 뒤 도커 컴포즈 실행
+docker-compose up
 ```
 
 &nbsp;
