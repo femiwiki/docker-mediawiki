@@ -6,7 +6,7 @@
 ```bash
 cp configs/secret.php.example configs/secret.php
 cp configs/env.example configs/env
-# configs/secret.php 를 적절히 수정해주세요
+# secret.php와 env 를 적절히 수정해주세요
 
 # DB는 별도의 방법으로 적절히 띄워주세요
 
@@ -26,9 +26,6 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 
 [Docker Hub Status]: https://badgen.net/docker/pulls/femiwiki/mediawiki/?icon=docker&label=pulls
 [Docker Hub Link]: https://hub.docker.com/r/femiwiki/mediawiki/
-[페미위키]: https://femiwiki.com
 [femiwiki.com]: https://femiwiki.com
-[도커]: https://www.docker.com
-[femiwiki/swarm]: https://github.com/femiwiki/swarm
 [GNU Affero General Public License v3.0]: LICENSE
 [COPYRIGHT]: COPYRIGHT
