@@ -1,14 +1,14 @@
-Lightsail
-=======
-EC2
+
+서버 현황
 ========
 
-database+bots 서버
+A. database+bots 서버
 --------
 
-데이터베이스 및 봇 실행.
-
-- amazon linux 2
+기능 | 데이터베이스 및 크론잡
+:---|----
+Base AMI | Amazon Linux 2
+Secondary Private IP | 172.31.33.33 (고정)
 
 ```sh
 sudo yum update -y
@@ -43,18 +43,19 @@ cp ~/swarm/secret.sample ~/swarm/secret
 vim ~/swarm/secret
 # 시크릿을 입력해주세요
 
-docker swarm init --advertise-addr eth0
+docker swarm init --advertise-addr 172.31.33.33
 docker stack deploy -c ~/swarm/database.yml database
 docker stack deploy -c ~/swarm/bots.yml bots
 docker stack deploy -c ~/swarm/parsoid.yml parsoid
 ```
 
-mediawiki 서버
+B. mediawiki 서버
 --------
 
-페미위키 실서버. 데이터베이스를 구성한 다음이어야 정상적으로 실행됨.
+기능 | 미디어위키 서버
+:---|----
+Base AMI | Debian stretch
 
-- Debian stretch
 ```sh
 #
 # 도커 설치
