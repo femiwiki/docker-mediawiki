@@ -43,7 +43,7 @@ cp ~/swarm/secret.sample ~/swarm/secret
 vim ~/swarm/secret
 # 시크릿을 입력해주세요
 
-docker swarm init
+docker swarm init --advertise-addr eth0
 docker stack deploy -c ~/swarm/database.yml database
 docker stack deploy -c ~/swarm/bots.yml bots
 ```
