@@ -7,12 +7,13 @@ A. database+bots 서버
 
 기능 | 데이터베이스 및 크론잡
 :---|----
-Base AMI | Amazon Linux 2
+Base AMI | Amazon Linux 2 Minimal (HDD)
 Secondary Private IP | 172.31.33.33 (고정)
 
 ```sh
 sudo yum update -y
 sudo yum install -y htop tmux git
+sudo amazon-linux-extras install -y vim
 
 #
 # 도커 설치
