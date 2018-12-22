@@ -7,7 +7,6 @@ A. database+bots 서버
 기능 | 데이터베이스 및 크론잡
 :---|----
 Base AMI | [Femiwiki Base AMI](https://github.com/femiwiki/ami)
-Secondary Private IP | 172.31.33.33 (고정)
 
 ```sh
 git clone https://github.com/femiwiki/swarm.git ~/swarm
@@ -15,7 +14,7 @@ cp ~/swarm/secret.sample ~/swarm/secret
 vim ~/swarm/secret
 # 시크릿을 입력해주세요
 
-docker swarm init --advertise-addr 172.31.33.33
+docker swarm init
 docker stack deploy -c ~/swarm/database.yml database
 docker stack deploy -c ~/swarm/bots.yml bots
 docker stack deploy -c ~/swarm/parsoid.yml parsoid
