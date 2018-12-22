@@ -9,7 +9,7 @@ A. database+bots 서버
 Base AMI | [Femiwiki Base AMI](https://github.com/femiwiki/ami)
 
 ```sh
-git clone https://github.com/femiwiki/swarm.git ~/swarm
+git clone https://github.com/femiwiki/swarm.git ~/swarm --depth=1
 cp ~/swarm/secret.sample ~/swarm/secret
 vim ~/swarm/secret
 # 시크릿을 입력해주세요
@@ -30,7 +30,7 @@ Base AMI | [Femiwiki Base AMI](https://github.com/femiwiki/ami)
 #
 # 서비스 시작
 #
-git clone https://github.com/femiwiki/mediawiki ~/mediawiki
+git clone https://github.com/femiwiki/mediawiki ~/mediawiki --depth=1
 cp ~/mediawiki/configs/env.example ~/mediawiki/configs/env
 cp ~/mediawiki/configs/secret.php.example  ~/mediawiki/configs/secret.php
 # 각 설정 파일을 필요한 내용으로 고쳐주세요.
