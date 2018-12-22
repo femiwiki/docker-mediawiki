@@ -72,8 +72,9 @@ $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
 
 ## $wgStructuredChangeFiltersShowPreference do exists untli Mediawiki 1.32.
-if ( version_compare( $wgVersion, '1.32', '<' ) )
+if ( version_compare( $wgVersion, '1.32', '<' ) ) {
     $wgStructuredChangeFiltersShowPreference = true; # UPO
+}
 
 # Database settings
 $wgDBtype = 'mysql';
@@ -261,7 +262,9 @@ $wgNamespaceRobotPolicies = [
     NS_USER_TALK => 'noindex,nofollow',
     NS_PROJECT_TALK => 'noindex,nofollow',
 ];
-if ( defined( 'NS_TOPIC' ) ) $wgNamespaceRobotPolicies[NS_TOPIC] = 'noindex,nofollow';
+if ( defined( 'NS_TOPIC' ) ) {
+    $wgNamespaceRobotPolicies[NS_TOPIC] = 'noindex,nofollow';
+}
 
 # Provide Naspace Aliases
 $wgNamespaceAliases = [
