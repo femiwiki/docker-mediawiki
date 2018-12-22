@@ -2,3 +2,5 @@ version: '3'
 services:
   memcached:
     image: memcached:1-alpine
+    ports:
+      - 11211:11211
