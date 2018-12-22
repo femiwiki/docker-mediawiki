@@ -14,8 +14,6 @@ services:
       - files:/srv/femiwiki.com
     env_file:
       - configs/env
-  cache:
-    image: memcached:1-alpine
   parsoid:
     image: femiwiki/parsoid
 volumes:
