@@ -88,10 +88,9 @@ $wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
 
 ## Shared memory settings
 $wgMainCacheType = CACHE_MEMCACHED;
+$wgSessionCacheType = CACHE_MEMCACHED;
 $wgParserCacheType = CACHE_MEMCACHED;
 $wgMessageCacheType = CACHE_MEMCACHED;
-$wgMemCachedServers = ["cache:11211"];
-$wgSessionCacheType = CACHE_DB;
 
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
