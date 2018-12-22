@@ -17,19 +17,19 @@ if (!defined('MEDIAWIKI')) {
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
-$wgSitename = "페미위키";
+$wgSitename = '페미위키';
 
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
 ## For more information on customizing the URLs
 ## (like /w/index.php/Page_title to /wiki/Page_title) please see:
 ## https://www.mediawiki.org/wiki/Manual:Short_URL
-$wgScriptPath = "";
+$wgScriptPath = '';
 $wgArticlePath = "/w/$1";
 
 ## The protocol and server name to use in fully-qualified URLs
-$wgServer = "PROTOCOL://HOST";
-$wgCanonicalServer = "PROTOCOL://HOST";
+$wgServer = 'PROTOCOL://HOST';
+$wgCanonicalServer = 'PROTOCOL://HOST';
 $wgEnableCanonicalServerLink = true;
 
 ## The URL path to static resources (images, scripts, etc.)
@@ -63,8 +63,8 @@ $wgEnableEmail = true;
 $wgEnableUserEmail = true; # UPO
 $wgAllowHTMLEmail = true;
 
-$wgEmergencyContact = "admin@femiwiki.com";
-$wgPasswordSender = "admin@femiwiki.com";
+$wgEmergencyContact = 'admin@femiwiki.com';
+$wgPasswordSender = 'admin@femiwiki.com';
 $wgUserEmailUseReplyTo = true;
 
 $wgEnotifUserTalk = false; # UPO
@@ -76,14 +76,14 @@ if ( version_compare( $wgVersion, '1.32', '<' ) )
     $wgStructuredChangeFiltersShowPreference = true; # UPO
 
 # Database settings
-$wgDBtype = "mysql";
-$wgDBname = "femiwiki";
+$wgDBtype = 'mysql';
+$wgDBname = 'femiwiki';
 
 # MySQL specific settings
-$wgDBprefix = "";
+$wgDBprefix = '';
 
 # MySQL table options to use during installation or update
-$wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
+$wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
 
 ## Shared memory settings
 $wgMainCacheType = CACHE_MEMCACHED;
@@ -99,7 +99,7 @@ $wgEnableUploads = true;
 $wgFileExtensions[] = 'svg';
 $wgAllowTitlesInSVG = true;
 $wgUseImageMagick = true;
-$wgImageMagickConvertCommand = "/usr/bin/convert";
+$wgImageMagickConvertCommand = '/usr/bin/convert';
 $wgSVGConverter = 'rsvg';
 
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
@@ -108,29 +108,29 @@ $wgUseInstantCommons = true;
 ## If you use ImageMagick (or any other shell command) on a
 ## Linux server, this will need to be set to the name of an
 ## available UTF-8 locale
-$wgShellLocale = "C.UTF-8";
+$wgShellLocale = 'C.UTF-8';
 
 ## Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
 ## be publically accessible from the web.
-$wgCacheDirectory = "/tmp/cache";
+$wgCacheDirectory = '/tmp/cache';
 $wgUseFileCache = ('HOST' == 'femiwiki.com');
 
 # Site language code, should be one of the list in ./languages/data/Names.php
-$wgLanguageCode = "ko";
-$wgLocaltimezone = "Asia/Seoul";
+$wgLanguageCode = 'ko';
+$wgLocaltimezone = 'Asia/Seoul';
 date_default_timezone_set( $wgLocaltimezone );
 $wgDefaultUserOptions['timecorrection'] = 9;
 
 # Changing this will log out all existing sessions.
-$wgAuthenticationTokenVersion = "1";
+$wgAuthenticationTokenVersion = '1';
 
 # Path to the GNU diff3 utility. Used for conflict resolution.
-$wgDiff3 = "/usr/bin/diff3";
+$wgDiff3 = '/usr/bin/diff3';
 
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, ie 'vector', 'monobook':
-$wgDefaultSkin = "femiwiki";
+$wgDefaultSkin = 'femiwiki';
 
 # Enabled skins.
 # The following skins were automatically enabled:
@@ -143,20 +143,20 @@ $wgFacebookAppId = '1937597133150935';
 
 # Namespace settings
 ## BBS
-define("NS_BBS", 3906);
-define("NS_BBS_TALK", 3907);
-$wgExtraNamespaces[NS_BBS] = "게시판";
-$wgExtraNamespaces[NS_BBS_TALK] = "게시판토론";
+define('NS_BBS', 3906);
+define('NS_BBS_TALK', 3907);
+$wgExtraNamespaces[NS_BBS] = '게시판';
+$wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
 ## BBS (Legacy)
-define("NS_BBSFREE", 3902);
-define("NS_BBSFREE_TALK", 3903);
-$wgExtraNamespaces[NS_BBSFREE] = "자유게시판";
-$wgExtraNamespaces[NS_BBSFREE_TALK] = "자유게시판토론";
-define("NS_BBSINTRO", 3904);
-define("NS_BBSINTRO_TALK", 3905);
-$wgExtraNamespaces[NS_BBSINTRO] = "가입인사게시판";
-$wgExtraNamespaces[NS_BBSINTRO_TALK] = "가입인사게시판토론";
+define('NS_BBSFREE', 3902);
+define('NS_BBSFREE_TALK', 3903);
+$wgExtraNamespaces[NS_BBSFREE] = '자유게시판';
+$wgExtraNamespaces[NS_BBSFREE_TALK] = '자유게시판토론';
+define('NS_BBSINTRO', 3904);
+define('NS_BBSINTRO_TALK', 3905);
+$wgExtraNamespaces[NS_BBSINTRO] = '가입인사게시판';
+$wgExtraNamespaces[NS_BBSINTRO_TALK] = '가입인사게시판토론';
 
 # Permission
 $wgGroupPermissions['*']['createaccount'] = true;
@@ -175,7 +175,7 @@ $wgAutoConfirmCount = 0;
 $wgAutoConfirmAge = 3600;
 
 $wgAutopromote = [
-    "autoconfirmed" => ["&",
+    'autoconfirmed' => ['&',
         [APCOND_EDITCOUNT, &$wgAutoConfirmCount],
         [APCOND_AGE, &$wgAutoConfirmAge],
     ],
@@ -238,9 +238,9 @@ $wgRestrictDisplayTitle = false;
 $wgExternalLinkTarget = '_blank';
 
 # Copyright
-$wgRightsPage = "페미위키:저작권";
-$wgRightsUrl = "https://creativecommons.org/licenses/by-sa/4.0/deed.ko";
-$wgRightsText = "크리에이티브 커먼즈 저작자표시-동일조건변경허락 4.0 국제 라이선스";
+$wgRightsPage = '페미위키:저작권';
+$wgRightsUrl = 'https://creativecommons.org/licenses/by-sa/4.0/deed.ko';
+$wgRightsText = '크리에이티브 커먼즈 저작자표시-동일조건변경허락 4.0 국제 라이선스';
 $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
 # User CSS and JS
@@ -284,7 +284,7 @@ $wgPFEnableStringFunctions = true;
 if ( 'HOST' == 'femiwiki.com' ) {
     wfLoadExtension( 'AWS' );
     $wgAWSRegion = 'ap-northeast-1';
-    $wgAWSBucketPrefix = "femiwiki-uploaded-files";
+    $wgAWSBucketPrefix = 'femiwiki-uploaded-files';
     $wgAWSRepoHashLevels = 2;
     $wgAWSRepoDeletedHashLevels = 2;
 }
@@ -309,7 +309,7 @@ $wgVisualEditorAvailableNamespaces = [
     NS_HELP_TALK => true,
     NS_CATEGORY => true,
     NS_CATEGORY_TALK => true,
-    "_merge_strategy" => "array_plus",
+    '_merge_strategy' => 'array_plus',
 ];
 
 # Enable Visual Editor to opt-out
@@ -431,7 +431,7 @@ $wgCaptchaTriggers['badlogin'] = false;
 
 ## Gadgets
 wfLoadExtension( 'Gadgets' );
-$wgGadgetsRepoClass = "GadgetDefinitionNamespaceRepo";
+$wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
 
 ## Widgets
 require_once "$IP/extensions/Widgets/Widgets.php";
@@ -509,4 +509,4 @@ $wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
 $wgDebugToolbar = ('HOST' != 'femiwiki.com');
 $wgShowDBErrorBacktrace = ('HOST' != 'femiwiki.com');
 
-require_once "/a/secret.php";
+require_once '/a/secret.php';
