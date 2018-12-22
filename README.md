@@ -9,11 +9,13 @@ database+bots 서버
 - amazon linux 2
 
 ```sh
+sudo yum update -y
+sudo yum install -y htop tmux
+
 #
 # 도커 설치
 # Reference: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/docker-basics.html#install_docker
 #
-sudo yum update -y
 sudo amazon-linux-extras install -y docker
 sudo systemctl enable docker
 sudo systemctl start docker
