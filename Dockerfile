@@ -282,5 +282,5 @@ VOLUME /a
 WORKDIR /srv/femiwiki.com
 EXPOSE 9000
 
-COPY run /usr/loca/bin/
+COPY run /usr/local/bin/
 CMD ["/usr/local/bin/run"]
