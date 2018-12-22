@@ -421,16 +421,18 @@ $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
 ## ConfirmEdit
 wfLoadExtensions([ 'ConfirmEdit', 'ConfirmEdit/QuestyCaptcha' ]);
-$wgCaptchaQuestions = [ '나는 페미니스트입니다.' => [
-    /* 마침표 있음 */
-    '나는 페미니스트입니다.',
-    '나는페미니스트입니다.',
-    '나는페미니스트 입니다.',
-    /* 마침표 없음*/
-    '나는 페미니스트입니다',
-    '나는페미니스트입니다',
-    '나는페미니스트 입니다'
-] ];
+$wgCaptchaQuestions = [
+    '나는 페미니스트입니다.' => [
+        # 마침표 있음
+        '나는 페미니스트입니다.',
+        '나는페미니스트입니다.',
+        '나는페미니스트 입니다.',
+        # 마침표 없음
+        '나는 페미니스트입니다',
+        '나는페미니스트입니다',
+        '나는페미니스트 입니다',
+    ]
+];
 $wgCaptchaTriggers['edit'] = false;
 $wgCaptchaTriggers['create'] = false;
 $wgCaptchaTriggers['addurl'] = false;
