@@ -17,6 +17,7 @@ vim ~/swarm/secret
 
 docker swarm init
 docker stack deploy -c ~/swarm/database.yml database
+docker stack deploy -c ~/swarm/memcached.yml memcached
 docker stack deploy -c ~/swarm/bots.yml bots
 ```
 
