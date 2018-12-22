@@ -44,6 +44,7 @@ vim ~/swarm/secret
 docker swarm init --advertise-addr eth0
 docker stack deploy -c ~/swarm/database.yml database
 docker stack deploy -c ~/swarm/bots.yml bots
+docker stack deploy -c ~/swarm/parsoid.yml parsoid
 ```
 
 mediawiki 서버
