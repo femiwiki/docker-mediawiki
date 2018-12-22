@@ -11,7 +11,7 @@ Secondary Private IP | 172.31.33.33 (고정)
 
 ```sh
 sudo yum update -y
-sudo yum install -y htop tmux
+sudo yum install -y htop tmux git
 
 #
 # 도커 설치
@@ -36,7 +36,6 @@ sudo swapon -a
 #
 # 서비스 시작
 #
-sudo yum install -y git
 git clone https://github.com/femiwiki/swarm.git ~/swarm
 cp ~/swarm/secret.sample ~/swarm/secret
 vim ~/swarm/secret
