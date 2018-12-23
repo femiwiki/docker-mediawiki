@@ -28,8 +28,8 @@ $wgScriptPath = '';
 $wgArticlePath = "/w/$1";
 
 ## The protocol and server name to use in fully-qualified URLs
-$wgServer = 'PROTOCOL://HOST';
-$wgCanonicalServer = 'PROTOCOL://HOST';
+$wgServer = 'https://femiwiki.com';
+$wgCanonicalServer = 'https://femiwiki.com';
 $wgEnableCanonicalServerLink = true;
 
 ## The URL path to static resources (images, scripts, etc.)
@@ -120,7 +120,7 @@ $wgShellLocale = 'C.UTF-8';
 ## to make your wiki go slightly faster. The directory should not
 ## be publically accessible from the web.
 $wgCacheDirectory = '/tmp/cache';
-$wgUseFileCache = ('HOST' == 'femiwiki.com');
+$wgUseFileCache = true;
 
 # Site language code, should be one of the list in ./languages/data/Names.php
 $wgLanguageCode = 'ko';
@@ -280,22 +280,23 @@ $wgNamespaceAliases = [
 # Parsoid server Setting
 $wgVirtualRestConfig['modules']['parsoid'] = [
     'url' => 'http://parsoid:8000',
-    'domain' => 'HOST'
+    'domain' => 'femiwiki.com'
 ];
 
-# Plugins
+
+#
+# Extensions
+#
 ## ParserFunction
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
 
-## AWS is activate only in production mode
-if ( 'HOST' == 'femiwiki.com' ) {
-    wfLoadExtension( 'AWS' );
-    $wgAWSRegion = 'ap-northeast-1';
-    $wgAWSBucketPrefix = 'femiwiki-uploaded-files';
-    $wgAWSRepoHashLevels = 2;
-    $wgAWSRepoDeletedHashLevels = 2;
-}
+## AWS
+wfLoadExtension('AWS');
+$wgAWSRegion = 'ap-northeast-1';
+$wgAWSBucketPrefix = 'femiwiki-uploaded-files';
+$wgAWSRepoHashLevels = 2;
+$wgAWSRepoDeletedHashLevels = 2;
 
 ## VisualEditor
 wfLoadExtension( 'VisualEditor' );
@@ -514,9 +515,35 @@ wfLoadExtension( 'Sanctions' );
 ## BetaFeatures
 wfLoadExtension( 'BetaFeatures' );
 
-# Misc.
-$wgShowExceptionDetails = ('HOST' != 'femiwiki.com');
-$wgDebugToolbar = ('HOST' != 'femiwiki.com');
-$wgShowDBErrorBacktrace = ('HOST' != 'femiwiki.com');
 
+#
+# Debug Mode
+#
+function runDebugMode($domain) {
+    global $wgServer, $wgCanonicalServer, $wgVirtualRestConfig,
+           $wgShowExceptionDetails, $wgDebugToolbar, $wgShowDBErrorBacktrace,
+           $wgUseFileCache, $wgAWSBucketName, $wgAWSBucketPrefix;
+
+    # 도메인 변경
+    $wgServer = "http://${domain}";
+    $wgCanonicalServer = "http://${domain}";
+    $wgVirtualRestConfig['modules']['parsoid']['domain'] = $domain;
+
+    # 디버그 툴 활성화
+    $wgShowExceptionDetails = true;
+    $wgDebugToolbar = true;
+    $wgShowDBErrorBacktrace = true;
+
+    # File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
+    $wgUseFileCache = false;
+
+    # AWS 플러그인 비활성화
+    $wgAWSBucketName = NULL;
+    $wgAWSBucketPrefix = NULL;
+}
+
+
+#
+# Load secret.php
+#
 require_once '/a/secret.php';
