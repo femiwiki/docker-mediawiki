@@ -3,7 +3,21 @@
 한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 서버입니다.
 Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
 
-&nbsp;
+|| 내용
+:---|----
+기능 | 미디어위키 서버
+Base AMI | [Femiwiki Base AMI](https://github.com/femiwiki/ami)
+
+```sh
+git clone https://github.com/femiwiki/mediawiki ~/mediawiki --depth=1
+cp ~/mediawiki/configs/env.example ~/mediawiki/configs/env
+cp ~/mediawiki/configs/secret.php.example  ~/mediawiki/configs/secret.php
+vim configs/{env,secret.php}
+# 각 설정 파일을 필요한 내용으로 고쳐주세요.
+
+sudo docker swarm init
+sudo docker stack deploy -c ~/mediawiki/docker-compose.yml mediawiki
+```
 
 ### 개발
 ```bash
