@@ -1,11 +1,11 @@
-서버 현황
+페미위키 데이터베이스 서버
 ========
+한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 데이터베이스 외 기타 서비스 서버입니다.
+Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
 
-A. database+bots 서버
---------
-
-기능 | 데이터베이스 및 크론잡
+|| 내용
 :---|----
+기능 | 데이터베이스 및 크론잡
 Base AMI | [Femiwiki Base AMI](https://github.com/femiwiki/ami)
 
 ```sh
@@ -20,22 +20,14 @@ docker stack deploy -c ~/swarm/memcached.yml memcached
 docker stack deploy -c ~/swarm/bots.yml bots
 ```
 
-B. mediawiki 서버
+&nbsp;
+
 --------
 
-기능 | 미디어위키 서버
-:---|----
-Base AMI | [Femiwiki Base AMI](https://github.com/femiwiki/ami)
+The source code of *femiwiki/database* is primarily distributed under the terms
+of the [GNU Affero General Public License v3.0] or any later version. See
+[COPYRIGHT] for details.
 
-```sh
-#
-# 서비스 시작
-#
-git clone https://github.com/femiwiki/mediawiki ~/mediawiki --depth=1
-cp ~/mediawiki/configs/env.example ~/mediawiki/configs/env
-cp ~/mediawiki/configs/secret.php.example  ~/mediawiki/configs/secret.php
-# 각 설정 파일을 필요한 내용으로 고쳐주세요.
-
-sudo docker swarm init
-sudo docker stack deploy -c ~/mediawiki/docker-compose.yml mediawiki
-```
+[femiwiki.com]: https://femiwiki.com
+[GNU Affero General Public License v3.0]: LICENSE
+[COPYRIGHT]: COPYRIGHT
