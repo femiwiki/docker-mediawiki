@@ -9,7 +9,3 @@ rewrite /w {
   r  /(.*)
   to /index.php
 }
-redir 301 {
-  if {path} is /
-  / "index.php"
-}
