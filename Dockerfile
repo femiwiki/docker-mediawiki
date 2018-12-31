@@ -174,6 +174,10 @@ RUN \
     git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Josa \
       -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Josa &&\
     composer update --no-dev -d /srv/femiwiki.com/extensions/Josa &&\
+    # HTMLTags
+    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/HTMLTags \
+    -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/HTMLTags &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/HTMLTags &&\
     # BetaFeatures
     git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/BetaFeatures \
       -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/BetaFeatures &&\
@@ -215,11 +219,6 @@ RUN \
     wget -nv https://github.com/femiwiki/unifiedExtensionForFemiwiki/archive/master.tar.gz -O /tmp/tarball.tgz &&\
     mkdir -p /srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki &&\
     tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki &&\
-    rm /tmp/tarball.tgz &&\
-    # HTMLTags
-    wget -nv https://extdist.wmflabs.org/dist/extensions/HTMLTags-REL1_31-b7377b0.tar.gz -O /tmp/tarball.tgz &&\
-    mkdir -p /srv/femiwiki.com/extensions/HTMLTags &&\
-    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/HTMLTags &&\
     rm /tmp/tarball.tgz &&\
     echo 'Installed all third-party extensions'
 
