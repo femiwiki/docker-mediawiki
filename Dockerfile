@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
       # Build dependencies
       build-essential \
       libicu-dev \
+      aria2 \
       # Composer dependencies
       git \
       wget \
@@ -88,106 +89,198 @@ USER www-data
 # '/var/www/.composer' is not writable for www-data. Change $COMPOSER_HOME
 ENV COMPOSER_HOME=/tmp/composer
 
-# Install official mediawiki extensions
+# Download official mediawiki extensions having no submodule using aria2
+RUN { \
+      # TemplateData
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/TemplateData/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=TemplateData.tar.gz"; \
+      # TwoColConflict
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/TwoColConflict/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=TwoColConflict.tar.gz"; \
+      # RevisionSlider
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/RevisionSlider/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=RevisionSlider.tar.gz"; \
+      # Echo
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Echo/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=Echo.tar.gz"; \
+      # Thanks
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Thanks/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=Thanks.tar.gz"; \
+      # Flow
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Flow/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=Flow.tar.gz"; \
+      # Scribunto
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Scribunto/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=Scribunto.tar.gz"; \
+      # TemplateStyles
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/TemplateStyles/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=TemplateStyles.tar.gz"; \
+      # Disambiguator
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Disambiguator/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=Disambiguator.tar.gz"; \
+      # CreateUserPage
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/CreateUserPage/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=CreateUserPage.tar.gz"; \
+      # AbuseFilter
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/AbuseFilter/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=AbuseFilter.tar.gz"; \
+      # CheckUser
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/CheckUser/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=CheckUser.tar.gz"; \
+      # UserMerge
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/UserMerge/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=UserMerge.tar.gz"; \
+      # CodeMirror
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/CodeMirror/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=CodeMirror.tar.gz"; \
+      # CharInsert
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/CharInsert/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=CharInsert.tar.gz"; \
+      # Description2
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Description2/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=Description2.tar.gz"; \
+      # OpenGraphMeta
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/OpenGraphMeta/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=OpenGraphMeta.tar.gz"; \
+      # PageImages
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/PageImages/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=PageImages.tar.gz"; \
+      # Josa
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/Josa/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=Josa.tar.gz"; \
+      # HTMLTags
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/HTMLTags/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=HTMLTags.tar.gz"; \
+      # BetaFeatures
+      echo "https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/extensions/BetaFeatures/+archive/${MEDIAWIKI_BRANCH}.tar.gz"; \
+      echo "  out=BetaFeatures.tar.gz"; \
+    } | aria2c --input-file=- --dir=/tmp
+
+# Install official mediawiki extensions having no submodule
+RUN \
+    # TemplateData
+    mkdir -p /srv/femiwiki.com/extensions/TemplateData &&\
+    tar -xzf /tmp/TemplateData.tar.gz --directory /srv/femiwiki.com/extensions/TemplateData &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/TemplateData &&\
+    rm /tmp/TemplateData.tar.gz &&\
+    # TwoColConflict
+    mkdir -p /srv/femiwiki.com/extensions/TwoColConflict &&\
+    tar -xzf /tmp/TwoColConflict.tar.gz --directory /srv/femiwiki.com/extensions/TwoColConflict &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/TwoColConflict &&\
+    rm /tmp/TwoColConflict.tar.gz &&\
+    # RevisionSlider
+    mkdir -p /srv/femiwiki.com/extensions/RevisionSlider &&\
+    tar -xzf /tmp/RevisionSlider.tar.gz --directory /srv/femiwiki.com/extensions/RevisionSlider &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/RevisionSlider &&\
+    rm /tmp/RevisionSlider.tar.gz &&\
+    # Echo
+    mkdir -p /srv/femiwiki.com/extensions/Echo &&\
+    tar -xzf /tmp/Echo.tar.gz --directory /srv/femiwiki.com/extensions/Echo &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/Echo &&\
+    rm /tmp/Echo.tar.gz &&\
+    # Thanks
+    mkdir -p /srv/femiwiki.com/extensions/Thanks &&\
+    tar -xzf /tmp/Thanks.tar.gz --directory /srv/femiwiki.com/extensions/Thanks &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/Thanks &&\
+    rm /tmp/Thanks.tar.gz &&\
+    # Flow
+    mkdir -p /srv/femiwiki.com/extensions/Flow &&\
+    tar -xzf /tmp/Flow.tar.gz --directory /srv/femiwiki.com/extensions/Flow &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/Flow &&\
+    rm /tmp/Flow.tar.gz &&\
+    # Scribunto
+    mkdir -p /srv/femiwiki.com/extensions/Scribunto &&\
+    tar -xzf /tmp/Scribunto.tar.gz --directory /srv/femiwiki.com/extensions/Scribunto &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/Scribunto &&\
+    rm /tmp/Scribunto.tar.gz &&\
+    # TemplateStyles
+    mkdir -p /srv/femiwiki.com/extensions/TemplateStyles &&\
+    tar -xzf /tmp/TemplateStyles.tar.gz --directory /srv/femiwiki.com/extensions/TemplateStyles &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/TemplateStyles &&\
+    rm /tmp/TemplateStyles.tar.gz &&\
+    # Disambiguator
+    mkdir -p /srv/femiwiki.com/extensions/Disambiguator &&\
+    tar -xzf /tmp/Disambiguator.tar.gz --directory /srv/femiwiki.com/extensions/Disambiguator &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/Disambiguator &&\
+    rm /tmp/Disambiguator.tar.gz &&\
+    # CreateUserPage
+    mkdir -p /srv/femiwiki.com/extensions/CreateUserPage &&\
+    tar -xzf /tmp/CreateUserPage.tar.gz --directory /srv/femiwiki.com/extensions/CreateUserPage &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/CreateUserPage &&\
+    rm /tmp/CreateUserPage.tar.gz &&\
+    # AbuseFilter
+    mkdir -p /srv/femiwiki.com/extensions/AbuseFilter &&\
+    tar -xzf /tmp/AbuseFilter.tar.gz --directory /srv/femiwiki.com/extensions/AbuseFilter &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/AbuseFilter &&\
+    rm /tmp/AbuseFilter.tar.gz &&\
+    # CheckUser
+    mkdir -p /srv/femiwiki.com/extensions/CheckUser &&\
+    tar -xzf /tmp/CheckUser.tar.gz --directory /srv/femiwiki.com/extensions/CheckUser &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/CheckUser &&\
+    rm /tmp/CheckUser.tar.gz &&\
+    # UserMerge
+    mkdir -p /srv/femiwiki.com/extensions/UserMerge &&\
+    tar -xzf /tmp/UserMerge.tar.gz --directory /srv/femiwiki.com/extensions/UserMerge &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/UserMerge &&\
+    rm /tmp/UserMerge.tar.gz &&\
+    # CodeMirror
+    mkdir -p /srv/femiwiki.com/extensions/CodeMirror &&\
+    tar -xzf /tmp/CodeMirror.tar.gz --directory /srv/femiwiki.com/extensions/CodeMirror &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/CodeMirror &&\
+    rm /tmp/CodeMirror.tar.gz &&\
+    # CharInsert
+    mkdir -p /srv/femiwiki.com/extensions/CharInsert &&\
+    tar -xzf /tmp/CharInsert.tar.gz --directory /srv/femiwiki.com/extensions/CharInsert &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/CharInsert &&\
+    rm /tmp/CharInsert.tar.gz &&\
+    # Description2
+    mkdir -p /srv/femiwiki.com/extensions/Description2 &&\
+    tar -xzf /tmp/Description2.tar.gz --directory /srv/femiwiki.com/extensions/Description2 &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/Description2 &&\
+    rm /tmp/Description2.tar.gz &&\
+    # OpenGraphMeta
+    mkdir -p /srv/femiwiki.com/extensions/OpenGraphMeta &&\
+    tar -xzf /tmp/OpenGraphMeta.tar.gz --directory /srv/femiwiki.com/extensions/OpenGraphMeta &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/OpenGraphMeta &&\
+    rm /tmp/OpenGraphMeta.tar.gz &&\
+    # PageImages
+    mkdir -p /srv/femiwiki.com/extensions/PageImages &&\
+    tar -xzf /tmp/PageImages.tar.gz --directory /srv/femiwiki.com/extensions/PageImages &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/PageImages &&\
+    rm /tmp/PageImages.tar.gz &&\
+    # Josa
+    mkdir -p /srv/femiwiki.com/extensions/Josa &&\
+    tar -xzf /tmp/Josa.tar.gz --directory /srv/femiwiki.com/extensions/Josa &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/Josa &&\
+    rm /tmp/Josa.tar.gz &&\
+    # HTMLTags
+    mkdir -p /srv/femiwiki.com/extensions/HTMLTags &&\
+    tar -xzf /tmp/HTMLTags.tar.gz --directory /srv/femiwiki.com/extensions/HTMLTags &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/HTMLTags &&\
+    rm /tmp/HTMLTags.tar.gz &&\
+    # BetaFeatures
+    mkdir -p /srv/femiwiki.com/extensions/BetaFeatures &&\
+    tar -xzf /tmp/BetaFeatures.tar.gz --directory /srv/femiwiki.com/extensions/BetaFeatures &&\
+    composer update --no-dev -d /srv/femiwiki.com/extensions/BetaFeatures &&\
+    rm /tmp/BetaFeatures.tar.gz &&\
+    echo 'Installed all official extensions having no submodule'
+
+# Install official mediawiki extensions having submodule
 RUN \
     # VisualEditor
     git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/VisualEditor &&\
+    -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/VisualEditor &&\
     composer update --no-dev -d /srv/femiwiki.com/extensions/VisualEditor &&\
-    # TemplateData
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TemplateData \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/TemplateData &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/TemplateData &&\
-    # TwoColConflict
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TwoColConflict \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/TwoColConflict &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/TwoColConflict &&\
-    # RevisionSlider
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/RevisionSlider \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/RevisionSlider &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/RevisionSlider &&\
-    # Echo
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Echo \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Echo &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Echo &&\
-    # Thanks
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Thanks \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Thanks &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Thanks &&\
-    # Flow
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Flow \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Flow &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Flow &&\
-    # Scribunto
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Scribunto \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Scribunto &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Scribunto &&\
-    # TemplateStyles
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TemplateStyles \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/TemplateStyles &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/TemplateStyles &&\
-    # Disambiguator
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Disambiguator \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Disambiguator &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Disambiguator &&\
-    # CreateUserPage
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CreateUserPage \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/CreateUserPage &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/CreateUserPage &&\
-    # AbuseFilter
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/AbuseFilter \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/AbuseFilter &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/AbuseFilter &&\
-    # CheckUser
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CheckUser \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/CheckUser &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/CheckUser &&\
-    # UserMerge
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/UserMerge \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/UserMerge &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/UserMerge &&\
     # Widgets
     git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Widgets \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Widgets &&\
+    -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Widgets &&\
     composer update --no-dev -d /srv/femiwiki.com/extensions/Widgets &&\
-    # CodeMirror
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CodeMirror \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/CodeMirror &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/CodeMirror &&\
-    # CharInsert
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CharInsert \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/CharInsert &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/CharInsert &&\
-    # Description2
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Description2 \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Description2 &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Description2 &&\
-    # OpenGraphMeta
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/OpenGraphMeta \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/OpenGraphMeta &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/OpenGraphMeta &&\
-    # PageImages
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageImages \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/PageImages &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/PageImages &&\
-    # Josa
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Josa \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Josa &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Josa &&\
-    # HTMLTags
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/HTMLTags \
-    -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/HTMLTags &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/HTMLTags &&\
-    # BetaFeatures
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/BetaFeatures \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/BetaFeatures &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/BetaFeatures &&\
-    echo 'Installed all official extensions'
+    echo 'Installed all official extensions having submodule'
 
 # Install third-party mediawiki extensions
 RUN \
     # AWS (v0.10.0)
-    git clone --recurse-submodules --depth 1 https://github.com/edwardspec/mediawiki-aws-s3.git \
+    git clone --depth 1 https://github.com/edwardspec/mediawiki-aws-s3.git \
       -b v0.10.0 /srv/femiwiki.com/extensions/AWS &&\
     composer update --no-dev -d /srv/femiwiki.com/extensions/AWS &&\
     # EmbedVideo
@@ -239,6 +332,7 @@ RUN rm -rf /usr/local/bin/composer /tmp/composer
 
 # Remove packages which is not needed anymore
 RUN apt-get autoremove -y --purge \
+      aria2 \
       git \
       wget \
       unzip
