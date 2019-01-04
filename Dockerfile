@@ -39,10 +39,6 @@ RUN apt-get update && apt-get install -y \
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 mysqli opcache intl
 
-RUN apt-get autoremove -y --purge \
-      build-essential \
-      libicu-dev
-
 # Install the default object cache.
 RUN pecl channel-update pecl.php.net &&\
     pecl install apcu &&\
@@ -96,6 +92,10 @@ RUN rm -rf /usr/local/bin/composer /tmp/composer
 
 # Remove packages which is not needed anymore
 RUN apt-get autoremove -y --purge \
+      # Build dependencies of PHP extensions
+      build-essential \
+      libicu-dev \
+      # CLI utilities which are used only during build phase of Dockerfile
       aria2 \
       git \
       wget \
