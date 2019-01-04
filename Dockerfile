@@ -83,22 +83,12 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
     fi &&\
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet &&\
     rm composer-setup.php
-
-# Change user
-USER www-data
-# '/var/www/.composer' is not writable for www-data. Change $COMPOSER_HOME
-ENV COMPOSER_HOME=/tmp/composer
+# Create a cache directory for composer
+RUN mkdir -p /tmp/cache
 
 # Install Mediawiki extensions
 COPY install_extensions /tmp/
-RUN /tmp/install_extensions
-
-# Create a cache directory
-RUN mkdir -p /tmp/cache
-
-USER root
-
-# Remove used script
+RUN sudo -u www-data /tmp/install_extensions
 RUN rm /tmp/install_extensions
 
 # Remove composer and its caches

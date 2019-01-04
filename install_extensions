@@ -106,11 +106,16 @@ for extension in $EXTENSIONS_FROM_GERRIT_WITH_SUBMODULE; do
   -b "${MEDIAWIKI_BRANCH}" "/srv/femiwiki.com/extensions/$extension"
 done
 
-# Composer update
+# Install composer dependencies via 'composer update'
 for extension in $ALL_EXTENSIONS; do
   if [ -f "/srv/femiwiki.com/extensions/$extension/composer.json" ]; then
     echo "Composing $extension"
-    composer update --no-dev --working-dir "/srv/femiwiki.com/extensions/$extension"
+
+    # '/var/www/.composer' is not writable for www-data.
+    # Overriding '$COMPOSER_HOME'
+    COMPOSER_HOME=/tmp/composer composer update \
+      --no-dev \
+      --working-dir "/srv/femiwiki.com/extensions/$extension"
   fi
 done
 
