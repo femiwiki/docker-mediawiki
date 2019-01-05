@@ -83,9 +83,9 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
 RUN mkdir -p /tmp/cache
 
 # Install Mediawiki extensions
-COPY install_extensions.php /tmp/
-RUN sudo -u www-data php /tmp/install_extensions.php MEDIAWIKI_BRANCH
-RUN rm /tmp/install_extensions.php
+COPY installExtensions.php /tmp/
+RUN sudo -u www-data php /tmp/installExtensions.php "${MEDIAWIKI_BRANCH}"
+RUN rm /tmp/installExtensions.php
 
 # Remove composer and its caches
 RUN rm -rf /usr/local/bin/composer /tmp/composer
