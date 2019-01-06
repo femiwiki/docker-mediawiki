@@ -285,6 +285,14 @@ $wgVirtualRestConfig['modules']['parsoid'] = [
 	'domain' => 'femiwiki.com'
 ];
 
+# Restbase server Setting
+$wgVirtualRestConfig['modules']['restbase'] = [
+	'url' => 'http://restbase:7231',
+	'domain' => 'femiwiki.com'
+];
+$wgVisualEditorRestbaseURL = 'https://femiwiki.com:7231/femiwiki.com/v1/page/html/';
+$wgVisualEditorFullRestbaseURL = 'https://femiwiki.com:7231/femiwiki.com/';
+
 #
 # Extensions
 #
@@ -528,6 +536,9 @@ function wfRunDebugMode( $domain ) {
 	$wgServer = "http://${domain}";
 	$wgCanonicalServer = "http://${domain}";
 	$wgVirtualRestConfig['modules']['parsoid']['domain'] = $domain;
+	$wgVirtualRestConfig['modules']['restbase']['domain'] = $domain;
+	$wgVisualEditorRestbaseURL = "http://${domain}:7231/${domain}/v1/page/html/";
+	$wgVisualEditorFullRestbaseURL = "http://${domain}:7231/${domain}/";
 
 	# 디버그 툴 활성화
 	$wgShowExceptionDetails = true;

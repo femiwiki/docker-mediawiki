@@ -17,5 +17,9 @@ services:
       - configs/env
   parsoid:
     image: femiwiki/parsoid
+  restbase:
+    image: femiwiki/restbase
+    ports:
+      - 7231:7231
 volumes:
   files:
