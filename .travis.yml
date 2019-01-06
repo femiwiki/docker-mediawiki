@@ -1,0 +1,174 @@
+language: php
+
+php: '7.2'
+
+os: linux
+
+dist: xenial
+
+git:
+  quiet: true
+  depth: 3
+
+env:
+  global:
+    - MEDIAWIKI_BRANCH=REL1_31
+    - LOOP_LIMIT=300
+
+cache:
+  directories:
+  - vendor
+
+services:
+  - docker
+
+jobs:
+  include:
+    - name: lint
+      install:
+        - composer install --prefer-source --quiet --no-interaction
+      script:
+        - php -l configs/LocalSettings.php
+        - php -l configs/secret.php.example
+        - composer test .
+    - name: docker
+      install:
+        - git clone https://github.com/femiwiki/database.git ~/swarm --depth=1
+      before_script:
+        - cp configs/env.example configs/env
+        - cp configs/secret.php.example configs/secret.php
+        - echo -en "\n\nwfRunDebugMode( 'localhost' );\n" >> configs/LocalSettings.php
+        - echo -en '\n\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php
+        - docker swarm init
+        # Setup database
+        - sudo mkdir -p /srv/mysql/
+        - docker stack deploy -c ~/swarm/database.yml database
+        - |
+            printf 'Waiting for database_mysql service...';
+            COUNTER=0;
+            while [ -z $(docker service logs database_mysql 2>&1 | grep -oP 'GENERATED ROOT PASSWORD: \K.+') ]; do
+              sleep 1;
+              printf '.';
+              (( COUNTER++ ));
+              if [ $COUNTER -gt $LOOP_LIMIT ]; then
+                printf '\n';
+                echo 'Falied to start database_mysql service';
+                docker service logs database_mysql;
+                travis_terminate 1;
+              fi
+            done; printf '\n'
+        - HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+        - MYSQL_USER=root
+        - "MYSQL_PW=$(docker service logs database_mysql 2>&1 | grep -Po 'GENERATED ROOT PASSWORD: \\K.+')"
+        - sed -ri "s/mysqlhostname/${HOST_IP}/" configs/env
+        - sed -ri "s/mysqlusername/${MYSQL_USER}/" configs/env
+        - sed -ri "s/mysqlpassword/${MYSQL_PW}/" configs/env
+        - sed -ri "s/DB_HOSTNAME/${HOST_IP}/" configs/secret.php
+        - sed -ri "s/DB_USERNAME/${MYSQL_USER}/" configs/secret.php
+        - sed -ri "s/DB_PASSWORD/${MYSQL_PW}/" configs/secret.php
+        # Setup memcached
+        - docker stack deploy -c ~/swarm/memcached.yml memcached
+        - sed -ri "s/MEMCACHED_HOSTNAME/${HOST_IP}/" configs/secret.php
+      script:
+        - docker build --tag femiwiki/mediawiki .
+        - docker stack deploy -c docker-compose.yml mediawiki
+        - |
+            printf 'Waiting for mediawiki_parsoid container...';
+            COUNTER=0;
+            while [ -z $(docker container ls -qf 'name=mediawiki_parsoid') ]; do
+              sleep 1;
+              printf '.';
+              (( COUNTER++ ));
+              if [ $COUNTER -gt $LOOP_LIMIT ]; then
+                printf '\n';
+                echo 'Failed to start mediawiki_parsoid service';
+                docker service logs mediawiki_parsoid;
+                travis_terminate 1;
+              fi
+            done; printf '\n'
+        - docker service logs mediawiki_parsoid
+        - |
+            printf 'Waiting for mediawiki_fastcgi container...';
+            COUNTER=0;
+            while [ -z $(docker container ls -qf 'name=mediawiki_fastcgi') ]; do
+              sleep 1;
+              printf '.';
+              (( COUNTER++ ));
+              if [ $COUNTER -gt $LOOP_LIMIT ]; then
+                printf '\n';
+                echo 'to start mediawiki_fastcgi service';
+                docker service logs mediawiki_fastcgi;
+                travis_terminate 1;
+              fi
+            done; printf '\n'
+          # We don't have a health check yet, so wait a moment for starting process is end...
+        - sleep 10
+        - docker service logs mediawiki_fastcgi
+        - test -z "$(docker service ps -qf "desired-state=Shutdown" mediawiki_fastcgi)"
+        - |
+            printf 'Waiting for http...'
+            COUNTER=0;
+            until [ "$(curl -Lfs localhost)" ]; do
+              sleep 1;
+              printf '.';
+              (( COUNTER++ ));
+              if [ $COUNTER -gt $LOOP_LIMIT ]; then
+                printf '\n';
+                echo 'Failed to connect to localhost';
+                travis_terminate 1;
+              fi
+            done; printf '\n'
+        - curl -Lf localhost | head
+        - docker exec $(docker container ls -qf name=mediawiki_fastcgi)
+            apt-get install -y git unzip
+        - docker exec $(docker container ls -qf name=mediawiki_fastcgi)
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+        - docker exec $(docker container ls -qf name=mediawiki_fastcgi)
+            php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet
+        - docker exec $(docker container ls -qf name=mediawiki_fastcgi)
+            composer install --prefer-source --quiet --no-interaction
+        - "docker exec $(docker container ls -qf name=mediawiki_fastcgi)
+            php tests/phpunit/phpunit.php --group '\
+            Abusefilter,\
+            AuthManager,\
+            BetaFeatures,\
+            Blocking,\
+            CSSMin,\
+            Cache,\
+            CheckUser,\
+            ComposerHooks,\
+            DataBase,\
+            Diff,\
+            Gadgets,\
+            GlobalFunctions,\
+            HKDF,\
+            Hash,\
+            HashRing,\
+            Http,\
+            IP,\
+            Installer,\
+            Interwiki,\
+            JobQueue,\
+            Language,\
+            Media,\
+            MediaWikiTestCaseTest,\
+            Output,\
+            PageImages,\
+            Pager,\
+            RequestContext,\
+            ResourceLoader,\
+            Sanitizer,\
+            Shell,\
+            Site,\
+            SpecialPage,\
+            SpecialPageAliases,\
+            SystemTest,\
+            Templates,\
+            Test,\
+            TestsWithNoNeedForAwsCredentials,\
+            Thanks,\
+            Upload,\
+            WebRequest,\
+            db,\
+            large,\
+            '"

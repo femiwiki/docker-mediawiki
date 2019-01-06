@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ruleset name="MediaWiki">
+	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
+		<exclude name="Generic.ControlStructures.InlineControlStructure" />
+		<exclude name="MediaWiki.Commenting.FunctionComment.MissingDocumentationProtected" />
+		<exclude name="MediaWiki.Commenting.FunctionComment.MissingDocumentationPublic" />
+		<exclude name="MediaWiki.Commenting.FunctionComment.MissingParamTag" />
+		<exclude name="MediaWiki.Commenting.FunctionComment.MissingReturn" />
+		<exclude name="MediaWiki.Commenting.FunctionComment.ExtraParamComment" />
+		<exclude name="MediaWiki.Commenting.FunctionComment.WrongStyle" />
+		<exclude name="MediaWiki.Commenting.IllegalSingleLineComment.IllegalSingleLineCommentStart" />
+		<exclude name="MediaWiki.Commenting.IllegalSingleLineComment.IllegalSingleLineCommentEnd" />
+		<exclude name="MediaWiki.Commenting.LicenseComment.InvalidLicenseTag" />
+		<exclude name="MediaWiki.ControlStructures.AssignmentInControlStructures.AssignmentInControlStructures" />
+		<exclude name="MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName" />
+		<exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment" />
+		<exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.SingleSpaceBeforeSingleLineComment" />
+		<exclude name="MediaWiki.Usage.DbrQueryUsage.DbrQueryFound" />
+		<exclude name="MediaWiki.Usage.ExtendClassUsage.FunctionVarUsage" />
+		<exclude name="MediaWiki.Usage.ForbiddenFunctions.assert" />
+		<exclude name="MediaWiki.Usage.SuperGlobalsUsage.SuperGlobals" />
+		<exclude name="MediaWiki.Files.ClassMatchesFilename.WrongCase" />
+		<exclude name="MediaWiki.Files.ClassMatchesFilename.NotMatch" />
+		<exclude name="Generic.Files.OneObjectStructurePerFile.MultipleFound" />
+		<exclude name="MediaWiki.VariableAnalysis.ForbiddenGlobalVariables.ForbiddenGlobal$wgTitle" />
+		<exclude name="MediaWiki.Commenting.FunctionComment.SpacingDocStar" />
+		<exclude name="MediaWiki.Commenting.FunctionComment.SpacingDocTag" />
+		<exclude name="Squiz.Scope.MethodScope.Missing" />
+		<exclude name="Squiz.Scope.MemberVarScope.Missing" />
+		<exclude name="MediaWiki.Commenting.MissingCovers.MissingCovers" />
+		<exclude name="MediaWiki.Usage.AssignmentInReturn.AssignmentInReturn" />
+	</rule>
+	<rule ref="MediaWiki.NamingConventions.PrefixedGlobalFunctions">
+		<properties>
+			<!--
+			includes/compat/normal/UtfNormalUtil.php
+			* codepointToUtf8
+			* escapeSingleString
+			* hexSequenceToUtf8
+			* utf8ToCodepoint
+			* utf8ToHexSequence
+			includes/GlobalFunctions.php
+			* mimeTypeMatch
+			maintenance/benchmarks/bench_strtr_str_replace.php
+			* bfNormalizeTitleStrReplace
+			* bfNormalizeTitleStrTr
+			maintenance/cdb.php
+			* cdbShowHelp
+			maintenance/language/transstat.php
+			* showUsage
+			maintenance/mcc.php
+			* mccGetHelp
+			* mccShowUsage
+			maintenance/storage/moveToExternal.php
+			* moveToExternal
+			maintenance/storage/resolveStubs.php
+			* resolveStub
+			* resolveStubs
+			profileinfo.php
+			* compare_point
+			* getEscapedProfileUrl
+			tests/phpunit/includes/HooksTest.php
+			* NothingFunction
+			* NothingFunctionData
+			tests/qunit/data/styleTest.css.php
+			* cssfilter
+			-->
+			<property name="ignoreList" type="array" value="bfNormalizeTitleStrReplace,bfNormalizeTitleStrTr,cdbShowHelp,codepointToUtf8,compare_point,cssfilter,escapeSingleString,getEscapedProfileUrl,hexSequenceToUtf8,mccGetHelp,mccShowUsage,mimeTypeMatch,moveToExternal,NothingFunction,NothingFunctionData,resolveStub,resolveStubs,showUsage,utf8ToCodepoint,utf8ToHexSequence" />
+		</properties>
+	</rule>
+	<rule ref="MediaWiki.NamingConventions.ValidGlobalName">
+		<properties>
+			<property name="ignoreList" type="array" value="$IP,$messageMemc,$parserMemc" />
+		</properties>
+	</rule>
+	<rule ref="Generic.Files.LineLength">
+		<exclude-pattern>*/languages/messages/Messages*\.php</exclude-pattern>
+	</rule>
+	<rule ref="PSR2.Methods.MethodDeclaration.Underscore">
+		<exclude-pattern>*/includes/StubObject\.php</exclude-pattern>
+	</rule>
+	<file>.</file>
+	<arg name="encoding" value="UTF-8"/>
+	<arg name="extensions" value="php,php5,inc,sample"/>
+	<exclude-pattern type="relative">^extensions/</exclude-pattern>
+	<exclude-pattern type="relative">^skins/</exclude-pattern>
+	<exclude-pattern>AdminSettings\.php</exclude-pattern>
+	<exclude-pattern>LocalSettings\.php</exclude-pattern>
+	<exclude-pattern>StartProfiler\.php</exclude-pattern>
+</ruleset>
