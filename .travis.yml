@@ -36,12 +36,13 @@ jobs:
     #
     - name: docker
       before_script:
-        # Setup files for database and memcached
+        # Setup files for database, memcached and restbase
         - git clone https://github.com/femiwiki/database.git ~/swarm --depth=1
         - sudo mkdir -p /srv/mysql/
-        # Initialize docker swarm and start memcached and MySQL
+        # Initialize docker swarm and start memcached, RESTBase and MySQL
         - docker swarm init
         - docker stack deploy -c ~/swarm/memcached.yml memcached
+        - docker stack deploy -c ~/swarm/restbase.yml restbase
         - docker stack deploy -c ~/swarm/database.yml database
       script:
         # Build image
