@@ -10,8 +10,8 @@
 # https://www.mediawiki.org/wiki/Manual:Configuration_settings
 
 # Protect against web entry
-if (!defined('MEDIAWIKI')) {
-    exit;
+if ( !defined( 'MEDIAWIKI' ) ) {
+	exit;
 }
 
 ## Uncomment this to disable output compression
@@ -37,19 +37,20 @@ $wgResourceBasePath = $wgScriptPath;
 
 $wgStyleVersion = '20181013_0';
 $wgResourceLoaderMaxage = [
-    'versioned' => [
-        // Squid/Varnish but also any other public proxy cache between the client and MediaWiki
-        'server' => 90 * 24 * 60 * 60, // 90 days
-        // On the client side (e.g. in the browser cache).
-        'client' => 90 * 24 * 60 * 60, // 90 days
-    ],
-    'unversioned' => [
-        'server' => 3 * 60, // 3 mins
-        'client' => 3 * 60, // 3 mins
-    ],
+	'versioned' => [
+		// Squid/Varnish but also any other public proxy cache between the client and MediaWiki
+		'server' => 90 * 24 * 60 * 60, // 90 days
+		// On the client side (e.g. in the browser cache).
+		'client' => 90 * 24 * 60 * 60, // 90 days
+	],
+	'unversioned' => [
+		'server' => 3 * 60, // 3 mins
+		'client' => 3 * 60, // 3 mins
+	],
 ];
 
-## Trust an X-Forwarded-For (XFF) header specifying a private IP in requests from a trusted forwarding proxy
+## Trust an X-Forwarded-For (XFF) header specifying a private IP in requests
+## from a trusted forwarding proxy
 $wgUsePrivateIPs = true;
 $wgSquidServersNoPurge = [ '172.31.0.0/16', '10.0.0.0/8' ];
 
@@ -63,11 +64,11 @@ $wgEnableEmail = true;
 $wgEnableUserEmail = true; # UPO
 $wgAllowHTMLEmail = true;
 $wgSMTP = [
-    'host' => 'email-smtp.us-east-1.amazonaws.com',
-    'IDHost' => 'femiwiki.com',
-    'port' => 25,
-    'auth' => true,
-    'username' => 'AKIAJ472HG7XALTXZ5QA',
+	'host' => 'email-smtp.us-east-1.amazonaws.com',
+	'IDHost' => 'femiwiki.com',
+	'port' => 25,
+	'auth' => true,
+	'username' => 'AKIAJ472HG7XALTXZ5QA',
 ];
 
 $wgEmergencyContact = 'admin@femiwiki.com';
@@ -80,7 +81,7 @@ $wgEmailAuthentication = true;
 
 ## $wgStructuredChangeFiltersShowPreference do exists untli Mediawiki 1.32.
 if ( version_compare( $wgVersion, '1.32', '<' ) ) {
-    $wgStructuredChangeFiltersShowPreference = true; # UPO
+	$wgStructuredChangeFiltersShowPreference = true; # UPO
 }
 
 # Database settings
@@ -140,8 +141,8 @@ $wgDefaultSkin = 'femiwiki';
 
 # Enabled skins.
 # The following skins were automatically enabled:
-wfLoadSkin('Vector');
-wfLoadSkin('Femiwiki');
+wfLoadSkin( 'Vector' );
+wfLoadSkin( 'Femiwiki' );
 $wgFacebookAppId = '1937597133150935';
 
 # End of automatically generated settings.
@@ -149,18 +150,18 @@ $wgFacebookAppId = '1937597133150935';
 
 # Namespace settings
 ## BBS
-define('NS_BBS', 3906);
-define('NS_BBS_TALK', 3907);
+define( 'NS_BBS', 3906 );
+define( 'NS_BBS_TALK', 3907 );
 $wgExtraNamespaces[NS_BBS] = '게시판';
 $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
 ## BBS (Legacy)
-define('NS_BBSFREE', 3902);
-define('NS_BBSFREE_TALK', 3903);
+define( 'NS_BBSFREE', 3902 );
+define( 'NS_BBSFREE_TALK', 3903 );
 $wgExtraNamespaces[NS_BBSFREE] = '자유게시판';
 $wgExtraNamespaces[NS_BBSFREE_TALK] = '자유게시판토론';
-define('NS_BBSINTRO', 3904);
-define('NS_BBSINTRO_TALK', 3905);
+define( 'NS_BBSINTRO', 3904 );
+define( 'NS_BBSINTRO_TALK', 3905 );
 $wgExtraNamespaces[NS_BBSINTRO] = '가입인사게시판';
 $wgExtraNamespaces[NS_BBSINTRO_TALK] = '가입인사게시판토론';
 
@@ -181,10 +182,10 @@ $wgAutoConfirmCount = 0;
 $wgAutoConfirmAge = 3600;
 
 $wgAutopromote = [
-    'autoconfirmed' => ['&',
-        [APCOND_EDITCOUNT, &$wgAutoConfirmCount],
-        [APCOND_AGE, &$wgAutoConfirmAge],
-    ],
+	'autoconfirmed' => [ '&',
+		[ APCOND_EDITCOUNT, &$wgAutoConfirmCount ],
+		[ APCOND_AGE, &$wgAutoConfirmAge ],
+	],
 ];
 
 ## Allow autoconfirmed users to edit pages
@@ -193,16 +194,16 @@ $wgGroupPermissions['autoconfirmed']['edit'] = true;
 
 ## Early adopt interface-admin that introduced in Mediawiki 1.32
 if ( version_compare( $wgVersion, '1.32', '<' ) ) {
-    $wgGroupPermissions['interface-admin']['editusercss'] = true;
-    $wgGroupPermissions['interface-admin']['edituserjson'] = true;
-    $wgGroupPermissions['interface-admin']['edituserjs'] = true;
-    $wgGroupPermissions['interface-admin']['editinterface'] = true;
-    $wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
-    $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
+	$wgGroupPermissions['interface-admin']['editusercss'] = true;
+	$wgGroupPermissions['interface-admin']['edituserjson'] = true;
+	$wgGroupPermissions['interface-admin']['edituserjs'] = true;
+	$wgGroupPermissions['interface-admin']['editinterface'] = true;
+	$wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
+	$wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 
-    $wgGroupPermissions['sysop']['editusercss'] = false;
-    $wgGroupPermissions['sysop']['edituserjson'] = false;
-    $wgGroupPermissions['sysop']['edituserjs'] = false;
+	$wgGroupPermissions['sysop']['editusercss'] = false;
+	$wgGroupPermissions['sysop']['edituserjson'] = false;
+	$wgGroupPermissions['sysop']['edituserjs'] = false;
 }
 
 ## Add restricted-sysop group
@@ -232,12 +233,13 @@ $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
 ## @See https://github.com/femiwiki/mediawiki/issues/210
 if ( version_compare( $wgVersion, '1.32', '<' ) ) {
-    $wgHiddenPrefs[] = 'showtoolbar';
+	$wgHiddenPrefs[] = 'showtoolbar';
 }
 ## @See https://github.com/femiwiki/mediawiki/issues/211
 $wgHiddenPrefs[] = 'numberheadings';
 
-# Allow display titles not only to titles that normalize to the same canonical DB key as the real page title.
+# Allow display titles not only to titles that normalize to the same canonical
+# DB key as the real page title.
 $wgRestrictDisplayTitle = false;
 
 # Open external links in new tab
@@ -262,27 +264,26 @@ $wgArticleCountMethod = 'any';
 
 ## Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = [
-    NS_TALK => 'noindex,nofollow',
-    NS_USER => 'noindex,nofollow',
-    NS_USER_TALK => 'noindex,nofollow',
-    NS_PROJECT_TALK => 'noindex,nofollow',
+	NS_TALK => 'noindex,nofollow',
+	NS_USER => 'noindex,nofollow',
+	NS_USER_TALK => 'noindex,nofollow',
+	NS_PROJECT_TALK => 'noindex,nofollow',
 ];
 if ( defined( 'NS_TOPIC' ) ) {
-    $wgNamespaceRobotPolicies[NS_TOPIC] = 'noindex,nofollow';
+	$wgNamespaceRobotPolicies[NS_TOPIC] = 'noindex,nofollow';
 }
 
 # Provide Naspace Aliases
 $wgNamespaceAliases = [
-    '도' => NS_HELP,
-    '페' => NS_PROJECT
+	'도' => NS_HELP,
+	'페' => NS_PROJECT
 ];
 
 # Parsoid server Setting
 $wgVirtualRestConfig['modules']['parsoid'] = [
-    'url' => 'http://parsoid:8000',
-    'domain' => 'femiwiki.com'
+	'url' => 'http://parsoid:8000',
+	'domain' => 'femiwiki.com'
 ];
-
 
 #
 # Extensions
@@ -292,7 +293,7 @@ wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
 
 ## AWS
-wfLoadExtension('AWS');
+wfLoadExtension( 'AWS' );
 $wgAWSRegion = 'ap-northeast-1';
 $wgAWSBucketPrefix = 'femiwiki-uploaded-files';
 $wgAWSRepoHashLevels = 2;
@@ -301,24 +302,24 @@ $wgAWSRepoDeletedHashLevels = 2;
 ## VisualEditor
 wfLoadExtension( 'VisualEditor' );
 $wgVisualEditorAvailableNamespaces = [
-    NS_SPECIAL => true,
-    NS_MAIN => true,
-    NS_TALK => true,
-    NS_USER => true,
-    NS_USER_TALK => true,
-    NS_PROJECT => true,
-    NS_PROJECT_TALK => true,
-    NS_FILE => true,
-    NS_FILE_TALK => true,
-    NS_MEDIAWIKI => true,
-    NS_MEDIAWIKI_TALK => true,
-    NS_TEMPLATE => true,
-    NS_TEMPLATE_TALK => true,
-    NS_HELP => true,
-    NS_HELP_TALK => true,
-    NS_CATEGORY => true,
-    NS_CATEGORY_TALK => true,
-    '_merge_strategy' => 'array_plus',
+	NS_SPECIAL => true,
+	NS_MAIN => true,
+	NS_TALK => true,
+	NS_USER => true,
+	NS_USER_TALK => true,
+	NS_PROJECT => true,
+	NS_PROJECT_TALK => true,
+	NS_FILE => true,
+	NS_FILE_TALK => true,
+	NS_MEDIAWIKI => true,
+	NS_MEDIAWIKI_TALK => true,
+	NS_TEMPLATE => true,
+	NS_TEMPLATE_TALK => true,
+	NS_HELP => true,
+	NS_HELP_TALK => true,
+	NS_CATEGORY => true,
+	NS_CATEGORY_TALK => true,
+	'_merge_strategy' => 'array_plus',
 ];
 
 # Enable Visual Editor to opt-out
@@ -357,7 +358,7 @@ $wgDefaultUserOptions['twocolconft'] = true;
 wfLoadExtension( 'Interwiki' );
 
 ## Thanks
-wfLoadExtension('Thanks');
+wfLoadExtension( 'Thanks' );
 
 ## Scribunto
 wfLoadExtension( 'Scribunto' );
@@ -365,7 +366,7 @@ $wgScribuntoDefaultEngine = 'luastandalone';
 
 ## Flow
 wfLoadExtension( 'Flow' );
-$wgFlowEditorList = ['visualeditor', 'none'];
+$wgFlowEditorList = [ 'visualeditor', 'none' ];
 $wgNamespaceContentModels[NS_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_USER_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_PROJECT_TALK] = 'flow-board';
@@ -394,16 +395,16 @@ wfLoadExtension( 'Disambiguator' );
 wfLoadExtension( 'CreateUserPage' );
 
 ## Cite
-wfLoadExtension('Cite');
+wfLoadExtension( 'Cite' );
 
 ## CiteThisPage
 wfLoadExtension( 'CiteThisPage' );
 
 ## CodeEditor
-wfLoadExtension('CodeEditor');
+wfLoadExtension( 'CodeEditor' );
 
 ## WikiEditor
-wfLoadExtension('WikiEditor');
+wfLoadExtension( 'WikiEditor' );
 $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
@@ -421,18 +422,18 @@ $wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
 ## ConfirmEdit
-wfLoadExtensions([ 'ConfirmEdit', 'ConfirmEdit/QuestyCaptcha' ]);
+wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/QuestyCaptcha' ] );
 $wgCaptchaQuestions = [
-    '나는 페미니스트입니다.' => [
-        # 마침표 있음
-        '나는 페미니스트입니다.',
-        '나는페미니스트입니다.',
-        '나는페미니스트 입니다.',
-        # 마침표 없음
-        '나는 페미니스트입니다',
-        '나는페미니스트입니다',
-        '나는페미니스트 입니다',
-    ]
+	'나는 페미니스트입니다.' => [
+		# 마침표 있음
+		'나는 페미니스트입니다.',
+		'나는페미니스트입니다.',
+		'나는페미니스트 입니다.',
+		# 마침표 없음
+		'나는 페미니스트입니다',
+		'나는페미니스트입니다',
+		'나는페미니스트 입니다',
+	]
 ];
 $wgCaptchaTriggers['edit'] = false;
 $wgCaptchaTriggers['create'] = false;
@@ -452,7 +453,7 @@ $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 wfLoadExtension( 'CheckUser' );
 
 ## UserMerge
-wfLoadExtension('UserMerge');
+wfLoadExtension( 'UserMerge' );
 
 ## Renameuser
 wfLoadExtension( 'Renameuser' );
@@ -470,7 +471,7 @@ wfLoadExtension( 'CharInsert' );
 wfLoadExtension( 'CodeMirror' );
 
 ## EmbedVideo
-wfLoadExtension('EmbedVideo');
+wfLoadExtension( 'EmbedVideo' );
 
 ## InputBox
 wfLoadExtension( 'InputBox' );
@@ -489,8 +490,8 @@ wfLoadExtension( 'FacetedCategory' );
 
 ## UnifiedExtensionForFemiwiki --it requires the CategoryTree extension
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
-$wgSpecialPages['Uncategorizedcategories'] = [SpecialUncategorizedCategoryTree::class];
-$wgSpecialPages['Whatlinkshere'] = [SpecialOrderedWhatlinkshere::class];
+$wgSpecialPages['Uncategorizedcategories'] = [ SpecialUncategorizedCategoryTree::class ];
+$wgSpecialPages['Whatlinkshere'] = [ SpecialOrderedWhatlinkshere::class ];
 $wgGoogleAnalyticsTrackingID = 'UA-82072330-1';
 
 ## IntersectionSearch
@@ -501,10 +502,10 @@ wfLoadExtension( 'SimpleMathJax' );
 
 ## HTMLTags
 require_once "$IP/extensions/HTMLTags/HTMLTags.php";
-$wgHTMLTagsAttributes['a'] = ['href', 'class', 'itemprop'];
-$wgHTMLTagsAttributes['link'] = ['href', 'itemprop'];
-$wgHTMLTagsAttributes['meta'] = ['content', 'itemprop'];
-$wgHTMLTagsAttributes['iframe'] = ['src', 'class', 'style'];
+$wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
+$wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
+$wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
+$wgHTMLTagsAttributes['iframe'] = [ 'src', 'class', 'style' ];
 
 ## Josa
 wfLoadExtension( 'Josa' );
@@ -515,33 +516,31 @@ wfLoadExtension( 'Sanctions' );
 ## BetaFeatures
 wfLoadExtension( 'BetaFeatures' );
 
-
 #
 # Debug Mode
 #
-function runDebugMode($domain) {
-    global $wgServer, $wgCanonicalServer, $wgVirtualRestConfig,
-           $wgShowExceptionDetails, $wgDebugToolbar, $wgShowDBErrorBacktrace,
-           $wgUseFileCache, $wgAWSBucketName, $wgAWSBucketPrefix;
+function wfRunDebugMode( $domain ) {
+	global $wgServer, $wgCanonicalServer, $wgVirtualRestConfig,
+		   $wgShowExceptionDetails, $wgDebugToolbar, $wgShowDBErrorBacktrace,
+		   $wgUseFileCache, $wgAWSBucketName, $wgAWSBucketPrefix;
 
-    # 도메인 변경
-    $wgServer = "http://${domain}";
-    $wgCanonicalServer = "http://${domain}";
-    $wgVirtualRestConfig['modules']['parsoid']['domain'] = $domain;
+	# 도메인 변경
+	$wgServer = "http://${domain}";
+	$wgCanonicalServer = "http://${domain}";
+	$wgVirtualRestConfig['modules']['parsoid']['domain'] = $domain;
 
-    # 디버그 툴 활성화
-    $wgShowExceptionDetails = true;
-    $wgDebugToolbar = true;
-    $wgShowDBErrorBacktrace = true;
+	# 디버그 툴 활성화
+	$wgShowExceptionDetails = true;
+	$wgDebugToolbar = true;
+	$wgShowDBErrorBacktrace = true;
 
-    # File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
-    $wgUseFileCache = false;
+	# File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
+	$wgUseFileCache = false;
 
-    # AWS 플러그인 비활성화
-    $wgAWSBucketName = NULL;
-    $wgAWSBucketPrefix = NULL;
+	# AWS 플러그인 비활성화
+	$wgAWSBucketName = null;
+	$wgAWSBucketPrefix = null;
 }
-
 
 #
 # Load secret.php
