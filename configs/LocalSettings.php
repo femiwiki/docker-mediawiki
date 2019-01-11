@@ -494,8 +494,8 @@ wfLoadExtension( 'FacetedCategory' );
 
 # UnifiedExtensionForFemiwiki --it requires the CategoryTree extension
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
-$wgSpecialPages['Uncategorizedcategories'] = [ SpecialUncategorizedCategoryTree::class ];
-$wgSpecialPages['Whatlinkshere'] = [ SpecialOrderedWhatlinkshere::class ];
+$wgSpecialPages['Uncategorizedcategories'] = 'SpecialUncategorizedCategoryTree';
+$wgSpecialPages['Whatlinkshere'] = 'SpecialOrderedWhatlinkshere';
 $wgGoogleAnalyticsTrackingID = 'UA-82072330-1';
 
 # IntersectionSearch
