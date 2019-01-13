@@ -17,11 +17,14 @@ ARG MEDIAWIKI_SHA512=ee49649cc37d0a7d45a7c6d90c822c2a595df290be2b5bf085affbec331
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install apt-fast and aria2
+# Install aria2 with its config file
+RUN apt-get update && apt-get install -y aria2
+COPY configs/aria2.conf /root/.config/aria2/aria2.conf
+
+# Install apt-fast
 ARG APT_FAST_VERSION=1.9.5
 ADD https://github.com/ilikenwf/apt-fast/raw/${APT_FAST_VERSION}/apt-fast /usr/local/sbin/apt-fast
 RUN chmod +x /usr/local/sbin/apt-fast
-RUN apt-get update && apt-get install -y aria2
 # Install dependencies and utilities
 RUN apt-fast install -y \
       # Build dependencies
