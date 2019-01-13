@@ -8,4 +8,5 @@ indent_style = space
 indent_size = 2
 
 [*.{php,php.example}]
+indent_style = tab
 indent_size = 4
