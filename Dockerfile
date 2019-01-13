@@ -74,10 +74,10 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
 RUN mkdir -p /tmp/cache
 
 # Install Mediawiki extensions
-COPY installExtensions.php /tmp/
+COPY install-extensions.php /tmp/
 COPY configs/aria2.conf /root/.config/aria2/aria2.conf
-RUN sudo -u www-data php /tmp/installExtensions.php "${MEDIAWIKI_BRANCH}"
-RUN rm /tmp/installExtensions.php /root/.config/aria2/aria2.conf
+RUN sudo -u www-data php /tmp/install-extensions.php "${MEDIAWIKI_BRANCH}"
+RUN rm /tmp/install-extensions.php /root/.config/aria2/aria2.conf
 
 # Remove composer and its caches
 RUN rm -rf /usr/local/bin/composer /tmp/composer
