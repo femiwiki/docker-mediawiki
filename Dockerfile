@@ -17,16 +17,8 @@ ARG MEDIAWIKI_SHA512=ee49649cc37d0a7d45a7c6d90c822c2a595df290be2b5bf085affbec331
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install aria2 with its config file
-RUN apt-get update && apt-get install -y aria2
-COPY configs/aria2.conf /root/.config/aria2/aria2.conf
-
-# Install apt-fast
-ARG APT_FAST_VERSION=1.9.5
-ADD https://github.com/ilikenwf/apt-fast/raw/${APT_FAST_VERSION}/apt-fast /usr/local/sbin/apt-fast
-RUN chmod +x /usr/local/sbin/apt-fast
 # Install dependencies and utilities
-RUN apt-fast install -y \
+RUN apt-get update && apt-get install -y \
       # Build dependencies
       build-essential \
       libicu-dev \
@@ -40,10 +32,9 @@ RUN apt-fast install -y \
       # Required for SyntaxHighlighting
       python3 \
       # Required utilities
+      aria2 \
       cron \
       sudo
-# Uninstall apt-fast
-RUN rm /usr/local/sbin/apt-fast
 
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 mysqli opcache intl
@@ -84,8 +75,9 @@ RUN mkdir -p /tmp/cache
 
 # Install Mediawiki extensions
 COPY installExtensions.php /tmp/
+COPY configs/aria2.conf /root/.config/aria2/aria2.conf
 RUN sudo -u www-data php /tmp/installExtensions.php "${MEDIAWIKI_BRANCH}"
-RUN rm /tmp/installExtensions.php
+RUN rm /tmp/installExtensions.php /root/.config/aria2/aria2.conf
 
 # Remove composer and its caches
 RUN rm -rf /usr/local/bin/composer /tmp/composer
