@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
       # Build dependencies
       build-essential \
       libicu-dev \
+      aria2 \
       # Composer dependencies
       git \
       wget \
@@ -37,10 +38,6 @@ RUN apt-get update && apt-get install -y \
 
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 mysqli opcache intl
-
-RUN apt-get autoremove -y --purge \
-      build-essential \
-      libicu-dev
 
 # Install the default object cache.
 RUN pecl channel-update pecl.php.net &&\
@@ -82,163 +79,24 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
     fi &&\
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet &&\
     rm composer-setup.php
-
-# Change user
-USER www-data
-# '/var/www/.composer' is not writable for www-data. Change $COMPOSER_HOME
-ENV COMPOSER_HOME=/tmp/composer
-
-# Install official mediawiki extensions
-RUN \
-    # VisualEditor
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/VisualEditor &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/VisualEditor &&\
-    # TemplateData
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TemplateData \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/TemplateData &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/TemplateData &&\
-    # TwoColConflict
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TwoColConflict \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/TwoColConflict &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/TwoColConflict &&\
-    # RevisionSlider
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/RevisionSlider \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/RevisionSlider &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/RevisionSlider &&\
-    # Echo
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Echo \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Echo &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Echo &&\
-    # Thanks
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Thanks \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Thanks &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Thanks &&\
-    # Flow
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Flow \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Flow &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Flow &&\
-    # Scribunto
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Scribunto \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Scribunto &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Scribunto &&\
-    # TemplateStyles
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TemplateStyles \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/TemplateStyles &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/TemplateStyles &&\
-    # Disambiguator
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Disambiguator \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Disambiguator &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Disambiguator &&\
-    # CreateUserPage
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CreateUserPage \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/CreateUserPage &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/CreateUserPage &&\
-    # AbuseFilter
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/AbuseFilter \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/AbuseFilter &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/AbuseFilter &&\
-    # CheckUser
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CheckUser \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/CheckUser &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/CheckUser &&\
-    # UserMerge
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/UserMerge \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/UserMerge &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/UserMerge &&\
-    # Widgets
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Widgets \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Widgets &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Widgets &&\
-    # CodeMirror
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CodeMirror \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/CodeMirror &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/CodeMirror &&\
-    # CharInsert
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/CharInsert \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/CharInsert &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/CharInsert &&\
-    # Description2
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Description2 \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Description2 &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Description2 &&\
-    # OpenGraphMeta
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/OpenGraphMeta \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/OpenGraphMeta &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/OpenGraphMeta &&\
-    # PageImages
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PageImages \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/PageImages &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/PageImages &&\
-    # Josa
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Josa \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/Josa &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/Josa &&\
-    # HTMLTags
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/HTMLTags \
-    -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/HTMLTags &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/HTMLTags &&\
-    # BetaFeatures
-    git clone --recurse-submodules --depth 1 https://gerrit.wikimedia.org/r/p/mediawiki/extensions/BetaFeatures \
-      -b "${MEDIAWIKI_BRANCH}" /srv/femiwiki.com/extensions/BetaFeatures &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/BetaFeatures &&\
-    echo 'Installed all official extensions'
-
-# Install third-party mediawiki extensions
-RUN \
-    # AWS (v0.10.0)
-    git clone --recurse-submodules --depth 1 https://github.com/edwardspec/mediawiki-aws-s3.git \
-      -b v0.10.0 /srv/femiwiki.com/extensions/AWS &&\
-    composer update --no-dev -d /srv/femiwiki.com/extensions/AWS &&\
-    # EmbedVideo
-    wget -nv https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.tar.gz -O /tmp/tarball.tgz &&\
-    mkdir -p /srv/femiwiki.com/extensions/EmbedVideo &&\
-    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/EmbedVideo &&\
-    rm /tmp/tarball.tgz &&\
-    # SimpleMathJax
-    wget -nv https://github.com/jmnote/SimpleMathJax/archive/v0.7.3.tar.gz -O /tmp/tarball.tgz &&\
-    mkdir -p /srv/femiwiki.com/extensions/SimpleMathJax &&\
-    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/SimpleMathJax &&\
-    rm /tmp/tarball.tgz &&\
-    # Sanctions
-    wget -nv https://github.com/femiwiki/sanctions/archive/master.tar.gz -O /tmp/tarball.tgz &&\
-    mkdir -p /srv/femiwiki.com/extensions/Sanctions &&\
-    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/Sanctions &&\
-    rm /tmp/tarball.tgz &&\
-    # CategoryIntersectionSearch
-    wget -nv https://github.com/femiwiki/categoryIntersectionSearch/archive/master.tar.gz -O /tmp/tarball.tgz &&\
-    mkdir -p /srv/femiwiki.com/extensions/CategoryIntersectionSearch &&\
-    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/CategoryIntersectionSearch &&\
-    rm /tmp/tarball.tgz &&\
-    # FacetedCategory
-    wget -nv https://github.com/femiwiki/facetedCategory/archive/master.tar.gz -O /tmp/tarball.tgz &&\
-    mkdir -p /srv/femiwiki.com/extensions/FacetedCategory &&\
-    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/FacetedCategory &&\
-    rm /tmp/tarball.tgz &&\
-    # UnifiedExtensionForFemiwiki
-    wget -nv https://github.com/femiwiki/unifiedExtensionForFemiwiki/archive/master.tar.gz -O /tmp/tarball.tgz &&\
-    mkdir -p /srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki &&\
-    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki &&\
-    rm /tmp/tarball.tgz &&\
-    echo 'Installed all third-party extensions'
-
-# Install femiwiki skin
-RUN \
-    wget -nv https://github.com/femiwiki/skin/archive/master.tar.gz -O /tmp/tarball.tgz &&\
-    mkdir -p /srv/femiwiki.com/skins/Femiwiki &&\
-    tar -xzf /tmp/tarball.tgz --strip-components=1 --directory /srv/femiwiki.com/skins/Femiwiki &&\
-    rm /tmp/tarball.tgz
-
-# Create a cache directory
+# Create a cache directory for composer
 RUN mkdir -p /tmp/cache
 
-USER root
+# Install Mediawiki extensions
+COPY installExtensions.php /tmp/
+RUN sudo -u www-data php /tmp/installExtensions.php "${MEDIAWIKI_BRANCH}"
+RUN rm /tmp/installExtensions.php
 
 # Remove composer and its caches
 RUN rm -rf /usr/local/bin/composer /tmp/composer
 
 # Remove packages which is not needed anymore
 RUN apt-get autoremove -y --purge \
+      # Build dependencies of PHP extensions
+      build-essential \
+      libicu-dev \
+      # CLI utilities which are used only during build phase of Dockerfile
+      aria2 \
       git \
       wget \
       unzip
