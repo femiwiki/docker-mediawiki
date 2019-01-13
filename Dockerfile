@@ -2,7 +2,7 @@
 #
 # /usr/local/etc/php     : PHP 설정
 # /srv/femiwiki.com      : 미디어위키 소스코드 및 확장들
-# /usr/local/bin         : 임의로 설치한 실행파일들
+# /usr/local/{bin,sbin}  : 임의로 설치한 실행파일들
 # /tmp/cache             : 캐시 디렉토리
 # /tini                  : tini
 
@@ -17,12 +17,16 @@ ARG MEDIAWIKI_SHA512=ee49649cc37d0a7d45a7c6d90c822c2a595df290be2b5bf085affbec331
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# Install apt-fast and aria2
+ARG APT_FAST_VERSION=1.9.5
+ADD https://github.com/ilikenwf/apt-fast/raw/${APT_FAST_VERSION}/apt-fast /usr/local/sbin/apt-fast
+RUN chmod +x /usr/local/sbin/apt-fast
+RUN apt-get update && apt-get install -y aria2
 # Install dependencies and utilities
-RUN apt-get update && apt-get install -y \
+RUN apt-fast install -y \
       # Build dependencies
       build-essential \
       libicu-dev \
-      aria2 \
       # Composer dependencies
       git \
       wget \
@@ -35,6 +39,8 @@ RUN apt-get update && apt-get install -y \
       # Required utilities
       cron \
       sudo
+# Uninstall apt-fast
+RUN rm /usr/local/sbin/apt-fast
 
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 mysqli opcache intl
