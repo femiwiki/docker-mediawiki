@@ -48,17 +48,8 @@ RUN pecl channel-update pecl.php.net &&\
 RUN mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini &&\
     rm /usr/local/etc/php/php.ini-development &&\
     sed -ri '/^\s*(post_max_size|upload_max_filesize)\s*=\s*.+?\s*$/s/=.*$/= 10M/' /usr/local/etc/php/php.ini
-
 # Configure PHP opcache
-# Reference: https://secure.php.net/manual/en/opcache.installation.php
-RUN { \
-      echo 'opcache.memory_consumption=128'; \
-      echo 'opcache.interned_strings_buffer=8'; \
-      echo 'opcache.max_accelerated_files=4000'; \
-      echo 'opcache.revalidate_freq=60'; \
-      echo 'opcache.fast_shutdown=1'; \
-      echo 'opcache.enable_cli=1'; \
-    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+COPY configs/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # MediaWiki setup
 RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
