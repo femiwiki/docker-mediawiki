@@ -8,10 +8,10 @@
 
 FROM php:7.2-fpm
 
-ENV MEDIAWIKI_MAJOR_VERSION=1.31
-ENV MEDIAWIKI_BRANCH=REL1_31
-ENV MEDIAWIKI_VERSION=1.31.1
-ENV MEDIAWIKI_SHA512=ee49649cc37d0a7d45a7c6d90c822c2a595df290be2b5bf085affbec3318768700a458a6e5b5b7e437651400b9641424429d6d304f870c22ec63fae86ffc5152
+ARG MEDIAWIKI_MAJOR_VERSION=1.31
+ARG MEDIAWIKI_BRANCH=REL1_31
+ARG MEDIAWIKI_VERSION=1.31.1
+ARG MEDIAWIKI_SHA512=ee49649cc37d0a7d45a7c6d90c822c2a595df290be2b5bf085affbec3318768700a458a6e5b5b7e437651400b9641424429d6d304f870c22ec63fae86ffc5152
 
 # Set timezone
 ENV TZ=Asia/Seoul
@@ -113,7 +113,7 @@ COPY cron/generate-sitemap /usr/local/bin/generate-sitemap
 # Tini
 #
 # See https://github.com/krallin/tini for the further details
-ENV TINI_VERSION v0.18.0
+ARG TINI_VERSION=v0.18.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
