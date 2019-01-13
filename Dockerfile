@@ -71,7 +71,7 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet &&\
     rm composer-setup.php
 # Create a cache directory for composer
-RUN mkdir -p /tmp/cache
+RUN sudo -u www-data mkdir -p /tmp/cache
 
 # Install Mediawiki extensions
 COPY install-extensions.php /tmp/
