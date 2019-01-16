@@ -290,8 +290,8 @@ $wgVirtualRestConfig['modules']['restbase'] = [
 	'url' => 'http://restbase:7231',
 	'domain' => 'femiwiki.com'
 ];
-$wgVisualEditorRestbaseURL = 'https://femiwiki.com:7231/femiwiki.com/v1/page/html/';
-$wgVisualEditorFullRestbaseURL = 'https://femiwiki.com:7231/femiwiki.com/';
+$wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
+$wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 
 #
 # Extensions
