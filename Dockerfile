@@ -16,7 +16,7 @@ FROM ruby:2.6
 # ARG instructions without a value inside of a build stage to use the default value of an ARG declared before the first FROM use
 ARG MEDIAWIKI_BRANCH
 
-COPY install-extensions.rb /tmp/
+COPY install-extensions.rb Gemfile /tmp/
 COPY configs/aria2.conf /root/.config/aria2/aria2.conf
 
 RUN apt-get update && apt-get install -y \
@@ -43,7 +43,8 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
 # Create a cache directory for composer
 RUN sudo -u www-data mkdir -p /tmp/composer
 
-RUN sudo -u www-data ruby /tmp/install-extensions.rb \
+RUN bundle install --gemfile /tmp/Gemfile --path /var/www/.gem &&\
+    sudo -u www-data ruby /tmp/install-extensions.rb \
       --mediawiki-branch="${MEDIAWIKI_BRANCH}" \
       --destination_path=/tmp/extensions/
 

@@ -2,6 +2,7 @@ require 'fileutils'
 require 'tempfile'
 require 'net/http'
 require 'json'
+require 'parallel'
 
 opts = {
   "mediawiki_branch" => "REL1_31",
@@ -92,7 +93,7 @@ end
 #   https://aria2.github.io/manual/en/html/aria2c.html#id2
 input_file = Tempfile.new
 input_file.write(
-  extensions_official.map do |extension|
+  Parallel.map(extensions_official) do |extension|
     branch_info_url = "https://gerrit.wikimedia.org/r/projects/mediawiki%2Fextensions%2F#{extension}/branches/#{opts["mediawiki_branch"]}"
     response = Net::HTTP.get(URI(branch_info_url))
     # Response starts with a magic prefix line ")]}'\n", so strip it.
@@ -117,18 +118,13 @@ puts "Starting download"
 `aria2c --input-file=#{input_file.path} --dir=#{opts["temp_directory_path"]}`
 puts "Finished download"
 
-# Uncompress tar.gz files not from github
-extensions_official.each do |extension|
-  `tar -xzf '#{opts["temp_directory_path"]}/#{extension}.tar.gz' --directory '#{opts["destination_path"]}/extensions/'`
-end
-
-# Uncompress tar.gz files from github. It have to be striped component
-extensions_github.each do |extension|
+# Uncompress tar.gz files
+Parallel.each(extensions_all) do |extension|
   `tar -xzf '#{opts["temp_directory_path"]}/#{extension}.tar.gz' --strip-components=1 --directory '#{opts["destination_path"]}/extensions/#{extension}'`
 end
 
 # Install composer dependencies via 'composer update'
-extensions_github.each do |extension|
+Parallel.each(extensions_github) do |extension|
   next unless File.exist? "#{opts["destination_path"]}/extensions/#{extension}/composer.json"
 
   # '/var/www/.composer' is not writable for www-data. Overriding $COMPOSER_HOME
