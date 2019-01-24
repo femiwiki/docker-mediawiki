@@ -71,7 +71,7 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet &&\
     rm composer-setup.php
 # Create a cache directory for composer
-RUN sudo -u www-data mkdir -p /tmp/cache
+RUN sudo -u www-data mkdir -p /tmp/composer
 
 # Install Mediawiki extensions
 COPY install-extensions.php /tmp/
@@ -92,6 +92,9 @@ RUN apt-get autoremove -y --purge \
       git \
       wget \
       unzip
+
+# Create a cache directory for mediawiki
+RUN sudo -u www-data mkdir -p /tmp/cache
 
 # Web server should be able to write 'extensions/Widgets/compiled_templates'
 # directory Required by 'Widgets' extension
