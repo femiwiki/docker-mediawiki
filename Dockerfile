@@ -6,12 +6,53 @@
 # /tmp/cache             : 캐시 디렉토리
 # /tini                  : tini
 
-FROM php:7.2-fpm
-
 ARG MEDIAWIKI_MAJOR_VERSION=1.31
 ARG MEDIAWIKI_BRANCH=REL1_31
 ARG MEDIAWIKI_VERSION=1.31.1
 ARG MEDIAWIKI_SHA512=ee49649cc37d0a7d45a7c6d90c822c2a595df290be2b5bf085affbec3318768700a458a6e5b5b7e437651400b9641424429d6d304f870c22ec63fae86ffc5152
+
+FROM ruby:2.6
+
+# ARG instructions without a value inside of a build stage to use the default value of an ARG declared before the first FROM use
+ARG MEDIAWIKI_BRANCH
+
+COPY install-extensions.rb /tmp/
+COPY configs/aria2.conf /root/.config/aria2/aria2.conf
+
+RUN apt-get update && apt-get install -y \
+      php7.0 \
+      php7.0-xml \
+      # Composer dependencies
+      git \
+      wget \
+      unzip \
+      # Required utilities
+      aria2 \
+      sudo
+
+# Install Composer
+RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)" &&\
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&\
+    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")" &&\
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then \
+      >&2 echo 'ERROR: Invalid installer signature' &&\
+      rm composer-setup.php &&\
+      exit 1; \
+    fi &&\
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet
+# Create a cache directory for composer
+RUN sudo -u www-data mkdir -p /tmp/composer
+
+RUN sudo -u www-data ruby /tmp/install-extensions.rb \
+      --mediawiki-branch="${MEDIAWIKI_BRANCH}" \
+      --destination_path=/tmp/extensions/
+
+FROM php:7.2-fpm
+
+ARG MEDIAWIKI_MAJOR_VERSION
+ARG MEDIAWIKI_BRANCH
+ARG MEDIAWIKI_VERSION
+ARG MEDIAWIKI_SHA512
 
 # Set timezone
 ENV TZ=Asia/Seoul
@@ -22,17 +63,12 @@ RUN apt-get update && apt-get install -y \
       # Build dependencies
       build-essential \
       libicu-dev \
-      # Composer dependencies
-      git \
-      wget \
-      unzip \
       # Runtime depenencies
       imagemagick \
       librsvg2-bin \
       # Required for SyntaxHighlighting
       python3 \
       # Required utilities
-      aria2 \
       cron \
       sudo
 
@@ -59,39 +95,14 @@ RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSIO
     sudo -u www-data tar -xzf mediawiki.tar.gz --strip-components=1 --directory /srv/femiwiki.com/ &&\
     rm mediawiki.tar.gz
 
-# Install Composer
-RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)" &&\
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&\
-    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")" &&\
-    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then \
-      >&2 echo 'ERROR: Invalid installer signature' &&\
-      rm composer-setup.php &&\
-      exit 1; \
-    fi &&\
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet &&\
-    rm composer-setup.php
-# Create a cache directory for composer
-RUN sudo -u www-data mkdir -p /tmp/composer
-
 # Install Mediawiki extensions
-COPY install-extensions.php /tmp/
-COPY configs/aria2.conf /root/.config/aria2/aria2.conf
-RUN sudo -u www-data php /tmp/install-extensions.php "${MEDIAWIKI_BRANCH}"
-RUN rm /tmp/install-extensions.php /root/.config/aria2/aria2.conf
-
-# Remove composer and its caches
-RUN rm -rf /usr/local/bin/composer /tmp/composer
+COPY --from=0 --chown=www-data /tmp/extensions/ /srv/femiwiki.com/
 
 # Remove packages which is not needed anymore
 RUN apt-get autoremove -y --purge \
       # Build dependencies of PHP extensions
       build-essential \
-      libicu-dev \
-      # CLI utilities which are used only during build phase of Dockerfile
-      aria2 \
-      git \
-      wget \
-      unzip
+      libicu-dev
 
 # Create a cache directory for mediawiki
 RUN sudo -u www-data mkdir -p /tmp/cache
