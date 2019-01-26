@@ -22,6 +22,8 @@ COPY configs/aria2.conf /root/.config/aria2/aria2.conf
 RUN apt-get update && apt-get install -y \
       php7.0 \
       php7.0-xml \
+      # Required for prestissimo
+      php7.0-curl \
       # Composer dependencies
       git \
       wget \
@@ -39,7 +41,9 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
       rm composer-setup.php &&\
       exit 1; \
     fi &&\
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet &&\
+    composer global require hirak/prestissimo
+
 # Create a cache directory for composer
 RUN sudo -u www-data mkdir -p /tmp/composer
 
