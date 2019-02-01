@@ -11,45 +11,25 @@ ARG MEDIAWIKI_BRANCH=REL1_31
 ARG MEDIAWIKI_VERSION=1.31.1
 ARG MEDIAWIKI_SHA512=ee49649cc37d0a7d45a7c6d90c822c2a595df290be2b5bf085affbec3318768700a458a6e5b5b7e437651400b9641424429d6d304f870c22ec63fae86ffc5152
 
-FROM ruby:2.6
+#
+# 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
+# 확장들을 병렬로 빠르게 미리 다운받아놓는다.
+#
+FROM femiwiki/base-extensions
 
-# ARG instructions without a value inside of a build stage to use the default value of an ARG declared before the first FROM use
+# ARG instructions without a value inside of a build stage to use the default
+# value of an ARG declared before the first FROM use
 ARG MEDIAWIKI_BRANCH
 
 COPY extension-installer/* /tmp/
-COPY configs/aria2.conf /root/.config/aria2/aria2.conf
-
-RUN apt-get update && apt-get install -y \
-      php7.0 \
-      php7.0-xml \
-      # Required for prestissimo
-      php7.0-curl \
-      # Composer dependencies
-      git \
-      wget \
-      unzip \
-      # Required utilities
-      aria2 \
-      sudo
-
-# Install Composer
-RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)" &&\
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&\
-    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")" &&\
-    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then \
-      >&2 echo 'ERROR: Invalid installer signature' &&\
-      rm composer-setup.php &&\
-      exit 1; \
-    fi &&\
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet &&\
-    composer global require hirak/prestissimo
-
-# Create a cache directory for composer
-RUN sudo -u www-data mkdir -p /tmp/composer
-
 RUN bundle install --gemfile /tmp/Gemfile --path /var/www/.gem &&\
     sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
+
+#
+# 미디어위키 도커이미지 생성 스테이지. 미디어위키 실행에 필요한 각종 PHP
+# 디펜던시들을 설치한다.
+#
 FROM php:7.2-fpm
 
 ARG MEDIAWIKI_MAJOR_VERSION
