@@ -16,7 +16,7 @@ FROM ruby:2.6
 # ARG instructions without a value inside of a build stage to use the default value of an ARG declared before the first FROM use
 ARG MEDIAWIKI_BRANCH
 
-COPY install-extensions.rb Gemfile /tmp/
+COPY extension-installer/* /tmp/
 COPY configs/aria2.conf /root/.config/aria2/aria2.conf
 
 RUN apt-get update && apt-get install -y \
