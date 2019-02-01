@@ -22,8 +22,8 @@ FROM femiwiki/base-extensions
 ARG MEDIAWIKI_BRANCH
 
 COPY extension-installer/* /tmp/
-RUN bundle install --gemfile /tmp/Gemfile --path /var/www/.gem &&\
-    sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
+RUN bundle install --deployment --gemfile /tmp/Gemfile --path /var/www/.gem
+RUN sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
 
 #
