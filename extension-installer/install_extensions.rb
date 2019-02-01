@@ -5,54 +5,58 @@ require 'net/http'
 require 'json'
 require 'parallel'
 
-opts = {
-  "mediawiki_branch" => "REL1_31",
-  # Temporary directory path for Composer
-  "composer_home_path" => "/tmp/composer/",
-  # Temporary directory path for downloading
-  "temp_directory_path" => "/tmp/",
-  # Target directory path for extensions
-  "destination_path" => "/srv/femiwiki.com/",
-}
+# Get configurations from command line options
+if ARGV.length == 0
+  STDERR.puts '어느 미디어위키 브랜치에서 다운받을것인지를 입력해주세요. 예: "REL1_31"'
+  exit 1
+end
+MEDIAWIKI_BRANCH = ARGV[0]
+
+# Temporary directory path for Composer
+COMPOSER_HOME_PATH = '/tmp/composer'
+# Temporary directory path for downloading
+TEMP_DIRECTORY_PATH = '/tmp'
+# Target directory path for extensions
+DESTINATION_PATH = '/tmp/extensions'
 
 # Official mediawiki extensions
 extensions_official = [
-  "TemplateData",
-  "TwoColConflict",
-  "RevisionSlider",
-  "Echo",
-  "Thanks",
-  "Flow",
-  "Scribunto",
-  "TemplateStyles",
-  "Disambiguator",
-  "CreateUserPage",
-  "AbuseFilter",
-  "CheckUser",
-  "UserMerge",
-  "CodeMirror",
-  "CharInsert",
-  "Description2",
-  "OpenGraphMeta",
-  "PageImages",
-  "Josa",
-  "HTMLTags",
-  "BetaFeatures",
-  "VisualEditor",
-  "Widgets",
+  'TemplateData',
+  'TwoColConflict',
+  'RevisionSlider',
+  'Echo',
+  'Thanks',
+  'Flow',
+  'Scribunto',
+  'TemplateStyles',
+  'Disambiguator',
+  'CreateUserPage',
+  'AbuseFilter',
+  'CheckUser',
+  'UserMerge',
+  'CodeMirror',
+  'CharInsert',
+  'Description2',
+  'OpenGraphMeta',
+  'PageImages',
+  'Josa',
+  'HTMLTags',
+  'BetaFeatures',
+  'VisualEditor',
+  'Widgets',
 ]
 # 3rd party extensions and their URLs
 extensions_3rdparty = {
-  "AWS" => "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.10.0.tar.gz",
-  "EmbedVideo" => "https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.tar.gz",
-  "SimpleMathJax" => "https://github.com/jmnote/SimpleMathJax/archive/v0.7.3.tar.gz",
+  'AWS' => 'https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.10.0.tar.gz',
+  'EmbedVideo' => 'https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.tar.gz',
+  'SimpleMathJax' => 'https://github.com/jmnote/SimpleMathJax/archive/v0.7.3.tar.gz',
 }
 # Extensions developed by Femiwiki team
 extensions_femiwiki = [
-  "Sanctions",
-  "CategoryIntersectionSearch",
-  "FacetedCategory",
-  "UnifiedExtensionForFemiwiki",
+  'Sanctions',
+  'CategoryIntersectionSearch',
+  'FacetedCategory',
+  'UnifiedExtensionForFemiwiki',
 ]
 
 # Names of the all extensions
@@ -66,26 +70,11 @@ extensions_github = (
   extensions_femiwiki
 )
 
-# Get configurations from command line options
-ARGV.each do |arg|
-  next unless arg =~ /^--.+=.+$/
-
-  key = arg[2..-1].match(/^[^=]+/)[0].gsub("-","_")
-  value = arg[2..-1].match(/=(.+)$/)[1]
-
-  next unless opts.has_key?(key)
-
-  opts[key] = value
-end
-
-# Remove trailing slash from paths if exists
-opts.each { |k, v| v.chomp!("/") if k.end_with?("path") }
-
-puts "Started installing extensions"
+puts 'Started installing extensions'
 
 # Make directories for each extensions
 extensions_all.each do |extension|
-  FileUtils.mkdir_p "#{opts["destination_path"]}/extensions/#{extension}"
+  FileUtils.mkdir_p "#{DESTINATION_PATH}/extensions/#{extension}"
 end
 
 # Create a file that can be used by aria2c with the '--input-file=' option
@@ -95,14 +84,14 @@ end
 input_file = Tempfile.new
 input_file.write(
   Parallel.map(extensions_official) do |extension|
-    branch_info_url = "https://gerrit.wikimedia.org/r/projects/mediawiki%2Fextensions%2F#{extension}/branches/#{opts["mediawiki_branch"]}"
+    branch_info_url = "https://gerrit.wikimedia.org/r/projects/mediawiki%2Fextensions%2F#{extension}/branches/#{MEDIAWIKI_BRANCH}"
     response = Net::HTTP.get(URI(branch_info_url))
     # Response starts with a magic prefix line ")]}'\n", so strip it.
     # See:
     #   https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
     response = response[5..-1]
-    sha = JSON.parse(response)["revision"]
-    "https://extdist.wmflabs.org/dist/extensions/#{extension}-#{opts["mediawiki_branch"]}-#{sha[0..6]}.tar.gz\n out=#{extension}.tar.gz\n"
+    sha = JSON.parse(response)['revision']
+    "https://extdist.wmflabs.org/dist/extensions/#{extension}-#{MEDIAWIKI_BRANCH}-#{sha[0..6]}.tar.gz\n out=#{extension}.tar.gz\n"
   end .join +
   extensions_femiwiki.map do |extension|
     "https://github.com/femiwiki/#{extension}/archive/master.tar.gz\n out=#{extension}.tar.gz\n"
@@ -115,25 +104,25 @@ input_file.write(
 input_file.close
 
 # Execute aria2
-puts "Starting download"
-`aria2c --input-file=#{input_file.path} --dir=#{opts["temp_directory_path"]}`
-puts "Finished download"
+puts 'Starting download'
+`aria2c --input-file=#{input_file.path} --dir=#{TEMP_DIRECTORY_PATH}`
+puts 'Finished download'
 
 # Uncompress tar.gz files
 Parallel.each(extensions_all) do |extension|
-  `tar -xzf '#{opts["temp_directory_path"]}/#{extension}.tar.gz' --strip-components=1 --directory '#{opts["destination_path"]}/extensions/#{extension}'`
+  `tar -xzf '#{TEMP_DIRECTORY_PATH}/#{extension}.tar.gz' --strip-components=1 --directory '#{DESTINATION_PATH}/extensions/#{extension}'`
 end
 
 # Install composer dependencies via 'composer update'
 Parallel.each(extensions_github) do |extension|
-  next unless File.exist? "#{opts["destination_path"]}/extensions/#{extension}/composer.json"
+  next unless File.exist? "#{DESTINATION_PATH}/extensions/#{extension}/composer.json"
 
   # '/var/www/.composer' is not writable for www-data. Overriding $COMPOSER_HOME
-  `COMPOSER_HOME=#{opts["composer_home_path"]} composer update --no-dev --working-dir '#{opts["destination_path"]}/extensions/#{extension}'`
+  `COMPOSER_HOME=#{COMPOSER_HOME_PATH} composer update --no-dev --working-dir '#{DESTINATION_PATH}/extensions/#{extension}'`
 end
 
 # Install Femiwiki Skin which should be located under 'skins' directory
-FileUtils.mkdir_p "#{opts["destination_path"]}/skins/Femiwiki"
-`tar -xzf #{opts['temp_directory_path']}/Femiwiki.tar.gz --strip-components=1 --directory #{opts["destination_path"]}/skins/Femiwiki`
+FileUtils.mkdir_p "#{DESTINATION_PATH}/skins/Femiwiki"
+`tar -xzf #{TEMP_DIRECTORY_PATH}/Femiwiki.tar.gz --strip-components=1 --directory #{DESTINATION_PATH}/skins/Femiwiki`
 
-puts "Finished extension intalling"
+puts 'Finished extension intalling'
