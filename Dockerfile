@@ -48,7 +48,7 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
 RUN sudo -u www-data mkdir -p /tmp/composer
 
 RUN bundle install --gemfile /tmp/Gemfile --path /var/www/.gem &&\
-    sudo -u www-data ruby /tmp/install-extensions.rb \
+    sudo -u www-data ruby /tmp/install_extensions.rb \
       --mediawiki-branch="${MEDIAWIKI_BRANCH}" \
       --destination_path=/tmp/extensions/
 
