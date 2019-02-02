@@ -43,6 +43,9 @@ jobs:
         - docker swarm init
         - docker stack deploy -c ~/swarm/memcached.yml memcached
         - docker stack deploy -c ~/swarm/database.yml database
+      script:
+        # Build image
+        - docker build --tag femiwiki/mediawiki .
         # Wait until root account's password of MySQL is generated
         - |
           printf 'Waiting for database_mysql service...';
@@ -68,22 +71,20 @@ jobs:
         - |
           HOST_IP="$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')";
           MYSQL_PW="$(docker service logs database_mysql 2>&1 | grep -Po 'GENERATED ROOT PASSWORD: \K.+')";
-        - mv configs/env.example configs/env
-        - sed -ri "s/mysqlhostname/${HOST_IP}/; s/mysqlusername/root/; s/mysqlpassword/${MYSQL_PW}/" configs/env
-        - mv configs/secret.php.example configs/secret.php
-        - sed -ri "s/DB_HOSTNAME/${HOST_IP}/; s/DB_USERNAME/root/; s/DB_PASSWORD/${MYSQL_PW}/; s/MEMCACHED_HOSTNAME/${HOST_IP}/" configs/secret.php
-        # Tweak LocalSettings.php for debugging
-        - printf 'wfRunDebugMode("localhost");\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php
-      script:
-        - docker build --tag femiwiki/mediawiki .
+          mv configs/env.example configs/env;
+          mv configs/secret.php.example configs/secret.php;
+          sed -ri "s/mysqlhostname/${HOST_IP}/; s/mysqlusername/root/; s/mysqlpassword/${MYSQL_PW}/" configs/env;
+          sed -ri "s/DB_HOSTNAME/${HOST_IP}/; s/DB_USERNAME/root/; s/DB_PASSWORD/${MYSQL_PW}/; s/MEMCACHED_HOSTNAME/${HOST_IP}/" configs/secret.php;
+          printf 'wfRunDebugMode("localhost");\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php;
+        # Start mediawiki
         - docker stack deploy -c docker-compose.yml mediawiki
-        # Check if status of container is shutdown
+        # Check if the container is still up
         - test -z "$(docker service ps -qf 'desired-state=Shutdown' mediawiki_fastcgi)"
         # Access localhost until success
         - |
             printf 'Waiting for http...'
             COUNTER=0;
-            until [ "$(curl -Lfs localhost)" ]; do
+            until [ "$(curl -Ls localhost 2>/dev/null)" ]; do
               sleep 1;
               printf '.';
               (( COUNTER++ ));
@@ -93,5 +94,6 @@ jobs:
                 travis_terminate 1;
               fi
             done; printf '\n'
-        - docker service logs mediawiki_fastcgi
-        - curl -Lf localhost | head
+        # Try to access the mediawiki
+        - |
+          curl -sSLvo /dev/null localhost || docker service logs mediawiki_fastcgi
