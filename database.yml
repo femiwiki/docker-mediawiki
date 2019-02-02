@@ -10,3 +10,7 @@ services:
       - /srv/mysql:/var/lib/mysql
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
+  backupbot:
+    image: femiwiki/backupbot
+    env_file:
+      - secret
