@@ -1,0 +1,9 @@
+version: '3'
+services:
+  restbase:
+    image: femiwiki/restbase
+    ports:
+      - 7231:7231
+  parsoid:
+    image: femiwiki/parsoid
+      - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php
