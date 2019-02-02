@@ -29,8 +29,7 @@ jobs:
       before_script:
         - composer install --prefer-source --quiet --no-interaction
       script:
-        - php -l configs/LocalSettings.php
-        - composer test .
+        - composer test
     - name: docker
       before_script:
         # Setup files for database and memcached

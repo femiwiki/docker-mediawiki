@@ -4,12 +4,11 @@
     "jakub-onderka/php-parallel-lint": "0.9.2"
   },
   "scripts": {
-    "lint": "parallel-lint --exclude vendor",
-    "phpcs": "phpcs -p -s",
     "fix": "phpcbf",
     "test": [
-      "composer lint",
-      "composer phpcs"
+      "php -l configs/LocalSettings.php",
+      "parallel-lint --exclude vendor .",
+      "phpcs -p -s ."
     ]
   }
 }
