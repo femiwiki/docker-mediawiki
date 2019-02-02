@@ -1,91 +1,84 @@
-language: php
-
-php: '7.2'
-
 os: linux
-
 dist: xenial
-
 git:
   quiet: true
   depth: 3
 
-env:
-  global:
-    - MEDIAWIKI_BRANCH=REL1_31
-    # Maximum iteration limit for loop
-    - LOOP_LIMIT=300
-
+# PHP
+language: php
+php: '7.2'
 cache:
   directories:
-  - vendor
+    - vendor
+
+env:
+  global:
+    # Maximum iteration limit for loop
+    - LOOP_LIMIT=300
 
 services:
   - docker
 
 jobs:
   include:
+    #
+    # LocalSettings.php 코드 lint
+    #
     - name: lint
       before_script:
         - composer install --prefer-source --quiet --no-interaction
       script:
         - composer test
+
+
+    #
+    # 미디어위키 도커 이미지가 정상적으로 실행되는지 확인
+    #
     - name: docker
       before_script:
         # Setup files for database and memcached
         - git clone https://github.com/femiwiki/database.git ~/swarm --depth=1
         - sudo mkdir -p /srv/mysql/
-        # Prepare configuration files
-        - cp configs/env.example configs/env
-        - cp configs/secret.php.example configs/secret.php
-        # Tweak LocalSettings.php for debugging
-        - echo -en "\n\nwfRunDebugMode( 'localhost' );\n" >> configs/LocalSettings.php
-        - echo -en '\n\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php
-        # Initialize docker swarm
+        # Initialize docker swarm and start memcached and MySQL
         - docker swarm init
-        # Start up database
-        - docker stack deploy -c ~/swarm/database.yml database
-        # We need root password of the database, so wait for the generation
-        - |
-            printf 'Waiting for database_mysql service...';
-            # Set counter to check endless loop
-            COUNTER=0;
-            while [ -z $(docker service logs database_mysql 2>&1 | grep -oP 'GENERATED ROOT PASSWORD: \K.+') ]; do
-              # retry every 1 second.
-              sleep 1;
-              # Append dots to the previous message if process is delayed.
-              printf '.';
-              # Terminate Travis-ci if loop exceeds limit
-              (( COUNTER++ ));
-              if [ $COUNTER -gt $LOOP_LIMIT ]; then
-                printf '\n';
-                echo 'Falied to start database_mysql service';
-                # Print logs for debugging
-                docker service logs database_mysql;
-                travis_terminate 1;
-              fi
-            done; printf '\n'
-        # Start up memcached
         - docker stack deploy -c ~/swarm/memcached.yml memcached
-        # Configure mediawiki
-        - HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
-        - MYSQL_USER=root
-        - "MYSQL_PW=$(docker service logs database_mysql 2>&1 | grep -Po 'GENERATED ROOT PASSWORD: \\K.+')"
-        - sed -ri "s/mysqlhostname/${HOST_IP}/" configs/env
-        - sed -ri "s/mysqlusername/${MYSQL_USER}/" configs/env
-        - sed -ri "s/mysqlpassword/${MYSQL_PW}/" configs/env
-        - sed -ri "s/DB_HOSTNAME/${HOST_IP}/" configs/secret.php
-        - sed -ri "s/DB_USERNAME/${MYSQL_USER}/" configs/secret.php
-        - sed -ri "s/DB_PASSWORD/${MYSQL_PW}/" configs/secret.php
-        - sed -ri "s/MEMCACHED_HOSTNAME/${HOST_IP}/" configs/secret.php
+        - docker stack deploy -c ~/swarm/database.yml database
+        # Wait until root account's password of MySQL is generated
+        - |
+          printf 'Waiting for database_mysql service...';
+          # Set counter to check endless loop
+          COUNTER=0;
+          while [ -z $(docker service logs database_mysql 2>&1 | grep -oP 'GENERATED ROOT PASSWORD: \K.+') ]; do
+            # retry every 1 second.
+            sleep 1;
+            # Append dots to the previous message if process is delayed.
+            printf '.';
+            # Terminate Travis-ci if loop exceeds limit
+            (( COUNTER++ ));
+            if [ $COUNTER -gt $LOOP_LIMIT ]; then
+              printf '\n';
+              echo 'Falied to start database_mysql service';
+              # Print logs for debugging
+              docker service logs database_mysql;
+              travis_terminate 1;
+            fi
+          done;
+          printf '\n';
+        # Edit configuration
+        - |
+          HOST_IP="$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')";
+          MYSQL_PW="$(docker service logs database_mysql 2>&1 | grep -Po 'GENERATED ROOT PASSWORD: \K.+')";
+        - mv configs/env.example configs/env
+        - sed -ri "s/mysqlhostname/${HOST_IP}/; s/mysqlusername/root/; s/mysqlpassword/${MYSQL_PW}/" configs/env
+        - mv configs/secret.php.example configs/secret.php
+        - sed -ri "s/DB_HOSTNAME/${HOST_IP}/; s/DB_USERNAME/root/; s/DB_PASSWORD/${MYSQL_PW}/; s/MEMCACHED_HOSTNAME/${HOST_IP}/" configs/secret.php
+        # Tweak LocalSettings.php for debugging
+        - printf 'wfRunDebugMode("localhost");\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php
       script:
         - docker build --tag femiwiki/mediawiki .
         - docker stack deploy -c docker-compose.yml mediawiki
-        # We don't have a health check yet, so wait a moment for starting process is end...
-        - sleep 60
-        - docker service logs mediawiki_fastcgi
-        # Check if container is shoutdown
-        - test -z "$(docker service ps -qf "desired-state=Shutdown" mediawiki_fastcgi)"
+        # Check if status of container is shutdown
+        - test -z "$(docker service ps -qf 'desired-state=Shutdown' mediawiki_fastcgi)"
         # Access localhost until success
         - |
             printf 'Waiting for http...'
@@ -100,4 +93,5 @@ jobs:
                 travis_terminate 1;
               fi
             done; printf '\n'
+        - docker service logs mediawiki_fastcgi
         - curl -Lf localhost | head
