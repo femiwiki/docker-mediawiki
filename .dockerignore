@@ -2,5 +2,8 @@
 /configs/secret.php
 /configs/env
 
+# Composer
+/vendor
+
 # Git
 /.git/

@@ -14,52 +14,57 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-## Uncomment this to disable output compression
-# $wgDisableOutputCompression = true;
-
 $wgSitename = '페미위키';
 
-## The URL base path to the directory containing the wiki;
-## defaults for all runtime URL paths are based off of this.
-## For more information on customizing the URLs
-## (like /w/index.php/Page_title to /wiki/Page_title) please see:
-## https://www.mediawiki.org/wiki/Manual:Short_URL
+# The URL base path to the directory containing the wiki;
+# defaults for all runtime URL paths are based off of this.
+# For more information on customizing the URLs
+# (like /w/index.php/Page_title to /wiki/Page_title) please see:
+# https://www.mediawiki.org/wiki/Manual:Short_URL
 $wgScriptPath = '';
 $wgArticlePath = "/w/$1";
 
-## The protocol and server name to use in fully-qualified URLs
+# The protocol and server name to use in fully-qualified URLs
 $wgServer = 'https://femiwiki.com';
 $wgCanonicalServer = 'https://femiwiki.com';
 $wgEnableCanonicalServerLink = true;
 
-## The URL path to static resources (images, scripts, etc.)
+# The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
 $wgStyleVersion = '20181013_0';
 $wgResourceLoaderMaxage = [
 	'versioned' => [
-		// Squid/Varnish but also any other public proxy cache between the client and MediaWiki
-		'server' => 90 * 24 * 60 * 60, // 90 days
-		// On the client side (e.g. in the browser cache).
-		'client' => 90 * 24 * 60 * 60, // 90 days
+		# Squid/Varnish but also any other public proxy cache between the client and MediaWiki
+		'server' => 90 * 24 * 60 * 60, # 90 days
+		# On the client side (e.g. in the browser cache).
+		'client' => 90 * 24 * 60 * 60, # 90 days
 	],
 	'unversioned' => [
-		'server' => 3 * 60, // 3 mins
-		'client' => 3 * 60, // 3 mins
+		# 3 minutes
+		'server' => 3 * 60,
+		# 3 minutes
+		'client' => 3 * 60,
 	],
 ];
 
-## Trust an X-Forwarded-For (XFF) header specifying a private IP in requests
-## from a trusted forwarding proxy
+# Trust an X-Forwarded-For (XFF) header specifying a private IP in requests
+# from a trusted forwarding proxy
 $wgUsePrivateIPs = true;
 $wgSquidServersNoPurge = [ '172.31.0.0/16', '10.0.0.0/8' ];
 
-## The URL path to the logo.  Make sure you change this from the default,
-## or else you'll overwrite your logo when you upgrade!
+# The URL path to the logo.  Make sure you change this from the default,
+# or else you'll overwrite your logo when you upgrade!
+#
+# References:
+#   https://www.mediawiki.org/wiki/Manual:$wgLogo
+#   https://www.mediawiki.org/wiki/Manual:$wgLogoHD
 $wgLogo = "$wgResourceBasePath/skins/Femiwiki/images/logo-1200-630.png";
-# @todo Add $wgLogoHD
 
-## UPO means: this is also a user preference option
+# UPO means: this is also a user preference option
+#
+# Reference:
+#   https://www.mediawiki.org/wiki/Help:User_preference_option
 $wgEnableEmail = true;
 $wgEnableUserEmail = true; # UPO
 $wgAllowHTMLEmail = true;
@@ -79,7 +84,7 @@ $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
 
-## $wgStructuredChangeFiltersShowPreference do exists untli Mediawiki 1.32.
+# $wgStructuredChangeFiltersShowPreference do exists untli Mediawiki 1.32.
 if ( version_compare( $wgVersion, '1.32', '<' ) ) {
 	$wgStructuredChangeFiltersShowPreference = true; # UPO
 }
@@ -94,14 +99,14 @@ $wgDBprefix = '';
 # MySQL table options to use during installation or update
 $wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
 
-## Shared memory settings
+# Shared memory settings
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgSessionCacheType = CACHE_MEMCACHED;
 $wgParserCacheType = CACHE_MEMCACHED;
 $wgMessageCacheType = CACHE_MEMCACHED;
 
-## To enable image uploads, make sure the 'images' directory
-## is writable, then set this to true:
+# To enable image uploads, make sure the 'images' directory
+# is writable, then set this to true:
 $wgEnableUploads = true;
 $wgFileExtensions[] = 'svg';
 $wgAllowTitlesInSVG = true;
@@ -112,14 +117,14 @@ $wgSVGConverter = 'rsvg';
 # InstantCommons allows wiki to use images from https://commons.wikimedia.org
 $wgUseInstantCommons = true;
 
-## If you use ImageMagick (or any other shell command) on a
-## Linux server, this will need to be set to the name of an
-## available UTF-8 locale
+# If you use ImageMagick (or any other shell command) on a
+# Linux server, this will need to be set to the name of an
+# available UTF-8 locale
 $wgShellLocale = 'C.UTF-8';
 
-## Set $wgCacheDirectory to a writable directory on the web server
-## to make your wiki go slightly faster. The directory should not
-## be publically accessible from the web.
+# Set $wgCacheDirectory to a writable directory on the web server
+# to make your wiki go slightly faster. The directory should not
+# be publically accessible from the web.
 $wgCacheDirectory = '/tmp/cache';
 $wgUseFileCache = true;
 
@@ -135,8 +140,8 @@ $wgAuthenticationTokenVersion = '1';
 # Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = '/usr/bin/diff3';
 
-## Default skin: you can change the default skin. Use the internal symbolic
-## names, ie 'vector', 'monobook':
+# Default skin: you can change the default skin. Use the internal symbolic
+# names, ie 'vector', 'monobook':
 $wgDefaultSkin = 'femiwiki';
 
 # Enabled skins.
@@ -145,17 +150,16 @@ wfLoadSkin( 'Vector' );
 wfLoadSkin( 'Femiwiki' );
 $wgFacebookAppId = '1937597133150935';
 
-# End of automatically generated settings.
-# Add more configuration options below.
-
+#
 # Namespace settings
-## BBS
+#
+# BBS
 define( 'NS_BBS', 3906 );
 define( 'NS_BBS_TALK', 3907 );
 $wgExtraNamespaces[NS_BBS] = '게시판';
 $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
-## BBS (Legacy)
+# BBS (Legacy)
 define( 'NS_BBSFREE', 3902 );
 define( 'NS_BBSFREE_TALK', 3903 );
 $wgExtraNamespaces[NS_BBSFREE] = '자유게시판';
@@ -174,10 +178,10 @@ $wgGroupPermissions['oversight']['deletelogentry'] = true;
 $wgGroupPermissions['oversight']['deleterevision'] = true;
 $wgGroupPermissions['bot']['patrolmarks'] = true;
 
-## Prevent anonymous users from edit pages
+# Prevent anonymous users from edit pages
 $wgGroupPermissions['*']['edit'] = false;
 
-## Set when users become autoconfirmed users
+# Set when users become autoconfirmed users
 $wgAutoConfirmCount = 0;
 $wgAutoConfirmAge = 3600;
 
@@ -188,11 +192,11 @@ $wgAutopromote = [
 	],
 ];
 
-## Allow autoconfirmed users to edit pages
+# Allow autoconfirmed users to edit pages
 $wgGroupPermissions['user']['edit'] = false;
 $wgGroupPermissions['autoconfirmed']['edit'] = true;
 
-## Early adopt interface-admin that introduced in Mediawiki 1.32
+# Early adopt interface-admin that introduced in Mediawiki 1.32
 if ( version_compare( $wgVersion, '1.32', '<' ) ) {
 	$wgGroupPermissions['interface-admin']['editusercss'] = true;
 	$wgGroupPermissions['interface-admin']['edituserjson'] = true;
@@ -206,7 +210,7 @@ if ( version_compare( $wgVersion, '1.32', '<' ) ) {
 	$wgGroupPermissions['sysop']['edituserjs'] = false;
 }
 
-## Add restricted-sysop group
+# Add restricted-sysop group
 $wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
 $wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
 $wgGroupPermissions['restricted-sysop']['editinterface'] = false;
@@ -216,10 +220,10 @@ $wgGroupPermissions['restricted-sysop']['managechangetags'] = false;
 $wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
 $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
-## FemiwikiTeam is just a list of all Femiwiki team member
+# FemiwikiTeam is just a list of all Femiwiki team member
 $wgGroupPermissions['femiwiki-team']['editprotected'] = true;
 
-## Remain commemorative Seeder group
+# Remain commemorative Seeder group
 $wgGroupPermissions['seeder']['read'] = true;
 
 # Show numbers on headings
@@ -231,11 +235,11 @@ $wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
 # Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
-## @See https://github.com/femiwiki/mediawiki/issues/210
+# See https://github.com/femiwiki/mediawiki/issues/210
 if ( version_compare( $wgVersion, '1.32', '<' ) ) {
 	$wgHiddenPrefs[] = 'showtoolbar';
 }
-## @See https://github.com/femiwiki/mediawiki/issues/211
+# See https://github.com/femiwiki/mediawiki/issues/211
 $wgHiddenPrefs[] = 'numberheadings';
 
 # Allow display titles not only to titles that normalize to the same canonical
@@ -262,7 +266,7 @@ $wgAllowImageTag = true;
 # all pages (that are not redirects) are considered as valid articles
 $wgArticleCountMethod = 'any';
 
-## Prevent Search for some namespaces
+# Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = [
 	NS_TALK => 'noindex,nofollow',
 	NS_USER => 'noindex,nofollow',
@@ -288,18 +292,18 @@ $wgVirtualRestConfig['modules']['parsoid'] = [
 #
 # Extensions
 #
-## ParserFunction
+# ParserFunction
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
 
-## AWS
+# AWS
 wfLoadExtension( 'AWS' );
 $wgAWSRegion = 'ap-northeast-1';
 $wgAWSBucketPrefix = 'femiwiki-uploaded-files';
 $wgAWSRepoHashLevels = 2;
 $wgAWSRepoDeletedHashLevels = 2;
 
-## VisualEditor
+# VisualEditor
 wfLoadExtension( 'VisualEditor' );
 $wgVisualEditorAvailableNamespaces = [
 	NS_SPECIAL => true,
@@ -341,30 +345,30 @@ $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 # Enable twocolconflict to opt-out
 $wgDefaultUserOptions['twocolconflict'] = true;
 
-## TemplateData
+# TemplateData
 wfLoadExtension( 'TemplateData' );
 
-## RevisionSlider
+# RevisionSlider
 wfLoadExtension( 'RevisionSlider' );
 
-## Echo
+# Echo
 wfLoadExtension( 'Echo' );
 
-## TwoColConflict
+# TwoColConflict
 wfLoadExtension( 'TwoColConflict' );
 $wgDefaultUserOptions['twocolconft'] = true;
 
-## Interwiki
+# Interwiki
 wfLoadExtension( 'Interwiki' );
 
-## Thanks
+# Thanks
 wfLoadExtension( 'Thanks' );
 
-## Scribunto
+# Scribunto
 wfLoadExtension( 'Scribunto' );
 $wgScribuntoDefaultEngine = 'luastandalone';
 
-## Flow
+# Flow
 wfLoadExtension( 'Flow' );
 $wgFlowEditorList = [ 'visualeditor', 'none' ];
 $wgNamespaceContentModels[NS_TALK] = 'flow-board';
@@ -375,35 +379,35 @@ $wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
-$wgNamespaceContentModels[275] = 'flow-board'; /* Widget talk */
-$wgNamespaceContentModels[829] = 'flow-board'; /* Module talk */
-$wgNamespaceContentModels[2301] = 'flow-board'; /* Gadget talk */
-$wgNamespaceContentModels[2303] = 'flow-board'; /* Gadget definition talk */
+$wgNamespaceContentModels[275] = 'flow-board'; # Widget talk
+$wgNamespaceContentModels[829] = 'flow-board'; # Module talk
+$wgNamespaceContentModels[2301] = 'flow-board'; # Gadget talk
+$wgNamespaceContentModels[2303] = 'flow-board'; # Gadget definition talk
 $wgNamespaceContentModels[NS_BBS] = 'flow-board';
 $wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
 
-## TemplateStyles
+# TemplateStyles
 wfLoadExtension( 'TemplateStyles' );
 
-## CategoryTree
+# CategoryTree
 wfLoadExtension( 'CategoryTree' );
 
-## Disambiguator
+# Disambiguator
 wfLoadExtension( 'Disambiguator' );
 
-## CreateUserPage
+# CreateUserPage
 wfLoadExtension( 'CreateUserPage' );
 
-## Cite
+# Cite
 wfLoadExtension( 'Cite' );
 
-## CiteThisPage
+# CiteThisPage
 wfLoadExtension( 'CiteThisPage' );
 
-## CodeEditor
+# CodeEditor
 wfLoadExtension( 'CodeEditor' );
 
-## WikiEditor
+# WikiEditor
 wfLoadExtension( 'WikiEditor' );
 $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
@@ -411,7 +415,7 @@ $wgDefaultUserOptions['wikieditor-preview'] = 1;
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
 $wgHiddenPrefs[] = 'usebetatoolbar';
 
-## AbuseFilter
+# AbuseFilter
 wfLoadExtension( 'AbuseFilter' );
 $wgGroupPermissions['sysop']['abusefilter-modify'] = true;
 $wgGroupPermissions['*']['abusefilter-log-detail'] = true;
@@ -421,7 +425,7 @@ $wgGroupPermissions['sysop']['abusefilter-private'] = true;
 $wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
-## ConfirmEdit
+# ConfirmEdit
 wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/QuestyCaptcha' ] );
 $wgCaptchaQuestions = [
 	'나는 페미니스트입니다.' => [
@@ -441,79 +445,79 @@ $wgCaptchaTriggers['addurl'] = false;
 $wgCaptchaTriggers['createaccount'] = true;
 $wgCaptchaTriggers['badlogin'] = false;
 
-## Gadgets
+# Gadgets
 wfLoadExtension( 'Gadgets' );
 $wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
 
-## Widgets
+# Widgets
 require_once "$IP/extensions/Widgets/Widgets.php";
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
-## CheckUser
+# CheckUser
 wfLoadExtension( 'CheckUser' );
 
-## UserMerge
+# UserMerge
 wfLoadExtension( 'UserMerge' );
 
-## Renameuser
+# Renameuser
 wfLoadExtension( 'Renameuser' );
 
-## Poem
+# Poem
 wfLoadExtension( 'Poem' );
 
-## SyntaxHighlight
+# SyntaxHighlight
 wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 
-## CharInsert
+# CharInsert
 wfLoadExtension( 'CharInsert' );
 
-## CodeMirror
+# CodeMirror
 wfLoadExtension( 'CodeMirror' );
 
-## EmbedVideo
+# EmbedVideo
 wfLoadExtension( 'EmbedVideo' );
 
-## InputBox
+# InputBox
 wfLoadExtension( 'InputBox' );
 
-## Description2
+# Description2
 wfLoadExtension( 'Description2' );
 
-## OpenGraphMeta
+# OpenGraphMeta
 wfLoadExtension( 'OpenGraphMeta' );
 
-## PageImages
+# PageImages
 wfLoadExtension( 'PageImages' );
 
-## FacetedCategory
+# FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
-## UnifiedExtensionForFemiwiki --it requires the CategoryTree extension
+# UnifiedExtensionForFemiwiki --it requires the CategoryTree extension
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgSpecialPages['Uncategorizedcategories'] = [ SpecialUncategorizedCategoryTree::class ];
 $wgSpecialPages['Whatlinkshere'] = [ SpecialOrderedWhatlinkshere::class ];
 $wgGoogleAnalyticsTrackingID = 'UA-82072330-1';
 
-## IntersectionSearch
+# IntersectionSearch
 wfLoadExtension( 'CategoryIntersectionSearch' );
 
-## SimpleMathJax
+# SimpleMathJax
 wfLoadExtension( 'SimpleMathJax' );
 
-## HTMLTags
+# HTMLTags
 require_once "$IP/extensions/HTMLTags/HTMLTags.php";
 $wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
 $wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
 $wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
 $wgHTMLTagsAttributes['iframe'] = [ 'src', 'class', 'style' ];
 
-## Josa
+# Josa
 wfLoadExtension( 'Josa' );
 
-## Sanction
+# Sanction
 wfLoadExtension( 'Sanctions' );
 
-## BetaFeatures
+# BetaFeatures
 wfLoadExtension( 'BetaFeatures' );
 
 #
