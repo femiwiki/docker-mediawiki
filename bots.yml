@@ -14,3 +14,10 @@ services:
     image: femiwiki/backupbot
     env_file:
       - secret
+    networks:
+      hostnet: {}
+
+networks:
+  hostnet:
+    external: true
+    name: host
