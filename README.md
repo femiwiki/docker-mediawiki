@@ -1,11 +1,6 @@
 페미위키 데이터베이스 서버
 ========
-한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 데이터베이스 외 기타 서비스 서버입니다.
-
-|| 내용
-:---|----
-기능 | 데이터베이스 및 크론잡
-Base AMI | [Femiwiki Base AMI](https://github.com/femiwiki/ami)
+한국의 페미니즘 위키인 [femiwiki.com]의 데이터베이스 서버 설정파일입니다. 데이터베이스와 memcached, 각종 봇들이 실행됩니다.
 
 ```sh
 git clone https://github.com/femiwiki/swarm.git ~/swarm --depth=1
