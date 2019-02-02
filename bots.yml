@@ -10,3 +10,7 @@ services:
     image: femiwiki/rankingbot
     env_file:
       - secret
+  backupbot:
+    image: femiwiki/backupbot
+    env_file:
+      - secret
