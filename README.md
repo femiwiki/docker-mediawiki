@@ -9,9 +9,9 @@ vim ~/swarm/secret
 # 시크릿을 입력해주세요
 
 docker swarm init
-docker stack deploy -c ~/swarm/database.yml database
-docker stack deploy -c ~/swarm/memcached.yml memcached
-docker stack deploy -c ~/swarm/bots.yml bots
+docker stack deploy --prune -c ~/swarm/database.yml database
+docker stack deploy --prune -c ~/swarm/memcached.yml memcached
+docker stack deploy --prune -c ~/swarm/bots.yml bots
 ```
 
 &nbsp;
