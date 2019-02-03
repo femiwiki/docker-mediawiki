@@ -22,7 +22,7 @@ services:
     volumes:
       - database:/var/lib/mysql
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_ROOT_PASSWORD=localfemiwikipassword
       - MYSQL_DATABASE=femiwiki
       - MYSQL_USER=DB_USERNAME
       - MYSQL_PASSWORD=DB_PASSWORD
