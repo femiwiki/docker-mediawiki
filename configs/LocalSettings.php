@@ -531,7 +531,6 @@ function wfRunDebugMode( $domain ) {
 	# 도메인 변경
 	$wgServer = "http://${domain}";
 	$wgCanonicalServer = "http://${domain}";
-	$wgVirtualRestConfig['modules']['parsoid']['domain'] = $domain;
 
 	# 디버그 툴 활성화
 	$wgShowExceptionDetails = true;
