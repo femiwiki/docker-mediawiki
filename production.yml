@@ -13,8 +13,6 @@ services:
       - ./configs/LocalSettings.php:/a/LocalSettings.php:ro
       - ./configs/secret.php:/a/secret.php:ro
       - files:/srv/femiwiki.com
-    env_file:
-      - configs/env
   parsoid:
     image: femiwiki/parsoid
 volumes:

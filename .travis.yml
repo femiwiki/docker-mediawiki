@@ -71,9 +71,7 @@ jobs:
         - |
           HOST_IP="$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')";
           MYSQL_PW="$(docker service logs database_mysql 2>&1 | grep -Po 'GENERATED ROOT PASSWORD: \K.+')";
-          mv configs/env.example configs/env;
           mv configs/secret.php.example configs/secret.php;
-          sed -ri "s/mysqlhostname/${HOST_IP}/; s/mysqlusername/root/; s/mysqlpassword/${MYSQL_PW}/" configs/env;
           sed -ri "s/DB_HOSTNAME/${HOST_IP}/; s/DB_USERNAME/root/; s/DB_PASSWORD/${MYSQL_PW}/; s/MEMCACHED_HOSTNAME/${HOST_IP}/" configs/secret.php;
           printf 'wfRunDebugMode("localhost");\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php;
         # Start mediawiki

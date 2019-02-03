@@ -1,6 +1,5 @@
 # secret
 /configs/secret.php
-/configs/env
 
 # Composer
 /vendor

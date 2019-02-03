@@ -7,10 +7,9 @@ Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
 # 도커이미지 빌드
 docker build -t femiwiki/mediawiki .
 
-# 환경설정 파일인 secret.php와 env 를 적절히 수정해주세요
+# 예제를 참고하여, secret.php 파일을 적절히 만들어주세요
 cp configs/secret.php.example configs/secret.php
-cp configs/env.example configs/env
-vim configs/{env,secret.php}
+vim configs/secret.php
 
 # (Optional) configs/LocalSettings.php 검사
 composer install
