@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  http:
+    image: joshix/caddy
+    ports:
+      - 80:80
+    volumes:
+      - ./caddy:/var/www/html:ro
+      - files:/srv/femiwiki.com
+  fastcgi:
+    image: femiwiki/mediawiki
+    volumes:
+      - ./configs/LocalSettings.php:/a/LocalSettings.php:ro
+      - ./configs/secret.php.example:/a/secret.php:ro
+      - files:/srv/femiwiki.com
+  parsoid:
+    image: femiwiki/parsoid
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - database:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=femiwiki
+      - MYSQL_USER=DB_USERNAME
+      - MYSQL_PASSWORD=DB_PASSWORD
+    networks:
+      default:
+        aliases:
+          - DB_HOSTNAME
+  memcached:
+    image: memcached:1-alpine
+    networks:
+      default:
+        aliases:
+          - MEMCACHED_HOSTNAME
+
+volumes:
+  files:
+  database:

@@ -3,29 +3,32 @@
 한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 서버입니다.
 Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
 
+[Docker Swarm]을 이용해, 아래와 같이 한줄로 페미위키를 로컬에서 실행할 수
+있습니다.
+
+```bash
+docker stack deploy --prune -c development.yml femiwiki
+```
+
+페미위키 개발하실때엔 아래 커맨드들을 참고해주세요.
+
 ```bash
 # 도커이미지 빌드
 docker build -t femiwiki/mediawiki .
+# 수정된 도커이미지를 실행할때엔 아래와 같이
+docker service update --force femiwiki_fastcgi
 
-# 예제를 참고하여, secret.php 파일을 적절히 만들어주세요
-cp configs/secret.php.example configs/secret.php
-vim configs/secret.php
-
-# (Optional) configs/LocalSettings.php 검사
+# configs/LocalSettings.php 검사
 composer install
 composer test
-# (Optional) configs/LocalSettings.php 자동 교정
+# configs/LocalSettings.php 자동 교정
 composer fix
-
-# MySQL와 memcached를 별도의 방법으로 띄운 뒤 도커 컴포즈를 실행해주면 됩니다.
-# 자세한 내용은 https://github.com/femiwiki/database 참고
-docker-compose up
 ```
 
 &nbsp;
 
 ### Production
-페미위키 프로덕션 배포는 [Docker Swarm]으로 이뤄집니다. 페미위키에서 사용하는
+페미위키는 프로덕션 배포에도 [Docker Swarm]을 사용합니다. 페미위키에서 사용하는
 AWS EC2 AMI는 [femiwiki/ami]를 참고해주세요.
 
 프로덕션 배포를 할때엔 [secret.php] 에서 개발자모드를 반드시 꺼주세요.
