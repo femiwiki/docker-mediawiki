@@ -11,8 +11,7 @@ services:
   fastcgi:
     image: femiwiki/mediawiki
     volumes:
-      - ./configs/LocalSettings.php:/a/LocalSettings.php:ro
-      - ./configs/secret.php:/a/secret.php:ro
+      - ./configs:/a:ro
       - files:/srv/femiwiki.com
   parsoid:
     image: femiwiki/parsoid
