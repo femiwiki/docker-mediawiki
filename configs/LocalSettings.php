@@ -541,7 +541,7 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgServer = "http://" . DEBUG_MODE;
 	$wgCanonicalServer = "http://" . DEBUG_MODE;
 	$wgVirtualRestConfig['modules']['restbase']['url'] = "http://restbase:7231";
-	$wgVisualEditorRestbaseURL = "http://" . DEBUG_MODE . ":7231/femiwiki.com}/v1/page/html/";
+	$wgVisualEditorRestbaseURL = "http://" . DEBUG_MODE . ":7231/femiwiki.com/v1/page/html/";
 	$wgVisualEditorFullRestbaseURL = "http://" . DEBUG_MODE . ":7231/femiwiki.com/";
 
 	# 디버그 툴 활성화
