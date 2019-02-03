@@ -12,7 +12,7 @@ services:
     image: femiwiki/mediawiki
     volumes:
       - ./configs/LocalSettings.php:/a/LocalSettings.php:ro
-      - ./configs/secret.php.example:/a/secret.php:ro
+      - ./configs/secret.php:/a/secret.php:ro
       - files:/srv/femiwiki.com
   parsoid:
     image: femiwiki/parsoid

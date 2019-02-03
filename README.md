@@ -3,10 +3,11 @@
 한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 서버입니다.
 Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
 
-[Docker Swarm]을 이용해, 아래와 같이 한줄로 페미위키를 로컬에서 실행할 수
+[Docker Swarm]을 이용해, 아래와 같이 간편하게 페미위키를 로컬에서 실행할 수
 있습니다.
 
 ```bash
+cp configs/secret.php.example configs/secret.php
 docker stack deploy --prune -c development.yml femiwiki
 ```
 
