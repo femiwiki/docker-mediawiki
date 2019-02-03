@@ -521,16 +521,17 @@ wfLoadExtension( 'Sanctions' );
 wfLoadExtension( 'BetaFeatures' );
 
 #
+# Load secret.php
+#
+require_once '/a/secret.php';
+
+#
 # Debug Mode
 #
-function wfRunDebugMode( $domain ) {
-	global $wgServer, $wgCanonicalServer, $wgVirtualRestConfig,
-		   $wgShowExceptionDetails, $wgDebugToolbar, $wgShowDBErrorBacktrace,
-		   $wgUseFileCache, $wgAWSBucketName, $wgAWSBucketPrefix;
-
+if ( defined( 'DEBUG_MODE' ) ) {
 	# 도메인 변경
-	$wgServer = "http://${domain}";
-	$wgCanonicalServer = "http://${domain}";
+	$wgServer = "http://" . DEBUG_MODE;
+	$wgCanonicalServer = "http://" . DEBUG_MODE;
 
 	# 디버그 툴 활성화
 	$wgShowExceptionDetails = true;
@@ -544,8 +545,3 @@ function wfRunDebugMode( $domain ) {
 	$wgAWSBucketName = null;
 	$wgAWSBucketPrefix = null;
 }
-
-#
-# Load secret.php
-#
-require_once '/a/secret.php';
