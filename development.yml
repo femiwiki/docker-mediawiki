@@ -21,6 +21,10 @@ services:
       - MEDIAWIKI_APIS_URI=http://http/api.php
     ports:
       - 7231:7231
+    networks:
+      default:
+        aliases:
+          - RESTBASE_HOSTNAME
   mysql:
     image: mysql:8
     command: --default-authentication-plugin=mysql_native_password

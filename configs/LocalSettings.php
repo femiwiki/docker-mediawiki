@@ -51,7 +51,6 @@ $wgResourceLoaderMaxage = [
 # Trust an X-Forwarded-For (XFF) header specifying a private IP in requests
 # from a trusted forwarding proxy
 $wgUsePrivateIPs = true;
-$wgSquidServersNoPurge = [ '172.31.0.0/16', '10.0.0.0/8' ];
 
 # The URL path to the logo.  Make sure you change this from the default,
 # or else you'll overwrite your logo when you upgrade!
@@ -290,10 +289,7 @@ $wgVirtualRestConfig['modules']['parsoid'] = [
 ];
 
 # Restbase server Setting
-$wgVirtualRestConfig['modules']['restbase'] = [
-	'url' => 'http://172.31.11.11:7231',
-	'domain' => 'femiwiki.com'
-];
+$wgVirtualRestConfig['modules']['restbase']['domain'] = 'femiwiki.com';
 $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
 $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 
