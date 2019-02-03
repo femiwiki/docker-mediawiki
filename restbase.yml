@@ -6,4 +6,5 @@ services:
       - 7231:7231
   parsoid:
     image: femiwiki/parsoid
+    environment:
       - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php
