@@ -76,7 +76,7 @@ jobs:
           sed -ri "s/DB_HOSTNAME/${HOST_IP}/; s/DB_USERNAME/root/; s/DB_PASSWORD/${MYSQL_PW}/; s/MEMCACHED_HOSTNAME/${HOST_IP}/" configs/secret.php;
           printf 'wfRunDebugMode("localhost");\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php;
         # Start mediawiki
-        - docker stack deploy -c docker-compose.yml mediawiki
+        - docker stack deploy -c production.yml mediawiki
         # Check if the container is still up
         - test -z "$(docker service ps -qf 'desired-state=Shutdown' mediawiki_fastcgi)"
         # Access localhost until success
