@@ -40,8 +40,8 @@ ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Configure PHP
-COPY configs/php.ini /usr/local/etc/php/php.ini
-COPY configs/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
+COPY php/php.ini /usr/local/etc/php/php.ini
+COPY php/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # MediaWiki setup
 RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
