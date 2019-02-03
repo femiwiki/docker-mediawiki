@@ -30,7 +30,7 @@ AWS EC2 AMI는 [femiwiki/ami]를 참고해주세요.
 
 ```sh
 sudo docker swarm init
-sudo docker stack deploy -c ~/mediawiki/production.yml mediawiki
+sudo docker stack deploy --prune -c ~/mediawiki/production.yml mediawiki
 ```
 
 &nbsp;
