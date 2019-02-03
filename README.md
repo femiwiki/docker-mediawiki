@@ -28,6 +28,8 @@ docker-compose up
 페미위키 프로덕션 배포는 [Docker Swarm]으로 이뤄집니다. 페미위키에서 사용하는
 AWS EC2 AMI는 [femiwiki/ami]를 참고해주세요.
 
+프로덕션 배포를 할때엔 [secret.php] 에서 개발자모드를 반드시 꺼주세요.
+
 ```sh
 sudo docker swarm init
 sudo docker stack deploy --prune -c ~/mediawiki/production.yml mediawiki
@@ -48,5 +50,6 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 [femiwiki.com]: https://femiwiki.com
 [Docker Swarm]: https://docs.docker.com/engine/swarm/
 [femiwiki/ami]: https://github.com/femiwiki/ami
+[secret.php]: configs/secret.php.example
 [GNU Affero General Public License v3.0]: LICENSE
 [COPYRIGHT]: COPYRIGHT
