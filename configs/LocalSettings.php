@@ -83,11 +83,6 @@ $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
 
-# $wgStructuredChangeFiltersShowPreference do exists untli Mediawiki 1.32.
-if ( version_compare( $wgVersion, '1.32', '<' ) ) {
-	$wgStructuredChangeFiltersShowPreference = true; # UPO
-}
-
 # Database settings
 $wgDBtype = 'mysql';
 $wgDBname = 'femiwiki';
@@ -185,18 +180,6 @@ $wgAutopromote = [
 $wgGroupPermissions['user']['edit'] = false;
 $wgGroupPermissions['autoconfirmed']['edit'] = true;
 
-# Early adopt interface-admin that introduced in Mediawiki 1.32
-if ( version_compare( $wgVersion, '1.32', '<' ) ) {
-	$wgGroupPermissions['interface-admin']['editusercss'] = true;
-	$wgGroupPermissions['interface-admin']['edituserjson'] = true;
-	$wgGroupPermissions['interface-admin']['edituserjs'] = true;
-	$wgGroupPermissions['interface-admin']['editinterface'] = true;
-
-	$wgGroupPermissions['sysop']['editusercss'] = false;
-	$wgGroupPermissions['sysop']['edituserjson'] = false;
-	$wgGroupPermissions['sysop']['edituserjs'] = false;
-}
-
 # Add restricted-sysop group
 $wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
 $wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
@@ -222,10 +205,6 @@ $wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
 # Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
-# See https://github.com/femiwiki/mediawiki/issues/210
-if ( version_compare( $wgVersion, '1.32', '<' ) ) {
-	$wgHiddenPrefs[] = 'showtoolbar';
-}
 # See https://github.com/femiwiki/mediawiki/issues/211
 $wgHiddenPrefs[] = 'numberheadings';
 
@@ -415,6 +394,7 @@ $wgHiddenPrefs[] = 'usebetatoolbar';
 
 # TemplateWizard
 wfLoadExtension( 'TemplateWizard' );
+$wgDefaultUserOptions['templatewizard-betafeature'] = 1;
 
 # AbuseFilter
 wfLoadExtension( 'AbuseFilter' );

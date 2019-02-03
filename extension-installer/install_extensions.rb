@@ -7,7 +7,7 @@ require 'parallel'
 
 # Get configurations from command line options
 if ARGV.length == 0
-  STDERR.puts '어느 미디어위키 브랜치에서 다운받을것인지를 입력해주세요. 예: "REL1_31"'
+  STDERR.puts '어느 미디어위키 브랜치에서 다운받을것인지를 입력해주세요. 예: "REL1_32"'
   exit 1
 end
 MEDIAWIKI_BRANCH = ARGV[0]
