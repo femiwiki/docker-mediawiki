@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail; IFS=$'\n\t'
 
+echo 'Starting Femiwiki ...'
+
 # 최초 실행인경우 install.php 실행
 if [ ! -f /srv/femiwiki.com/LocalSettings.php ]; then
   DB_HOSTNAME="$(php -r 'require "/a/secret.php"; echo $wgDBserver;')"
