@@ -287,7 +287,10 @@ $wgVirtualRestConfig['modules']['parsoid'] = [
 ];
 
 # Restbase server Setting
-$wgVirtualRestConfig['modules']['restbase']['domain'] = 'femiwiki.com';
+$wgVirtualRestConfig['modules']['restbase'] = [
+	'url' => 'http://restbase:7231',
+	'domain' => 'femiwiki.com'
+];
 $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
 $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 
@@ -538,8 +541,8 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgServer = 'http://' . DEBUG_MODE;
 	$wgCanonicalServer = 'http://' . DEBUG_MODE;
 	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
-	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . ':7231/femiwiki.com/v1/page/html/';
-	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . ':7231/femiwiki.com/';
+	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
+	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
 
 	# 디버그 툴 활성화
 	$wgShowExceptionDetails = true;

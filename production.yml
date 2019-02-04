@@ -14,5 +14,9 @@ services:
       - files:/srv/femiwiki.com
   parsoid:
     image: femiwiki/parsoid:build-0
+  restbase:
+    image: femiwiki/restbase:build-1
+    volumes:
+      - ./configs:/a:ro
 volumes:
   files:
