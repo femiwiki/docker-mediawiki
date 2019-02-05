@@ -1,0 +1,9 @@
+version: '3'
+services:
+  cassandra:
+    image: femiwiki/cassandra:build-0
+    volumes:
+      - cassandra:/var/lib/cassandra
+
+volumes:
+  cassandra:
