@@ -25,7 +25,7 @@ jobs:
     # LocalSettings.php 코드 lint
     #
     - name: lint
-      before_script:
+      install:
         - composer install --prefer-source --quiet --no-interaction
       script:
         - composer test
