@@ -201,8 +201,6 @@ if ( version_compare( $wgVersion, '1.32', '<' ) ) {
 	$wgGroupPermissions['interface-admin']['edituserjson'] = true;
 	$wgGroupPermissions['interface-admin']['edituserjs'] = true;
 	$wgGroupPermissions['interface-admin']['editinterface'] = true;
-	$wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
-	$wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 
 	$wgGroupPermissions['sysop']['editusercss'] = false;
 	$wgGroupPermissions['sysop']['edituserjson'] = false;
@@ -452,6 +450,8 @@ $wgCaptchaTriggers['badlogin'] = false;
 # Gadgets
 wfLoadExtension( 'Gadgets' );
 $wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
+$wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
+$wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 
 # Widgets
 require_once "$IP/extensions/Widgets/Widgets.php";
