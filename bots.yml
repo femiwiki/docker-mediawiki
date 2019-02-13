@@ -1,17 +1,17 @@
 version: '3.5'
 services:
   tweetbot:
-    image: femiwiki/tweetbot
+    image: femiwiki/tweetbot:build-0
     volumes:
       - /srv/tweetbot:/var/tweetbot
     env_file:
       - secret
   ranking-bot:
-    image: femiwiki/rankingbot
+    image: femiwiki/rankingbot:build-0
     env_file:
       - secret
   backupbot:
-    image: femiwiki/backupbot
+    image: femiwiki/backupbot:build-0
     env_file:
       - secret
     networks:
