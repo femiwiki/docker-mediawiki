@@ -355,6 +355,7 @@ wfLoadExtension( 'RevisionSlider' );
 
 # Echo
 wfLoadExtension( 'Echo' );
+$wgEchoMaxMentionsInEditSummary = 5;
 
 # TwoColConflict
 wfLoadExtension( 'TwoColConflict' );
