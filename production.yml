@@ -8,11 +8,11 @@ services:
       - ./caddy:/var/www/html:ro
       - files:/srv/femiwiki.com
   fastcgi:
-    image: femiwiki/mediawiki
+    image: femiwiki/mediawiki:build-0
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
   parsoid:
-    image: femiwiki/parsoid
+    image: femiwiki/parsoid:build-0
 volumes:
   files:

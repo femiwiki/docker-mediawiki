@@ -9,16 +9,16 @@ services:
       - ./caddy:/var/www/html:ro
       - files:/srv/femiwiki.com
   fastcgi:
-    image: femiwiki/mediawiki
+    image: femiwiki/mediawiki:build-0
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
       # 스킨 개발할때엔 아래 라인을 주석해제
       #- ../skin:/srv/femiwiki.com/skins/Femiwiki
   parsoid:
-    image: femiwiki/parsoid
+    image: femiwiki/parsoid:build-0
   restbase:
-    image: femiwiki/restbase
+    image: femiwiki/restbase:build-0
     environment:
       - MEDIAWIKI_APIS_URI=http://http/api.php
     ports:

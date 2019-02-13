@@ -7,7 +7,7 @@ ARG MEDIAWIKI_SHA512=ee49649cc37d0a7d45a7c6d90c822c2a595df290be2b5bf085affbec331
 # 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아놓는다.
 #
-FROM femiwiki/base-extensions
+FROM femiwiki/base-extensions:build-0
 
 # ARG instructions without a value inside of a build stage to use the default
 # value of an ARG declared before the first FROM use
@@ -29,7 +29,7 @@ RUN sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 #   /tmp/cache             캐시 디렉토리
 #   /tini                  tini
 #
-FROM femiwiki/base
+FROM femiwiki/base:build-0
 ARG MEDIAWIKI_MAJOR_VERSION
 ARG MEDIAWIKI_BRANCH
 ARG MEDIAWIKI_VERSION
