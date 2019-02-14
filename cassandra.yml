@@ -2,6 +2,8 @@ version: '3'
 services:
   cassandra:
     image: femiwiki/cassandra:build-0
+    ports:
+      - 9042:9042
     volumes:
       - cassandra:/var/lib/cassandra
 
