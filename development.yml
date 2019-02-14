@@ -46,12 +46,12 @@ services:
     volumes:
       - cassandra:/var/lib/cassandra
     environment:
-      - USER_NAME=RESTBASE_DB_USERNAME # secret.php.example에 적힌 기본값
-      - DEV_PASSWORD=RESTBASE_DB_PASSWORD # secret.php.example에 적힌 기본값
+      - USER_NAME=CASSANDRA_USERNAME # secret.php.example에 적힌 기본값
+      - DEV_PASSWORD=CASSANDRA_PASSWORD # secret.php.example에 적힌 기본값
     networks:
       default:
         aliases:
-          - RESTBASE_DB_HOSTNAME # secret.php.example에 적힌 기본값
+          - CASSANDRA_HOSTNAME # secret.php.example에 적힌 기본값
   memcached:
     image: memcached:1-alpine
     networks:
