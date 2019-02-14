@@ -1,6 +1,6 @@
 페미위키 데이터베이스 서버
 ========
-한국의 페미니즘 위키인 [femiwiki.com]의 데이터베이스 서버 설정파일입니다. 데이터베이스와 memcached, RESTBase,
+한국의 페미니즘 위키인 [femiwiki.com]의 데이터베이스 서버 설정파일입니다. 데이터베이스와 memcached, cassandra,
 각종 봇들이 실행됩니다.
 
 ```sh
@@ -12,7 +12,7 @@ vim ~/swarm/secret
 docker swarm init
 docker stack deploy --prune -c ~/swarm/database.yml database
 docker stack deploy --prune -c ~/swarm/memcached.yml memcached
-docker stack deploy --prune -c ~/swarm/restbase.yml restbase
+docker stack deploy --prune -c ~/swarm/cassandra.yml cassandra
 docker stack deploy --prune -c ~/swarm/bots.yml bots
 ```
 
