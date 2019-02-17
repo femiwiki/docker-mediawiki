@@ -464,6 +464,9 @@ $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 require_once "$IP/extensions/Widgets/Widgets.php";
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
+# Graph
+wfLoadExtension( 'Graph' );
+
 # CheckUser
 wfLoadExtension( 'CheckUser' );
 

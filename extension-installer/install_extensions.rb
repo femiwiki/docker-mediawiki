@@ -23,6 +23,7 @@ DESTINATION_PATH = '/tmp/extensions'
 extensions_official = [
   'TemplateData',
   'TemplateWizard',
+  'Graph',
   'TwoColConflict',
   'RevisionSlider',
   'Echo',
