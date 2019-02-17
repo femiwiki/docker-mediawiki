@@ -421,6 +421,9 @@ $wgDefaultUserOptions['wikieditor-preview'] = 1;
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
 $wgHiddenPrefs[] = 'usebetatoolbar';
 
+# TemplateWizard
+wfLoadExtension( 'TemplateWizard' );
+
 # AbuseFilter
 wfLoadExtension( 'AbuseFilter' );
 $wgGroupPermissions['sysop']['abusefilter-modify'] = true;

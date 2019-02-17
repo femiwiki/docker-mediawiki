@@ -22,6 +22,7 @@ DESTINATION_PATH = '/tmp/extensions'
 # Official mediawiki extensions
 extensions_official = [
   'TemplateData',
+  'TemplateWizard',
   'TwoColConflict',
   'RevisionSlider',
   'Echo',
