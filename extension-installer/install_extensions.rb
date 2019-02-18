@@ -32,6 +32,7 @@ extensions_official = [
   'Scribunto',
   'TemplateStyles',
   'Disambiguator',
+  'DisableAccount',
   'CreateUserPage',
   'AbuseFilter',
   'CheckUser',
