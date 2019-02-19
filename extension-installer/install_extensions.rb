@@ -117,7 +117,8 @@ Parallel.each(extensions_all) do |extension|
 end
 
 # Install composer dependencies via 'composer update'
-Parallel.each(extensions_github) do |extension|
+# Temporarily do this to all extensions because of https://phabricator.wikimedia.org/T215713
+Parallel.each(extensions_all) do |extension|
   next unless File.exist? "#{DESTINATION_PATH}/extensions/#{extension}/composer.json"
 
   # '/var/www/.composer' is not writable for www-data. Overriding $COMPOSER_HOME
