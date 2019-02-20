@@ -300,21 +300,25 @@ $wgVisualEditorAvailableNamespaces = [
 	'_merge_strategy' => 'array_plus',
 ];
 
+# Enable Enhanced recent changes to opt-out
+$wgDefaultUserOptions['rcenhancedfilters-disable'] = 0;
+
 # Enable Visual Editor to opt-out
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 $wgVisualEditorSupportedSkins[] = 'femiwiki';
 
-# Enable 2017 Wikitext Editor to opt-in
+# Enable 2017 Wikitext Editor to opt-out
 $wgVisualEditorEnableWikitext = true;
+$wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
 
 # Enable Visual diffs on history pages
 $wgVisualEditorEnableDiffPage = true;
 
-# Enable Single Edit Tab to opt-in
+# Enable Single Edit Tab to opt-out
 $wgVisualEditorUseSingleEditTab = true;
-$wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
+$wgDefaultUserOptions['visualeditor-tabs'] = 'prefer-ve';
 
 # TemplateData
 wfLoadExtension( 'TemplateData' );
