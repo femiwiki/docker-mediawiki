@@ -47,6 +47,7 @@ extensions_official = [
   'BetaFeatures',
   'VisualEditor',
   'Widgets',
+  'LocalisationUpdate',
 ]
 # 3rd party extensions and their URLs
 extensions_3rdparty = {

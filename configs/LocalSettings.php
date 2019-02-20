@@ -498,6 +498,9 @@ wfLoadExtension( 'OpenGraphMeta' );
 # PageImages
 wfLoadExtension( 'PageImages' );
 
+# LocalisationUpdate
+wfLoadExtension( 'LocalisationUpdate' );
+
 # FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 

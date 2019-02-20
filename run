@@ -28,6 +28,8 @@ fi
 
 # Run update script
 /srv/femiwiki.com/maintenance/update.php --quick
+# Update localisations for MediaWiki messages in the background
+php /srv/femiwiki.com/extensions/LocalisationUpdate/update.php &
 
 # Start cron daemon
 cron

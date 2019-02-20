@@ -1,1 +1,2 @@
 0 1,5,9,13,17,21 * * * /usr/local/bin/generate-sitemap
+0 5 * * * /usr/local/bin/localisation-update
