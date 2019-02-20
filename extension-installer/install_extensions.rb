@@ -49,6 +49,7 @@ extensions_official = [
   'Widgets',
   'UniversalLanguageSelector',
   'Translate',
+  'LocalisationUpdate',
 ]
 # 3rd party extensions and their URLs
 extensions_3rdparty = {

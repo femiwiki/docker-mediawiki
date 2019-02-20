@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# 주기적으로 실행해야하는 스크립트. 미디어위키의 시스템 메시지를 항상 최신으로
+# 유지시켜 준다.
+#
+# Reference:
+#   https://www.mediawiki.org/wiki/Extension:LocalisationUpdate
+
+set -euo pipefail; IFS=$'\n\t'
+
+cd /srv/femiwiki.com/extensions/LocalisationUpdate
+
+sudo -u www-data php update.php --quiet
