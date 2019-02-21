@@ -202,6 +202,9 @@ $wgDefaultUserOptions['numberheadings'] = 1;
 # Disable Enhanced RecentChange Filters
 $wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
 
+# Enable ULS compact links beta feature to opt-out
+$wgDefaultUserOptions['uls-compact-links'] = 1;
+
 # Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
@@ -509,6 +512,23 @@ wfLoadExtension( 'Sanctions' );
 
 # BetaFeatures
 wfLoadExtension( 'BetaFeatures' );
+
+# UniversalLanguageSelector
+wfLoadExtension( 'UniversalLanguageSelector' );
+$wgULSPosition = 'interlanguage';
+$wgULSGeoService = false; # API endpoint used by default is deprecated
+
+# Translate
+include_once "$IP/extensions/Translate/Translate.php";
+$wgGroupPermissions['autoconfirmed']['translate'] = true;
+$wgGroupPermissions['translationadmin']['pagetranslation'] = true;
+$wgGroupPermissions['translationadmin']['translate-manage'] = true;
+$wgGroupPermissions['translationadmin']['translate-messagereview'] = true;
+$wgTranslatePageTranslationULS = true;
+$wgPageTranslationLanguageList = 'sidebar-always';
+
+$wgTranslatePermissionUrl = 'Project:번역';
+$wgTranslateSecondaryPermissionUrl = 'Project:번역';
 
 #
 # Load secret.php
