@@ -397,7 +397,6 @@ wfLoadExtension( 'CreateUserPage' );
 # DisableAccount
 wfLoadExtension( 'DisableAccount' );
 $wgGroupPermissions['sysop']['disableaccount'] = true;
-$wgGroupPermissions['inactive']['edit'] = false;
 
 # Cite
 wfLoadExtension( 'Cite' );
