@@ -519,7 +519,8 @@ wfLoadExtension( 'BetaFeatures' );
 # UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
 $wgULSPosition = 'interlanguage';
-$wgULSGeoService = false; # API endpoint used by default is deprecated
+$wgULSIMEEnabled = false;
+$wgULSCompactLinksEnableAnon = true;
 
 # Translate
 include_once "$IP/extensions/Translate/Translate.php";
