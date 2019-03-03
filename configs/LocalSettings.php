@@ -337,9 +337,6 @@ $wgVisualEditorEnableDiffPage = true;
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 
-# Enable twocolconflict to opt-out
-$wgDefaultUserOptions['twocolconflict'] = true;
-
 # TemplateData
 wfLoadExtension( 'TemplateData' );
 
@@ -352,7 +349,8 @@ $wgEchoMaxMentionsInEditSummary = 5;
 
 # TwoColConflict
 wfLoadExtension( 'TwoColConflict' );
-$wgDefaultUserOptions['twocolconft'] = true;
+# Enable twocolconflict to opt-out
+$wgDefaultUserOptions['twocolconflict'] = true;
 
 # Interwiki
 wfLoadExtension( 'Interwiki' );
