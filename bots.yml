@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   tweetbot:
-    image: femiwiki/tweetbot:build-1
+    image: femiwiki/tweetbot:build-0
     volumes:
       - /srv/tweetbot:/var/tweetbot
     env_file:
