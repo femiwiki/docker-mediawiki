@@ -321,7 +321,7 @@ $wgVisualEditorEnableDiffPage = true;
 
 # Enable Single Edit Tab to opt-out
 $wgVisualEditorUseSingleEditTab = true;
-$wgDefaultUserOptions['visualeditor-tabs'] = 'prefer-ve';
+$wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 
 # TemplateData
 wfLoadExtension( 'TemplateData' );
