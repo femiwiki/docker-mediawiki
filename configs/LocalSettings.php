@@ -553,7 +553,7 @@ if ( defined( 'DEBUG_MODE' ) ) {
 
 	# 디버그 툴 활성화
 	$wgShowExceptionDetails = true;
-	// $wgDebugToolbar = true;
+	$wgDebugToolbar = true;
 	$wgShowDBErrorBacktrace = true;
 
 	# File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
