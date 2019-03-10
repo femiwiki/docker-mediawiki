@@ -365,6 +365,7 @@ $wgNamespaceContentModels[2301] = 'flow-board'; # Gadget talk
 $wgNamespaceContentModels[2303] = 'flow-board'; # Gadget definition talk
 $wgNamespaceContentModels[NS_BBS] = 'flow-board';
 $wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
+$wgFlowDefaultLimit = 2;
 
 # TemplateStyles
 wfLoadExtension( 'TemplateStyles' );
@@ -552,7 +553,7 @@ if ( defined( 'DEBUG_MODE' ) ) {
 
 	# 디버그 툴 활성화
 	$wgShowExceptionDetails = true;
-	$wgDebugToolbar = true;
+	// $wgDebugToolbar = true;
 	$wgShowDBErrorBacktrace = true;
 
 	# File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
