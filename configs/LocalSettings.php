@@ -142,7 +142,7 @@ $wgDefaultSkin = 'femiwiki';
 # The following skins were automatically enabled:
 wfLoadSkin( 'Vector' );
 wfLoadSkin( 'Femiwiki' );
-$wgFacebookAppId = '1937597133150935';
+$wgFemiwikiFacebookAppId = '1937597133150935';
 
 #
 # Namespace settings
