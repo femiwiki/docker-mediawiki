@@ -29,7 +29,8 @@ fi
 # Run update script
 /srv/femiwiki.com/maintenance/update.php --quick
 # Update localisations for MediaWiki messages in the background
-php /srv/femiwiki.com/extensions/LocalisationUpdate/update.php &
+# Temporarily disabled @See https://github.com/femiwiki/mediawiki/issues/216
+# php /srv/femiwiki.com/extensions/LocalisationUpdate/update.php &
 
 # Start cron daemon
 cron
