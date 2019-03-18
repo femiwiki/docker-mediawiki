@@ -217,11 +217,8 @@ $wgGroupPermissions['seeder']['read'] = true;
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
 
-# Disable Enhanced RecentChange Filters
-$wgDefaultUserOptions['rcenhancedfilters-disable'] = 1;
-
-# Enable ULS compact links beta feature to opt-out
-$wgDefaultUserOptions['uls-compact-links'] = 1;
+# Enable Enhanced recent changes to opt-out
+$wgDefaultUserOptions['rcenhancedfilters-disable'] = 0;
 
 # Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
@@ -287,16 +284,26 @@ $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 #
 # Extensions
 #
-# ParserFunction
-wfLoadExtension( 'ParserFunctions' );
-$wgPFEnableStringFunctions = true;
 
-# AWS
-wfLoadExtension( 'AWS' );
-$wgAWSRegion = 'ap-northeast-1';
-$wgAWSBucketPrefix = 'femiwiki-uploaded-files';
-$wgAWSRepoHashLevels = 2;
-$wgAWSRepoDeletedHashLevels = 2;
+# Flow
+wfLoadExtension( 'Flow' );
+$wgFlowEditorList = [ 'visualeditor', 'none' ];
+$wgNamespaceContentModels[NS_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_USER_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_PROJECT_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_FILE_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
+$wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
+$wgNamespaceContentModels[275] = 'flow-board'; # Widget talk
+$wgNamespaceContentModels[829] = 'flow-board'; # Module talk
+$wgNamespaceContentModels[1199] = 'flow-board'; # Translations talk
+$wgNamespaceContentModels[2301] = 'flow-board'; # Gadget talk
+$wgNamespaceContentModels[2303] = 'flow-board'; # Gadget definition talk
+$wgNamespaceContentModels[NS_BBS] = 'flow-board';
+$wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
+$wgFlowDefaultLimit = 2;
 
 # VisualEditor
 wfLoadExtension( 'VisualEditor' );
@@ -320,118 +327,14 @@ $wgVisualEditorAvailableNamespaces = [
 	NS_CATEGORY_TALK => true,
 	'_merge_strategy' => 'array_plus',
 ];
-
-# Enable Enhanced recent changes to opt-out
-$wgDefaultUserOptions['rcenhancedfilters-disable'] = 0;
-
-# Enable Visual Editor to opt-out
-$wgDefaultUserOptions['visualeditor-enable'] = 1;
-$wgHiddenPrefs[] = 'visualeditor-enable';
-$wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
-$wgVisualEditorSupportedSkins[] = 'femiwiki';
-
 # Enable 2017 Wikitext Editor to opt-out
 $wgVisualEditorEnableWikitext = true;
 $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
-
 # Enable Visual diffs on history pages
 $wgVisualEditorEnableDiffPage = true;
-
-# Enable Single Edit Tab to opt-out
+# Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
-
-# TemplateData
-wfLoadExtension( 'TemplateData' );
-
-# RevisionSlider
-wfLoadExtension( 'RevisionSlider' );
-
-# Echo
-wfLoadExtension( 'Echo' );
-$wgEchoMaxMentionsInEditSummary = 5;
-
-# TwoColConflict
-wfLoadExtension( 'TwoColConflict' );
-# Enable twocolconflict to opt-out
-$wgDefaultUserOptions['twocolconflict'] = true;
-
-# Interwiki
-wfLoadExtension( 'Interwiki' );
-
-# Thanks
-wfLoadExtension( 'Thanks' );
-
-# Scribunto
-wfLoadExtension( 'Scribunto' );
-$wgScribuntoDefaultEngine = 'luastandalone';
-
-# Flow
-wfLoadExtension( 'Flow' );
-$wgFlowEditorList = [ 'visualeditor', 'none' ];
-$wgNamespaceContentModels[NS_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_USER_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_PROJECT_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_FILE_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
-$wgNamespaceContentModels[275] = 'flow-board'; # Widget talk
-$wgNamespaceContentModels[829] = 'flow-board'; # Module talk
-$wgNamespaceContentModels[1199] = 'flow-board'; # Translations talk
-$wgNamespaceContentModels[2301] = 'flow-board'; # Gadget talk
-$wgNamespaceContentModels[2303] = 'flow-board'; # Gadget definition talk
-$wgNamespaceContentModels[NS_BBS] = 'flow-board';
-$wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
-$wgFlowDefaultLimit = 2;
-
-# TemplateStyles
-wfLoadExtension( 'TemplateStyles' );
-
-# CategoryTree
-wfLoadExtension( 'CategoryTree' );
-
-# Disambiguator
-wfLoadExtension( 'Disambiguator' );
-
-# CreateUserPage
-wfLoadExtension( 'CreateUserPage' );
-
-# DisableAccount
-wfLoadExtension( 'DisableAccount' );
-$wgGroupPermissions['sysop']['disableaccount'] = true;
-
-# Cite
-wfLoadExtension( 'Cite' );
-
-# CiteThisPage
-wfLoadExtension( 'CiteThisPage' );
-
-# CodeEditor
-wfLoadExtension( 'CodeEditor' );
-
-# WikiEditor
-wfLoadExtension( 'WikiEditor' );
-$wgDefaultUserOptions['usebetatoolbar'] = 1;
-$wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
-$wgDefaultUserOptions['wikieditor-preview'] = 1;
-$wgDefaultUserOptions['wikieditor-publish'] = 1;
-$wgHiddenPrefs[] = 'usebetatoolbar';
-
-# TemplateWizard
-wfLoadExtension( 'TemplateWizard' );
-$wgDefaultUserOptions['templatewizard-betafeature'] = 1;
-
-# AbuseFilter
-wfLoadExtension( 'AbuseFilter' );
-$wgGroupPermissions['sysop']['abusefilter-modify'] = true;
-$wgGroupPermissions['*']['abusefilter-log-detail'] = true;
-$wgGroupPermissions['*']['abusefilter-view'] = true;
-$wgGroupPermissions['*']['abusefilter-log'] = true;
-$wgGroupPermissions['sysop']['abusefilter-private'] = true;
-$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
-$wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
 # ConfirmEdit
 wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/QuestyCaptcha' ] );
@@ -447,11 +350,74 @@ $wgCaptchaQuestions = [
 		'나는페미니스트 입니다',
 	]
 ];
+$wgCaptchaTriggers['createaccount'] = true;
 $wgCaptchaTriggers['edit'] = false;
 $wgCaptchaTriggers['create'] = false;
 $wgCaptchaTriggers['addurl'] = false;
-$wgCaptchaTriggers['createaccount'] = true;
 $wgCaptchaTriggers['badlogin'] = false;
+
+# Translate
+include_once "$IP/extensions/Translate/Translate.php";
+$wgGroupPermissions['autoconfirmed']['translate'] = true;
+$wgGroupPermissions['translationadmin']['pagetranslation'] = true;
+$wgGroupPermissions['translationadmin']['translate-manage'] = true;
+$wgGroupPermissions['translationadmin']['translate-messagereview'] = true;
+$wgTranslatePageTranslationULS = true;
+$wgPageTranslationLanguageList = 'sidebar-always';
+$wgTranslatePermissionUrl = 'Project:번역';
+$wgTranslateSecondaryPermissionUrl = 'Project:번역';
+
+# AWS
+wfLoadExtension( 'AWS' );
+$wgAWSRegion = 'ap-northeast-1';
+$wgAWSBucketPrefix = 'femiwiki-uploaded-files';
+$wgAWSRepoHashLevels = 2;
+$wgAWSRepoDeletedHashLevels = 2;
+
+# AbuseFilter
+wfLoadExtension( 'AbuseFilter' );
+$wgGroupPermissions['sysop']['abusefilter-modify'] = true;
+$wgGroupPermissions['*']['abusefilter-log-detail'] = true;
+$wgGroupPermissions['*']['abusefilter-view'] = true;
+$wgGroupPermissions['*']['abusefilter-log'] = true;
+$wgGroupPermissions['sysop']['abusefilter-private'] = true;
+$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
+$wgGroupPermissions['sysop']['abusefilter-revert'] = true;
+
+# UniversalLanguageSelector
+wfLoadExtension( 'UniversalLanguageSelector' );
+$wgULSPosition = 'interlanguage';
+$wgULSIMEEnabled = false;
+$wgULSCompactLinksEnableAnon = true;
+# Enable ULS compact links beta feature to opt-out
+$wgDefaultUserOptions['uls-compact-links'] = 1;
+
+# WikiEditor
+wfLoadExtension( 'WikiEditor' );
+$wgDefaultUserOptions['usebetatoolbar'] = 1;
+$wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
+$wgDefaultUserOptions['wikieditor-preview'] = 1;
+$wgDefaultUserOptions['wikieditor-publish'] = 1;
+$wgHiddenPrefs[] = 'usebetatoolbar';
+
+# Enable Visual Editor to opt-out
+$wgDefaultUserOptions['visualeditor-enable'] = 1;
+$wgHiddenPrefs[] = 'visualeditor-enable';
+$wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
+$wgVisualEditorSupportedSkins[] = 'femiwiki';
+
+# UnifiedExtensionForFemiwiki
+wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
+$wgSpecialPages['Uncategorizedcategories'] = 'SpecialUncategorizedCategoryTree';
+$wgSpecialPages['Whatlinkshere'] = 'SpecialOrderedWhatlinkshere';
+$wgGoogleAnalyticsTrackingID = 'UA-82072330-1';
+
+# HTMLTags
+require_once "$IP/extensions/HTMLTags/HTMLTags.php";
+$wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
+$wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
+$wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
+$wgHTMLTagsAttributes['iframe'] = [ 'src', 'class', 'style' ];
 
 # Gadgets
 wfLoadExtension( 'Gadgets' );
@@ -459,9 +425,67 @@ $wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
 $wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
 $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 
+# ParserFunction
+wfLoadExtension( 'ParserFunctions' );
+$wgPFEnableStringFunctions = true;
+
+# Echo
+wfLoadExtension( 'Echo' );
+$wgEchoMaxMentionsInEditSummary = 5;
+
+# TwoColConflict
+wfLoadExtension( 'TwoColConflict' );
+# Enable twocolconflict to opt-out
+$wgDefaultUserOptions['twocolconflict'] = true;
+
+# Scribunto
+wfLoadExtension( 'Scribunto' );
+$wgScribuntoDefaultEngine = 'luastandalone';
+
+# DisableAccount
+wfLoadExtension( 'DisableAccount' );
+$wgGroupPermissions['sysop']['disableaccount'] = true;
+
+# TemplateWizard
+wfLoadExtension( 'TemplateWizard' );
+$wgDefaultUserOptions['templatewizard-betafeature'] = 1;
+
 # Widgets
 require_once "$IP/extensions/Widgets/Widgets.php";
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
+
+# TemplateData
+wfLoadExtension( 'TemplateData' );
+
+# RevisionSlider
+wfLoadExtension( 'RevisionSlider' );
+
+# Interwiki
+wfLoadExtension( 'Interwiki' );
+
+# Thanks
+wfLoadExtension( 'Thanks' );
+
+# TemplateStyles
+wfLoadExtension( 'TemplateStyles' );
+
+# CategoryTree
+wfLoadExtension( 'CategoryTree' );
+
+# Disambiguator
+wfLoadExtension( 'Disambiguator' );
+
+# CreateUserPage
+wfLoadExtension( 'CreateUserPage' );
+
+# Cite
+wfLoadExtension( 'Cite' );
+
+# CiteThisPage
+wfLoadExtension( 'CiteThisPage' );
+
+# CodeEditor
+wfLoadExtension( 'CodeEditor' );
 
 # Graph
 wfLoadExtension( 'Graph' );
@@ -508,24 +532,11 @@ wfLoadExtension( 'LocalisationUpdate' );
 # FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
-# UnifiedExtensionForFemiwiki --it requires the CategoryTree extension
-wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
-$wgSpecialPages['Uncategorizedcategories'] = 'SpecialUncategorizedCategoryTree';
-$wgSpecialPages['Whatlinkshere'] = 'SpecialOrderedWhatlinkshere';
-$wgGoogleAnalyticsTrackingID = 'UA-82072330-1';
-
 # IntersectionSearch
 wfLoadExtension( 'CategoryIntersectionSearch' );
 
 # SimpleMathJax
 wfLoadExtension( 'SimpleMathJax' );
-
-# HTMLTags
-require_once "$IP/extensions/HTMLTags/HTMLTags.php";
-$wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
-$wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
-$wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
-$wgHTMLTagsAttributes['iframe'] = [ 'src', 'class', 'style' ];
 
 # Josa
 wfLoadExtension( 'Josa' );
@@ -535,24 +546,6 @@ wfLoadExtension( 'Sanctions' );
 
 # BetaFeatures
 wfLoadExtension( 'BetaFeatures' );
-
-# UniversalLanguageSelector
-wfLoadExtension( 'UniversalLanguageSelector' );
-$wgULSPosition = 'interlanguage';
-$wgULSIMEEnabled = false;
-$wgULSCompactLinksEnableAnon = true;
-
-# Translate
-include_once "$IP/extensions/Translate/Translate.php";
-$wgGroupPermissions['autoconfirmed']['translate'] = true;
-$wgGroupPermissions['translationadmin']['pagetranslation'] = true;
-$wgGroupPermissions['translationadmin']['translate-manage'] = true;
-$wgGroupPermissions['translationadmin']['translate-messagereview'] = true;
-$wgTranslatePageTranslationULS = true;
-$wgPageTranslationLanguageList = 'sidebar-always';
-
-$wgTranslatePermissionUrl = 'Project:번역';
-$wgTranslateSecondaryPermissionUrl = 'Project:번역';
 
 #
 # Load secret.php
