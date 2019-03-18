@@ -379,6 +379,7 @@ $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
 $wgNamespaceContentModels[275] = 'flow-board'; # Widget talk
 $wgNamespaceContentModels[829] = 'flow-board'; # Module talk
+$wgNamespaceContentModels[1199] = 'flow-board'; # Translations talk
 $wgNamespaceContentModels[2301] = 'flow-board'; # Gadget talk
 $wgNamespaceContentModels[2303] = 'flow-board'; # Gadget definition talk
 $wgNamespaceContentModels[NS_BBS] = 'flow-board';
