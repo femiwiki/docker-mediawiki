@@ -70,7 +70,7 @@ $wgAllowHTMLEmail = true;
 $wgSMTP = [
 	'host' => 'email-smtp.us-east-1.amazonaws.com',
 	'IDHost' => 'femiwiki.com',
-	'port' => 25,
+	'port' => 587,
 	'auth' => true,
 	'username' => 'AKIAJ472HG7XALTXZ5QA',
 ];
