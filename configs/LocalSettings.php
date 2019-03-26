@@ -561,6 +561,8 @@ wfLoadExtension( 'Sanctions' );
 # BetaFeatures
 wfLoadExtension( 'BetaFeatures' );
 
+# AntiSpoof
+wfLoadExtension( 'AntiSpoof' );
 #
 # Load secret.php
 #
