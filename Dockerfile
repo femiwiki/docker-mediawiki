@@ -29,7 +29,7 @@ RUN sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 #   /tmp/cache             캐시 디렉토리
 #   /tini                  tini
 #
-FROM femiwiki/base:build-0
+FROM femiwiki/base:build-1
 ARG MEDIAWIKI_MAJOR_VERSION
 ARG MEDIAWIKI_BRANCH
 ARG MEDIAWIKI_VERSION
