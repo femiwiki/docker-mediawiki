@@ -8,7 +8,7 @@ services:
       - ./caddy:/var/www/html:ro
       - files:/srv/femiwiki.com
   fastcgi:
-    image: femiwiki/mediawiki:build-5
+    image: femiwiki/mediawiki:build-6
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
