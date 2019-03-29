@@ -49,8 +49,8 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 
 [Docker Hub Status]: https://badgen.net/docker/pulls/femiwiki/mediawiki/?icon=docker&label=pulls
 [Docker Hub Link]: https://hub.docker.com/r/femiwiki/mediawiki/
-[Travis CI Status]: https://badgen.net/travis/femiwiki/mediawiki/master?label=build
-[Travis CI Link]: https://travis-ci.org/femiwiki/mediawiki
+[Travis CI Status]: https://api.travis-ci.com/femiwiki/mediawiki.svg?branch=master
+[Travis CI Link]: https://travis-ci.com/femiwiki/mediawiki
 [femiwiki.com]: https://femiwiki.com
 [Docker Swarm]: https://docs.docker.com/engine/swarm/
 [femiwiki/ami]: https://github.com/femiwiki/ami
