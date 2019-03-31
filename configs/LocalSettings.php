@@ -337,34 +337,10 @@ $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 
 # ConfirmEdit
-wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/QuestyCaptcha' ] );
-$wgCaptchaQuestions = [
-	'Type "I am a feminist".' => [
-		'나는 페미니스트입니다.', # 마침표 있음
-		'나는 페미니스트입니다',
-		'나는 페미니스트다.', # 마침표 있음
-		'나는 페미니스트다',
-		'나는페미니스트 입니다.',
-		'나는페미니스트 입니다',
-		'나는페미니스트입니다.', # 마침표 있음
-		'나는페미니스트입니다',
-		'나는페미니스트다.', # 마침표 있음
-		'나는페미니스트다',
-		# 마침표 있음
-		'I am a feminist.',
-		'I\'m a feminist.',
-		'I am feminist.',
-		'I\'m feminist.',
-		'I\`m feminist.',
-		# 마침표 없음
-		'I am a feminist',
-		'I\'m a feminist',
-		'I am feminist',
-		'I\'m feminist',
-		'I\`m feminist',
-	]
-];
+wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha' ] );
+$wgCaptchaClass = 'ReCaptchaNoCaptcha';
 $wgCaptchaTriggers['createaccount'] = true;
+# If you plan to use VisualEditor forget about this new and better No Captcha solution from Google.
 $wgCaptchaTriggers['edit'] = false;
 $wgCaptchaTriggers['create'] = false;
 $wgCaptchaTriggers['addurl'] = false;
