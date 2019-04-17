@@ -11,7 +11,7 @@ services:
     env_file:
       - secret
   backupbot:
-    image: femiwiki/backupbot:build-4
+    image: femiwiki/backupbot:build-5
     env_file:
       - secret
     networks:
