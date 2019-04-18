@@ -403,7 +403,6 @@ $wgVisualEditorSupportedSkins[] = 'femiwiki';
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgSpecialPages['Uncategorizedcategories'] = 'SpecialUncategorizedCategoryTree';
 $wgSpecialPages['Whatlinkshere'] = 'SpecialOrderedWhatlinkshere';
-$wgGoogleAnalyticsTrackingID = 'UA-82072330-1';
 
 # HTMLTags
 require_once "$IP/extensions/HTMLTags/HTMLTags.php";
