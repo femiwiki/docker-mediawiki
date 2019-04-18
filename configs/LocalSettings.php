@@ -281,6 +281,9 @@ $wgVirtualRestConfig['modules']['restbase'] = [
 $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
 $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 
+# Set a cookie when a user is autoblocked
+$wgCookieSetOnAutoblock = true;
+
 #
 # Extensions
 #
