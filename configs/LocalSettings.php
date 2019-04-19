@@ -446,6 +446,21 @@ $wgDefaultUserOptions['templatewizard-betafeature'] = 1;
 require_once "$IP/extensions/Widgets/Widgets.php";
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
+# DiscordNotifications
+wfLoadExtension( 'DiscordNotifications' );
+$wgDiscordFromName = '바뀐글';
+$wgWikiUrl = "{$wgCanonicalServer}/";
+// $wgWikiUrlEnding = 'w/';
+$wgDiscordShowNewUserEmail = false;
+$wgDiscordShowNewUserFullName = false;
+$wgDiscordShowNewUserIP = false;
+$wgExcludedPermission = 'bot';
+# VisualEditor setting
+# See https://github.com/kulttuuri/DiscordNotifications#customize-request-call-method-fix-extension-not-working-with-visualeditor
+$wgDiscordSendMethod = 'file_get_contents';
+$wgWikiUrlEndingUserRights = "Special:UserRights/";
+$wgWikiUrlEndingBlockUser = '특수:제재안목록/';
+
 # TemplateData
 wfLoadExtension( 'TemplateData' );
 
