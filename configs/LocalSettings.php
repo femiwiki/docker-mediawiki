@@ -457,6 +457,7 @@ $wgExcludedPermission = 'bot';
 # VisualEditor setting
 # See https://github.com/kulttuuri/DiscordNotifications#customize-request-call-method-fix-extension-not-working-with-visualeditor
 $wgDiscordSendMethod = 'file_get_contents';
+$wgDiscordNotificationNewUser = false;
 $wgWikiUrlEndingUserRights = "Special:UserRights/";
 $wgWikiUrlEndingBlockUser = '특수:제재안목록/';
 
