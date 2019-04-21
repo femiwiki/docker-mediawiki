@@ -450,7 +450,6 @@ $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 wfLoadExtension( 'DiscordNotifications' );
 $wgDiscordFromName = '바뀐글';
 $wgWikiUrl = "{$wgCanonicalServer}/";
-// $wgWikiUrlEnding = 'w/';
 $wgDiscordShowNewUserEmail = false;
 $wgDiscordShowNewUserFullName = false;
 $wgDiscordShowNewUserIP = false;
