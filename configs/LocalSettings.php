@@ -212,7 +212,7 @@ $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 $wgGroupPermissions['femiwiki-team']['editprotected'] = true;
 
 # Remain commemorative Seeder group
-$wgGroupPermissions['seeder']['read'] = true;
+$wgGroupPermissions['seeder']['edit'] = true;
 
 # Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
