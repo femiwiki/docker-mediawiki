@@ -454,6 +454,7 @@ $wgDiscordShowNewUserEmail = false;
 $wgDiscordShowNewUserFullName = false;
 $wgDiscordShowNewUserIP = false;
 $wgExcludedPermission = 'bot';
+$wgDiscordExcludeNotificationsFrom = [ 'Translations:' ];
 # VisualEditor setting
 # See https://github.com/kulttuuri/DiscordNotifications#customize-request-call-method-fix-extension-not-working-with-visualeditor
 $wgDiscordSendMethod = 'file_get_contents';
