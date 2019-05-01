@@ -369,12 +369,17 @@ $wgAWSRepoDeletedHashLevels = 2;
 
 # AbuseFilter
 wfLoadExtension( 'AbuseFilter' );
-$wgGroupPermissions['sysop']['abusefilter-modify'] = true;
+$wgGroupPermissions['sysop']['abusefilter-modify'] = false;
+$wgGroupPermissions['abusefilter']['abusefilter-modify'] = true;
+$wgGroupPermissions['abusefilter']['changetags'] = true;
+$wgGroupPermissions['abusefilter']['managechangetags'] = true;
+$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = false;
+$wgGroupPermissions['abusefilter']['abusefilter-modify-restricted'] = true;
 $wgGroupPermissions['*']['abusefilter-log-detail'] = true;
 $wgGroupPermissions['*']['abusefilter-view'] = true;
 $wgGroupPermissions['*']['abusefilter-log'] = true;
-$wgGroupPermissions['sysop']['abusefilter-private'] = true;
-$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
+$wgGroupPermissions['sysop']['abusefilter-private'] = false;
+$wgGroupPermissions['checkuser']['abusefilter-private'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
 # UniversalLanguageSelector
