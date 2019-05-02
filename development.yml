@@ -2,7 +2,7 @@ version: '3'
 
 services:
   http:
-    image: joshix/caddy
+    image: joshix/caddy:v0.11.3
     ports:
       - 80:80
     volumes:
