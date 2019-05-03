@@ -9,7 +9,7 @@ services:
       - ./caddy:/var/www/html:ro
       - files:/srv/femiwiki.com
   fastcgi:
-    image: femiwiki/mediawiki:build-8
+    image: femiwiki/mediawiki:build-9
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
