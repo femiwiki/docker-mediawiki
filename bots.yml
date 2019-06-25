@@ -7,7 +7,7 @@ services:
     env_file:
       - secret
   ranking-bot:
-    image: femiwiki/rankingbot:build-0
+    image: femiwiki/rankingbot:build-1
     env_file:
       - secret
   backupbot:
