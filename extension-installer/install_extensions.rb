@@ -51,6 +51,8 @@ extensions_official = [
   'Translate',
   'LocalisationUpdate',
   'AntiSpoof',
+  'UploadWizard',
+  'EventLogging',
 ]
 # 3rd party extensions and their URLs
 extensions_3rdparty = {

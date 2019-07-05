@@ -382,6 +382,28 @@ $wgGroupPermissions['sysop']['abusefilter-private'] = false;
 $wgGroupPermissions['checkuser']['abusefilter-private'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
+# UploadWizard
+wfLoadExtension( 'UploadWizard' );
+# Needed to make UploadWizard work in IE, see https://phabricator.wikimedia.org/T41877
+$wgApiFrameOptions = 'SAMEORIGIN';
+$wgExtensionFunctions[] = function () {
+	$GLOBALS['wgUploadNavigationUrl'] = SpecialPage::getTitleFor( 'UploadWizard' )->getLocalURL();
+	return true;
+};
+$wgUploadWizardConfig = [];
+$wgUploadWizardConfig['alternativeUploadToolsPage'] = '특수:파일올리기';
+# Skip the tutorial
+$wgUploadWizardConfig['tutorial'] = [ 'skip' => true ];
+$wgDefaultUserOptions['upwiz_skiptutorial'] = 1;
+$wgHiddenPrefs[] = 'upwiz_skiptutorial';
+# Tweaks for permissions
+$wgGroupPermissions['sysop']['upwizcampaigns'] = false;
+$wgGroupPermissions['sysop']['mass-upload'] = false;
+$wgAddGroups['sysop']['upwizcampeditors'] = false;
+$wgRemoveGroups['sysop']['upwizcampeditors'] = false;
+$wgAddGroups['bureaucrat']['upwizcampeditors'] = true;
+$wgRemoveGroups['bureaucrat']['upwizcampeditors'] = true;
+
 # UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
 $wgULSPosition = 'interlanguage';
@@ -421,6 +443,11 @@ wfLoadExtension( 'Gadgets' );
 $wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
 $wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
 $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
+
+# EventLogging
+wfLoadExtension( 'EventLogging' );
+$wgEventLoggingBaseUri = 'http://localhost:8080/event.gif';
+$wgEventLoggingFile = '/var/log/mediawiki/events.log';
 
 # ParserFunction
 wfLoadExtension( 'ParserFunctions' );
