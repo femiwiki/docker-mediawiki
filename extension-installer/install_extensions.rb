@@ -57,7 +57,7 @@ extensions_3rdparty = {
   'AWS' => 'https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.10.0.tar.gz',
   'EmbedVideo' => 'https://github.com/HydraWiki/mediawiki-embedvideo/archive/v2.7.4.tar.gz',
   'SimpleMathJax' => 'https://github.com/jmnote/SimpleMathJax/archive/v0.7.3.tar.gz',
-  'DiscordNotifications' => 'https://github.com/kulttuuri/DiscordNotifications/archive/1.07.tar.gz',
+  'DiscordNotifications' => 'https://github.com/femiwiki/DiscordNotifications/archive/master.tar.gz',
 }
 # Extensions developed by Femiwiki team
 extensions_femiwiki = [
