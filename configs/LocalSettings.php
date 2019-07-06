@@ -127,6 +127,7 @@ $wgLanguageCode = 'ko';
 $wgLocaltimezone = 'Asia/Seoul';
 date_default_timezone_set( $wgLocaltimezone );
 $wgDefaultUserOptions['timecorrection'] = 9;
+$wgPageLanguageUseDB = true;
 
 # Changing this will log out all existing sessions.
 $wgAuthenticationTokenVersion = '1';
@@ -355,6 +356,7 @@ $wgGroupPermissions['autoconfirmed']['translate'] = true;
 $wgGroupPermissions['translationadmin']['pagetranslation'] = true;
 $wgGroupPermissions['translationadmin']['translate-manage'] = true;
 $wgGroupPermissions['translationadmin']['translate-messagereview'] = true;
+$wgGroupPermissions['translationadmin']['pagelang'] = true;
 $wgTranslatePageTranslationULS = true;
 $wgPageTranslationLanguageList = 'sidebar-always';
 $wgTranslatePermissionUrl = 'Project:번역';
