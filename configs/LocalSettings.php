@@ -394,6 +394,30 @@ $wgExtensionFunctions[] = function () {
 };
 $wgUploadWizardConfig = [];
 $wgUploadWizardConfig['alternativeUploadToolsPage'] = '특수:파일올리기';
+$wgUploadWizardConfig['licensing']['thirdParty']['licenseGroups'] = [
+	[
+		'head' => 'mwe-upwiz-license-cc-head',
+		'subhead' => 'mwe-upwiz-license-cc-subhead',
+		'licenses' => [
+			'cc-by-sa-4.0',
+			'cc-by-sa-3.0',
+			'cc-by-sa-2.5',
+			'cc-by-4.0',
+			'cc-by-3.0',
+			'cc-by-2.5',
+			'cc-zero'
+		]
+	],
+	[
+		'head' => 'mwe-upwiz-license-custom-head',
+		'special' => 'custom',
+		'licenses' => [ 'custom' ],
+	],
+	[
+		'head' => 'mwe-upwiz-license-none-head',
+		'licenses' => [ 'none' ]
+	],
+];
 # Skip the tutorial
 $wgUploadWizardConfig['tutorial'] = [ 'skip' => true ];
 $wgDefaultUserOptions['upwiz_skiptutorial'] = 1;
