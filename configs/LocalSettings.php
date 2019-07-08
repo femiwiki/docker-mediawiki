@@ -475,6 +475,9 @@ wfLoadExtension( 'EventLogging' );
 $wgEventLoggingBaseUri = 'http://localhost:8080/event.gif';
 $wgEventLoggingFile = '/var/log/mediawiki/events.log';
 
+# BounceHandler
+wfLoadExtension( 'BounceHandler' );
+
 # ParserFunction
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
@@ -630,6 +633,7 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
 	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
 	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
+	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0' ];
 
 	# 디버그 툴 활성화
 	$wgShowExceptionDetails = true;
