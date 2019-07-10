@@ -277,8 +277,8 @@ $wgVirtualRestConfig['modules']['parsoid'] = [
 # Restbase server Setting
 # 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
 # $wgVirtualRestConfig['modules']['restbase'] = [
-# 	 'url' => 'http://restbase:7231',
-#	 'domain' => 'femiwiki.com'
+# 	'url' => 'http://restbase:7231',
+# 	'domain' => 'femiwiki.com'
 # ];
 # $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
 # $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
