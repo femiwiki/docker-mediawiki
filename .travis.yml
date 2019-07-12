@@ -45,7 +45,7 @@ jobs:
         - docker build --tag femiwiki/mediawiki .
         # Initialize docker swarm and start services
         - docker swarm init
-        - docker stack deploy -c development.yml femiwiki
+        - docker stack deploy -c development.yml mediawiki
         # Access localhost until success
         - |
             printf 'Waiting for http...'

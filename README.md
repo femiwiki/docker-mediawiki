@@ -8,7 +8,7 @@ Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
 
 ```bash
 cp configs/secret.php.example configs/secret.php
-docker stack deploy --prune -c development.yml femiwiki
+docker stack deploy --prune -c development.yml mediawiki
 ```
 
 페미위키 개발하실때엔 아래 커맨드들을 참고해주세요.
