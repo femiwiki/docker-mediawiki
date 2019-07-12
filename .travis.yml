@@ -64,3 +64,11 @@ jobs:
         - test -z "$(docker service ps -qf 'desired-state=Shutdown' mediawiki_fastcgi)"
         # Try to access the mediawiki
         - curl -sSLvo /dev/null localhost || docker service logs mediawiki_fastcgi
+      after_success:
+        - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+        - chmod +x send.sh
+        - ./send.sh success $WEBHOOK_URL
+      after_failure:
+        - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+        - chmod +x send.sh
+        - ./send.sh failure $WEBHOOK_URL
