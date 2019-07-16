@@ -421,6 +421,10 @@ $wgUploadWizardConfig['licensing']['thirdParty']['licenseGroups'] = [
 ];
 # Skip the tutorial
 $wgUploadWizardConfig['tutorial'] = [ 'skip' => true ];
+$wgUploadWizardConfig['uwLanguages'] = [
+	'en' => 'English',
+	'ko' => '한국어',
+];
 $wgDefaultUserOptions['upwiz_skiptutorial'] = 1;
 $wgHiddenPrefs[] = 'upwiz_skiptutorial';
 # Tweaks for permissions
