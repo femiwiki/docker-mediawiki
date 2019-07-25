@@ -23,20 +23,17 @@ services:
   parsoid:
     image: femiwiki/parsoid:build-0
   restbase:
-    image: femiwiki/restbase:build-1
+    image: femiwiki/restbase:build-2
     ports:
       - 7231:7231
     volumes:
       - ./configs:/a:ro
-    networks:
-      default:
-        aliases:
-          - RESTBASE_HOSTNAME # secret.php.example에 적힌 기본값
   mysql:
     image: mysql:8
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - database:/var/lib/mysql
+      - ./mysql.sql:/docker-entrypoint-initdb.d/initialize.sql
     environment:
       - MYSQL_ROOT_PASSWORD=localfemiwikipassword
       - MYSQL_DATABASE=femiwiki
@@ -46,17 +43,6 @@ services:
       default:
         aliases:
           - DB_HOSTNAME # secret.php.example에 적힌 기본값
-  cassandra:
-    image: femiwiki/cassandra:build-0
-    volumes:
-      - cassandra:/var/lib/cassandra
-    environment:
-      - USER_NAME=CASSANDRA_USERNAME # secret.php.example에 적힌 기본값
-      - DEV_PASSWORD=CASSANDRA_PASSWORD # secret.php.example에 적힌 기본값
-    networks:
-      default:
-        aliases:
-          - CASSANDRA_HOSTNAME # secret.php.example에 적힌 기본값
   memcached:
     image: memcached:1-alpine
     networks:
@@ -68,4 +54,3 @@ volumes:
   files:
   database:
   caddy:
-  cassandra:

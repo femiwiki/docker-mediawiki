@@ -1,0 +1,2 @@
+CREATE DATABASE `restbase`;
+GRANT ALL PRIVILEGES ON `restbase`.* TO `DB_USERNAME`@`%`;
