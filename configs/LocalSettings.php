@@ -549,9 +549,6 @@ wfLoadExtension( 'CategoryTree' );
 # Disambiguator
 wfLoadExtension( 'Disambiguator' );
 
-# CreateUserPage
-wfLoadExtension( 'CreateUserPage' );
-
 # Cite
 wfLoadExtension( 'Cite' );
 

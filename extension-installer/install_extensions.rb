@@ -33,7 +33,6 @@ extensions_official = [
   'TemplateStyles',
   'Disambiguator',
   'DisableAccount',
-  'CreateUserPage',
   'AbuseFilter',
   'CheckUser',
   'UserMerge',
