@@ -435,6 +435,23 @@ $wgRemoveGroups['sysop']['upwizcampeditors'] = false;
 $wgAddGroups['bureaucrat']['upwizcampeditors'] = true;
 $wgRemoveGroups['bureaucrat']['upwizcampeditors'] = true;
 
+# ContactPage
+wfLoadExtension( 'ContactPage' );
+$wgContactConfig['default'] = [
+	'RecipientUser' => 'Admin',
+	'SenderName' => "${wgSitename}에서 발신한 문의",
+	'RequireDetails' => true, // Either "true" or "false" as required
+	'MustBeLoggedIn' => true, // Check if the user is logged in before rendering the form
+	'AdditionalFields' => [
+		'Text' => [
+			'label-message' => 'emailmessage',
+			'type' => 'textarea',
+			'rows' => 20,
+			'required' => true,  // Either "true" or "false" as required
+		],
+	],
+];
+
 # UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
 $wgULSPosition = 'interlanguage';

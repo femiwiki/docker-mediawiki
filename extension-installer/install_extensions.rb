@@ -53,6 +53,7 @@ extensions_official = [
   'UploadWizard',
   'EventLogging',
   'BounceHandler',
+  'ContactPage',
 ]
 # 3rd party extensions and their URLs
 extensions_3rdparty = {
