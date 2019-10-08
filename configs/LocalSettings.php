@@ -544,6 +544,12 @@ $wgDiscordSendMethod = 'file_get_contents';
 $wgWikiUrlEndingUserRights = "Special:UserRights/";
 $wgWikiUrlEndingBlockUser = '특수:제재안목록/';
 
+# EventLogging
+wfLoadExtension( 'EventLogging' );
+
+# GuidedTour
+wfLoadExtension( 'GuidedTour' );
+
 # TemplateData
 wfLoadExtension( 'TemplateData' );
 
