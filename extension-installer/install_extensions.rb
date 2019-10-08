@@ -112,7 +112,7 @@ input_file.write(
   extensions_3rdparty.map do |extension, url|
     "#{url}\n out=#{extension}.tar.gz\n"
   end .join +
-  "https://github.com/femiwiki/skin/archive/master.tar.gz\n out=Femiwiki.tar.gz\n"
+  "https://github.com/femiwiki/FemiwikiSkin/archive/master.tar.gz\n out=Femiwiki.tar.gz\n"
 )
 input_file.close
 
