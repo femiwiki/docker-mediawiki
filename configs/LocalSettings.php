@@ -332,6 +332,7 @@ $wgVisualEditorAvailableNamespaces = [
 	NS_CATEGORY_TALK => true,
 	'_merge_strategy' => 'array_plus',
 ];
+$wgVisualEditorEnableTocWidget = true;
 # Enable 2017 Wikitext Editor to opt-out
 $wgVisualEditorEnableWikitext = true;
 $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
