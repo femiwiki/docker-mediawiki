@@ -53,7 +53,6 @@ extensions_official = [
   'UploadWizard',
   'EventLogging',
   'BounceHandler',
-  'ContactPage',
   'EventLogging',
   'GuidedTour',
 ]

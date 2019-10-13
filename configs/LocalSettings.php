@@ -436,28 +436,6 @@ $wgRemoveGroups['sysop']['upwizcampeditors'] = false;
 $wgAddGroups['bureaucrat']['upwizcampeditors'] = true;
 $wgRemoveGroups['bureaucrat']['upwizcampeditors'] = true;
 
-# ContactPage
-# Disabled. See https://github.com/femiwiki/mediawiki/issues/292
-# wfLoadExtension( 'ContactPage' );
-$wgContactConfig['default'] = [
-	'RecipientUser' => 'Admin',
-	'SenderEmail' => null, // Defaults to $wgPasswordSender, may be changed as required
-	'SenderName' => "${wgSitename}에서 발신한 문의",
-	'RequireDetails' => false,
-	'IncludeIP' => false,
-	'MustBeLoggedIn' => true, // Check if the user is logged in before rendering the form
-	"RLModules" => [],
-	"RLStyleModules" => [],
-	'AdditionalFields' => [
-		'Text' => [
-			'label-message' => 'emailmessage',
-			'type' => 'textarea',
-			'rows' => 20,
-			'required' => true,  // Either "true" or "false" as required
-		],
-	],
-];
-
 # UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
 $wgULSPosition = 'interlanguage';
