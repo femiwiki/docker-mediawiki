@@ -290,6 +290,111 @@ $wgCookieSetOnAutoblock = true;
 # Extensions
 #
 
+# AbuseFilter
+wfLoadExtension( 'AbuseFilter' );
+$wgGroupPermissions['sysop']['abusefilter-modify'] = false;
+$wgGroupPermissions['abusefilter']['abusefilter-modify'] = true;
+$wgGroupPermissions['abusefilter']['changetags'] = true;
+$wgGroupPermissions['abusefilter']['managechangetags'] = true;
+$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = false;
+$wgGroupPermissions['abusefilter']['abusefilter-modify-restricted'] = true;
+$wgGroupPermissions['*']['abusefilter-log-detail'] = true;
+$wgGroupPermissions['*']['abusefilter-view'] = true;
+$wgGroupPermissions['*']['abusefilter-log'] = true;
+$wgGroupPermissions['sysop']['abusefilter-private'] = false;
+$wgGroupPermissions['checkuser']['abusefilter-private'] = true;
+$wgGroupPermissions['sysop']['abusefilter-revert'] = true;
+
+# AntiSpoof
+wfLoadExtension( 'AntiSpoof' );
+
+# AWS
+wfLoadExtension( 'AWS' );
+$wgAWSRegion = 'ap-northeast-1';
+$wgAWSBucketPrefix = 'femiwiki-uploaded-files';
+$wgAWSRepoHashLevels = 2;
+$wgAWSRepoDeletedHashLevels = 2;
+
+# BetaFeatures
+wfLoadExtension( 'BetaFeatures' );
+
+# BounceHandler
+wfLoadExtension( 'BounceHandler' );
+
+# CategoryIntersectionSearch
+wfLoadExtension( 'CategoryIntersectionSearch' );
+
+# CategoryTree
+wfLoadExtension( 'CategoryTree' );
+
+# CharInsert
+wfLoadExtension( 'CharInsert' );
+
+# CheckUser
+wfLoadExtension( 'CheckUser' );
+
+# Cite
+wfLoadExtension( 'Cite' );
+
+# CiteThisPage
+wfLoadExtension( 'CiteThisPage' );
+
+# CodeEditor
+wfLoadExtension( 'CodeEditor' );
+
+# CodeMirror
+wfLoadExtension( 'CodeMirror' );
+
+# ConfirmEdit
+wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha' ] );
+$wgCaptchaClass = 'ReCaptchaNoCaptcha';
+$wgCaptchaTriggers['createaccount'] = true;
+# If you plan to use VisualEditor forget about this new and better No Captcha solution from Google.
+$wgCaptchaTriggers['edit'] = false;
+$wgCaptchaTriggers['create'] = false;
+$wgCaptchaTriggers['addurl'] = false;
+$wgCaptchaTriggers['badlogin'] = false;
+
+# Description2
+wfLoadExtension( 'Description2' );
+
+# DisableAccount
+wfLoadExtension( 'DisableAccount' );
+$wgGroupPermissions['sysop']['disableaccount'] = true;
+
+# Disambiguator
+wfLoadExtension( 'Disambiguator' );
+
+# DiscordNotifications
+wfLoadExtension( 'DiscordNotifications' );
+$wgDiscordFromName = '바뀐글';
+$wgWikiUrl = "{$wgCanonicalServer}/";
+$wgDiscordShowNewUserEmail = false;
+$wgDiscordShowNewUserFullName = false;
+$wgDiscordShowNewUserIP = false;
+$wgExcludedPermission = 'bot';
+$wgDiscordExcludeNotificationsFrom = [ 'Translations:' ];
+# VisualEditor setting
+# See https://github.com/kulttuuri/DiscordNotifications#customize-request-call-method-fix-extension-not-working-with-visualeditor
+$wgDiscordSendMethod = 'file_get_contents';
+$wgWikiUrlEndingUserRights = "Special:UserRights/";
+$wgWikiUrlEndingBlockUser = '특수:제재안목록/';
+
+# Echo
+wfLoadExtension( 'Echo' );
+$wgEchoMaxMentionsInEditSummary = 5;
+
+# EmbedVideo
+wfLoadExtension( 'EmbedVideo' );
+
+# EventLogging
+wfLoadExtension( 'EventLogging' );
+$wgEventLoggingBaseUri = 'http://localhost:8080/event.gif';
+$wgEventLoggingFile = '/var/log/mediawiki/events.log';
+
+# FacetedCategory
+wfLoadExtension( 'FacetedCategory' );
+
 # Flow
 wfLoadExtension( 'Flow' );
 $wgFlowEditorList = [ 'visualeditor', 'none' ];
@@ -310,47 +415,81 @@ $wgNamespaceContentModels[NS_BBS] = 'flow-board';
 $wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
 $wgFlowDefaultLimit = 2;
 
-# VisualEditor
-wfLoadExtension( 'VisualEditor' );
-$wgVisualEditorAvailableNamespaces = [
-	NS_SPECIAL => true,
-	NS_MAIN => true,
-	NS_TALK => true,
-	NS_USER => true,
-	NS_USER_TALK => true,
-	NS_PROJECT => true,
-	NS_PROJECT_TALK => true,
-	NS_FILE => true,
-	NS_FILE_TALK => true,
-	NS_MEDIAWIKI => true,
-	NS_MEDIAWIKI_TALK => true,
-	NS_TEMPLATE => true,
-	NS_TEMPLATE_TALK => true,
-	NS_HELP => true,
-	NS_HELP_TALK => true,
-	NS_CATEGORY => true,
-	NS_CATEGORY_TALK => true,
-	'_merge_strategy' => 'array_plus',
-];
-$wgVisualEditorEnableTocWidget = true;
-# Enable 2017 Wikitext Editor to opt-out
-$wgVisualEditorEnableWikitext = true;
-$wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
-# Enable Visual diffs on history pages
-$wgVisualEditorEnableDiffPage = true;
-# Enable Single Edit Tab to opt-in
-$wgVisualEditorUseSingleEditTab = true;
-$wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
+# Gadgets
+wfLoadExtension( 'Gadgets' );
+$wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
+$wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
+$wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 
-# ConfirmEdit
-wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha' ] );
-$wgCaptchaClass = 'ReCaptchaNoCaptcha';
-$wgCaptchaTriggers['createaccount'] = true;
-# If you plan to use VisualEditor forget about this new and better No Captcha solution from Google.
-$wgCaptchaTriggers['edit'] = false;
-$wgCaptchaTriggers['create'] = false;
-$wgCaptchaTriggers['addurl'] = false;
-$wgCaptchaTriggers['badlogin'] = false;
+# Graph
+wfLoadExtension( 'Graph' );
+
+# GuidedTour
+wfLoadExtension( 'GuidedTour' );
+
+# HTMLTags
+require_once "$IP/extensions/HTMLTags/HTMLTags.php";
+$wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
+$wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
+$wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
+$wgHTMLTagsAttributes['iframe'] = [ 'src', 'class', 'style' ];
+
+# InputBox
+wfLoadExtension( 'InputBox' );
+
+# Interwiki
+wfLoadExtension( 'Interwiki' );
+
+# Josa
+wfLoadExtension( 'Josa' );
+
+# LocalisationUpdate
+wfLoadExtension( 'LocalisationUpdate' );
+
+# OpenGraphMeta
+wfLoadExtension( 'OpenGraphMeta' );
+
+# PageImages
+wfLoadExtension( 'PageImages' );
+
+# ParserFunction
+wfLoadExtension( 'ParserFunctions' );
+$wgPFEnableStringFunctions = true;
+
+# Poem
+wfLoadExtension( 'Poem' );
+
+# Renameuser
+wfLoadExtension( 'Renameuser' );
+
+# RevisionSlider
+wfLoadExtension( 'RevisionSlider' );
+
+# Sanctions
+wfLoadExtension( 'Sanctions' );
+
+# Scribunto
+wfLoadExtension( 'Scribunto' );
+$wgScribuntoDefaultEngine = 'luastandalone';
+
+# SimpleMathJax
+wfLoadExtension( 'SimpleMathJax' );
+
+# SyntaxHighlight
+wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+
+# TemplateData
+wfLoadExtension( 'TemplateData' );
+
+# TemplateStyles
+wfLoadExtension( 'TemplateStyles' );
+
+# TemplateWizard
+wfLoadExtension( 'TemplateWizard' );
+$wgDefaultUserOptions['templatewizard-betafeature'] = 1;
+
+# Thanks
+wfLoadExtension( 'Thanks' );
 
 # Translate
 include_once "$IP/extensions/Translate/Translate.php";
@@ -364,27 +503,23 @@ $wgPageTranslationLanguageList = 'sidebar-always';
 $wgTranslatePermissionUrl = 'Project:번역';
 $wgTranslateSecondaryPermissionUrl = 'Project:번역';
 
-# AWS
-wfLoadExtension( 'AWS' );
-$wgAWSRegion = 'ap-northeast-1';
-$wgAWSBucketPrefix = 'femiwiki-uploaded-files';
-$wgAWSRepoHashLevels = 2;
-$wgAWSRepoDeletedHashLevels = 2;
+# TwoColConflict
+wfLoadExtension( 'TwoColConflict' );
+# Enable twocolconflict to opt-out
+$wgDefaultUserOptions['twocolconflict'] = true;
 
-# AbuseFilter
-wfLoadExtension( 'AbuseFilter' );
-$wgGroupPermissions['sysop']['abusefilter-modify'] = false;
-$wgGroupPermissions['abusefilter']['abusefilter-modify'] = true;
-$wgGroupPermissions['abusefilter']['changetags'] = true;
-$wgGroupPermissions['abusefilter']['managechangetags'] = true;
-$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = false;
-$wgGroupPermissions['abusefilter']['abusefilter-modify-restricted'] = true;
-$wgGroupPermissions['*']['abusefilter-log-detail'] = true;
-$wgGroupPermissions['*']['abusefilter-view'] = true;
-$wgGroupPermissions['*']['abusefilter-log'] = true;
-$wgGroupPermissions['sysop']['abusefilter-private'] = false;
-$wgGroupPermissions['checkuser']['abusefilter-private'] = true;
-$wgGroupPermissions['sysop']['abusefilter-revert'] = true;
+# UnifiedExtensionForFemiwiki
+wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
+$wgSpecialPages['Uncategorizedcategories'] = 'SpecialUncategorizedCategoryTree';
+$wgSpecialPages['Whatlinkshere'] = 'SpecialOrderedWhatlinkshere';
+
+# UniversalLanguageSelector
+wfLoadExtension( 'UniversalLanguageSelector' );
+$wgULSPosition = 'interlanguage';
+$wgULSIMEEnabled = false;
+$wgULSCompactLinksEnableAnon = true;
+# Enable ULS compact links beta feature to opt-out
+$wgDefaultUserOptions['uls-compact-links'] = 1;
 
 # UploadWizard
 wfLoadExtension( 'UploadWizard' );
@@ -436,13 +571,44 @@ $wgRemoveGroups['sysop']['upwizcampeditors'] = false;
 $wgAddGroups['bureaucrat']['upwizcampeditors'] = true;
 $wgRemoveGroups['bureaucrat']['upwizcampeditors'] = true;
 
-# UniversalLanguageSelector
-wfLoadExtension( 'UniversalLanguageSelector' );
-$wgULSPosition = 'interlanguage';
-$wgULSIMEEnabled = false;
-$wgULSCompactLinksEnableAnon = true;
-# Enable ULS compact links beta feature to opt-out
-$wgDefaultUserOptions['uls-compact-links'] = 1;
+# UserMerge
+wfLoadExtension( 'UserMerge' );
+
+# VisualEditor
+wfLoadExtension( 'VisualEditor' );
+$wgVisualEditorAvailableNamespaces = [
+	NS_SPECIAL => true,
+	NS_MAIN => true,
+	NS_TALK => true,
+	NS_USER => true,
+	NS_USER_TALK => true,
+	NS_PROJECT => true,
+	NS_PROJECT_TALK => true,
+	NS_FILE => true,
+	NS_FILE_TALK => true,
+	NS_MEDIAWIKI => true,
+	NS_MEDIAWIKI_TALK => true,
+	NS_TEMPLATE => true,
+	NS_TEMPLATE_TALK => true,
+	NS_HELP => true,
+	NS_HELP_TALK => true,
+	NS_CATEGORY => true,
+	NS_CATEGORY_TALK => true,
+	'_merge_strategy' => 'array_plus',
+];
+$wgVisualEditorEnableTocWidget = true;
+# Enable 2017 Wikitext Editor to opt-out
+$wgVisualEditorEnableWikitext = true;
+$wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
+# Enable Visual diffs on history pages
+$wgVisualEditorEnableDiffPage = true;
+# Enable Single Edit Tab to opt-in
+$wgVisualEditorUseSingleEditTab = true;
+$wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
+
+# Widgets
+require_once "$IP/extensions/Widgets/Widgets.php";
+$wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
 # WikiEditor
 wfLoadExtension( 'WikiEditor' );
@@ -451,181 +617,12 @@ $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
 $wgHiddenPrefs[] = 'usebetatoolbar';
-
 # Enable Visual Editor to opt-out
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 $wgVisualEditorSupportedSkins[] = 'femiwiki';
 
-# UnifiedExtensionForFemiwiki
-wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
-$wgSpecialPages['Uncategorizedcategories'] = 'SpecialUncategorizedCategoryTree';
-$wgSpecialPages['Whatlinkshere'] = 'SpecialOrderedWhatlinkshere';
-
-# HTMLTags
-require_once "$IP/extensions/HTMLTags/HTMLTags.php";
-$wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
-$wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
-$wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
-$wgHTMLTagsAttributes['iframe'] = [ 'src', 'class', 'style' ];
-
-# Gadgets
-wfLoadExtension( 'Gadgets' );
-$wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
-$wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
-$wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
-
-# EventLogging
-wfLoadExtension( 'EventLogging' );
-$wgEventLoggingBaseUri = 'http://localhost:8080/event.gif';
-$wgEventLoggingFile = '/var/log/mediawiki/events.log';
-
-# BounceHandler
-wfLoadExtension( 'BounceHandler' );
-
-# ParserFunction
-wfLoadExtension( 'ParserFunctions' );
-$wgPFEnableStringFunctions = true;
-
-# Echo
-wfLoadExtension( 'Echo' );
-$wgEchoMaxMentionsInEditSummary = 5;
-
-# TwoColConflict
-wfLoadExtension( 'TwoColConflict' );
-# Enable twocolconflict to opt-out
-$wgDefaultUserOptions['twocolconflict'] = true;
-
-# Scribunto
-wfLoadExtension( 'Scribunto' );
-$wgScribuntoDefaultEngine = 'luastandalone';
-
-# DisableAccount
-wfLoadExtension( 'DisableAccount' );
-$wgGroupPermissions['sysop']['disableaccount'] = true;
-
-# TemplateWizard
-wfLoadExtension( 'TemplateWizard' );
-$wgDefaultUserOptions['templatewizard-betafeature'] = 1;
-
-# Widgets
-require_once "$IP/extensions/Widgets/Widgets.php";
-$wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
-
-# DiscordNotifications
-wfLoadExtension( 'DiscordNotifications' );
-$wgDiscordFromName = '바뀐글';
-$wgWikiUrl = "{$wgCanonicalServer}/";
-$wgDiscordShowNewUserEmail = false;
-$wgDiscordShowNewUserFullName = false;
-$wgDiscordShowNewUserIP = false;
-$wgExcludedPermission = 'bot';
-$wgDiscordExcludeNotificationsFrom = [ 'Translations:' ];
-# VisualEditor setting
-# See https://github.com/kulttuuri/DiscordNotifications#customize-request-call-method-fix-extension-not-working-with-visualeditor
-$wgDiscordSendMethod = 'file_get_contents';
-$wgWikiUrlEndingUserRights = "Special:UserRights/";
-$wgWikiUrlEndingBlockUser = '특수:제재안목록/';
-
-# EventLogging
-wfLoadExtension( 'EventLogging' );
-
-# GuidedTour
-wfLoadExtension( 'GuidedTour' );
-
-# TemplateData
-wfLoadExtension( 'TemplateData' );
-
-# RevisionSlider
-wfLoadExtension( 'RevisionSlider' );
-
-# Interwiki
-wfLoadExtension( 'Interwiki' );
-
-# Thanks
-wfLoadExtension( 'Thanks' );
-
-# TemplateStyles
-wfLoadExtension( 'TemplateStyles' );
-
-# CategoryTree
-wfLoadExtension( 'CategoryTree' );
-
-# Disambiguator
-wfLoadExtension( 'Disambiguator' );
-
-# Cite
-wfLoadExtension( 'Cite' );
-
-# CiteThisPage
-wfLoadExtension( 'CiteThisPage' );
-
-# CodeEditor
-wfLoadExtension( 'CodeEditor' );
-
-# Graph
-wfLoadExtension( 'Graph' );
-
-# CheckUser
-wfLoadExtension( 'CheckUser' );
-
-# UserMerge
-wfLoadExtension( 'UserMerge' );
-
-# Renameuser
-wfLoadExtension( 'Renameuser' );
-
-# Poem
-wfLoadExtension( 'Poem' );
-
-# SyntaxHighlight
-wfLoadExtension( 'SyntaxHighlight_GeSHi' );
-
-# CharInsert
-wfLoadExtension( 'CharInsert' );
-
-# CodeMirror
-wfLoadExtension( 'CodeMirror' );
-
-# EmbedVideo
-wfLoadExtension( 'EmbedVideo' );
-
-# InputBox
-wfLoadExtension( 'InputBox' );
-
-# Description2
-wfLoadExtension( 'Description2' );
-
-# OpenGraphMeta
-wfLoadExtension( 'OpenGraphMeta' );
-
-# PageImages
-wfLoadExtension( 'PageImages' );
-
-# LocalisationUpdate
-wfLoadExtension( 'LocalisationUpdate' );
-
-# FacetedCategory
-wfLoadExtension( 'FacetedCategory' );
-
-# IntersectionSearch
-wfLoadExtension( 'CategoryIntersectionSearch' );
-
-# SimpleMathJax
-wfLoadExtension( 'SimpleMathJax' );
-
-# Josa
-wfLoadExtension( 'Josa' );
-
-# Sanction
-wfLoadExtension( 'Sanctions' );
-
-# BetaFeatures
-wfLoadExtension( 'BetaFeatures' );
-
-# AntiSpoof
-wfLoadExtension( 'AntiSpoof' );
 #
 # Load secret.php
 #
