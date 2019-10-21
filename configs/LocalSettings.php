@@ -443,6 +443,9 @@ wfLoadExtension( 'Interwiki' );
 # Josa
 wfLoadExtension( 'Josa' );
 
+# Nuke
+wfLoadExtension( 'Nuke' );
+
 # LocalisationUpdate
 wfLoadExtension( 'LocalisationUpdate' );
 
@@ -462,6 +465,9 @@ wfLoadExtension( 'Poem' );
 # Renameuser
 wfLoadExtension( 'Renameuser' );
 
+# ReplaceText
+wfLoadExtension( 'ReplaceText' );
+
 # RevisionSlider
 wfLoadExtension( 'RevisionSlider' );
 
@@ -474,6 +480,9 @@ $wgScribuntoDefaultEngine = 'luastandalone';
 
 # SimpleMathJax
 wfLoadExtension( 'SimpleMathJax' );
+
+# SpamBlacklist
+wfLoadExtension( 'SpamBlacklist' );
 
 # SyntaxHighlight
 wfLoadExtension( 'SyntaxHighlight_GeSHi' );
@@ -490,6 +499,9 @@ $wgDefaultUserOptions['templatewizard-betafeature'] = 1;
 
 # Thanks
 wfLoadExtension( 'Thanks' );
+
+# TitleBlacklist
+wfLoadExtension( 'TitleBlacklist' );
 
 # Translate
 include_once "$IP/extensions/Translate/Translate.php";
