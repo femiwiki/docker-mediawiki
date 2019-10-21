@@ -39,7 +39,6 @@ extensions_official = [
   'GuidedTour',
   'HTMLTags',
   'Josa',
-  'LocalisationUpdate',
   'OpenGraphMeta',
   'PageImages',
   'RevisionSlider',
