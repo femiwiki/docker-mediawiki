@@ -483,6 +483,12 @@ wfLoadExtension( 'SimpleMathJax' );
 
 # SpamBlacklist
 wfLoadExtension( 'SpamBlacklist' );
+# Empty Meta-Wiki blacklist
+$wgBlacklistSettings = [
+	'spam' => [
+		'files' => []
+	]
+];
 
 # SyntaxHighlight
 wfLoadExtension( 'SyntaxHighlight_GeSHi' );
