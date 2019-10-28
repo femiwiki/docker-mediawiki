@@ -1,11 +1,11 @@
 version: '3'
 services:
   http:
-    image: joshix/caddy:v0.11.3
+    image: femiwiki/caddy:1.0.3
     ports:
       - 80:80
     volumes:
-      - ./caddy:/var/www/html:ro
+      - ./caddy/Caddyfile:/etc/Caddyfile:ro
       - files:/srv/femiwiki.com
   fastcgi:
     image: femiwiki/mediawiki:build-19
