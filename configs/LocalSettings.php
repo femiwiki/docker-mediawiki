@@ -449,6 +449,9 @@ wfLoadExtension( 'Nuke' );
 # LocalisationUpdate
 wfLoadExtension( 'LocalisationUpdate' );
 
+# OATHAuth
+wfLoadExtension( 'OATHAuth' );
+
 # OpenGraphMeta
 wfLoadExtension( 'OpenGraphMeta' );
 
