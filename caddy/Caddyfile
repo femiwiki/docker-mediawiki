@@ -1,4 +1,7 @@
-*:80
+*.femiwiki.com:443
+tls {
+  dns route53
+}
 root /srv/femiwiki.com
 index index.php
 fastcgi / fastcgi:9000 php
