@@ -4,8 +4,9 @@ services:
     image: femiwiki/caddy:1.0.3
     ports:
       - 80:80
+      - 443:443
     volumes:
-      - ./caddy/Caddyfile:/etc/Caddyfile:ro
+      - ./caddy/Caddyfile.prod:/etc/Caddyfile:ro
       - files:/srv/femiwiki.com
   fastcgi:
     image: femiwiki/mediawiki:build-19
