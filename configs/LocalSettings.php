@@ -96,6 +96,11 @@ $wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
 # Change the default password type to use when hashing user passwords.
 $wgPasswordDefault = 'argon2';
 
+# Change settings related to password strength and security.
+$wgPasswordPolicy['policies']['default'] = [
+	'MinimalPasswordLength' => [ 'value' => 8, 'suggestChangeOnLogin' => true ]
+];
+
 # Shared memory settings
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgSessionCacheType = CACHE_MEMCACHED;
