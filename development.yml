@@ -10,7 +10,7 @@ services:
       - ./caddy/Caddyfile.dev:/etc/Caddyfile:ro
       - files:/srv/femiwiki.com
   fastcgi:
-    image: femiwiki/mediawiki:build-19
+    image: femiwiki/mediawiki:build-20
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
