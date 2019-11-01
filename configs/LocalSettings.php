@@ -32,7 +32,7 @@ $wgEnableCanonicalServerLink = true;
 # The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-$wgStyleVersion = '20181013_0';
+$wgStyleVersion = '20191101_0';
 $wgResourceLoaderMaxage = [
 	'versioned' => [
 		# Squid/Varnish but also any other public proxy cache between the client and MediaWiki
@@ -92,6 +92,14 @@ $wgDBprefix = '';
 
 # MySQL table options to use during installation or update
 $wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
+
+# Change the default password type to use when hashing user passwords.
+$wgPasswordDefault = 'argon2';
+
+# Change settings related to password strength and security.
+$wgPasswordPolicy['policies']['default'] = [
+	'MinimalPasswordLength' => [ 'value' => 8, 'suggestChangeOnLogin' => true ]
+];
 
 # Shared memory settings
 $wgMainCacheType = CACHE_MEMCACHED;
@@ -233,6 +241,9 @@ $wgRestrictDisplayTitle = false;
 
 # Open external links in new tab
 $wgExternalLinkTarget = '_blank';
+
+# Allow partial blocks to be created
+$wgEnablePartialBlocks = true;
 
 # Copyright
 $wgRightsPage = '페미위키:저작권';
@@ -626,6 +637,8 @@ $wgVisualEditorEnableDiffPage = true;
 # Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
+# enable the section editing
+$wgVisualEditorEnableVisualSectionEditing = true;
 
 # Widgets
 require_once "$IP/extensions/Widgets/Widgets.php";
