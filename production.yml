@@ -6,7 +6,8 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./caddy/Caddyfile.prod:/etc/Caddyfile:ro
+      # 임시로 dev 사용
+      - ./caddy/Caddyfile.dev:/etc/Caddyfile:ro
       - files:/srv/femiwiki.com
   fastcgi:
     image: femiwiki/mediawiki:build-19
