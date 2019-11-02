@@ -9,6 +9,9 @@ services:
     volumes:
       - ./caddy/Caddyfile.dev:/etc/Caddyfile:ro
       - files:/srv/femiwiki.com
+      - /srv/caddy:/etc/caddycerts
+    environment:
+      - CADDYPATH=/etc/caddycerts
   fastcgi:
     image: femiwiki/mediawiki:build-20
     volumes:
