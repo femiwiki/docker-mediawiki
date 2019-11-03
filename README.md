@@ -16,6 +16,11 @@ docker stack deploy --prune -c development.yml mediawiki
 ```bash
 # 도커이미지 빌드
 docker build -t femiwiki/mediawiki .
+# 예제를 참고하여, secret.php 및 mysql.sql 파일을 적절히 만들어주세요
+cp configs/secret.php.example configs/secret.php
+vim configs/secret.php
+cp mysql.sql.example mysql.sql
+vim mysql.sql
 # 수정된 도커이미지를 실행할때엔 아래와 같이
 docker service update --force femiwiki_fastcgi
 
