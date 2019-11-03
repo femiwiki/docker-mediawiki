@@ -9,7 +9,7 @@ services:
       # 임시로 dev 사용
       - ./caddy/Caddyfile.dev:/etc/Caddyfile:ro
       - files:/srv/femiwiki.com
-      - /srv/caddy:/etc/caddycerts
+      - caddy:/etc/caddycerts
     environment:
       - CADDYPATH=/etc/caddycerts
   fastcgi:
@@ -26,3 +26,4 @@ services:
   #    - ./configs:/a:ro
 volumes:
   files:
+  caddy:

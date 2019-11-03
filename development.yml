@@ -9,7 +9,7 @@ services:
     volumes:
       - ./caddy/Caddyfile.dev:/etc/Caddyfile:ro
       - files:/srv/femiwiki.com
-      - /srv/caddy:/etc/caddycerts
+      - caddy:/etc/caddycerts
     environment:
       - CADDYPATH=/etc/caddycerts
   fastcgi:
@@ -67,4 +67,5 @@ services:
 volumes:
   files:
   database:
+  caddy:
   cassandra:
