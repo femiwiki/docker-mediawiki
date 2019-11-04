@@ -22,6 +22,7 @@ services:
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
+      - l18n_cache:/tmp/cache
   parsoid:
     image: femiwiki/parsoid:build-0
   ## 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
@@ -32,3 +33,4 @@ services:
 volumes:
   files:
   caddy:
+  l18n_cache:
