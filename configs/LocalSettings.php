@@ -463,6 +463,12 @@ wfLoadExtension( 'Nuke' );
 
 # LocalisationUpdate
 wfLoadExtension( 'LocalisationUpdate' );
+$wgLocalisationUpdateRepositories['femiwiki'] = [
+	'extension' =>
+		'https://raw.github.com/femiwiki/%NAME%/master/%PATH%',
+	'skin' =>
+		'https://raw.github.com/femiwiki/FemiwikiSkin/master/%PATH%'
+];
 
 # LoginNotify
 wfLoadExtension( 'LoginNotify' );

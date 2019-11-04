@@ -11,3 +11,4 @@ set -euo pipefail; IFS=$'\n\t'
 cd /srv/femiwiki.com/extensions/LocalisationUpdate
 
 sudo -u www-data php update.php --quiet
+sudo -u www-data php update.php --repoid femiwiki --quiet
