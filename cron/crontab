@@ -1,3 +1,2 @@
 0 1,5,9,13,17,21 * * * /usr/local/bin/generate-sitemap
-# Temporarily disabled @See https://github.com/femiwiki/mediawiki/issues/216
-# 0 5 * * * /usr/local/bin/localisation-update
+0 5 */7 * * /usr/local/bin/localisation-update

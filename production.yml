@@ -22,6 +22,7 @@ services:
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
+      - l18n_cache:/tmp/cache
   mysql:
     image: mysql:8.0.17
     command: --default-authentication-plugin=mysql_native_password
@@ -46,3 +47,4 @@ services:
 volumes:
   files:
   caddy:
+  l18n_cache:

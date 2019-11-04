@@ -5,9 +5,13 @@
 #
 # Reference:
 #   https://www.mediawiki.org/wiki/Extension:LocalisationUpdate
+#   https://wikitech.wikimedia.org/wiki/LocalisationUpdate
 
 set -euo pipefail; IFS=$'\n\t'
 
+# Update l10n cache
 cd /srv/femiwiki.com/extensions/LocalisationUpdate
 
-sudo -u www-data php update.php --quiet
+sudo -u www-data nice -n 19 php update.php --quiet
+sudo -u www-data nice -n 19 php update.php --repoid femiwiki --quiet
+echo "All done"
