@@ -25,30 +25,47 @@ extensions_official = [
   'AntiSpoof',
   'BetaFeatures',
   'BounceHandler',
+  'CategoryTree',
   'CharInsert',
   'CheckUser',
+  'Cite',
+  'CiteThisPage',
+  'CodeEditor',
   'CodeMirror',
   'CollaborationKit',
+  'ConfirmEdit',
   'Description2',
   'DisableAccount',
   'Disambiguator',
   'Echo',
   'EventLogging',
-  'EventLogging',
   'Flow',
+  'Gadgets',
   'Graph',
   'GuidedTour',
   'HTMLTags',
+  'InputBox',
+  'Interwiki',
   'Josa',
+  'Nuke',
+  'LocalisationUpdate',
   'LoginNotify',
+  'OATHAuth',
   'OpenGraphMeta',
   'PageImages',
+  'ParserFunctions',
+  'Poem',
+  'Renameuser',
+  'ReplaceText',
   'RevisionSlider',
   'Scribunto',
+  'SpamBlacklist',
+  'SyntaxHighlight_GeSHi',
   'TemplateData',
   'TemplateStyles',
   'TemplateWizard',
   'Thanks',
+  'TitleBlacklist',
   'Translate',
   'TwoColConflict',
   'UniversalLanguageSelector',
@@ -56,6 +73,11 @@ extensions_official = [
   'UserMerge',
   'VisualEditor',
   'Widgets',
+  'WikiEditor',
+]
+# Official mediawiki skins
+skins_official = [
+  'Vector',
 ]
 # 3rd party extensions and their URLs
 extensions_3rdparty = {
@@ -82,6 +104,10 @@ extensions_github = (
   extensions_3rdparty.keys +
   extensions_femiwiki
 )
+skins_all = [
+  'Femiwiki',
+  'Vector',
+]
 
 puts 'Started installing extensions'
 
@@ -95,16 +121,21 @@ end
 # Reference:
 #   https://aria2.github.io/manual/en/html/aria2c.html#id2
 input_file = Tempfile.new
+
+def name_to_aria2_input_line(name, type)
+  branch_info_url = "https://gerrit.wikimedia.org/r/projects/mediawiki%2F#{type}s%2F#{name}/branches/#{MEDIAWIKI_BRANCH}"
+  response = Net::HTTP.get(URI(branch_info_url))
+  # Response starts with a magic prefix line ")]}'\n", so strip it.
+  # See:
+  #   https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
+  response = response[5..-1]
+  sha = JSON.parse(response)['revision']
+  "https://extdist.wmflabs.org/dist/#{type}s/#{name}-#{MEDIAWIKI_BRANCH}-#{sha[0..6]}.tar.gz\n out=#{name}.tar.gz\n"
+end
+
 input_file.write(
   Parallel.map(extensions_official) do |extension|
-    branch_info_url = "https://gerrit.wikimedia.org/r/projects/mediawiki%2Fextensions%2F#{extension}/branches/#{MEDIAWIKI_BRANCH}"
-    response = Net::HTTP.get(URI(branch_info_url))
-    # Response starts with a magic prefix line ")]}'\n", so strip it.
-    # See:
-    #   https://gerrit-review.googlesource.com/Documentation/rest-api.html#output
-    response = response[5..-1]
-    sha = JSON.parse(response)['revision']
-    "https://extdist.wmflabs.org/dist/extensions/#{extension}-#{MEDIAWIKI_BRANCH}-#{sha[0..6]}.tar.gz\n out=#{extension}.tar.gz\n"
+    name_to_aria2_input_line(extension, 'extension')
   end .join +
   extensions_femiwiki.map do |extension|
     "https://github.com/femiwiki/#{extension}/archive/master.tar.gz\n out=#{extension}.tar.gz\n"
@@ -112,6 +143,7 @@ input_file.write(
   extensions_3rdparty.map do |extension, url|
     "#{url}\n out=#{extension}.tar.gz\n"
   end .join +
+  name_to_aria2_input_line('Vector', 'skin') +
   "https://github.com/femiwiki/FemiwikiSkin/archive/master.tar.gz\n out=Femiwiki.tar.gz\n"
 )
 input_file.close
@@ -135,8 +167,13 @@ Parallel.each(extensions_all) do |extension|
   `COMPOSER_HOME=#{COMPOSER_HOME_PATH} composer update --no-dev --working-dir '#{DESTINATION_PATH}/extensions/#{extension}'`
 end
 
-# Install Femiwiki Skin which should be located under 'skins' directory
-FileUtils.mkdir_p "#{DESTINATION_PATH}/skins/Femiwiki"
-`tar -xzf #{TEMP_DIRECTORY_PATH}/Femiwiki.tar.gz --strip-components=1 --directory #{DESTINATION_PATH}/skins/Femiwiki`
+# Install skins which should be located under 'skins' directory
+Parallel.each(skins_all) do |skin|
+  FileUtils.mkdir_p "#{DESTINATION_PATH}/skins/#{skin}"
+  `tar -xzf #{TEMP_DIRECTORY_PATH}/#{skin}.tar.gz --strip-components=1 --directory #{DESTINATION_PATH}/skins/#{skin}`
+  if File.exist? "#{DESTINATION_PATH}/skins/#{skin}/composer.json"
+    `COMPOSER_HOME=#{COMPOSER_HOME_PATH} composer update --no-dev --working-dir '#{DESTINATION_PATH}/skins/#{skin}'`
+  end
+end
 
 puts 'Finished extension intalling'

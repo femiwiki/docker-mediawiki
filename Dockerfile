@@ -1,7 +1,7 @@
 ARG MEDIAWIKI_MAJOR_VERSION=1.33
 ARG MEDIAWIKI_BRANCH=REL1_33
 ARG MEDIAWIKI_VERSION=1.33.1
-ARG MEDIAWIKI_SHA512=0cf786872714546fb13843bc5f8b851bfcc665f7459a0326a3fb77efb0d1976b618d4e2206d3fb0852a60b7fa375e98aa0b5600b03209ce9eabd9e3dc5db7d1a
+ARG MEDIAWIKI_SHA512=c88f08f88cc10fdc960d538ea428eb779c0902fec90994e391fd2b2d1483dc4a1334fda809ebf01d7b84607fe72eeda7d80590a7d19aebcdc8d7f0f7e633d72c
 
 #
 # 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
@@ -44,7 +44,7 @@ COPY php/php.ini /usr/local/etc/php/php.ini
 COPY php/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # MediaWiki setup
-RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
+RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
     echo "${MEDIAWIKI_SHA512} *mediawiki.tar.gz" | sha512sum -c - &&\
     mkdir -p /srv/femiwiki.com/ &&\
     chown www-data:www-data /srv/femiwiki.com/ &&\

@@ -475,7 +475,7 @@ wfLoadExtension( 'OpenGraphMeta' );
 # PageImages
 wfLoadExtension( 'PageImages' );
 
-# ParserFunction
+# ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
 
