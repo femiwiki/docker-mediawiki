@@ -356,6 +356,9 @@ wfLoadExtension( 'CodeEditor' );
 # CodeMirror
 wfLoadExtension( 'CodeMirror' );
 
+# CollaborationKit
+wfLoadExtension( 'CollaborationKit' );
+
 # ConfirmEdit
 wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha' ] );
 $wgCaptchaClass = 'ReCaptchaNoCaptcha';
@@ -459,6 +462,9 @@ wfLoadExtension( 'Nuke' );
 
 # LocalisationUpdate
 wfLoadExtension( 'LocalisationUpdate' );
+
+# LoginNotify
+wfLoadExtension( 'LoginNotify' );
 
 # OATHAuth
 wfLoadExtension( 'OATHAuth' );
