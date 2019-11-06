@@ -18,7 +18,7 @@ services:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
       # 스킨 등 개발할 때엔 아래 라인을 주석해제
-      - ../skin:/srv/femiwiki.com/skins/Femiwiki
+      #- ../skin:/srv/femiwiki.com/skins/Femiwiki
       #- ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
     image: femiwiki/parsoid:build-0
