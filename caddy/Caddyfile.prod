@@ -1,4 +1,4 @@
-femiwiki.com
+femiwiki.com *.femiwiki.com
 tls {
   dns route53
 }
