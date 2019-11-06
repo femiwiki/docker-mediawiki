@@ -170,7 +170,7 @@ $wgFemiwikiHeadItems = [
 	'fav16' => "<meta name='msapplication-TileImage' content='/fw-resources/favicons/ms-icon-144x144.png'>",
 	'fav17' => "<meta name='theme-color' content='#ffffff'>"
 ];
-$wgFemiwikiTwitterAccount = 'femiwikidotcometest';
+$wgFemiwikiTwitterAccount = 'femiwikidotcome';
 
 #
 # Namespace settings
