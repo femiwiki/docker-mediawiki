@@ -22,16 +22,17 @@ services:
       #- ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
     image: femiwiki/parsoid:build-0
-  restbase:
-    image: femiwiki/restbase:build-1
-    ports:
-      - 7231:7231
-    volumes:
-      - ./configs:/a:ro
-    networks:
-      default:
-        aliases:
-          - RESTBASE_HOSTNAME # secret.php.example에 적힌 기본값
+  # 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
+  # restbase:
+  #   image: femiwiki/restbase:build-1
+  #   ports:
+  #     - 7231:7231
+  #   volumes:
+  #     - ./configs:/a:ro
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - RESTBASE_HOSTNAME # secret.php.example에 적힌 기본값
   mysql:
     image: mysql:8
     command: --default-authentication-plugin=mysql_native_password
@@ -46,17 +47,6 @@ services:
       default:
         aliases:
           - DB_HOSTNAME # secret.php.example에 적힌 기본값
-  cassandra:
-    image: femiwiki/cassandra:build-0
-    volumes:
-      - cassandra:/var/lib/cassandra
-    environment:
-      - USER_NAME=CASSANDRA_USERNAME # secret.php.example에 적힌 기본값
-      - DEV_PASSWORD=CASSANDRA_PASSWORD # secret.php.example에 적힌 기본값
-    networks:
-      default:
-        aliases:
-          - CASSANDRA_HOSTNAME # secret.php.example에 적힌 기본값
   memcached:
     image: memcached:1-alpine
     networks:
@@ -68,4 +58,3 @@ volumes:
   files:
   database:
   caddy:
-  cassandra:

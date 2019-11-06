@@ -676,9 +676,10 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	# 도메인 변경
 	$wgServer = 'http://' . DEBUG_MODE;
 	$wgCanonicalServer = 'http://' . DEBUG_MODE;
-	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
-	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
-	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
+	# 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
+	# $wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
+	# $wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
+	# $wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
 	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0' ];
 
 	# 디버그 툴 활성화
