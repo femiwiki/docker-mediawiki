@@ -48,7 +48,8 @@ extensions_official = [
   'Interwiki',
   'Josa',
   'Nuke',
-  'LocalisationUpdate',
+  # See https://github.com/femiwiki/femiwiki/issues/114
+  # 'LocalisationUpdate',
   'LoginNotify',
   'OATHAuth',
   'OpenGraphMeta',
@@ -84,6 +85,7 @@ extensions_3rdparty = {
   'AWS' => 'https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.10.0.tar.gz',
   'DiscordNotifications' => 'https://github.com/kulttuuri/DiscordNotifications/archive/1.11.tar.gz',
   'EmbedVideo' => 'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/v2.8.0/EmbedVideo-v2.8.0.tar.gz',
+  'LocalisationUpdate' => 'https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_33.tar.gz',
   'SimpleMathJax' => 'https://github.com/jmnote/SimpleMathJax/archive/v0.7.4.tar.gz',
 }
 # Extensions developed by Femiwiki team
