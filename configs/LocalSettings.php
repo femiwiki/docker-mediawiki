@@ -265,14 +265,9 @@ $wgArticleCountMethod = 'any';
 
 # Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = [
-	NS_TALK => 'noindex,nofollow',
 	NS_USER => 'noindex,nofollow',
 	NS_USER_TALK => 'noindex,nofollow',
-	NS_PROJECT_TALK => 'noindex,nofollow',
 ];
-if ( defined( 'NS_TOPIC' ) ) {
-	$wgNamespaceRobotPolicies[NS_TOPIC] = 'noindex,nofollow';
-}
 
 # Provide Naspace Aliases
 $wgNamespaceAliases = [
