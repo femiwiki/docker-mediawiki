@@ -6,8 +6,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      # 임시로 dev 사용
-      - ./caddy/Caddyfile.dev:/etc/Caddyfile:ro
+      - ./caddy/Caddyfile.prod:/etc/Caddyfile:ro
       - files:/srv/femiwiki.com
       - caddy:/etc/caddycerts
     environment:
