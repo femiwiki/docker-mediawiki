@@ -11,6 +11,12 @@ services:
       - caddy:/etc/caddycerts
     environment:
       - CADDYPATH=/etc/caddycerts
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
   fastcgi:
     image: femiwiki/mediawiki:build-21
     volumes:
