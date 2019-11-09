@@ -458,6 +458,17 @@ wfLoadExtension( 'Nuke' );
 
 # LocalisationUpdate
 wfLoadExtension( 'LocalisationUpdate' );
+$wgLocalisationUpdateRepositories = [
+	'github' => [
+		'mediawiki' => 'file:///var/lib/l10nupdate/mediawiki/core/%PATH%',
+		'extension' => 'file:///var/lib/l10nupdate/mediawiki/extensions/%NAME%/%PATH%',
+		'skin' => 'file:///var/lib/l10nupdate/mediawiki/skins/%NAME%/%PATH%',
+	],
+	'femiwiki' => [
+		'extension' => 'https://raw.github.com/femiwiki/%NAME%/master/%PATH%',
+		'skin' => 'https://raw.github.com/femiwiki/FemiwikiSkin/master/%PATH%',
+	]
+];
 
 # LoginNotify
 wfLoadExtension( 'LoginNotify' );
