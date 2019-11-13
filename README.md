@@ -2,6 +2,7 @@
 ========
 한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 서버입니다.
 Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
+데이터베이스와 memcached, 각종 봇들이 실행됩니다.
 
 [Docker Swarm]을 이용해, 아래와 같이 간편하게 페미위키를 로컬에서 실행할 수
 있습니다.
@@ -37,6 +38,7 @@ AWS EC2 AMI는 [femiwiki/ami]를 참고해주세요.
 ```sh
 sudo docker swarm init
 sudo docker stack deploy --prune -c ~/mediawiki/production.yml mediawiki
+sudo docker stack deploy --prune -c ~/mediawiki/bots.yml bots
 ```
 
 &nbsp;
