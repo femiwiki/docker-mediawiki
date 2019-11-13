@@ -22,6 +22,16 @@ services:
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
+  mysql:
+    image: mysql:8.0.17
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./mysql:/etc/mysql/conf.d:ro
+      - /srv/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+  memcached:
+    image: memcached:1.5.17-alpine
   parsoid:
     image: femiwiki/parsoid:build-0
   ## 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
@@ -29,6 +39,10 @@ services:
   #  image: femiwiki/restbase:build-1
   #  volumes:
   #    - ./configs:/a:ro
+  #cassandra:
+  #  image: femiwiki/cassandra:build-0
+  #  volumes:
+  #    - cassandra:/var/lib/cassandra
 volumes:
   files:
   caddy:

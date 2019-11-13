@@ -5,15 +5,15 @@ services:
     volumes:
       - /srv/tweetbot:/var/tweetbot
     env_file:
-      - secret
+      - config/bot-secret.env
   ranking-bot:
     image: femiwiki/rankingbot:build-2
     env_file:
-      - secret
+      - config/bot-secret.env
   backupbot:
     image: femiwiki/backupbot:build-5
     env_file:
-      - secret
+      - config/bot-secret.env
     networks:
       hostnet: {}
 
