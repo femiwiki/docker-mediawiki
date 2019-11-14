@@ -684,4 +684,12 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	# AWS 플러그인 비활성화
 	$wgAWSBucketName = null;
 	$wgAWSBucketPrefix = null;
+
+	# 구글 리캡차 비활성화
+	$wgCaptchaTriggers['edit'] = false;
+	$wgCaptchaTriggers['create'] = false;
+	$wgCaptchaTriggers['createtalk'] = false;
+	$wgCaptchaTriggers['addurl'] = false;
+	$wgCaptchaTriggers['createaccount'] = false;
+	$wgCaptchaTriggers['badlogin'] = false;
 }
