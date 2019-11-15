@@ -1,0 +1,23 @@
+version: '3.5'
+services:
+  tweetbot:
+    image: femiwiki/tweetbot:build-0
+    volumes:
+      - /srv/tweetbot:/var/tweetbot
+    env_file:
+      - config/bot-secret.env
+  ranking-bot:
+    image: femiwiki/rankingbot:build-2
+    env_file:
+      - config/bot-secret.env
+  backupbot:
+    image: femiwiki/backupbot:build-5
+    env_file:
+      - config/bot-secret.env
+    networks:
+      hostnet: {}
+
+networks:
+  hostnet:
+    external: true
+    name: host
