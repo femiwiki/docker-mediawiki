@@ -81,6 +81,7 @@ $wgEmailAuthentication = true;
 
 # Database settings
 $wgDBtype = 'mysql';
+$wgDBserver = 'mysql';
 $wgDBname = 'femiwiki';
 
 # MySQL specific settings
@@ -98,6 +99,7 @@ $wgPasswordPolicy['policies']['default'] = [
 ];
 
 # Shared memory settings
+$wgMemCachedServers = [ 'memcached:11211' ];
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgSessionCacheType = CACHE_MEMCACHED;
 $wgParserCacheType = CACHE_MEMCACHED;
