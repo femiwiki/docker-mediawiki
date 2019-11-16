@@ -82,7 +82,7 @@ skins_official = [
 # 3rd party extensions and their URLs
 extensions_3rdparty = {
   'AWS' => 'https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.10.0.tar.gz',
-  'DiscordNotifications' => 'https://github.com/kulttuuri/DiscordNotifications/archive/1.11.tar.gz',
+  'DiscordNotifications' => 'https://github.com/femiwiki/DiscordNotifications/archive/master.tar.gz',
   'EmbedVideo' => 'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/v2.8.0/EmbedVideo-v2.8.0.tar.gz',
   'SimpleMathJax' => 'https://github.com/jmnote/SimpleMathJax/archive/v0.7.4.tar.gz',
 }
