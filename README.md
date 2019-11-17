@@ -36,6 +36,7 @@ AWS EC2 AMI는 [femiwiki/ami]를 참고해주세요.
 프로덕션 배포를 할때엔 [secret.php] 에서 개발자모드를 반드시 꺼주세요.
 
 ```sh
+sudo mkdir -p /srv/tweetbot
 sudo docker swarm init
 sudo docker stack deploy --prune -c ~/mediawiki/production.yml mediawiki
 sudo docker stack deploy --prune -c ~/mediawiki/bots.yml bots
