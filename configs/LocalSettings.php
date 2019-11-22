@@ -85,7 +85,7 @@ $wgEmailAuthentication = true;
 
 // Database settings
 $wgDBtype = 'mysql';
-$wgDBserver = 'mysql';
+$wgDBserver = 'http://mysql';
 $wgDBname = 'femiwiki';
 
 // MySQL specific settings
@@ -103,7 +103,7 @@ $wgPasswordPolicy['policies']['default'] = [
 ];
 
 // Shared memory settings
-$wgMemCachedServers = [ 'memcached:11211' ];
+$wgMemCachedServers = [ 'http://memcached:11211' ];
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgSessionCacheType = CACHE_MEMCACHED;
 $wgParserCacheType = CACHE_MEMCACHED;
@@ -717,7 +717,7 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgShowDBErrorBacktrace = true;
 
 	# File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
-	$wgUseFileCache = false;
+	// $wgUseFileCache = false;
 
 	# AWS 플러그인 비활성화
 	$wgAWSBucketName = null;
