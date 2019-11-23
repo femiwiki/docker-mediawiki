@@ -85,7 +85,6 @@ $wgEmailAuthentication = true;
 
 // Database settings
 $wgDBtype = 'mysql';
-$wgDBserver = 'mysql';
 $wgDBname = 'femiwiki';
 
 // MySQL specific settings
