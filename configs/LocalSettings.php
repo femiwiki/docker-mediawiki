@@ -511,6 +511,11 @@ $wgPFEnableStringFunctions = true;
 // Poem
 wfLoadExtension( 'Poem' );
 
+// Popups
+wfLoadExtension( 'Popups' );
+$wgPopupsOptInDefaultState = "1";
+$wgDefaultUserOptions['popupsreferencepreviews'] = 1;
+
 // Renameuser
 wfLoadExtension( 'Renameuser' );
 
@@ -551,6 +556,9 @@ wfLoadExtension( 'TemplateStyles' );
 // TemplateWizard
 wfLoadExtension( 'TemplateWizard' );
 $wgDefaultUserOptions['templatewizard-betafeature'] = 1;
+
+// TextExtracts
+wfLoadExtension( 'TextExtracts' );
 
 // Thanks
 wfLoadExtension( 'Thanks' );
