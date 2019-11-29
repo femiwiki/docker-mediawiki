@@ -513,8 +513,8 @@ wfLoadExtension( 'Poem' );
 
 // Popups
 wfLoadExtension( 'Popups' );
-$wgPopupsOptInDefaultState = "1";
-$wgDefaultUserOptions['popupsreferencepreviews'] = 1;
+$wgPopupsOptInDefaultState = '1';
+$wgDefaultUserOptions[ 'popupsreferencepreviews' ] = '1';
 
 // Renameuser
 wfLoadExtension( 'Renameuser' );
