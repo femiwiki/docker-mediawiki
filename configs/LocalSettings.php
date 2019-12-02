@@ -489,7 +489,13 @@ $wgLocalisationUpdateRepositories = [
 	'femiwiki' => [
 		'extension' => 'https://raw.github.com/femiwiki/%NAME%/master/%PATH%',
 		'skin' => 'https://raw.github.com/femiwiki/FemiwikiSkin/master/%PATH%',
+	],
+	'kulttuuri' => [
+		'extension' => 'https://raw.github.com/kulttuuri/%NAME%/master/%PATH%',
 	]
+];
+$wgLocalisationUpdateHttpRequestOptions = [
+	'followRedirects' => true,
 ];
 
 // LoginNotify

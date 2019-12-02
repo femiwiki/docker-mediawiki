@@ -12,8 +12,7 @@ set -euo pipefail; IFS=$'\n\t'
 # Update l10n cache
 cd /srv/femiwiki.com/extensions/LocalisationUpdate
 
-sudo -u www-data nice -n 19 php update.php --quiet
-# Disabled temporarily
-# See https://github.com/femiwiki/docker-mediawiki/issues/216#issuecomment-554850652
-# sudo -u www-data nice -n 19 php update.php --repoid femiwiki --quiet
+sudo -u www-data nice -n 19 php update.php
+sudo -u www-data nice -n 19 php update.php --repoid femiwiki
+sudo -u www-data nice -n 19 php update.php --repoid kulttuuri
 echo "All done"
