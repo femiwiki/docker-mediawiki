@@ -1,22 +1,29 @@
+#
+# 미디어위키 및 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
+# 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
+#
+FROM femiwiki/base-extensions:build-0
+
 ARG MEDIAWIKI_MAJOR_VERSION=1.33
 ARG MEDIAWIKI_BRANCH=REL1_33
 ARG MEDIAWIKI_VERSION=1.33.1
 ARG MEDIAWIKI_SHA512=c88f08f88cc10fdc960d538ea428eb779c0902fec90994e391fd2b2d1483dc4a1334fda809ebf01d7b84607fe72eeda7d80590a7d19aebcdc8d7f0f7e633d72c
 
-#
-# 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
-# 확장들을 병렬로 빠르게 미리 다운받아놓는다.
-#
-FROM femiwiki/base-extensions:build-0
+RUN mkdir -p /tmp/mediawiki/ &&\
+    chown www-data:www-data /tmp/mediawiki/
 
-# ARG instructions without a value inside of a build stage to use the default
-# value of an ARG declared before the first FROM use
-ARG MEDIAWIKI_BRANCH
-
+# Extensions and skins setup
 COPY extension-installer/* /tmp/
 RUN bundle install --deployment --gemfile /tmp/Gemfile --path /var/www/.gem
 RUN sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
+# MediaWiki setup
+COPY --chown=www-data configs/composer.local.json /tmp/mediawiki/
+RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
+    echo "${MEDIAWIKI_SHA512} *mediawiki.tar.gz" | sha512sum -c - &&\
+    sudo -u www-data tar -xzf mediawiki.tar.gz --strip-components=1 --directory /tmp/mediawiki/ &&\
+    rm mediawiki.tar.gz
+RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/mediawiki'
 
 #
 # 미디어위키 도커이미지 생성 스테이지. 미디어위키 실행에 필요한 각종 PHP
@@ -30,10 +37,6 @@ RUN sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 #   /tini                  tini
 #
 FROM femiwiki/base:build-2
-ARG MEDIAWIKI_MAJOR_VERSION
-ARG MEDIAWIKI_BRANCH
-ARG MEDIAWIKI_VERSION
-ARG MEDIAWIKI_SHA512
 
 # Set timezone
 ENV TZ=Asia/Seoul
@@ -43,16 +46,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY php/php.ini /usr/local/etc/php/php.ini
 COPY php/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-# MediaWiki setup
-RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
-    echo "${MEDIAWIKI_SHA512} *mediawiki.tar.gz" | sha512sum -c - &&\
-    mkdir -p /srv/femiwiki.com/ &&\
-    chown www-data:www-data /srv/femiwiki.com/ &&\
-    sudo -u www-data tar -xzf mediawiki.tar.gz --strip-components=1 --directory /srv/femiwiki.com/ &&\
-    rm mediawiki.tar.gz
-
 # Install Mediawiki extensions
-COPY --from=0 --chown=www-data /tmp/extensions/ /srv/femiwiki.com/
+COPY --from=0 --chown=www-data /tmp/mediawiki /srv/femiwiki.com
 
 # Create a cache directory for mediawiki
 RUN sudo -u www-data mkdir -p /tmp/cache
