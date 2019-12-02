@@ -438,6 +438,8 @@ $wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
 $wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
+$wgNamespaceContentModels[121] = 'flow-board'; # Item talk
+$wgNamespaceContentModels[123] = 'flow-board'; # Property talk
 $wgNamespaceContentModels[275] = 'flow-board'; # Widget talk
 $wgNamespaceContentModels[829] = 'flow-board'; # Module talk
 $wgNamespaceContentModels[1199] = 'flow-board'; # Translations talk
@@ -692,6 +694,16 @@ $wgVisualEditorEnableVisualSectionEditing = true;
 // Widgets
 require_once "$IP/extensions/Widgets/Widgets.php";
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
+
+// WikiBase
+$wgEnableWikibaseRepo = true;
+$wgEnableWikibaseClient = true;
+require_once "$IP/extensions/Wikibase/repo/Wikibase.php";
+require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
+require_once "$IP/extensions/Wikibase/client/WikibaseClient.php";
+require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
+$wgWBRepoSettings['enableEntitySearchUI'] = false;
+$wgWBRepoSettings['siteLinkGroups'] = [ 'femiwiki' ];
 
 // WikiEditor
 wfLoadExtension( 'WikiEditor' );

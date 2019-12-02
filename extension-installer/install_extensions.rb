@@ -17,7 +17,7 @@ COMPOSER_HOME_PATH = '/tmp/composer'
 # Temporary directory path for downloading
 TEMP_DIRECTORY_PATH = '/tmp'
 # Target directory path for extensions
-DESTINATION_PATH = '/tmp/extensions'
+DESTINATION_PATH = '/tmp/mediawiki'
 
 # Official mediawiki extensions
 extensions_official = [
@@ -77,6 +77,7 @@ extensions_official = [
   'VisualEditor',
   'Widgets',
   'WikiEditor',
+  'Wikibase',
 ]
 # Official mediawiki skins
 skins_official = [
