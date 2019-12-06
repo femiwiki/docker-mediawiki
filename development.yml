@@ -13,7 +13,7 @@ services:
     environment:
       - CADDYPATH=/etc/caddycerts
   fastcgi:
-    image: femiwiki/mediawiki:build-24
+    image: femiwiki/mediawiki:build-25
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
