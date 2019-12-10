@@ -571,6 +571,11 @@ wfLoadExtension( 'TemplateSandbox' );
 
 // TemplateStyles
 wfLoadExtension( 'TemplateStyles' );
+$wgTemplateStylesAllowedUrls = [
+	'font' => [
+		'<^https://fonts\\.googleapis\\.com/css(?:[?#]|$)>',
+	],
+];
 
 // TemplateWizard
 wfLoadExtension( 'TemplateWizard' );
