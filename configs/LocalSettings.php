@@ -524,6 +524,14 @@ wfLoadExtension( 'Popups' );
 $wgPopupsOptInDefaultState = '1';
 $wgDefaultUserOptions[ 'popupsreferencepreviews' ] = '1';
 
+// RelatedArticles
+wfLoadExtension( 'RelatedArticles' );
+$wgRelatedArticlesFooterWhitelistedSkins = [
+	'femiwiki',
+	'vector'
+];
+$wgRelatedArticlesCardLimit = 6;
+
 // Renameuser
 wfLoadExtension( 'Renameuser' );
 

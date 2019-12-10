@@ -57,6 +57,7 @@ extensions_official = [
   'ParserFunctions',
   'Poem',
   'Popups',
+  'RelatedArticles',
   'Renameuser',
   'ReplaceText',
   'RevisionSlider',
