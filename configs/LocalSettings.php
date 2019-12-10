@@ -566,6 +566,9 @@ wfLoadExtension( 'SyntaxHighlight_GeSHi' );
 // TemplateData
 wfLoadExtension( 'TemplateData' );
 
+// TemplateSandbox
+wfLoadExtension( 'TemplateSandbox' );
+
 // TemplateStyles
 wfLoadExtension( 'TemplateStyles' );
 

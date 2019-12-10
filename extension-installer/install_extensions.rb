@@ -65,6 +65,7 @@ extensions_official = [
   'SpamBlacklist',
   'SyntaxHighlight_GeSHi',
   'TemplateData',
+  'TemplateSandbox',
   'TemplateStyles',
   'TemplateWizard',
   'TextExtracts',
