@@ -511,6 +511,7 @@ wfLoadExtension( 'OpenGraphMeta' );
 
 // PageImages
 wfLoadExtension( 'PageImages' );
+$wgPageImagesLeadSectionOnly = false;
 
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
