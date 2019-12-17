@@ -23,6 +23,11 @@ services:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
       - l18n_cache:/tmp/cache
+      ## 스킨 등 개발할 때엔 아래 라인을 주석해제
+      # - ../skin:/srv/femiwiki.com/skins/Femiwiki
+      # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
+  parsoid:
+    image: femiwiki/parsoid:build-0
   mysql:
     image: mysql:8.0.17
     command: --default-authentication-plugin=mysql_native_password
@@ -33,17 +38,16 @@ services:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
   memcached:
     image: memcached:1.5.17-alpine
-  parsoid:
-    image: femiwiki/parsoid:build-0
   ## 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
-  #restbase:
-  #  image: femiwiki/restbase:build-1
-  #  volumes:
-  #    - ./configs:/a:ro
-  #cassandra:
-  #  image: femiwiki/cassandra:build-0
-  #  volumes:
-  #    - cassandra:/var/lib/cassandra
+  # restbase:
+  #   image: femiwiki/restbase:build-1
+  #   volumes:
+  #     - ./configs:/a:ro
+  # cassandra:
+  #   image: femiwiki/cassandra:build-0
+  #   volumes:
+  #     - cassandra:/var/lib/cassandra
+
 volumes:
   files:
   caddy:

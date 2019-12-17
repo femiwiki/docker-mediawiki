@@ -1,5 +1,4 @@
 version: '3'
-
 services:
   http:
     image: femiwiki/caddy:1.0.3
@@ -12,30 +11,25 @@ services:
       - caddy:/etc/caddycerts
     environment:
       - CADDYPATH=/etc/caddycerts
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
   fastcgi:
     image: femiwiki/mediawiki:build-26
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
       - l18n_cache:/tmp/cache
-      # 스킨 등 개발할 때엔 아래 라인을 주석해제
-      #- ../skin:/srv/femiwiki.com/skins/Femiwiki
-      #- ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
+      ## 스킨 등 개발할 때엔 아래 라인을 주석해제
+      # - ../skin:/srv/femiwiki.com/skins/Femiwiki
+      # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
     image: femiwiki/parsoid:build-0
-  # 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
-  # restbase:
-  #   image: femiwiki/restbase:build-1
-  #   ports:
-  #     - 7231:7231
-  #   volumes:
-  #     - ./configs:/a:ro
-  #   networks:
-  #     default:
-  #       aliases:
-  #         - RESTBASE_HOSTNAME # secret.php.example에 적힌 기본값
   mysql:
-    image: mysql:8
+    image: mysql:8.0.17
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - database:/var/lib/mysql
@@ -54,6 +48,17 @@ services:
       default:
         aliases:
           - MEMCACHED_HOSTNAME # secret.php.example에 적힌 기본값
+  ## 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
+  # restbase:
+  #   image: femiwiki/restbase:build-1
+  #   ports:
+  #     - 7231:7231
+  #   volumes:
+  #     - ./configs:/a:ro
+  #   networks:
+  #     default:
+  #       aliases:
+  #         - RESTBASE_HOSTNAME # secret.php.example에 적힌 기본값
 
 volumes:
   files:
