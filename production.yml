@@ -18,7 +18,7 @@ services:
         max_attempts: 3
         window: 120s
   fastcgi:
-    image: femiwiki/mediawiki:build-26
+    image: femiwiki/mediawiki:build-27
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com

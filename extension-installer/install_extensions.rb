@@ -89,15 +89,18 @@ skins_official = [
 extensions_3rdparty = {
   'AWS' => 'https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.10.0.tar.gz',
   'DiscordNotifications' => 'https://github.com/femiwiki/DiscordNotifications/archive/master.tar.gz',
-  'EmbedVideo' => 'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/v2.8.0/EmbedVideo-v2.8.0.tar.gz',
-  'LocalisationUpdate' => 'https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_33.tar.gz',
+  'EmbedVideo' => 'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz',
+  'LocalisationUpdate' => 'https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_34.tar.gz',
+  # Use REL1_34 branch while upgrading
+  'Sanctions' => 'https://github.com/femiwiki/Sanctions/archive/REL1_34.tar.gz',
   'SimpleMathJax' => 'https://github.com/jmnote/SimpleMathJax/archive/v0.7.4.tar.gz',
 }
 # Extensions developed by Femiwiki team
 extensions_femiwiki = [
   'CategoryIntersectionSearch',
   'FacetedCategory',
-  'Sanctions',
+  # Commented out while upgrading
+  # 'Sanctions',
   'UnifiedExtensionForFemiwiki',
 ]
 
@@ -151,7 +154,8 @@ input_file.write(
     "#{url}\n out=#{extension}.tar.gz\n"
   end .join +
   name_to_aria2_input_line('Vector', 'skin') +
-  "https://github.com/femiwiki/FemiwikiSkin/archive/master.tar.gz\n out=Femiwiki.tar.gz\n"
+  # Use REL1_34 branch while upgrading
+  "https://github.com/femiwiki/FemiwikiSkin/archive/REL1_34.tar.gz\n out=Femiwiki.tar.gz\n"
 )
 input_file.close
 
