@@ -2,12 +2,12 @@
 # 미디어위키 및 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM femiwiki/base-extensions:build-0
+FROM femiwiki/base-extensions:build-1
 
-ARG MEDIAWIKI_MAJOR_VERSION=1.33
-ARG MEDIAWIKI_BRANCH=REL1_33
-ARG MEDIAWIKI_VERSION=1.33.1
-ARG MEDIAWIKI_SHA512=c88f08f88cc10fdc960d538ea428eb779c0902fec90994e391fd2b2d1483dc4a1334fda809ebf01d7b84607fe72eeda7d80590a7d19aebcdc8d7f0f7e633d72c
+ARG MEDIAWIKI_MAJOR_VERSION=1.34
+ARG MEDIAWIKI_BRANCH=REL1_34
+ARG MEDIAWIKI_VERSION=1.34.0
+ARG MEDIAWIKI_SHA512=d133042fbc2918e5a901d732573d98c17ef56712187c4de60af5b6b46d52acd28b79ef0b3539d8922ad95430bfb45a1b4c91efe60f8c45adb785f3e5e3c645f5
 
 RUN mkdir -p /tmp/mediawiki/ &&\
     chown www-data:www-data /tmp/mediawiki/

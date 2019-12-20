@@ -82,6 +82,7 @@ $wgUserEmailUseReplyTo = true;
 $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
+$wgEnableSpecialMute = true;
 
 // Database settings
 $wgDBtype = 'mysql';
@@ -314,9 +315,6 @@ $wgVirtualRestConfig['modules']['parsoid'] = [
  * $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
  */
 
-// Set a cookie when a user is autoblocked
-$wgCookieSetOnAutoblock = true;
-
 //
 // Extensions
 //
@@ -532,6 +530,7 @@ $wgRelatedArticlesFooterWhitelistedSkins = [
 	'vector'
 ];
 $wgRelatedArticlesCardLimit = 6;
+$wgRelatedArticlesDescriptionSource = 'textextracts';
 
 // Renameuser
 wfLoadExtension( 'Renameuser' );
@@ -712,15 +711,20 @@ $wgVisualEditorEnableVisualSectionEditing = true;
 require_once "$IP/extensions/Widgets/Widgets.php";
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
-// WikiBase
+// WikiBase - repo
 $wgEnableWikibaseRepo = true;
-$wgEnableWikibaseClient = true;
 require_once "$IP/extensions/Wikibase/repo/Wikibase.php";
 require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
-require_once "$IP/extensions/Wikibase/client/WikibaseClient.php";
-require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 $wgWBRepoSettings['enableEntitySearchUI'] = false;
 $wgWBRepoSettings['siteLinkGroups'] = [ 'femiwiki' ];
+
+// WikiBase - client
+$wgEnableWikibaseClient = true;
+require_once "$IP/extensions/Wikibase/client/WikibaseClient.php";
+require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
+// See https://github.com/femiwiki/docker-mediawiki/issues/324
+// $wgWBClientSettings['dataBridgeEnabled'] = true;
+// $wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgCanonicalServer . $wgArticlePath ) . '$';
 
 // WikiEditor
 wfLoadExtension( 'WikiEditor' );
@@ -751,6 +755,10 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	# $wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
 	# $wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
 	# $wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
+	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' .
+	str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)',
+		$wgCanonicalServer . $wgArticlePath ) . '$';
+
 	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0' ];
 
 	# 디버그 툴 활성화
