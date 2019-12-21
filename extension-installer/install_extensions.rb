@@ -71,7 +71,8 @@ extensions_official = [
   'TextExtracts',
   'Thanks',
   'TitleBlacklist',
-  'Translate',
+  # Workaround https://github.com/femiwiki/docker-mediawiki/issues/328
+  # 'Translate',
   'TwoColConflict',
   'UniversalLanguageSelector',
   'UploadWizard',
@@ -93,6 +94,8 @@ extensions_3rdparty = {
   'EmbedVideo' => 'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz',
   'LocalisationUpdate' => 'https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_34.tar.gz',
   'SimpleMathJax' => 'https://github.com/jmnote/SimpleMathJax/archive/v0.7.4.tar.gz',
+  # Workaround https://github.com/femiwiki/docker-mediawiki/issues/328
+  'Translate' => 'https://github.com/wikimedia/mediawiki-extensions-Translate/archive/4c3ad6f.tar.gz',
 }
 # Extensions developed by Femiwiki team
 extensions_femiwiki = [
