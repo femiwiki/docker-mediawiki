@@ -44,6 +44,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Configure PHP
 COPY php/php.ini /usr/local/etc/php/php.ini
+COPY php/php.ini /usr/local/etc/php-fpm.d/www.conf
 COPY php/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # Install Mediawiki extensions
