@@ -82,6 +82,7 @@ $wgUserEmailUseReplyTo = true;
 $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
+$wgEmailConfirmToEdit = true;
 $wgEnableSpecialMute = true;
 
 // Database settings
@@ -717,14 +718,15 @@ require_once "$IP/extensions/Wikibase/repo/Wikibase.php";
 require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 $wgWBRepoSettings['enableEntitySearchUI'] = false;
 $wgWBRepoSettings['siteLinkGroups'] = [ 'femiwiki' ];
+$wgWBRepoSettings['dataBridgeEnabled'] = true;
 
 // WikiBase - client
 $wgEnableWikibaseClient = true;
 require_once "$IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 // See https://github.com/femiwiki/docker-mediawiki/issues/324
-// $wgWBClientSettings['dataBridgeEnabled'] = true;
-// $wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgCanonicalServer . $wgArticlePath ) . '$';
+$wgWBClientSettings['dataBridgeEnabled'] = true;
+$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgCanonicalServer . $wgArticlePath ) . '$';
 
 // WikiEditor
 wfLoadExtension( 'WikiEditor' );
@@ -781,3 +783,5 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgCaptchaTriggers['createaccount'] = false;
 	$wgCaptchaTriggers['badlogin'] = false;
 }
+
+$wgSpecialSearchFormOptions['showDescriptions'] = true;
