@@ -83,6 +83,7 @@ $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
 $wgEmailConfirmToEdit = true;
+$wgEnableUserEmailBlacklist = true;
 $wgEnableSpecialMute = true;
 
 // Database settings
