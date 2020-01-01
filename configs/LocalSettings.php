@@ -771,6 +771,9 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	# File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
 	$wgUseFileCache = false;
 
+	# 이메일 인증 요구 비활성화
+	$wgEmailConfirmToEdit = false;
+
 	# AWS 플러그인 비활성화
 	$wgAWSBucketName = null;
 	$wgAWSBucketPrefix = null;
