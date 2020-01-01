@@ -99,8 +99,8 @@ $wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
 $wgPasswordDefault = 'argon2';
 
 // Change settings related to password strength and security.
-$wgPasswordPolicy['policies']['default'] = [
-	'MinimalPasswordLength' => [ 'value' => 8, 'suggestChangeOnLogin' => true ]
+$wgPasswordPolicy['policies']['default']['MinimalPasswordLength'] = [
+	'value' => 8, 'suggestChangeOnLogin' => true
 ];
 
 // Shared memory settings
