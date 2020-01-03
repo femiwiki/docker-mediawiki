@@ -89,7 +89,7 @@ skins_official = [
 # 3rd party extensions and their URLs
 extensions_3rdparty = {
   # See https://github.com/femiwiki/femiwiki/issues/140
-  'AWS' => 'https://github.com/edwardspec/mediawiki-aws-s3/archive/9de2389.tar.gz',
+  'AWS' => 'https://github.com/edwardspec/mediawiki-aws-s3/archive/78c82ab.tar.gz',
   'DiscordNotifications' => 'https://github.com/kulttuuri/DiscordNotifications/archive/1.12.tar.gz',
   'EmbedVideo' => 'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz',
   'LocalisationUpdate' => 'https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_34.tar.gz',
