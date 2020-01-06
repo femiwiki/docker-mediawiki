@@ -305,17 +305,13 @@ $wgVirtualRestConfig['modules']['parsoid'] = [
 	'domain' => 'femiwiki.com'
 ];
 
-/*
- * 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
- *
- * // Restbase server Setting
- * $wgVirtualRestConfig['modules']['restbase'] = [
- * 	'url' => 'http://restbase:7231',
- * 	'domain' => 'femiwiki.com'
- * ];
- * $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
- * $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
- */
+// Restbase server Setting
+$wgVirtualRestConfig['modules']['restbase'] = [
+	'url' => 'http://restbase:7231',
+	'domain' => 'femiwiki.com'
+];
+$wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
+$wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 
 //
 // Extensions
@@ -706,8 +702,10 @@ $wgVisualEditorEnableDiffPage = true;
 // Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
-// enable the section editing
+// Enable the section editing
 $wgVisualEditorEnableVisualSectionEditing = true;
+// Disallow switching from wikitext to visual editor if doing so may cause dirty diffs
+$wgVisualEditorAllowLossySwitching = false;
 
 // Widgets
 require_once "$IP/extensions/Widgets/Widgets.php";
@@ -754,10 +752,9 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	# 도메인 변경
 	$wgServer = 'http://' . DEBUG_MODE;
 	$wgCanonicalServer = 'http://' . DEBUG_MODE;
-	# 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
-	# $wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
-	# $wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
-	# $wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
+	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
+	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
+	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' .
 	str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)',
 		$wgCanonicalServer . $wgArticlePath ) . '$';

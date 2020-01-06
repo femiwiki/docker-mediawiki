@@ -24,8 +24,7 @@ rewrite /w {
   to /index.php
 }
 
-# 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
 # Proxy requests to RESTBase
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
-# proxy /femiwiki.com restbase:7231
+proxy /femiwiki.com restbase:7231

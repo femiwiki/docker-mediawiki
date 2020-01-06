@@ -48,17 +48,16 @@ services:
       default:
         aliases:
           - MEMCACHED_HOSTNAME # secret.php.example에 적힌 기본값
-  ## 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
-  # restbase:
-  #   image: femiwiki/restbase:build-1
-  #   ports:
-  #     - 7231:7231
-  #   volumes:
-  #     - ./configs:/a:ro
-  #   networks:
-  #     default:
-  #       aliases:
-  #         - RESTBASE_HOSTNAME # secret.php.example에 적힌 기본값
+  restbase:
+    image: femiwiki/restbase:build-2
+    ports:
+      - 7231:7231
+    volumes:
+      - ./configs:/a:ro
+    networks:
+      default:
+        aliases:
+          - RESTBASE_HOSTNAME # secret.php.example에 적힌 기본값
 
 volumes:
   files:
