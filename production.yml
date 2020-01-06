@@ -42,6 +42,7 @@ services:
     image: femiwiki/restbase:build-2
     volumes:
       - ./configs:/a:ro
+      - /srv/restbase.sqlite3:/srv/restbase/db.sqlite3
 
 volumes:
   files:
