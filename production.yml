@@ -38,15 +38,10 @@ services:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
   memcached:
     image: memcached:1.5.17-alpine
-  ## 잠시 끔. https://github.com/femiwiki/femiwiki/issues/82 참고
-  # restbase:
-  #   image: femiwiki/restbase:build-1
-  #   volumes:
-  #     - ./configs:/a:ro
-  # cassandra:
-  #   image: femiwiki/cassandra:build-0
-  #   volumes:
-  #     - cassandra:/var/lib/cassandra
+  restbase:
+    image: femiwiki/restbase:build-2
+    volumes:
+      - ./configs:/a:ro
 
 volumes:
   files:
