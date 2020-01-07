@@ -450,6 +450,8 @@ wfLoadExtension( 'Gadgets' );
 $wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
 $wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
 $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
+$wgGrantPermissions['editinterface']['gadgets-edit'] = true;
+$wgGrantPermissions['editinterface']['gadgets-definition-edit'] = true;
 
 // Graph
 wfLoadExtension( 'Graph' );
