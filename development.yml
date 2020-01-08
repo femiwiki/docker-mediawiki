@@ -50,10 +50,6 @@ services:
           - MEMCACHED_HOSTNAME # secret.php.example에 적힌 기본값
   restbase:
     image: femiwiki/restbase:build-2
-    ports:
-      - 7231:7231
-    volumes:
-      - ./configs:/a:ro
     networks:
       default:
         aliases:
