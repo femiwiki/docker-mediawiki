@@ -27,7 +27,7 @@ services:
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
       # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
-    image: femiwiki/parsoid:build-1
+    image: femiwiki/parsoid:build-2
   mysql:
     image: mysql:8.0.17
     command: --default-authentication-plugin=mysql_native_password
