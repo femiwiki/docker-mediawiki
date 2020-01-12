@@ -28,6 +28,13 @@ services:
       # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
     image: femiwiki/parsoid:build-1
+  restbase:
+    image: femiwiki/restbase:build-2
+    environment:
+      # Workaround for https://github.com/femiwiki/femiwiki/issues/151
+      - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php
+    volumes:
+      - /srv/restbase.sqlite3:/srv/restbase/db.sqlite3
   mysql:
     image: mysql:8.0.17
     command: --default-authentication-plugin=mysql_native_password
@@ -38,10 +45,6 @@ services:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
   memcached:
     image: memcached:1.5.17-alpine
-  restbase:
-    image: femiwiki/restbase:build-2
-    volumes:
-      - /srv/restbase.sqlite3:/srv/restbase/db.sqlite3
 
 volumes:
   files:
