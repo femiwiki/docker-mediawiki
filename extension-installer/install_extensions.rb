@@ -71,13 +71,14 @@ extensions_official = [
   'TextExtracts',
   'Thanks',
   'TitleBlacklist',
-  # Workaround https://github.com/femiwiki/docker-mediawiki/issues/328
+  # See https://github.com/femiwiki/docker-mediawiki/issues/328
   # 'Translate',
   'TwoColConflict',
   'UniversalLanguageSelector',
   'UploadWizard',
   'UserMerge',
-  'VisualEditor',
+  # See https://github.com/femiwiki/femiwiki/issues/152
+  # 'VisualEditor',
   'Widgets',
   'WikiEditor',
   'Wikibase',
@@ -92,10 +93,13 @@ extensions_3rdparty = {
   'AWS' => 'https://github.com/edwardspec/mediawiki-aws-s3/archive/78c82ab.tar.gz',
   'DiscordNotifications' => 'https://github.com/kulttuuri/DiscordNotifications/archive/1.12.tar.gz',
   'EmbedVideo' => 'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz',
+  # See https://github.com/femiwiki/femiwiki/issues/114
   'LocalisationUpdate' => 'https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_34.tar.gz',
   'SimpleMathJax' => 'https://github.com/jmnote/SimpleMathJax/archive/v0.7.4.tar.gz',
-  # Workaround https://github.com/femiwiki/docker-mediawiki/issues/328
+  # See https://github.com/femiwiki/docker-mediawiki/issues/328
   'Translate' => 'https://github.com/wikimedia/mediawiki-extensions-Translate/archive/4c3ad6f.tar.gz',
+  # See https://github.com/femiwiki/femiwiki/issues/152
+  'VisualEditor' => 'https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_34/REL1_34.tar.gz',
 }
 # Extensions developed by Femiwiki team
 extensions_femiwiki = [
