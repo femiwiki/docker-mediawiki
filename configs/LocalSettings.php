@@ -224,6 +224,8 @@ $wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
 // FemiwikiTeam is just a list of all Femiwiki team member
 $wgGroupPermissions['femiwiki-team']['editprotected'] = true;
+$wgGroupPermissions['femiwiki-team']['editsemiprotected'] = true;
+$wgGroupPermissions['femiwiki-team']['protect'] = true;
 
 // Remain commemorative Seeder group
 $wgGroupPermissions['seeder']['edit'] = true;
