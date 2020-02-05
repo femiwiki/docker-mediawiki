@@ -1,0 +1,14 @@
+on: [push]
+
+jobs:
+  docker_image_job:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@2.12
+      with:
+        name: femiwiki/mediawiki
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        snapshot: true
