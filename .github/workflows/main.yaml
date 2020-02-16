@@ -12,6 +12,6 @@ jobs:
       uses: elgohr/Publish-Docker-Github-Action@2.12
       with:
         name: femiwiki/mediawiki
-        username: ${{ secrets.DOCKER_USERNAME }}
+        username: femiwiki
         password: ${{ secrets.DOCKER_PASSWORD }}
         snapshot: true
