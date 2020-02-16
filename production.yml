@@ -37,6 +37,8 @@ services:
       - /srv/restbase.sqlite3:/srv/restbase/db.sqlite3
   mysql:
     image: mysql:8.0.17
+    ports:
+      - 3306:3306
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./mysql:/etc/mysql/conf.d:ro
