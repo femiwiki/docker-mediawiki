@@ -1,9 +1,5 @@
 version: '3.5'
 services:
-  ranking-bot:
-    image: femiwiki/rankingbot:build-2
-    env_file:
-      - configs/bot-secret.env
   backupbot:
     image: femiwiki/backupbot:build-5
     env_file:
