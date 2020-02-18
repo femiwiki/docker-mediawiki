@@ -36,7 +36,7 @@ RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --work
 #   /tmp/cache             캐시 디렉토리
 #   /tini                  tini
 #
-FROM femiwiki/base:build-2
+FROM femiwiki/base:20200218151114874816
 
 # Set timezone
 ENV TZ=Asia/Seoul
