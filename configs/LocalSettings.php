@@ -85,6 +85,7 @@ $wgEmailAuthentication = true;
 $wgEmailConfirmToEdit = true;
 $wgEnableUserEmailBlacklist = true;
 $wgEnableSpecialMute = true;
+$wgAllowRequiringEmailForResets = true;
 
 // Database settings
 $wgDBtype = 'mysql';
