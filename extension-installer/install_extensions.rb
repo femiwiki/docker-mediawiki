@@ -102,22 +102,23 @@ extensions_3rdparty = {
   'VisualEditor' => 'https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_34/REL1_34.tar.gz',
 }
 # Extensions developed by Femiwiki team
-extensions_femiwiki = [
-  'CategoryIntersectionSearch',
-  'FacetedCategory',
-  'Sanctions',
-  'UnifiedExtensionForFemiwiki',
-]
+extensions_femiwiki = {
+  'CategoryIntersectionSearch' => 'v0.0.2',
+  'FacetedCategory' => 'v0.0.4',
+  'Sanctions' => 'v1.0.3',
+  'UnifiedExtensionForFemiwiki' => 'v0.0.2',
+}
+skin_femiwiki_version = 'v1.0.1'
 
 # Names of the all extensions
 extensions_all = (
   extensions_official +
   extensions_3rdparty.keys +
-  extensions_femiwiki
+  extensions_femiwiki.keys
 )
 extensions_github = (
   extensions_3rdparty.keys +
-  extensions_femiwiki
+  extensions_femiwiki.keys
 )
 skins_all = [
   'Femiwiki',
@@ -152,14 +153,14 @@ input_file.write(
   Parallel.map(extensions_official) do |extension|
     name_to_aria2_input_line(extension, 'extension')
   end .join +
-  extensions_femiwiki.map do |extension|
-    "https://github.com/femiwiki/#{extension}/archive/master.tar.gz\n out=#{extension}.tar.gz\n"
+  extensions_femiwiki.map do |extension, version|
+    "https://github.com/femiwiki/#{extension}/archive/#{version}.tar.gz\n out=#{extension}.tar.gz\n"
   end .join +
   extensions_3rdparty.map do |extension, url|
     "#{url}\n out=#{extension}.tar.gz\n"
   end .join +
   name_to_aria2_input_line('Vector', 'skin') +
-  "https://github.com/femiwiki/FemiwikiSkin/archive/master.tar.gz\n out=Femiwiki.tar.gz\n"
+  "https://github.com/femiwiki/FemiwikiSkin/archive/#{skin_femiwiki_version}.tar.gz\n out=Femiwiki.tar.gz\n"
 )
 input_file.close
 
