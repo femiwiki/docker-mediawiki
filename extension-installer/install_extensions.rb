@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'fileutils'
 require 'tempfile'
 require 'net/http'
@@ -6,8 +7,8 @@ require 'json'
 require 'parallel'
 
 # Get configurations from command line options
-if ARGV.length == 0
-  STDERR.puts '어느 미디어위키 브랜치에서 다운받을것인지를 입력해주세요. 예: "REL1_32"'
+if ARGV.empty?
+  warn '어느 미디어위키 브랜치에서 다운받을 것인지를 입력해 주세요. 예: "REL1_34"'
   exit 1
 end
 MEDIAWIKI_BRANCH = ARGV[0]
@@ -90,16 +91,23 @@ skins_official = [
 # 3rd party extensions and their URLs
 extensions_3rdparty = {
   # See https://github.com/femiwiki/femiwiki/issues/140
-  'AWS' => 'https://github.com/edwardspec/mediawiki-aws-s3/archive/78c82ab.tar.gz',
-  'DiscordNotifications' => 'https://github.com/kulttuuri/DiscordNotifications/archive/1.12.tar.gz',
-  'EmbedVideo' => 'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz',
+  'AWS' =>
+    'https://github.com/edwardspec/mediawiki-aws-s3/archive/78c82ab.tar.gz',
+  'DiscordNotifications' =>
+    'https://github.com/kulttuuri/DiscordNotifications/archive/1.12.tar.gz',
+  'EmbedVideo' =>
+    'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz',
   # See https://github.com/femiwiki/femiwiki/issues/114
-  'LocalisationUpdate' => 'https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_34.tar.gz',
-  'SimpleMathJax' => 'https://github.com/jmnote/SimpleMathJax/archive/v0.7.4.tar.gz',
+  'LocalisationUpdate' =>
+    'https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_34.tar.gz',
+  'SimpleMathJax' =>
+    'https://github.com/jmnote/SimpleMathJax/archive/v0.7.4.tar.gz',
   # See https://github.com/femiwiki/docker-mediawiki/issues/328
-  'Translate' => 'https://github.com/wikimedia/mediawiki-extensions-Translate/archive/4c3ad6f.tar.gz',
+  'Translate' =>
+    'https://github.com/wikimedia/mediawiki-extensions-Translate/archive/4c3ad6f.tar.gz',
   # See https://github.com/femiwiki/femiwiki/issues/152
-  'VisualEditor' => 'https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_34/REL1_34.tar.gz',
+  'VisualEditor' =>
+    'https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_34/REL1_34.tar.gz'
 }
 # Extensions developed by Femiwiki team
 extensions_femiwiki = {
@@ -120,9 +128,9 @@ extensions_github = (
   extensions_3rdparty.keys +
   extensions_femiwiki.keys
 )
-skins_all = [
-  'Femiwiki',
-  'Vector',
+skins_all = %w[
+  Femiwiki
+  Vector
 ]
 
 puts 'Started installing extensions'
@@ -152,13 +160,13 @@ end
 input_file.write(
   Parallel.map(extensions_official) do |extension|
     name_to_aria2_input_line(extension, 'extension')
-  end .join +
+  end.join +
   extensions_femiwiki.map do |extension, version|
     "https://github.com/femiwiki/#{extension}/archive/#{version}.tar.gz\n out=#{extension}.tar.gz\n"
-  end .join +
+  end.join +
   extensions_3rdparty.map do |extension, url|
     "#{url}\n out=#{extension}.tar.gz\n"
-  end .join +
+  end.join +
   name_to_aria2_input_line('Vector', 'skin') +
   "https://github.com/femiwiki/FemiwikiSkin/archive/#{skin_femiwiki_version}.tar.gz\n out=Femiwiki.tar.gz\n"
 )
