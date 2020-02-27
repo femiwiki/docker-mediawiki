@@ -1,0 +1,20 @@
+on:
+  repository_dispatch:
+    types: [bump-extension]
+
+jobs:
+  bump-extension:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-ruby@v1
+      with:
+        ruby-version: '2.6'
+    - run: |
+        ruby .github/bump_extension.rb '${{github.event.client_payload.extension}}' '${{github.event.client_payload.version}}'
+        git config --global user.email "admin@femiwiki.com"
+        git config --global user.name "femiwiki-bot"
+        git add .
+        git commit -m "Bump ${{github.event.client_payload.extension}} to ${{github.event.client_payload.version}}" \
+          -m "Triggerd on ${{github.event.client_payload.commits_url}}"
+        git push
