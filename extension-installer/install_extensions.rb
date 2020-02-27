@@ -17,127 +17,37 @@ MEDIAWIKI_BRANCH = ARGV[0]
 COMPOSER_HOME_PATH = '/tmp/composer'
 # Temporary directory path for downloading
 TEMP_DIRECTORY_PATH = '/tmp'
-# Target directory path for extensions
+# Target directory path for extensions and skins
 DESTINATION_PATH = '/tmp/mediawiki'
 
-# Official mediawiki extensions
-extensions_official = [
-  'AbuseFilter',
-  'AntiSpoof',
-  'BetaFeatures',
-  'BounceHandler',
-  'CategoryTree',
-  'CharInsert',
-  'CheckUser',
-  'Cite',
-  'CiteThisPage',
-  'CodeEditor',
-  'CodeMirror',
-  'CollaborationKit',
-  'ConfirmEdit',
-  'Description2',
-  'DisableAccount',
-  'Disambiguator',
-  'Echo',
-  'EventLogging',
-  'Flow',
-  'Gadgets',
-  'Graph',
-  'GuidedTour',
-  'HTMLTags',
-  'InputBox',
-  'Interwiki',
-  'Josa',
-  'Nuke',
-  # See https://github.com/femiwiki/femiwiki/issues/114
-  # 'LocalisationUpdate',
-  'LoginNotify',
-  'OATHAuth',
-  'OpenGraphMeta',
-  'PageImages',
-  'ParserFunctions',
-  'Poem',
-  'Popups',
-  'RelatedArticles',
-  'Renameuser',
-  'ReplaceText',
-  'RevisionSlider',
-  'Scribunto',
-  'SpamBlacklist',
-  'SyntaxHighlight_GeSHi',
-  'TemplateData',
-  'TemplateSandbox',
-  'TemplateStyles',
-  'TemplateWizard',
-  'TextExtracts',
-  'Thanks',
-  'TitleBlacklist',
-  # See https://github.com/femiwiki/docker-mediawiki/issues/328
-  # 'Translate',
-  'TwoColConflict',
-  'UniversalLanguageSelector',
-  'UploadWizard',
-  'UserMerge',
-  # See https://github.com/femiwiki/femiwiki/issues/152
-  # 'VisualEditor',
-  'Widgets',
-  'WikiEditor',
-  'Wikibase',
-]
-# Official mediawiki skins
-skins_official = [
-  'Vector',
-]
-# 3rd party extensions and their URLs
-extensions_3rdparty = {
-  # See https://github.com/femiwiki/femiwiki/issues/140
-  'AWS' =>
-    'https://github.com/edwardspec/mediawiki-aws-s3/archive/78c82ab.tar.gz',
-  'DiscordNotifications' =>
-    'https://github.com/kulttuuri/DiscordNotifications/archive/1.12.tar.gz',
-  'EmbedVideo' =>
-    'https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz',
-  # See https://github.com/femiwiki/femiwiki/issues/114
-  'LocalisationUpdate' =>
-    'https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_34.tar.gz',
-  'SimpleMathJax' =>
-    'https://github.com/jmnote/SimpleMathJax/archive/v0.7.4.tar.gz',
-  # See https://github.com/femiwiki/docker-mediawiki/issues/328
-  'Translate' =>
-    'https://github.com/wikimedia/mediawiki-extensions-Translate/archive/4c3ad6f.tar.gz',
-  # See https://github.com/femiwiki/femiwiki/issues/152
-  'VisualEditor' =>
-    'https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_34/REL1_34.tar.gz'
-}
-# Extensions developed by Femiwiki team
-extensions_femiwiki = {
-  'CategoryIntersectionSearch' => 'v0.0.2',
-  'FacetedCategory' => 'v0.0.4',
-  'Sanctions' => 'v1.0.3',
-  'UnifiedExtensionForFemiwiki' => 'v0.0.2',
-}
-skin_femiwiki_version = 'v1.0.1'
+extensions_data = JSON.parse(File.read("#{__dir__}/extensions.json"))
+# WMF extensions and skins
+WMF_extensions = extensions_data["WMF-extensions"]
+WMF_skins = extensions_data["WMF-skins"]
+# non-WMF extensions and skins
+non_WMF_all = extensions_data["non-WMF"]
+is_skin = -> k, v { v.key?('type') and v['type'] == 'skin' }
+non_WMF_extensions = non_WMF_all.reject(&is_skin)
+non_WMF_skins = non_WMF_all.select(&is_skin)
 
-# Names of the all extensions
+# Names of the all extensions and skins
 extensions_all = (
-  extensions_official +
-  extensions_3rdparty.keys +
-  extensions_femiwiki.keys
+  WMF_extensions +
+  non_WMF_extensions.keys
 )
-extensions_github = (
-  extensions_3rdparty.keys +
-  extensions_femiwiki.keys
+skins_all = (
+  WMF_skins +
+  non_WMF_skins.keys
 )
-skins_all = %w[
-  Femiwiki
-  Vector
-]
 
 puts 'Started installing extensions'
 
-# Make directories for each extensions
-extensions_all.each do |extension|
+# Make directories for each extensions and skins
+Parallel.each(extensions_all) do |extension|
   FileUtils.mkdir_p "#{DESTINATION_PATH}/extensions/#{extension}"
+end
+Parallel.each(skins_all) do |skin|
+  FileUtils.mkdir_p "#{DESTINATION_PATH}/skins/#{skin}"
 end
 
 # Create a file that can be used by aria2c with the '--input-file=' option
@@ -158,17 +68,19 @@ def name_to_aria2_input_line(name, type)
 end
 
 input_file.write(
-  Parallel.map(extensions_official) do |extension|
+  Parallel.map(WMF_extensions) do |extension|
     name_to_aria2_input_line(extension, 'extension')
   end.join +
-  extensions_femiwiki.map do |extension, version|
-    "https://github.com/femiwiki/#{extension}/archive/#{version}.tar.gz\n out=#{extension}.tar.gz\n"
+  Parallel.map(WMF_skins) do |skin|
+    name_to_aria2_input_line(skin, 'skin')
   end.join +
-  extensions_3rdparty.map do |extension, url|
-    "#{url}\n out=#{extension}.tar.gz\n"
-  end.join +
-  name_to_aria2_input_line('Vector', 'skin') +
-  "https://github.com/femiwiki/FemiwikiSkin/archive/#{skin_femiwiki_version}.tar.gz\n out=Femiwiki.tar.gz\n"
+  non_WMF_all.map do |name, data|
+    url = data["template"]
+    if data.key?('version')
+      url.gsub!('$1', data['version'])
+    end
+    url + "\n out=#{name}.tar.gz\n"
+  end.join
 )
 input_file.close
 
@@ -181,6 +93,9 @@ puts 'Finished download'
 Parallel.each(extensions_all) do |extension|
   `tar -xzf '#{TEMP_DIRECTORY_PATH}/#{extension}.tar.gz' --strip-components=1 --directory '#{DESTINATION_PATH}/extensions/#{extension}'`
 end
+Parallel.each(skins_all) do |skin|
+  `tar -xzf '#{TEMP_DIRECTORY_PATH}/#{skin}.tar.gz' --strip-components=1 --directory '#{DESTINATION_PATH}/skins/#{skin}'`
+end
 
 # Install composer dependencies via 'composer update'
 # Temporarily do this to all extensions because of https://phabricator.wikimedia.org/T215713
@@ -191,13 +106,10 @@ Parallel.each(extensions_all) do |extension|
   `COMPOSER_HOME=#{COMPOSER_HOME_PATH} composer update --no-dev --working-dir '#{DESTINATION_PATH}/extensions/#{extension}'`
 end
 
-# Install skins which should be located under 'skins' directory
 Parallel.each(skins_all) do |skin|
-  FileUtils.mkdir_p "#{DESTINATION_PATH}/skins/#{skin}"
-  `tar -xzf #{TEMP_DIRECTORY_PATH}/#{skin}.tar.gz --strip-components=1 --directory #{DESTINATION_PATH}/skins/#{skin}`
-  if File.exist? "#{DESTINATION_PATH}/skins/#{skin}/composer.json"
-    `COMPOSER_HOME=#{COMPOSER_HOME_PATH} composer update --no-dev --working-dir '#{DESTINATION_PATH}/skins/#{skin}'`
-  end
+  next unless File.exist? "#{DESTINATION_PATH}/skins/#{skin}/composer.json"
+
+  `COMPOSER_HOME=#{COMPOSER_HOME_PATH} composer update --no-dev --working-dir '#{DESTINATION_PATH}/skins/#{skin}'`
 end
 
 puts 'Finished extension intalling'
