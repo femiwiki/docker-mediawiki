@@ -70,7 +70,7 @@
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/archive/$1.tar.gz",
-      "version": "v1.0.3"
+      "version": "117e0ce"
     },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/$1.tar.gz",
