@@ -18,8 +18,6 @@ jobs:
       uses: peter-evans/create-pull-request@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: |
-          Bump ${{github.event.client_payload.extension}} to ${{steps.version.outputs.version}}
-          Triggerd on ${{github.event.client_payload.commits_url}}
+        commit-message: Bump ${{github.event.client_payload.extension}} to ${{steps.version.outputs.version}}
         title: Bump ${{github.event.client_payload.extension}} to ${{steps.version.outputs.version}}
         branch: bump-${{github.event.client_payload.extension}}
