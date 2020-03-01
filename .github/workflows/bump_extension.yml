@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
-    - run: echo "::set-output name=version::$(echo ${{github.event.client_payload.version}} | cut -c1-7)"
+    - run: echo "::set-output name=version::$(echo ${{github.event.client_payload.version}} | cut -c1-8)"
       id: version
     - uses: actions/setup-ruby@v1
       with:
