@@ -65,15 +65,13 @@ jobs:
           fi
         done; printf '\n'
     - name: Check if the container is still up
-      if: success()
-      run: test "$(docker service ps -qf 'desired-state=Running' mediawiki_fastcgi)"
+      run: test "$(docker service ps -qf 'desired-state=Running' -f 'desired-state=Ready' mediawiki_fastcgi)"
     - name: Try to access the mediawiki
-      if: success()
       run: curl -sSLvo /dev/null localhost || docker service logs mediawiki_fastcgi
 
     - name: Publish to Registry
       # Publish only when in the master branch
-      if: success() && (github.ref == 'refs/heads/master')
+      if: github.ref == 'refs/heads/master'
       uses: elgohr/Publish-Docker-Github-Action@2.12
       with:
         name: femiwiki/mediawiki
