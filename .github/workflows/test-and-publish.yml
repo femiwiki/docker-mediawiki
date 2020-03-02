@@ -1,0 +1,82 @@
+name: Lint, test and publish
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    name: PHP lint
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup PHP Action
+      uses: shivammathur/setup-php@1.7.2
+      with:
+        php-version: '7.3'
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: |
+        echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - uses: actions/cache@v1
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+    - run: |
+        composer install --prefer-source --quiet --no-interaction
+        composer test
+
+  docker_image:
+    name: Docker image test and publishing
+    runs-on: ubuntu-18.04
+    env:
+      # Maximum iteration limit for loops
+      LOOP_LIMIT: 300
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Edit configuration
+      run: |
+        mv configs/secret.php.example configs/secret.php;
+        printf 'const DEBUG_MODE = 'localhost';\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php;
+        sed -i'' -r 's/femiwiki\/mediawiki:.+/femiwiki\/mediawiki:docker-test/' development.yml
+
+    - name: Build docker image
+      run: |
+        docker pull femiwiki/mediawiki 2>/dev/null
+        docker build --tag femiwiki/mediawiki:docker-test --cache-from femiwiki/mediawiki .
+    - name: Initialize docker swarm and start services
+      run: |
+        docker swarm init
+        docker stack deploy -c development.yml mediawiki
+
+    - name: Access localhost until success
+      run: |
+        printf 'Waiting for http...'
+        COUNTER=0;
+        until [ "$(curl -Ls localhost 2>/dev/null)" ]; do
+          sleep 1;
+          printf '.';
+          (( ++COUNTER ));
+          if [ $COUNTER -gt $LOOP_LIMIT ]; then
+            printf '\n';
+            printf 'Failed to connect to localhost';
+            exit 1;
+          fi
+        done; printf '\n'
+    - name: Check if the container is still up
+      if: success()
+      run: test -z "$(docker service ps -qf 'desired-state=Shutdown' mediawiki_fastcgi)"
+    - name: Try to access the mediawiki
+      if: success()
+      run: curl -sSLvo /dev/null localhost || docker service logs mediawiki_fastcgi
+
+    - name: Publish to Registry
+      # Publish only when in the master branch
+      if: success() && (github.ref == 'refs/heads/master')
+      uses: elgohr/Publish-Docker-Github-Action@2.12
+      with:
+        name: femiwiki/mediawiki
+        username: femiwikibot
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        snapshot: true
