@@ -66,7 +66,7 @@ jobs:
         done; printf '\n'
     - name: Check if the container is still up
       if: success()
-      run: test -z "$(docker service ps -qf 'desired-state=Shutdown' mediawiki_fastcgi)"
+      run: test "$(docker service ps -qf 'desired-state=Running' mediawiki_fastcgi)"
     - name: Try to access the mediawiki
       if: success()
       run: curl -sSLvo /dev/null localhost || docker service logs mediawiki_fastcgi
