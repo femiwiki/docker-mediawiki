@@ -1,3 +1,5 @@
+name: Submit a PR for bumping extension
+
 on:
   repository_dispatch:
     types: [bump-extension]
