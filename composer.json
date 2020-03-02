@@ -6,8 +6,8 @@
   "scripts": {
     "fix": "phpcbf",
     "test": [
-      "parallel-lint --exclude vendor .",
-      "phpcs"
+      "parallel-lint configs/LocalSettings.php configs/secret.php.example",
+      "phpcs configs/LocalSettings.php configs/secret.php.example"
     ]
   }
 }
