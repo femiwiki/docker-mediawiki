@@ -41,12 +41,12 @@ jobs:
       id: tag
 
     - name: Build docker image using cache
-      env:
-        DOCKER_BUILDKIT: 1
+      # # BuildKit mode is compatible with UCP 3.2 or newer
+      # env:
+      #   DOCKER_BUILDKIT: 1
       run: |
         docker build \
           --cache-from femiwiki/mediawiki:latest \
-          --build-arg BUILDKIT_INLINE_CACHE=1 \
           --tag femiwiki/mediawiki:latest \
           --tag femiwiki/mediawiki:docker-test \
           --tag femiwiki/mediawiki:${{ steps.tag.outputs.tag }} \
