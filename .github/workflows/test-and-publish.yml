@@ -79,12 +79,17 @@ jobs:
     - name: Try to access the mediawiki
       run: curl -sSLvo /dev/null localhost || docker service logs mediawiki_fastcgi
 
+    - name: Login to Docker hub
+      # Login only when in the master branch
+      if: github.ref == 'refs/heads/master'
+      uses: azure/docker-login@v1
+      with:
+        username: femiwikibot
+        password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Publish to Registry
       # Publish only when in the master branch
       if: github.ref == 'refs/heads/master'
       run: |
-        docker login -u femiwikibot --password-stdin ${{ secrets.DOCKER_PASSWORD }}
-        docker push \
-          femiwiki/mediawiki:latest \
-          femiwiki/mediawiki:${{ steps.tag.outputs.tag }}
+        docker push femiwiki/mediawiki:latest
+        docker push femiwiki/mediawiki:${{ steps.tag.outputs.tag }}
         docker logout
