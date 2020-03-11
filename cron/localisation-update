@@ -9,10 +9,11 @@
 
 set -euo pipefail; IFS=$'\n\t'
 
+echo "Starting LU at $(date --iso-8601=minutes)"
 # Update l10n cache
 cd /srv/femiwiki.com/extensions/LocalisationUpdate
 
 sudo nice -n 19 php update.php
 sudo nice -n 19 php update.php --repoid femiwiki
 sudo nice -n 19 php update.php --repoid kulttuuri
-echo "All done"
+echo "All done at $(date --iso-8601=minutes)"
