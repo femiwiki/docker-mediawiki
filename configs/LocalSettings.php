@@ -290,6 +290,10 @@ $wgAllowImageTag = true;
 // all pages (that are not redirects) are considered as valid articles
 $wgArticleCountMethod = 'any';
 
+// Enable subpages in the main namespace
+// See https://github.com/femiwiki/docker-mediawiki/issues/267
+$wgNamespacesWithSubpages[NS_MAIN] = true;
+
 // Prevent Search for some namespaces
 $wgNamespaceRobotPolicies = [
 	NS_USER => 'noindex,nofollow',
