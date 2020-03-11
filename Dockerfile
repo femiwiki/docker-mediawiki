@@ -58,6 +58,11 @@ RUN sudo -u www-data mkdir -p /tmp/cache
 # Reference: https://www.mediawiki.org/wiki/Extension:Widgets
 RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 
+# Web server should be able to READ 'extensions/FlaggedRevs/frontend/modules'
+# directory Required by 'FlaggedRevs' extension
+# Reference: https://www.mediawiki.org/wiki/Extension:FlaggedRevs
+RUN chmod o+r /srv/femiwiki.com/extensions/FlaggedRevs/frontend/modules
+
 
 #
 # Install and register cron

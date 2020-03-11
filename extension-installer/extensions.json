@@ -18,6 +18,7 @@
     "Disambiguator",
     "Echo",
     "EventLogging",
+    "FlaggedRevs",
     "Flow",
     "Gadgets",
     "Graph",

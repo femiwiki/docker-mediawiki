@@ -430,6 +430,30 @@ $wgEventLoggingFile = '/var/log/mediawiki/events.log';
 // FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
+// FlaggedRevs
+require_once "$IP/extensions/FlaggedRevs/FlaggedRevs.php";
+$wgFlaggedRevsNamespaces = [
+	NS_MAIN,
+	NS_PROJECT,
+	NS_TEMPLATE,
+	828, // Module
+];
+// Use FlaggedRevs only as a protection-like mechanism
+$wgFlaggedRevsProtection = true;
+// Disable Special:ValidationStatistics updates
+$wgFlaggedRevsStatsAge = false;
+// Changes the settings of stable revisions of any page
+$wgDefaultUserOptions[ 'flaggedrevsstable' ] = 1; // FR_SHOW_STABLE_ALWAYS
+// Group permissions for femiwiki-team
+$wgGroupPermissions['femiwiki-team']['review'] = true;
+$wgGroupPermissions['femiwiki-team']['validate'] = true;
+$wgGroupPermissions['femiwiki-team']['autoreview'] = true;
+$wgGroupPermissions['femiwiki-team']['autoreviewrestore'] = true;
+$wgGroupPermissions['femiwiki-team']['movestable'] = true;
+$wgGroupPermissions['femiwiki-team']['stablesettings'] = true;
+// Everyone can view Special:UnreviewedPages
+$wgGroupPermissions['*']['unreviewedpages'] = true;
+
 // Flow
 wfLoadExtension( 'Flow' );
 $wgFlowEditorList = [ 'visualeditor', 'none' ];
