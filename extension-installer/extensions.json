@@ -95,8 +95,7 @@
       "template": "https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_34/REL1_34.tar.gz"
     },
     "AWS": {
-      "@note": "See https://github.com/femiwiki/femiwiki/issues/140",
-      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/78c82ab.tar.gz"
+      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.0.tar.gz"
     },
     "DiscordNotifications": {
       "template": "https://github.com/kulttuuri/DiscordNotifications/archive/1.12.tar.gz"
