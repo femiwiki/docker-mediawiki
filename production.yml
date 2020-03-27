@@ -18,7 +18,7 @@ services:
         max_attempts: 3
         window: 120s
   fastcgi:
-    image: femiwiki/mediawiki:2020-03-27T02-13acf184fe
+    image: femiwiki/mediawiki:2020-03-27T13-48d5c3bd9a
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
