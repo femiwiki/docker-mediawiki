@@ -37,7 +37,7 @@ jobs:
         printf 'const DEBUG_MODE = 'localhost';\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php;
         sed -i'' -r 's/femiwiki\/mediawiki:.+/femiwiki\/mediawiki:docker-test/' development.yml
 
-    - run: echo "::set-output name=tag::$(date +%Y-%m-%dT%H-%M)$(echo ${{ github.sha }} | cut -c1-8)"
+    - run: echo "::set-output name=tag::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
       id: tag
 
     - name: Build docker image using cache
