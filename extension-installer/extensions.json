@@ -80,7 +80,7 @@
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/archive/$1.tar.gz",
-      "version": "7115b6df"
+      "version": "2ddd26b7"
     },
     "LocalisationUpdate": {
       "@note": "See https://github.com/femiwiki/femiwiki/issues/114",
