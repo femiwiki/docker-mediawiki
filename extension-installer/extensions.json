@@ -27,8 +27,8 @@
     "InputBox",
     "Interwiki",
     "Josa",
-    "Nuke",
     "LoginNotify",
+    "Nuke",
     "OATHAuth",
     "OpenGraphMeta",
     "PageImages",
@@ -49,13 +49,14 @@
     "TextExtracts",
     "Thanks",
     "TitleBlacklist",
+    "Translate",
     "TwoColConflict",
     "UniversalLanguageSelector",
     "UploadWizard",
     "UserMerge",
     "Widgets",
-    "WikiEditor",
-    "Wikibase"
+    "Wikibase",
+    "WikiEditor"
   ],
   "WMF-skins": [
     "Vector"
@@ -85,10 +86,6 @@
     "LocalisationUpdate": {
       "@note": "See https://github.com/femiwiki/femiwiki/issues/114",
       "template": "https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_34.tar.gz"
-    },
-    "Translate": {
-      "@note": "See https://github.com/femiwiki/docker-mediawiki/issues/328",
-      "template": "https://github.com/wikimedia/mediawiki-extensions-Translate/archive/4c3ad6f.tar.gz"
     },
     "VisualEditor": {
       "@note": "See https://github.com/femiwiki/femiwiki/issues/152",
