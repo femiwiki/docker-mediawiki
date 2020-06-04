@@ -8,7 +8,7 @@ fastcgi / fastcgi:9000 php
 gzip
 header / {
   # HSTS
-  Strict-Transport-Security "max-age=15768000"
+  Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
   # Enable XSS filtering for legacy browsers
   X-XSS-Protection "1; mode=block"
   # Block content sniffing, and enable Cross-Origin Read Blocking
