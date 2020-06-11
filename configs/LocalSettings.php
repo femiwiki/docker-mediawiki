@@ -506,9 +506,6 @@ wfLoadExtension( 'Interwiki' );
 // Josa
 wfLoadExtension( 'Josa' );
 
-// Nuke
-wfLoadExtension( 'Nuke' );
-
 // LocalisationUpdate
 wfLoadExtension( 'LocalisationUpdate' );
 $wgLocalisationUpdateRepositories = [
@@ -531,6 +528,12 @@ $wgLocalisationUpdateHttpRequestOptions = [
 
 // LoginNotify
 wfLoadExtension( 'LoginNotify' );
+
+// Newsletter
+wfLoadExtension( 'Newsletter' );
+
+// Nuke
+wfLoadExtension( 'Nuke' );
 
 // OATHAuth
 wfLoadExtension( 'OATHAuth' );
