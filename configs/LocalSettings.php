@@ -48,22 +48,18 @@ $wgResourceLoaderMaxage = [
 	],
 ];
 
-/*
- * The URL path to the logo.  Make sure you change this from the default,
- * or else you'll overwrite your logo when you upgrade!
- *
- * References:
- *   https://www.mediawiki.org/wiki/Manual:$wgLogo
- *   https://www.mediawiki.org/wiki/Manual:$wgLogoHD
- */
+// The URL path to the logo.  Make sure you change this from the default,
+// or else you'll overwrite your logo when you upgrade!
+//
+// References:
+// - https://www.mediawiki.org/wiki/Manual:$wgLogo
+// - https://www.mediawiki.org/wiki/Manual:$wgLogoHD
 $wgLogo = "$wgResourceBasePath/skins/Femiwiki/images/logo-1200-630.png";
 
-/*
- * UPO means: this is also a user preference option
- *
- * Reference:
- *   https://www.mediawiki.org/wiki/Help:User_preference_option
-*/
+// UPO means: this is also a user preference option
+//
+// Reference:
+// - https://www.mediawiki.org/wiki/Help:User_preference_option
 $wgEnableEmail = true;
 $wgEnableUserEmail = true; # UPO
 $wgAllowHTMLEmail = true;
