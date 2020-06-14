@@ -48,13 +48,44 @@ $wgResourceLoaderMaxage = [
 	],
 ];
 
-// The URL path to the logo.  Make sure you change this from the default,
-// or else you'll overwrite your logo when you upgrade!
-//
+// The URL path to the logo.
 // References:
 // - https://www.mediawiki.org/wiki/Manual:$wgLogo
 // - https://www.mediawiki.org/wiki/Manual:$wgLogoHD
-$wgLogo = "$wgResourceBasePath/skins/Femiwiki/images/logo-1200-630.png";
+// - https://www.mediawiki.org/wiki/Manual:$wgLogos
+// Note:
+// - $wgLogoHD is deprecated since MW 1.35
+// - $wgLogos is introduced in MW 1.35, therefore below declaration does not affect the core yet.
+
+// maximally 135x135
+$wgLogo = "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-135x114.png";
+$wgLogos = [
+	// maximally 50x50
+	'icon' => "$wgResourceBasePath/fw-resources/icon-transparent-white-50x50.png",
+	// maximally 135x135
+	'1x' => $wgLogo,
+	// maximally 202x202
+	'1.5x' => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-202x170.png",
+	// maximally 270x270
+	'2x' => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-240x200.png",
+	'svg' => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet.svg",
+	'wordmark' => [
+		'src' => "$wgResourceBasePath/fw-resources/logo-long-transparent-white-202x56.png",
+		'1x' => "$wgResourceBasePath/fw-resources/logo-long-transparent-white.svg",
+		'width' => 202,
+		'height' => 56
+	]
+];
+if ( version_compare( MW_VERSION, '1.35', '<' ) ) {
+	global $wgLogos, $wgLogoHD, $wgFemiwikiLogos;
+	$wgLogoHD = [
+		# maximally 135x135
+		"1.5x" => $wgLogo,
+		# maximally 270x270
+		"2x" => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-240x200.png"
+	];
+	$wgFemiwikiLogos = $wgLogos;
+}
 
 // UPO means: this is also a user preference option
 //
