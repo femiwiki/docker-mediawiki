@@ -820,5 +820,3 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgCaptchaTriggers['createaccount'] = false;
 	$wgCaptchaTriggers['badlogin'] = false;
 }
-
-$wgSpecialSearchFormOptions['showDescriptions'] = true;
