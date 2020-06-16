@@ -798,7 +798,7 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0' ];
 
 	# 디버그 툴 활성화
-	$wgShowExceptionDetails = true;
+	require_once "includes/DevelopmentSettings.php";
 	$wgDebugToolbar = true;
 	$wgShowDBErrorBacktrace = true;
 
