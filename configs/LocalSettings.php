@@ -335,8 +335,8 @@ $wgGroupPermissions['abusefilter']['abusefilter-modify-restricted'] = true;
 $wgGroupPermissions['*']['abusefilter-log-detail'] = true;
 $wgGroupPermissions['*']['abusefilter-view'] = true;
 $wgGroupPermissions['*']['abusefilter-log'] = true;
-$wgGroupPermissions['sysop']['abusefilter-private'] = false;
-$wgGroupPermissions['checkuser']['abusefilter-private'] = true;
+$wgGroupPermissions['sysop']['abusefilter-privatedetails'] = false;
+$wgGroupPermissions['checkuser']['abusefilter-privatedetails'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
 // AntiSpoof
