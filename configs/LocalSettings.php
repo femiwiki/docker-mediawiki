@@ -297,6 +297,9 @@ $wgRestrictDisplayTitle = false;
 // Open external links in new tab
 $wgExternalLinkTarget = '_blank';
 
+// The number of authors that credited below an article text.
+$wgMaxCredits = 5;
+
 // Allow partial blocks to be created
 $wgEnablePartialBlocks = true;
 
