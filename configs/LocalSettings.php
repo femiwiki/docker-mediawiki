@@ -142,7 +142,12 @@ $wgMessageCacheType = CACHE_MEMCACHED;
 // To enable image uploads, make sure the 'images' directory
 // is writable, then set this to true:
 $wgEnableUploads = true;
-$wgFileExtensions[] = 'svg';
+$wgFileExtensions = array_merge(
+	$wgFileExtensions, [
+		'pdf',
+		'svg',
+	]
+);
 $wgAllowTitlesInSVG = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = '/usr/bin/convert';
@@ -527,6 +532,8 @@ $wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
 $wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
 $wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
 $wgHTMLTagsAttributes['iframe'] = [ 'src', 'class', 'style' ];
+$wgHTMLTagsAttributes['details'] = [];
+$wgHTMLTagsAttributes['summary'] = [];
 
 // InputBox
 wfLoadExtension( 'InputBox' );
