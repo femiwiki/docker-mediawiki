@@ -183,12 +183,12 @@ $wgDiff3 = '/usr/bin/diff3';
 
 // Default skin: you can change the default skin. Use the internal symbolic
 // names, ie 'vector', 'monobook':
-$wgDefaultSkin = 'femiwiki';
+$wgDefaultSkin = 'femiwikiskin';
 
 // Enabled skins.
 // The following skins were automatically enabled:
 wfLoadSkin( 'Vector' );
-wfLoadSkin( 'Femiwiki' );
+wfLoadSkin( 'FemiwikiSkin' );
 $wgFemiwikiHeadItems = [
 	'fav1' => "<link rel='apple-touch-icon' sizes='57x75' href='/fw-resources/favicons/apple-icon-57x57.png'>",
 	'fav2' => "<link rel='apple-touch-icon' sizes='60x60' href='/fw-resources/favicons/apple-icon-60x60.png'>",
