@@ -532,6 +532,8 @@ $wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
 $wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
 $wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
 $wgHTMLTagsAttributes['iframe'] = [ 'src', 'class', 'style' ];
+$wgHTMLTagsAttributes['details'] = [];
+$wgHTMLTagsAttributes['summary'] = [];
 
 // InputBox
 wfLoadExtension( 'InputBox' );
