@@ -209,6 +209,7 @@ $wgFemiwikiHeadItems = [
 	'fav17' => "<meta name='theme-color' content='#ffffff'>"
 ];
 $wgFemiwikiTwitterAccount = 'femiwikidotcome';
+$wgFemiwikiFacebookAppId = '1937597133150935';
 
 //
 // Namespace settings
@@ -578,6 +579,7 @@ wfLoadExtension( 'OATHAuth' );
 
 // OpenGraphMeta
 wfLoadExtension( 'OpenGraphMeta' );
+$egFacebookAppId = $wgFemiwikiFacebookAppId;
 
 // PageImages
 wfLoadExtension( 'PageImages' );
