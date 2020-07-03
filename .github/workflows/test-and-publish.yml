@@ -34,7 +34,7 @@ jobs:
     - name: Edit configuration
       run: |
         mv configs/secret.php.example configs/secret.php;
-        printf 'const DEBUG_MODE = 'localhost';\nrequire_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php;
+        printf 'require_once "$IP/includes/DevelopmentSettings.php";\n' >> configs/LocalSettings.php;
         sed -i'' -r 's/femiwiki\/mediawiki:.+/femiwiki\/mediawiki:docker-test/' development.yml
 
     - run: echo "::set-output name=tag::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
