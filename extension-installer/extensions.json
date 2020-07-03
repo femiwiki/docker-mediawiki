@@ -72,7 +72,7 @@
       "version": "116bb6a"
     },
     "Sanctions": {
-      "template": "https://github.com/femiwiki/Sanctions/archive/$1.tar.gz",
+      "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
       "version": "v1.0.4"
     },
     "UnifiedExtensionForFemiwiki": {
