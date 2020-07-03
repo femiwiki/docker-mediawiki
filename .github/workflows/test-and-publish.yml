@@ -58,22 +58,21 @@ jobs:
         docker stack deploy -c development.yml mediawiki
 
     - name: Access localhost until success
-      env:
-        # Maximum iteration limit for loops
-        LOOP_LIMIT: 300
+      timeout-minutes: 3
       run: |
         printf 'Waiting for http...'
-        COUNTER=0;
-        until [ "$(curl -Ls localhost 2>/dev/null)" ]; do
+        until curl -sLfo /dev/null localhost; do
           sleep 1;
           printf '.';
-          (( ++COUNTER ));
-          if [ $COUNTER -gt $LOOP_LIMIT ]; then
-            printf '\n';
-            printf 'Failed to connect to localhost';
-            exit 1;
-          fi
         done; printf '\n'
+    - name: backup of accessing
+      if: ${{ failure() }}
+      run: |
+        echo 'Failed to connect to localhost';
+        docker ps;
+        for s in $(docker service ls -q ); do docker service ps "$s"; done
+        docker container ps;
+        for s in $(docker service ls -q ); do docker service logs "$s"; done
     - name: Check if the container is still up
       run: test "$(docker service ps -qf 'desired-state=Running' -f 'desired-state=Ready' mediawiki_fastcgi)"
     - name: Try to access the mediawiki
