@@ -620,6 +620,9 @@ wfLoadExtension( 'Sanctions' );
 wfLoadExtension( 'Scribunto' );
 $wgScribuntoDefaultEngine = 'luastandalone';
 
+// SecureLinkFixer
+wfLoadExtension( 'SecureLinkFixer' );
+
 // SimpleMathJax
 wfLoadExtension( 'SimpleMathJax' );
 
