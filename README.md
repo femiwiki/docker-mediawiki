@@ -1,4 +1,4 @@
-페미위키 미디어위키 서버 [![Docker Hub Status]][Docker Hub Link] [![Travis CI Status]][Travis CI Link]
+페미위키 미디어위키 서버 [![Docker Hub Status]][Docker Hub Link] [![Github checks Status]][Github checks Link]
 ========
 한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 서버입니다.
 Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
@@ -52,8 +52,8 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 
 [Docker Hub Status]: https://badgen.net/docker/pulls/femiwiki/mediawiki/?icon=docker&label=pulls
 [Docker Hub Link]: https://hub.docker.com/r/femiwiki/mediawiki/
-[Travis CI Status]: https://api.travis-ci.com/femiwiki/mediawiki.svg?branch=master
-[Travis CI Link]: https://travis-ci.com/femiwiki/mediawiki
+[Github checks Status]: https://badgen.net/github/checks/femiwiki/docker-mediawiki
+[Github checks Link]: https://github.com/femiwiki/docker-mediawiki
 [femiwiki.com]: https://femiwiki.com
 [Docker Swarm]: https://docs.docker.com/engine/swarm/
 [femiwiki/ami]: https://github.com/femiwiki/ami
