@@ -815,7 +815,6 @@ $wgHiddenPrefs[] = 'usebetatoolbar';
 $wgDefaultUserOptions['visualeditor-enable'] = 1;
 $wgHiddenPrefs[] = 'visualeditor-enable';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
-$wgVisualEditorSupportedSkins[] = 'femiwiki';
 
 //
 // Load secret.php
