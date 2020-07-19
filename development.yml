@@ -49,7 +49,7 @@ services:
         aliases:
           - MEMCACHED_HOSTNAME # secret.php.example에 적힌 기본값
   restbase:
-    image: femiwiki/restbase:build-2
+    image: femiwiki/restbase:202007190950224badf7
     networks:
       default:
         aliases:

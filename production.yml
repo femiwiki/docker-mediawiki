@@ -29,7 +29,7 @@ services:
   parsoid:
     image: femiwiki/parsoid:build-2
   restbase:
-    image: femiwiki/restbase:build-2
+    image: femiwiki/restbase:202007190950224badf7
     environment:
       # Workaround for https://github.com/femiwiki/femiwiki/issues/151
       - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php
