@@ -70,7 +70,7 @@
     },
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/archive/$1.tar.gz",
-      "version": "116bb6a"
+      "version": "v0.0.5"
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
