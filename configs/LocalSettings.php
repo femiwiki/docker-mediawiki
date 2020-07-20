@@ -571,6 +571,9 @@ wfLoadExtension( 'MobileFrontend' );
 $wgMFDefaultSkinClass = 'SkinFemiwiki';
 $wgMFMwApiContentProviderBaseUri = $wgCanonicalServer . '/api.php';
 $wgMFMcsContentProviderBaseUri = $wgCanonicalServer . '/femiwiki.com/v1';
+// Disable automatically showing mobile view, as FemiwikiSkin is little responsive and
+// MobileFrontend is not tested enough.
+$wgMFAutodetectMobileView = false;
 // Enable mobile preferences in Special:Preferences
 $wgMFEnableMobilePreferences = true;
 // Disable CollapsibleSections in anywhere.
