@@ -66,7 +66,7 @@
   "non-WMF": {
     "CategoryIntersectionSearch": {
       "template": "https://github.com/femiwiki/CategoryIntersectionSearch/archive/$1.tar.gz",
-      "version": "ad8826b"
+      "version": "v0.0.3"
     },
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/archive/$1.tar.gz",
@@ -78,7 +78,7 @@
     },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/$1.tar.gz",
-      "version": "8979c52f"
+      "version": "v0.0.3"
     },
     "Femiwiki": {
       "type": "skin",
