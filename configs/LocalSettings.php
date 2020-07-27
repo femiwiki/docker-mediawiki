@@ -861,6 +861,7 @@ require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 $wgWBRepoSettings['enableEntitySearchUI'] = false;
 $wgWBRepoSettings['siteLinkGroups'] = [ 'femiwiki' ];
 $wgWBRepoSettings['dataBridgeEnabled'] = true;
+$wgWBRepoSettings['conceptBaseUri'] = $wgCanonicalServer . str_replace( '$1', 'Item:', $wgArticlePath );
 
 // WikiBase - client
 $wgEnableWikibaseClient = true;
@@ -868,7 +869,9 @@ require_once "$IP/extensions/Wikibase/client/WikibaseClient.php";
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 // See https://github.com/femiwiki/docker-mediawiki/issues/324
 $wgWBClientSettings['dataBridgeEnabled'] = true;
-$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgCanonicalServer . $wgArticlePath ) . '$';
+$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
+	str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
+$wgWBClientSettings['repoSiteName'] = 'wikibase-repo-site-name';
 
 // WikiEditor
 wfLoadExtension( 'WikiEditor' );
@@ -897,9 +900,9 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
 	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
 	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
-	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' .
-	str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)',
-		$wgCanonicalServer . $wgArticlePath ) . '$';
+	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
+	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
+		str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
 
 	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0' ];
 
