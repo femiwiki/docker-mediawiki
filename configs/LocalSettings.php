@@ -214,9 +214,37 @@ $wgFemiwikiFacebookAppId = '1937597133150935';
 //
 // Namespace settings
 //
+
+// Define Namespaces
+foreach( [
+	// Defined by extensions
+	'NS_ITEM'                   =>  120,
+	'NS_ITEM_TALK'              =>  121,
+	'NS_PROPERTY'               =>  122,
+	'NS_PROPERTY_TALK'          =>  123,
+	'NS_WIDGET'                 =>  274,
+	'NS_WIDGET_TALK'            =>  275,
+	'NS_MODULE'                 =>  828,
+	'NS_MODULE_TALK'            =>  829,
+	'NS_TRANSLATIONS'           => 1198,
+	'NS_TRANSLATIONS_TALK'      => 1199,
+	'NS_GADGET'                 => 2300,
+	'NS_GADGET_TALK'            => 2301,
+	'NS_GADGET_DEFINITION'      => 2302,
+	'NS_GADGET_DEFINITION_TALK' => 2303,
+	'NS_TOPIC'                  => 2600,
+	'NS_NEWSLETTER'             => 5500,
+	'NS_NEWSLETTER_TALK'        => 5501,
+	// Others
+	'NS_BBS'      => 3906,
+	'NS_BBS_TALK' => 3907,
+] as $k => $v ) {
+	if ( !defined( $k ) ) {
+		define( $k, $v );
+	}
+}
+
 // BBS
-define( 'NS_BBS', 3906 );
-define( 'NS_BBS_TALK', 3907 );
 $wgExtraNamespaces[NS_BBS] = '게시판';
 $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
@@ -336,8 +364,45 @@ $wgNamespaceRobotPolicies = [
 	NS_USER => 'noindex,nofollow',
 	NS_USER_TALK => 'noindex,nofollow',
 ];
+$wgSitemapNamespaces = [
+	NS_MAIN,
+	NS_TALK,
+	// Exclude noindex namespaces
+	// See https://github.com/femiwiki/femiwiki/issues/211
+	// NS_USER,
+	// NS_USER_TALK,
+	NS_PROJECT,
+	NS_PROJECT_TALK,
+	NS_FILE,
+	NS_FILE_TALK,
+	NS_MEDIAWIKI,
+	NS_MEDIAWIKI_TALK,
+	NS_TEMPLATE,
+	NS_TEMPLATE_TALK,
+	NS_HELP,
+	NS_HELP_TALK,
+	NS_CATEGORY,
+	NS_CATEGORY_TALK,
+	NS_ITEM,
+	NS_ITEM_TALK,
+	NS_PROPERTY,
+	NS_PROPERTY_TALK,
+	NS_WIDGET,
+	NS_WIDGET_TALK,
+	NS_MODULE,
+	NS_MODULE_TALK,
+	NS_TRANSLATIONS,
+	NS_TRANSLATIONS_TALK,
+	NS_GADGET,
+	NS_GADGET_TALK,
+	NS_GADGET_DEFINITION,
+	NS_GADGET_DEFINITION_TALK,
+	NS_TOPIC,
+	NS_NEWSLETTER,
+	NS_NEWSLETTER_TALK,
+];
 
-// Provide Naspace Aliases
+// Provide Namespace Aliases
 $wgNamespaceAliases = [
 	'도' => NS_HELP,
 	'페' => NS_PROJECT
@@ -494,23 +559,28 @@ $wgGroupPermissions['*']['unreviewedpages'] = true;
 // Flow
 wfLoadExtension( 'Flow' );
 $wgFlowEditorList = [ 'visualeditor', 'none' ];
-$wgNamespaceContentModels[NS_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_USER_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_PROJECT_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_FILE_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_MEDIAWIKI_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_TEMPLATE_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_HELP_TALK] = 'flow-board';
-$wgNamespaceContentModels[NS_CATEGORY_TALK] = 'flow-board';
-$wgNamespaceContentModels[121] = 'flow-board'; # Item talk
-$wgNamespaceContentModels[123] = 'flow-board'; # Property talk
-$wgNamespaceContentModels[275] = 'flow-board'; # Widget talk
-$wgNamespaceContentModels[829] = 'flow-board'; # Module talk
-$wgNamespaceContentModels[1199] = 'flow-board'; # Translations talk
-$wgNamespaceContentModels[2301] = 'flow-board'; # Gadget talk
-$wgNamespaceContentModels[2303] = 'flow-board'; # Gadget definition talk
-$wgNamespaceContentModels[NS_BBS] = 'flow-board';
-$wgNamespaceContentModels[NS_BBS_TALK] = 'flow-board';
+foreach( [
+	NS_TALK,
+	NS_USER_TALK,
+	NS_PROJECT_TALK,
+	NS_FILE_TALK,
+	NS_MEDIAWIKI_TALK,
+	NS_TEMPLATE_TALK,
+	NS_HELP_TALK,
+	NS_CATEGORY_TALK,
+	NS_ITEM_TALK,
+	NS_PROPERTY_TALK,
+	NS_WIDGET_TALK,
+	NS_MODULE_TALK,
+	NS_TRANSLATIONS_TALK,
+	NS_GADGET_TALK,
+	NS_GADGET_DEFINITION_TALK,
+	NS_NEWSLETTER_TALK,
+	NS_BBS,
+	NS_BBS_TALK,
+] as $space ) {
+	$wgNamespaceContentModels[$space] = 'flow-board';
+}
 $wgFlowDefaultLimit = 2;
 
 // Gadgets
