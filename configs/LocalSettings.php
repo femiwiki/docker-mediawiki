@@ -818,7 +818,7 @@ $wgTranslateSecondaryPermissionUrl = 'Project:번역';
 // TwoColConflict
 wfLoadExtension( 'TwoColConflict' );
 // Enable twocolconflict to opt-out
-$wgDefaultUserOptions['twocolconflict'] = true;
+$wgDefaultUserOptions['twocolconflict'] = '1';
 
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
