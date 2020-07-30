@@ -216,8 +216,9 @@ $wgFemiwikiFacebookAppId = '1937597133150935';
 //
 
 // Define Namespaces
-foreach( [
+foreach ( [
 	// Defined by extensions
+	// phpcs:disable Squiz.WhiteSpace.OperatorSpacing.SpacingAfter
 	'NS_ITEM'                   =>  120,
 	'NS_ITEM_TALK'              =>  121,
 	'NS_PROPERTY'               =>  122,
@@ -238,6 +239,7 @@ foreach( [
 	// Others
 	'NS_BBS'      => 3906,
 	'NS_BBS_TALK' => 3907,
+	// phpcs:enable
 ] as $k => $v ) {
 	if ( !defined( $k ) ) {
 		define( $k, $v );
@@ -559,7 +561,7 @@ $wgGroupPermissions['*']['unreviewedpages'] = true;
 // Flow
 wfLoadExtension( 'Flow' );
 $wgFlowEditorList = [ 'visualeditor', 'none' ];
-foreach( [
+foreach ( [
 	NS_TALK,
 	NS_USER_TALK,
 	NS_PROJECT_TALK,
