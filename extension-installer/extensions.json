@@ -68,24 +68,24 @@
   "non-WMF": {
     "CategoryIntersectionSearch": {
       "template": "https://github.com/femiwiki/CategoryIntersectionSearch/releases/download/$1/$1.tar.gz",
-      "version": "v0.0.3"
+      "version": "v1.0.0"
     },
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
-      "version": "v0.0.5"
+      "version": "v1.0.0"
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
-      "version": "v1.0.5"
+      "version": "v1.1.1"
     },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/releases/download/$1/$1.tar.gz",
-      "version": "v0.1.0"
+      "version": "v1.0.0"
     },
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v1.2.2"
+      "version": "v1.3.0"
     },
     "LocalisationUpdate": {
       "@note": "See https://github.com/femiwiki/femiwiki/issues/114",

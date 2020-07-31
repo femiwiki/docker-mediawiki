@@ -826,7 +826,6 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
-$wgSpecialPages['Uncategorizedcategories'] = 'SpecialUncategorizedCategoryTree';
 $wgSpecialPages['Whatlinkshere'] = 'SpecialOrderedWhatlinkshere';
 
 // UniversalLanguageSelector
