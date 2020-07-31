@@ -519,6 +519,10 @@ $wgDiscordSendMethod = 'file_get_contents';
 $wgWikiUrlEndingUserRights = "Special:UserRights/";
 $wgWikiUrlEndingBlockUser = '특수:제재안목록/';
 
+// DiscussionTools
+wfLoadExtension( 'DiscussionTools' );
+$wgDiscussionToolsEnableVisual = true;
+
 // Echo
 wfLoadExtension( 'Echo' );
 $wgEchoMaxMentionsInEditSummary = 5;
