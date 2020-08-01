@@ -28,6 +28,7 @@
     "InputBox",
     "Interwiki",
     "Josa",
+    "LocalisationUpdate",
     "LoginNotify",
     "MobileFrontend",
     "Newsletter",
@@ -58,6 +59,7 @@
     "UniversalLanguageSelector",
     "UploadWizard",
     "UserMerge",
+    "VisualEditor",
     "Widgets",
     "Wikibase",
     "WikiEditor"
@@ -86,14 +88,6 @@
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
       "version": "v1.3.0"
-    },
-    "LocalisationUpdate": {
-      "@note": "See https://github.com/femiwiki/femiwiki/issues/114",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-LocalisationUpdate/archive/REL1_34.tar.gz"
-    },
-    "VisualEditor": {
-      "@note": "See https://github.com/femiwiki/femiwiki/issues/152",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_34/REL1_34.tar.gz"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.0.tar.gz"
