@@ -76,16 +76,6 @@ $wgLogos = [
 		'height' => 56
 	]
 ];
-if ( version_compare( MW_VERSION, '1.35', '<' ) ) {
-	global $wgLogos, $wgLogoHD, $wgFemiwikiLogos;
-	$wgLogoHD = [
-		// maximally 135x135
-		"1.5x" => $wgLogo,
-		// maximally 270x270
-		"2x" => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-240x200.png"
-	];
-	$wgFemiwikiLogos = $wgLogos;
-}
 
 // UPO means: this is also a user preference option
 //
