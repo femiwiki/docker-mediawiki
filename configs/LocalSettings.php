@@ -35,15 +35,15 @@ $wgResourceBasePath = $wgScriptPath;
 $wgStyleVersion = '20191101_0';
 $wgResourceLoaderMaxage = [
 	'versioned' => [
-		# Squid/Varnish but also any other public proxy cache between the client and MediaWiki
-		'server' => 90 * 24 * 60 * 60, # 90 days
-		# On the client side (e.g. in the browser cache).
-		'client' => 90 * 24 * 60 * 60, # 90 days
+		// Squid/Varnish but also any other public proxy cache between the client and MediaWiki
+		'server' => 90 * 24 * 60 * 60, // 90 days
+		// On the client side (e.g. in the browser cache).
+		'client' => 90 * 24 * 60 * 60, // 90 days
 	],
 	'unversioned' => [
-		# 3 minutes
+		// 3 minutes
 		'server' => 3 * 60,
-		# 3 minutes
+		// 3 minutes
 		'client' => 3 * 60,
 	],
 ];
@@ -79,9 +79,9 @@ $wgLogos = [
 if ( version_compare( MW_VERSION, '1.35', '<' ) ) {
 	global $wgLogos, $wgLogoHD, $wgFemiwikiLogos;
 	$wgLogoHD = [
-		# maximally 135x135
+		// maximally 135x135
 		"1.5x" => $wgLogo,
-		# maximally 270x270
+		// maximally 270x270
 		"2x" => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-240x200.png"
 	];
 	$wgFemiwikiLogos = $wgLogos;
@@ -92,7 +92,7 @@ if ( version_compare( MW_VERSION, '1.35', '<' ) ) {
 // Reference:
 // - https://www.mediawiki.org/wiki/Help:User_preference_option
 $wgEnableEmail = true;
-$wgEnableUserEmail = true; # UPO
+$wgEnableUserEmail = true; // UPO
 $wgAllowHTMLEmail = true;
 $wgSMTP = [
 	'host' => 'email-smtp.us-east-1.amazonaws.com',
@@ -106,8 +106,8 @@ $wgEmergencyContact = 'admin@femiwiki.com';
 $wgPasswordSender = 'admin@femiwiki.com';
 $wgUserEmailUseReplyTo = true;
 
-$wgEnotifUserTalk = false; # UPO
-$wgEnotifWatchlist = false; # UPO
+$wgEnotifUserTalk = false; // UPO
+$wgEnotifWatchlist = false; // UPO
 $wgEmailAuthentication = true;
 $wgEmailConfirmToEdit = true;
 $wgEnableUserEmailBlacklist = true;
@@ -969,7 +969,7 @@ require_once '/a/secret.php';
 // Debug Mode
 //
 if ( defined( 'DEBUG_MODE' ) ) {
-	# 도메인 변경
+	// 도메인 변경
 	$wgServer = 'http://' . DEBUG_MODE;
 	$wgCanonicalServer = 'http://' . DEBUG_MODE;
 	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
@@ -981,22 +981,22 @@ if ( defined( 'DEBUG_MODE' ) ) {
 
 	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0' ];
 
-	# 디버그 툴 활성화
+	// 디버그 툴 활성화
 	require_once "includes/DevelopmentSettings.php";
 	$wgDebugToolbar = true;
 	$wgShowDBErrorBacktrace = true;
 
-	# File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
+	// File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
 	$wgUseFileCache = false;
 
-	# 이메일 인증 요구 비활성화
+	// 이메일 인증 요구 비활성화
 	$wgEmailConfirmToEdit = false;
 
-	# AWS 플러그인 비활성화
+	// AWS 플러그인 비활성화
 	$wgAWSBucketName = null;
 	$wgAWSBucketPrefix = null;
 
-	# 구글 리캡차 비활성화
+	// 구글 리캡차 비활성화
 	$wgCaptchaTriggers['edit'] = false;
 	$wgCaptchaTriggers['create'] = false;
 	$wgCaptchaTriggers['createtalk'] = false;
