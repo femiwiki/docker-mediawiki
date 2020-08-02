@@ -19,6 +19,7 @@
     "DiscussionTools",
     "Echo",
     "EventLogging",
+    "EventStreamConfig",
     "FlaggedRevs",
     "Flow",
     "Gadgets",

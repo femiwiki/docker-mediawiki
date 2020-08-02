@@ -525,6 +525,9 @@ wfLoadExtension( 'EventLogging' );
 $wgEventLoggingBaseUri = 'http://localhost:8080/event.gif';
 $wgEventLoggingFile = '/var/log/mediawiki/events.log';
 
+// EventStreamConfig
+wfLoadExtension( 'EventStreamConfig' );
+
 // FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
