@@ -808,7 +808,7 @@ wfLoadExtension( 'Thanks' );
 wfLoadExtension( 'TitleBlacklist' );
 
 // Translate
-include_once "$IP/extensions/Translate/Translate.php";
+wfLoadExtension( 'Translate' );
 $wgGroupPermissions['autoconfirmed']['translate'] = true;
 $wgGroupPermissions['translationadmin']['pagetranslation'] = true;
 $wgGroupPermissions['translationadmin']['translate-manage'] = true;
