@@ -28,6 +28,8 @@ services:
       # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
     image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
+    environment:
+      - MEDIAWIKI_LINTING=true
   mysql:
     image: mysql:8.0.17
     command: --default-authentication-plugin=mysql_native_password

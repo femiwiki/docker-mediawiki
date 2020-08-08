@@ -25,6 +25,8 @@ services:
       - l18n_cache:/tmp/cache
   parsoid:
     image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
+    environment:
+      - MEDIAWIKI_LINTING=true
   restbase:
     image: ghcr.io/femiwiki/restbase:2020-09-05T10-04-5dcdc8b6
     environment:

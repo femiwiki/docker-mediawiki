@@ -596,6 +596,9 @@ wfLoadExtension( 'Interwiki' );
 // Josa
 wfLoadExtension( 'Josa' );
 
+// Linter
+wfLoadExtension( 'Linter' );
+
 // LocalisationUpdate
 wfLoadExtension( 'LocalisationUpdate' );
 $wgLocalisationUpdateRepositories = [
