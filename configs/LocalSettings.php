@@ -34,36 +34,16 @@ $wgResourceBasePath = $wgScriptPath;
 
 $wgStyleVersion = '20191101_0';
 $wgResourceLoaderMaxage = [
-	'versioned' => [
-		// Squid/Varnish but also any other public proxy cache between the client and MediaWiki
-		'server' => 90 * 24 * 60 * 60, // 90 days
-		// On the client side (e.g. in the browser cache).
-		'client' => 90 * 24 * 60 * 60, // 90 days
-	],
-	'unversioned' => [
-		// 3 minutes
-		'server' => 3 * 60,
-		// 3 minutes
-		'client' => 3 * 60,
-	],
+	'versioned' => 90 * 24 * 60 * 60, // 90 days
+	'unversioned' => 3 * 60, // 3 minutes
 ];
 
 // The URL path to the logo.
-// References:
-// - https://www.mediawiki.org/wiki/Manual:$wgLogo
-// - https://www.mediawiki.org/wiki/Manual:$wgLogoHD
-// - https://www.mediawiki.org/wiki/Manual:$wgLogos
-// Note:
-// - $wgLogoHD is deprecated since MW 1.35
-// - $wgLogos is introduced in MW 1.35, therefore below declaration does not affect the core yet.
-
-// maximally 135x135
-$wgLogo = "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-135x114.png";
 $wgLogos = [
 	// maximally 50x50
 	'icon' => "$wgResourceBasePath/fw-resources/icon-transparent-white-50x50.png",
 	// maximally 135x135
-	'1x' => $wgLogo,
+	'1x' => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-135x114.png",
 	// maximally 202x202
 	'1.5x' => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-202x170.png",
 	// maximally 270x270
@@ -77,13 +57,6 @@ $wgLogos = [
 	]
 ];
 
-// UPO means: this is also a user preference option
-//
-// Reference:
-// - https://www.mediawiki.org/wiki/Help:User_preference_option
-$wgEnableEmail = true;
-$wgEnableUserEmail = true; // UPO
-$wgAllowHTMLEmail = true;
 $wgSMTP = [
 	'host' => 'email-smtp.us-east-1.amazonaws.com',
 	'IDHost' => 'femiwiki.com',
@@ -92,9 +65,17 @@ $wgSMTP = [
 	'username' => 'AKIAJ472HG7XALTXZ5QA',
 ];
 
+// UPO means: this is also a user preference option
+//
+// Reference:
+// - https://www.mediawiki.org/wiki/Help:User_preference_option
+$wgEnableEmail = true;
+$wgEnableUserEmail = true; // UPO
+$wgAllowHTMLEmail = true;
+$wgUserEmailUseReplyTo = true;
+
 $wgEmergencyContact = 'admin@femiwiki.com';
 $wgPasswordSender = 'admin@femiwiki.com';
-$wgUserEmailUseReplyTo = true;
 
 $wgEnotifUserTalk = false; // UPO
 $wgEnotifWatchlist = false; // UPO
@@ -123,11 +104,11 @@ $wgPasswordPolicy['policies']['default']['MinimalPasswordLength'] = [
 ];
 
 // Shared memory settings
-$wgMemCachedServers = [ 'memcached:11211' ];
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgSessionCacheType = CACHE_MEMCACHED;
 $wgParserCacheType = CACHE_MEMCACHED;
 $wgMessageCacheType = CACHE_MEMCACHED;
+$wgMemCachedServers = [ 'memcached:11211' ];
 
 // To enable image uploads, make sure the 'images' directory
 // is writable, then set this to true:
@@ -167,6 +148,14 @@ $wgPageLanguageUseDB = true;
 
 // Changing this will log out all existing sessions.
 $wgAuthenticationTokenVersion = '1';
+
+## For attaching licensing metadata to pages, and displaying an
+## appropriate copyright notice / icon. GNU Free Documentation
+## License and Creative Commons licenses are supported so far.
+$wgRightsPage = '페미위키:저작권';
+$wgRightsUrl = 'https://creativecommons.org/licenses/by-sa/4.0/deed.ko';
+$wgRightsText = '크리에이티브 커먼즈 저작자표시-동일조건변경허락 4.0 국제 라이선스';
+$wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
 // Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = '/usr/bin/diff3';
@@ -325,16 +314,11 @@ $wgRestrictDisplayTitle = false;
 $wgExternalLinkTarget = '_blank';
 
 // The number of authors that credited below an article text.
+// https://github.com/femiwiki/FemiwikiSkin/issues/137
 $wgMaxCredits = 5;
 
 // Allow partial blocks to be created
 $wgEnablePartialBlocks = true;
-
-// Copyright
-$wgRightsPage = '페미위키:저작권';
-$wgRightsUrl = 'https://creativecommons.org/licenses/by-sa/4.0/deed.ko';
-$wgRightsText = '크리에이티브 커먼즈 저작자표시-동일조건변경허락 4.0 국제 라이선스';
-$wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
 // User CSS and JS
 $wgAllowUserCss = true;
@@ -532,7 +516,7 @@ wfLoadExtension( 'EventStreamConfig' );
 wfLoadExtension( 'FacetedCategory' );
 
 // FlaggedRevs
-require_once "$IP/extensions/FlaggedRevs/FlaggedRevs.php";
+wfLoadExtension( 'FlaggedRevs' );
 $wgFlaggedRevsNamespaces = [
 	NS_MAIN,
 	NS_PROJECT,
