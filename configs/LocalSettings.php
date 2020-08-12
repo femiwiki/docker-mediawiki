@@ -122,7 +122,6 @@ $wgFileExtensions = array_merge(
 		'svg',
 	]
 );
-$wgAllowTitlesInSVG = true;
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = '/usr/bin/convert';
 $wgSVGConverter = 'rsvg';
@@ -319,9 +318,6 @@ $wgExternalLinkTarget = '_blank';
 // The number of authors that credited below an article text.
 // https://github.com/femiwiki/FemiwikiSkin/issues/137
 $wgMaxCredits = 5;
-
-// Allow partial blocks to be created
-$wgEnablePartialBlocks = true;
 
 // User CSS and JS
 $wgAllowUserCss = true;
