@@ -29,6 +29,9 @@ $wgServer = 'https://femiwiki.com';
 $wgCanonicalServer = 'https://femiwiki.com';
 $wgEnableCanonicalServerLink = true;
 
+// Make the HTTP to HTTPS redirect be unconditional
+$wgForceHTTPS = true;
+
 // The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
@@ -950,6 +953,7 @@ require_once '/a/secret.php';
 //
 if ( defined( 'DEBUG_MODE' ) ) {
 	// 도메인 변경
+	$wgForceHTTPS = false;
 	$wgServer = 'http://' . DEBUG_MODE;
 	$wgCanonicalServer = 'http://' . DEBUG_MODE;
 	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
