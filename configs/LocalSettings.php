@@ -623,7 +623,6 @@ wfLoadExtension( 'LoginNotify' );
 
 // MobileFrontend
 wfLoadExtension( 'MobileFrontend' );
-$wgMFDefaultSkinClass = 'SkinFemiwiki';
 $wgMFMwApiContentProviderBaseUri = $wgCanonicalServer . '/api.php';
 $wgMFMcsContentProviderBaseUri = $wgCanonicalServer . '/femiwiki.com/v1';
 // Disable automatically showing mobile view, as FemiwikiSkin is little responsive and
