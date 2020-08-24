@@ -325,7 +325,6 @@ $wgAllowUserJs = true;
 
 // Allow external image link
 $wgAllowExternalImages = true;
-$wgAllowImageTag = true;
 
 // all pages (that are not redirects) are considered as valid articles
 $wgArticleCountMethod = 'any';
