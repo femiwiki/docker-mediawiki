@@ -395,6 +395,7 @@ $wgVirtualRestConfig['modules']['restbase'] = [
 ];
 $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
 $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
+$wgMathFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 
 //
 // Extensions
@@ -619,6 +620,11 @@ $wgLocalisationUpdateHttpRequestOptions = [
 
 // LoginNotify
 wfLoadExtension( 'LoginNotify' );
+
+// Math
+wfLoadExtension( 'Math' );
+$wgDefaultUserOptions['math'] = 'mathml';
+$wgMathMathMLUrl = 'http://mathoid:10044/'; // IP of Mathoid server
 
 // MobileFrontend
 wfLoadExtension( 'MobileFrontend' );
@@ -953,6 +959,7 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
 	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
 	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
+	$wgMathFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 		str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';

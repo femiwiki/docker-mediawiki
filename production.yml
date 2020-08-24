@@ -34,6 +34,8 @@ services:
       - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php
     volumes:
       - /srv/restbase.sqlite3:/srv/restbase/db.sqlite3
+  mathoid:
+    image: wikimedia/mathoid:bad5ec8d4
   mysql:
     image: mysql:8.0.17
     ports:
