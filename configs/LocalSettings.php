@@ -748,9 +748,6 @@ $wgScribuntoDefaultEngine = 'luastandalone';
 // SecureLinkFixer
 wfLoadExtension( 'SecureLinkFixer' );
 
-// SimpleMathJax
-wfLoadExtension( 'SimpleMathJax' );
-
 // SpamBlacklist
 wfLoadExtension( 'SpamBlacklist' );
 // Empty Meta-Wiki blacklist
