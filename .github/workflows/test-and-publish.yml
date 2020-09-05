@@ -35,10 +35,10 @@ jobs:
       run: |
         mv configs/secret.php.example configs/secret.php;
         sed -i -r 's/localhost/127.0.0.1/' configs/secret.php
-        sed -i -r 's/femiwiki\/mediawiki:.+/femiwiki\/mediawiki:docker-test/' development.yml
+        sed -i -r 's/ghcr\.io\/femiwiki\/mediawiki:.+/ghcr\.io\/femiwiki\/mediawiki:docker-test/' development.yml
 
-    - run: echo "::set-output name=tag::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
-      id: tag
+    - run: echo "::set-output name=version::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
+      id: version
 
     - name: Build docker image using cache
       # # BuildKit mode is compatible with UCP 3.2 or newer
@@ -46,10 +46,10 @@ jobs:
       #   DOCKER_BUILDKIT: 1
       run: |
         docker build \
-          --cache-from femiwiki/mediawiki:latest \
-          --tag femiwiki/mediawiki:latest \
-          --tag femiwiki/mediawiki:docker-test \
-          --tag femiwiki/mediawiki:${{ steps.tag.outputs.tag }} \
+          --cache-from ghcr.io/femiwiki/mediawiki:latest \
+          --tag ghcr.io/femiwiki/mediawiki:latest \
+          --tag ghcr.io/femiwiki/mediawiki:docker-test \
+          --tag ghcr.io/femiwiki/mediawiki:${{ steps.version.outputs.version }} \
           .
 
     - name: Initialize docker swarm and start services
@@ -78,17 +78,12 @@ jobs:
     - name: Try to access the mediawiki
       run: curl -sSLvo /dev/null 127.0.0.1 || docker service logs mediawiki_fastcgi
 
-    - name: Login to Docker hub
-      # Login only when in the master branch
-      if: github.ref == 'refs/heads/master'
-      uses: azure/docker-login@v1
-      with:
-        username: femiwikibot
-        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Log into GitHub Container Registry
+      run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u femiwiki-bot --password-stdin
+
     - name: Publish to Registry
       # Publish only when in the master branch
       if: github.ref == 'refs/heads/master'
       run: |
-        docker push femiwiki/mediawiki:latest
-        docker push femiwiki/mediawiki:${{ steps.tag.outputs.tag }}
-        docker logout
+        docker push ghcr.io/femiwiki/mediawiki:latest
+        docker push ghcr.io/femiwiki/mediawiki:${{ steps.tag.outputs.tag }}

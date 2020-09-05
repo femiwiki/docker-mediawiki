@@ -1,7 +1,7 @@
 version: '3'
 services:
   http:
-    image: femiwiki/caddy:1.0.3
+    image: ghcr.io/femiwiki/caddy:1.0.3
     ports:
       - 80:80
       - 443:443
@@ -18,7 +18,7 @@ services:
         max_attempts: 3
         window: 120s
   fastcgi:
-    image: femiwiki/mediawiki:latest
+    image: ghcr.io/femiwiki/mediawiki:latest
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
@@ -27,7 +27,7 @@ services:
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
       # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
-    image: femiwiki/parsoid:build-2
+    image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
   mysql:
     image: mysql:8.0.17
     command: --default-authentication-plugin=mysql_native_password
@@ -49,7 +49,7 @@ services:
         aliases:
           - MEMCACHED_HOSTNAME # secret.php.example에 적힌 기본값
   restbase:
-    image: femiwiki/restbase:202007190950224badf7
+    image: ghcr.io/femiwiki/restbase:2020-09-05T10-04-5dcdc8b6
     networks:
       default:
         aliases:

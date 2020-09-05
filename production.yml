@@ -1,7 +1,7 @@
 version: '3'
 services:
   http:
-    image: femiwiki/caddy:1.0.3
+    image: ghcr.io/femiwiki/caddy:1.0.3
     ports:
       - 80:80
       - 443:443
@@ -27,9 +27,9 @@ services:
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
       # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
-    image: femiwiki/parsoid:build-2
+    image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
   restbase:
-    image: femiwiki/restbase:202007190950224badf7
+    image: ghcr.io/femiwiki/restbase:2020-09-05T10-04-5dcdc8b6
     environment:
       # Workaround for https://github.com/femiwiki/femiwiki/issues/151
       - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php

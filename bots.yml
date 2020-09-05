@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   backupbot:
-    image: femiwiki/backupbot:build-5
+    image: ghcr.io/femiwiki/backupbot:2020-09-05T10-11-eefb914b
     env_file:
       - configs/bot-secret.env
     networks:

@@ -2,7 +2,7 @@
 # 미디어위키 및 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM femiwiki/base-extensions:build-1
+FROM ghcr.io/femiwiki/base-extensions:2020-09-05T09-47-cc87d07f
 
 ARG MEDIAWIKI_MAJOR_VERSION=1.34
 ARG MEDIAWIKI_BRANCH=REL1_34
@@ -36,7 +36,7 @@ RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --work
 #   /tmp/cache             캐시 디렉토리
 #   /tini                  tini
 #
-FROM femiwiki/base:20200218151114874816
+FROM ghcr.io/femiwiki/base:2020-09-05T09-39-9835601d
 
 # Set timezone
 ENV TZ=Asia/Seoul
