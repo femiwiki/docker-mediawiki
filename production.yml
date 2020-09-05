@@ -18,14 +18,11 @@ services:
         max_attempts: 3
         window: 120s
   fastcgi:
-    image: femiwiki/mediawiki:2020-08-07T12-21-36a5ea12
+    image: ghcr.io/femiwiki/mediawiki:2020-09-05T12-43-32c41df2
     volumes:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
       - l18n_cache:/tmp/cache
-      ## 스킨 등 개발할 때엔 아래 라인을 주석해제
-      # - ../skin:/srv/femiwiki.com/skins/Femiwiki
-      # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
     image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
   restbase:
