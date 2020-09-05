@@ -86,4 +86,4 @@ jobs:
       if: github.ref == 'refs/heads/master'
       run: |
         docker push ghcr.io/femiwiki/mediawiki:latest
-        docker push ghcr.io/femiwiki/mediawiki:${{ steps.tag.outputs.tag }}
+        docker push ghcr.io/femiwiki/mediawiki:${{ steps.version.outputs.version }}
