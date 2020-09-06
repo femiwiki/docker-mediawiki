@@ -46,6 +46,7 @@ jobs:
       #   DOCKER_BUILDKIT: 1
       run: |
         docker build \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
           --cache-from ghcr.io/femiwiki/mediawiki:latest \
           --tag ghcr.io/femiwiki/mediawiki:latest \
           --tag ghcr.io/femiwiki/mediawiki:docker-test \
