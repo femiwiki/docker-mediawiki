@@ -23,13 +23,13 @@ services:
       - ./configs:/a:ro
       - files:/srv/femiwiki.com
       - l18n_cache:/tmp/cache
-  parsoid:
-    image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
   restbase:
     image: ghcr.io/femiwiki/restbase:2020-09-05T10-04-5dcdc8b6
     environment:
       # Workaround for https://github.com/femiwiki/femiwiki/issues/151
       - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php
+      # Use Parsoid/PHP
+      - PARSOID_URI=http://http/rest.php
     volumes:
       - /srv/restbase.sqlite3:/srv/restbase/db.sqlite3
   mysql:

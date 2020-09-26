@@ -410,10 +410,10 @@ $wgNamespaceAliases = [
 	'페' => NS_PROJECT
 ];
 
-// Parsoid server Setting
-$wgVirtualRestConfig['modules']['parsoid'] = [
-	'url' => 'http://parsoid:8000',
-	'domain' => 'femiwiki.com'
+// Parsoid Setting
+$wgParsoidSettings = [
+	'linting' => true,
+	'_merge_strategy' => 'array_plus',
 ];
 
 // Restbase server Setting
@@ -725,6 +725,9 @@ $wgPageImagesLeadSectionOnly = false;
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
 
+// Parsoid
+wfLoadExtension( 'Parsoid', "$IP/vendor/wikimedia/parsoid/extension.json" );
+
 // Poem
 wfLoadExtension( 'Poem' );
 
@@ -969,9 +972,9 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	# 도메인 변경
 	$wgServer = 'http://' . DEBUG_MODE;
 	$wgCanonicalServer = 'http://' . DEBUG_MODE;
-	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
-	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
-	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
+	$wgVirtualRestConfig['modules']['restbase']['domain'] = 'localhost';
+	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/localhost/v1/page/html/';
+	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/localhost/';
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 		str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';

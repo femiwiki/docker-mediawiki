@@ -26,8 +26,6 @@ services:
       ## 스킨 등 개발할 때엔 아래 라인을 주석해제
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
       # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
-  parsoid:
-    image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
   mysql:
     image: mysql:8.0.17
     command: --default-authentication-plugin=mysql_native_password
@@ -50,6 +48,9 @@ services:
           - MEMCACHED_HOSTNAME # secret.php.example에 적힌 기본값
   restbase:
     image: ghcr.io/femiwiki/restbase:2020-09-05T10-04-5dcdc8b6
+    environment:
+      - MEDIAWIKI_APIS_DOMAIN=localhost
+      - PARSOID_URI=http://http/rest.php
     networks:
       default:
         aliases:

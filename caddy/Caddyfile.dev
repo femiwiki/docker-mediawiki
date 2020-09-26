@@ -18,8 +18,12 @@ rewrite /w {
   r  /(.*)
   to /index.php
 }
+# https://www.mediawiki.org/wiki/Parsoid/PHP
+rewrite /rest.php/* {
+  to {uri} {uri}/ /rest.php?{query}
+}
 
 # Proxy requests to RESTBase
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
-proxy /femiwiki.com restbase:7231
+proxy /localhost restbase:7231

@@ -23,6 +23,10 @@ rewrite /w {
   r  /(.*)
   to /index.php
 }
+# https://www.mediawiki.org/wiki/Parsoid/PHP
+rewrite /rest.php/* {
+  to {uri} {uri}/ /rest.php?{query}
+}
 
 # Proxy requests to RESTBase
 # Reference:
