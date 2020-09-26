@@ -67,7 +67,7 @@
   "non-WMF": {
     "CategoryIntersectionSearch": {
       "template": "https://github.com/femiwiki/CategoryIntersectionSearch/releases/download/$1/$1.tar.gz",
-      "version": "v0.0.3"
+      "version": "v1.0.0"
     },
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
