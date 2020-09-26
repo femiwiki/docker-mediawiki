@@ -725,9 +725,6 @@ $wgPageImagesLeadSectionOnly = false;
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
 
-// Parsoid
-wfLoadExtension( 'Parsoid', "$IP/vendor/wikimedia/parsoid/extension.json" );
-
 // Poem
 wfLoadExtension( 'Poem' );
 
