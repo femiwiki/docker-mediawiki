@@ -25,6 +25,8 @@ services:
       - l18n_cache:/tmp/cache
   parsoid:
     image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
+    environment:
+      - MEDIAWIKI_LINTING=true
   restbase:
     image: ghcr.io/femiwiki/restbase:2020-09-05T10-04-5dcdc8b6
     environment:
@@ -32,8 +34,10 @@ services:
       - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php
     volumes:
       - /srv/restbase.sqlite3:/srv/restbase/db.sqlite3
+  mathoid:
+    image: wikimedia/mathoid:bad5ec8d4
   mysql:
-    image: mysql:8.0.17
+    image: mysql:8.0.21
     ports:
       - 3306:3306
     command: --default-authentication-plugin=mysql_native_password
@@ -43,7 +47,7 @@ services:
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
   memcached:
-    image: memcached:1.5.17-alpine
+    image: memcached:1.6.6-alpine
 
 volumes:
   files:

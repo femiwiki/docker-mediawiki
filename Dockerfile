@@ -4,10 +4,9 @@
 #
 FROM ghcr.io/femiwiki/base-extensions:2020-09-05T09-47-cc87d07f
 
-ARG MEDIAWIKI_MAJOR_VERSION=1.34
-ARG MEDIAWIKI_BRANCH=REL1_34
-ARG MEDIAWIKI_VERSION=1.34.1
-ARG MEDIAWIKI_SHA512=58310c04cd86bfa670185123dd25ccdbac8d90bb17107026ae801640620571967ee83eedf4e91cfdda740d646707cb0a054ee9e8ce367f21768b62af4e251d02
+ARG MEDIAWIKI_MAJOR_VERSION=1.35
+ARG MEDIAWIKI_BRANCH=REL1_35
+ARG MEDIAWIKI_VERSION=1.35.0
 
 RUN mkdir -p /tmp/mediawiki/ &&\
     chown www-data:www-data /tmp/mediawiki/
@@ -20,7 +19,6 @@ RUN sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 # MediaWiki setup
 COPY --chown=www-data configs/composer.local.json /tmp/mediawiki/
 RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
-    echo "${MEDIAWIKI_SHA512} *mediawiki.tar.gz" | sha512sum -c - &&\
     sudo -u www-data tar -xzf mediawiki.tar.gz --strip-components=1 --directory /tmp/mediawiki/ &&\
     rm mediawiki.tar.gz
 RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/mediawiki'
