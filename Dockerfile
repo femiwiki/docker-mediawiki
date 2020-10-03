@@ -2,11 +2,50 @@
 # 미디어위키 및 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM ghcr.io/femiwiki/base-extensions:2020-09-05T09-47-cc87d07f
+FROM ruby:2.7 AS base-extension
 
 ARG MEDIAWIKI_MAJOR_VERSION=1.35
 ARG MEDIAWIKI_BRANCH=REL1_35
 ARG MEDIAWIKI_VERSION=1.35.0
+
+# Install composer, prestissimo, aria2, sudo and preload configuration file of
+# aria2
+#
+# References:
+#   https://getcomposer.org/
+#   https://github.com/hirak/prestissimo
+#   https://aria2.github.io/
+RUN apt-get update && apt-get install -y \
+      # Required for composer
+      php7.3-cli \
+      php7.3-mbstring \
+      # Required for prestissimo
+      php7.3-curl \
+      # Required for aws-sdk-php
+      php7.3-simplexml \
+      # Install other CLI utilities
+      aria2 \
+      sudo
+
+# Install Composer
+RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)" &&\
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&\
+    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")" &&\
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then \
+      >&2 echo 'ERROR: Invalid installer signature' &&\
+      rm composer-setup.php &&\
+      exit 1; \
+    fi &&\
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet
+
+# Install prestissimo
+RUN composer global require hirak/prestissimo
+
+# Create a cache directory for composer
+RUN sudo -u www-data mkdir -p /tmp/composer
+
+# Install aria2.conf
+COPY extension-installer/aria2.conf /root/.config/aria2/aria2.conf
 
 RUN mkdir -p /tmp/mediawiki/ &&\
     chown www-data:www-data /tmp/mediawiki/
@@ -34,7 +73,43 @@ RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --work
 #   /tmp/cache             캐시 디렉토리
 #   /tini                  tini
 #
-FROM ghcr.io/femiwiki/base:2020-09-05T09-39-9835601d
+FROM php:7.3.22-fpm
+
+# Install dependencies and utilities
+RUN apt-get update && apt-get install -y \
+      # Build dependencies
+      build-essential \
+      libicu-dev \
+      # Runtime depenencies
+      imagemagick \
+      librsvg2-bin \
+      # Required for SyntaxHighlighting
+      python3 \
+      # CLI utilities
+      cron \
+      sudo
+
+# Install the PHP extensions we need
+RUN docker-php-ext-install -j8 mysqli opcache intl
+
+# Install the default object cache
+RUN pecl channel-update pecl.php.net
+RUN pecl install apcu
+RUN docker-php-ext-enable apcu
+
+#
+# Tini
+#
+# See https://github.com/krallin/tini for the further details
+ARG TINI_VERSION=v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
+
+# Remove packages which is not needed anymore (build dependencies of PHP extensions)
+ONBUILD RUN apt-get autoremove -y --purge \
+              build-essential \
+              libicu-dev
 
 # Set timezone
 ENV TZ=Asia/Seoul
@@ -46,7 +121,7 @@ COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # Install Mediawiki extensions
-COPY --from=0 --chown=www-data /tmp/mediawiki /srv/femiwiki.com
+COPY --from=base-extension --chown=www-data /tmp/mediawiki /srv/femiwiki.com
 
 # Create a cache directory for mediawiki
 RUN sudo -u www-data mkdir -p /tmp/cache
