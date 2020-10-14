@@ -1,13 +1,13 @@
 version: '3'
 services:
   http:
-    image: ghcr.io/femiwiki/caddy:1.0.3
+    image: ghcr.io/femiwiki/mediawiki:latest
+    command: caddy run
     ports:
       - 80:80
       - 443:443
     volumes:
-      - ./caddy/Caddyfile.dev:/etc/Caddyfile:ro
-      - files:/srv/femiwiki.com
+      - ./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
       - caddy:/etc/caddycerts
     environment:
       - CADDYPATH=/etc/caddycerts
@@ -21,7 +21,6 @@ services:
     image: ghcr.io/femiwiki/mediawiki:latest
     volumes:
       - ./configs:/a:ro
-      - files:/srv/femiwiki.com
       - l18n_cache:/tmp/cache
       ## 스킨 등 개발할 때엔 아래 라인을 주석해제
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
@@ -60,7 +59,6 @@ services:
     image: wikimedia/mathoid:bad5ec8d4
 
 volumes:
-  files:
   database:
   caddy:
   l18n_cache:

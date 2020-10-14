@@ -1,9 +1,9 @@
 *:80
-root /srv/femiwiki.com
-index index.php
-fastcgi / fastcgi:9000 php
-gzip
-header / {
+root * /srv/femiwiki.com
+php_fastcgi fastcgi:9000
+file_server
+encode gzip
+header {
   # Enable XSS filtering for legacy browsers
   X-XSS-Protection "1; mode=block"
   # Block content sniffing, and enable Cross-Origin Read Blocking
@@ -11,15 +11,10 @@ header / {
   # Avoid clickjacking
   X-Frame-Options "DENY"
 }
-rewrite /w/api.php {
-  to /api.php
-}
-rewrite /w {
-  r  /(.*)
-  to /index.php
-}
+rewrite /w/api.php /api.php
+rewrite /w/* /index.php
 
 # Proxy requests to RESTBase
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
-proxy /femiwiki.com restbase:7231
+reverse_proxy /femiwiki.com/* restbase:7231
