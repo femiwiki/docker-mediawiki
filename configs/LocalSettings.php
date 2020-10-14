@@ -965,6 +965,9 @@ if ( defined( 'DEBUG_MODE' ) ) {
 
 	// 디버그 툴 활성화
 	require_once "includes/DevelopmentSettings.php";
+	// Overwrite DevelopmentSettings
+	$wgCacheDirectory = '/tmp/cache';
+
 	$wgDebugToolbar = true;
 	$wgShowDBErrorBacktrace = true;
 
