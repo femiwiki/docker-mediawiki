@@ -1,4 +1,4 @@
-femiwiki.com *.femiwiki.com 127.0.0.1:80 http://http
+femiwiki.com *.femiwiki.com 127.0.0.1:80 http
 tls {
   dns route53
 }
