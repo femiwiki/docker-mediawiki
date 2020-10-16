@@ -2,11 +2,11 @@ femiwiki.com *.femiwiki.com http://http
 tls {
   dns route53
 }
-root /srv/femiwiki.com
-index index.php
-fastcgi / fastcgi:9000 php
-gzip
-header / {
+root * /srv/femiwiki.com
+php_fastcgi fastcgi:9000
+file_server
+encode gzip
+header {
   # HSTS
   Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
   # Enable XSS filtering for legacy browsers
@@ -16,15 +16,10 @@ header / {
   # Avoid clickjacking
   X-Frame-Options "DENY"
 }
-rewrite /w/api.php {
-  to /api.php
-}
-rewrite /w {
-  r  /(.*)
-  to /index.php
-}
+rewrite /w/api.php /api.php
+rewrite /w/* /index.php
 
 # Proxy requests to RESTBase
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
-proxy /femiwiki.com restbase:7231
+reverse_proxy /femiwiki.com/* restbase:7231
