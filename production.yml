@@ -10,6 +10,8 @@ services:
       - caddy:/etc/caddycerts
     environment:
       - CADDYPATH=/etc/caddycerts
+      - FASTCGI_ADDR=fastcgi:9000
+      - RESTBASE_ADDR=restbase:7231
     deploy:
       restart_policy:
         condition: on-failure

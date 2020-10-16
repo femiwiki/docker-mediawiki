@@ -1,9 +1,9 @@
-femiwiki.com *.femiwiki.com http://http
+femiwiki.com *.femiwiki.com localhost http://http
 tls {
   dns route53
 }
 root * /srv/femiwiki.com
-php_fastcgi fastcgi:9000
+php_fastcgi {$FASTCGI_ADDR}
 file_server
 encode gzip
 header {
@@ -22,4 +22,4 @@ rewrite /w/* /index.php
 # Proxy requests to RESTBase
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
-reverse_proxy /femiwiki.com/* restbase:7231
+reverse_proxy /femiwiki.com/* {$RESTBASE_ADDR}

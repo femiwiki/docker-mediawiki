@@ -45,8 +45,9 @@ sudo docker stack deploy --prune -c ~/mediawiki/bots.yml bots
 ### About Docker image
 
 페미위키를 위한 [PHP-FPM] 서버입니다.
-동일한 이미지를 `caddy run` 커맨드로 사용할 경우에는 [Caddy] 웹 서버를 실행할 수 있습니다.
-개발 등의 목적으로 Caddyfile을 변경해야 할 경우에는 `/srv/femiwiki.com/Caddyfile`을 교체할 수 있습니다.
+동일한 이미지를 `FASTCGI_ADDR`과 `RESTBASE_ADDR` 환경 변수를 설정한 후 `caddy run`
+커맨드로 사용할 경우에는 [Caddy] 웹 서버를 실행할 수 있습니다.
+개발 등의 목적으로 Caddyfile을 완전히 변경해야 할 경우에는 `/srv/femiwiki.com/Caddyfile`을 교체할 수 있습니다.
 다음 예시 Compose file를 참고해 주세요.
 
 ```yml
