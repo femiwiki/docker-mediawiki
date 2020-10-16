@@ -63,6 +63,14 @@ RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSIO
 RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/mediawiki'
 
 #
+# Caddy에 Route53 패키지를 설치한다.
+#
+FROM caddy:2.2.0-builder AS caddy
+
+RUN xcaddy build \
+      --with github.com/caddy-dns/route53
+
+#
 # 미디어위키 도커이미지 생성 스테이지. 미디어위키 실행에 필요한 각종 PHP
 # 디펜던시들을 설치한다.
 #
@@ -71,6 +79,7 @@ RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --work
 #   /srv/femiwiki.com      미디어위키 소스코드 및 확장들
 #   /usr/local/{bin,sbin}  임의로 설치한 실행파일들
 #   /tmp/cache             캐시 디렉토리
+#   /tmp/log/cron          크론 로그
 #   /tini                  tini
 #
 FROM php:7.3.22-fpm
@@ -88,6 +97,19 @@ RUN apt-get update && apt-get install -y \
       # CLI utilities
       cron \
       sudo
+
+# Install Caddy
+COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
+
+RUN mkdir -p \
+      /config/caddy \
+      /data/caddy \
+      /etc/caddy \
+      /usr/share/caddy
+
+# See https://caddyserver.com/docs/conventions#file-locations for details
+ENV XDG_CONFIG_HOME /config
+ENV XDG_DATA_HOME /data
 
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 mysqli opcache intl
@@ -156,6 +178,12 @@ COPY --chown=www-data:www-data resources /srv/femiwiki.com/
 VOLUME /a
 
 WORKDIR /srv/femiwiki.com
+
+# Copy Caddyfile for web server usage. See README.md for detail.
+COPY caddy/Caddyfile.prod /srv/femiwiki.com/Caddyfile
+
+EXPOSE 80
+EXPOSE 443
 EXPOSE 9000
 
 COPY run /usr/local/bin/
