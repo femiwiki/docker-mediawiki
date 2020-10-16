@@ -7,6 +7,7 @@ services:
       - 80:80
       - 443:443
     volumes:
+      # Overwrite production Caddyfile
       - ./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
       - caddy:/etc/caddycerts
     environment:

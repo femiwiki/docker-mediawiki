@@ -179,6 +179,9 @@ VOLUME /a
 
 WORKDIR /srv/femiwiki.com
 
+# Copy Caddyfile for web server usage. See README.md for detail.
+COPY caddy/Caddyfile.prod /srv/femiwiki.com/Caddyfile
+
 EXPOSE 80
 EXPOSE 443
 EXPOSE 9000
