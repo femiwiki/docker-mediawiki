@@ -1,4 +1,4 @@
-*:80 127.0.0.1:80 http
+*:80
 root * /srv/femiwiki.com
 php_fastcgi fastcgi:9000
 file_server
@@ -17,4 +17,4 @@ rewrite /w/* /index.php
 # Proxy requests to RESTBase
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
-reverse_proxy /femiwiki.com/* restbase:7231
+reverse_proxy /localhost/* restbase:7231

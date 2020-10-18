@@ -953,10 +953,11 @@ if ( defined( 'DEBUG_MODE' ) ) {
 	$wgForceHTTPS = false;
 	$wgServer = 'http://' . DEBUG_MODE;
 	$wgCanonicalServer = 'http://' . DEBUG_MODE;
-	$wgVirtualRestConfig['modules']['restbase']['url'] = 'http://restbase:7231';
-	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/v1/page/html/';
-	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
-	$wgMathFullRestbaseURL = 'http://' . DEBUG_MODE . '/femiwiki.com/';
+	$wgVirtualRestConfig['modules']['parsoid']['domain'] = 'localhost';
+	$wgVirtualRestConfig['modules']['restbase']['domain'] = 'localhost';
+	$wgVisualEditorRestbaseURL = 'http://' . DEBUG_MODE . '/localhost/v1/page/html/';
+	$wgVisualEditorFullRestbaseURL = 'http://' . DEBUG_MODE . '/localhost/';
+	$wgMathFullRestbaseURL = 'http://' . DEBUG_MODE . '/localhost/';
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 		str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
