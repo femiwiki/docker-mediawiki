@@ -60,7 +60,7 @@ services:
         aliases:
           - RESTBASE_HOSTNAME # secret.php.example에 적힌 기본값
   mathoid:
-    image: wikimedia/mathoid:bad5ec8d4
+    image: ghcr.io/femiwiki/mathoid:2020-12-09T04-56-c3db867c
 
 volumes:
   database:
