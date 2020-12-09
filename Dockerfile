@@ -7,6 +7,9 @@ FROM ruby:2.7 AS base-extension
 ARG MEDIAWIKI_MAJOR_VERSION=1.35
 ARG MEDIAWIKI_BRANCH=REL1_35
 ARG MEDIAWIKI_VERSION=1.35.0
+# composer-merge-plugin does not support for composer 2.0
+# https://phabricator.wikimedia.org/T248908
+ARG COMPOSER_VERSION=1.10.19
 
 # Install composer, prestissimo, aria2, sudo and preload configuration file of
 # aria2
@@ -36,7 +39,7 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
       rm composer-setup.php &&\
       exit 1; \
     fi &&\
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer --quiet
+    php composer-setup.php --version "${COMPOSER_VERSION}" --install-dir=/usr/local/bin --filename=composer --quiet
 
 # Install prestissimo
 RUN composer global require hirak/prestissimo
