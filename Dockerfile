@@ -68,7 +68,7 @@ RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --work
 #
 # Caddy에 Route53 패키지를 설치한다.
 #
-FROM caddy:2.2.0-builder AS caddy
+FROM caddy:2.2.1-builder AS caddy
 
 RUN xcaddy build \
       --with github.com/caddy-dns/route53
