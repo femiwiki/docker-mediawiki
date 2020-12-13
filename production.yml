@@ -24,11 +24,11 @@ services:
       - ./configs:/a:ro
       - l18n_cache:/tmp/cache
   parsoid:
-    image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
+    image: ghcr.io/femiwiki/parsoid:2020-12-10T14-51-f84b9d2d
     environment:
       - MEDIAWIKI_LINTING=true
   restbase:
-    image: ghcr.io/femiwiki/restbase:2020-09-05T10-04-5dcdc8b6
+    image: ghcr.io/femiwiki/restbase:2020-12-13T02-25-8388f4c4
     environment:
       # Workaround for https://github.com/femiwiki/femiwiki/issues/151
       - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php

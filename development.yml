@@ -27,7 +27,7 @@ services:
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
       # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
   parsoid:
-    image: ghcr.io/femiwiki/parsoid:2020-09-05T10-03-ae442600
+    image: ghcr.io/femiwiki/parsoid:latest
     environment:
       - MEDIAWIKI_LINTING=true
       - MEDIAWIKI_APIS_DOMAIN=localhost
@@ -52,7 +52,7 @@ services:
         aliases:
           - MEMCACHED_HOSTNAME # secret.php.example에 적힌 기본값
   restbase:
-    image: ghcr.io/femiwiki/restbase:2020-09-05T10-04-5dcdc8b6
+    image: ghcr.io/femiwiki/restbase:latest
     environment:
       - MEDIAWIKI_APIS_DOMAIN=localhost
     networks:
@@ -60,7 +60,7 @@ services:
         aliases:
           - RESTBASE_HOSTNAME # secret.php.example에 적힌 기본값
   mathoid:
-    image: ghcr.io/femiwiki/mathoid:2020-12-09T04-56-c3db867c
+    image: ghcr.io/femiwiki/mathoid:latest
 
 volumes:
   database:
