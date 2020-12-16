@@ -95,6 +95,8 @@ RUN apt-get update && apt-get install -y \
       # Runtime depenencies
       imagemagick \
       librsvg2-bin \
+      # See https://github.com/femiwiki/docker-mediawiki/issues/442
+      git \
       # Required for SyntaxHighlighting
       python3 \
       # CLI utilities
