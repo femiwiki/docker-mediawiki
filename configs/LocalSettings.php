@@ -87,6 +87,7 @@ $wgEmailConfirmToEdit = true;
 $wgEnableUserEmailBlacklist = true;
 $wgEnableSpecialMute = true;
 $wgUnwatchedPageThreshold = 3;
+$wgWatchlistExpiry = true;
 
 // Database settings
 $wgDBtype = 'mysql';
