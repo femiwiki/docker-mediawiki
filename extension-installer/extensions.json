@@ -71,6 +71,10 @@
     "Vector"
   ],
   "non-WMF": {
+    "AchievementBadges": {
+      "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
+      "version": "v0.0.1"
+    },
     "CategoryIntersectionSearch": {
       "template": "https://github.com/femiwiki/CategoryIntersectionSearch/releases/download/$1/$1.tar.gz",
       "version": "v1.0.0"
@@ -81,7 +85,7 @@
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
-      "version": "v1.1.2"
+      "version": "v1.1.3"
     },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/releases/download/$1/$1.tar.gz",

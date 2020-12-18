@@ -416,6 +416,10 @@ $wgGroupPermissions['sysop']['abusefilter-privatedetails'] = false;
 $wgGroupPermissions['checkuser']['abusefilter-privatedetails'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
+// AchievementBadges
+wfLoadExtension( 'AchievementBadges' );
+$wgAchievementBadgesEnableBetaFeature = true;
+
 // AntiSpoof
 wfLoadExtension( 'AntiSpoof' );
 
