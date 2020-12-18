@@ -97,7 +97,7 @@
       "version": "v1.3.2"
     },
     "AWS": {
-      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.0.tar.gz"
+      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.1.tar.gz"
     },
     "DiscordNotifications": {
       "template": "https://github.com/kulttuuri/DiscordNotifications/archive/1.12.tar.gz"

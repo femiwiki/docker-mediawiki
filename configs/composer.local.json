@@ -2,6 +2,7 @@
   "extra": {
     "merge-plugin": {
       "include": [
+				"extensions/AWS/composer.json",
         "extensions/Wikibase/composer.json"
       ]
     }
