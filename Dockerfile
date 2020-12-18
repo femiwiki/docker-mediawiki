@@ -6,7 +6,7 @@ FROM ruby:2.7 AS base-extension
 
 ARG MEDIAWIKI_MAJOR_VERSION=1.35
 ARG MEDIAWIKI_BRANCH=REL1_35
-ARG MEDIAWIKI_VERSION=1.35.0
+ARG MEDIAWIKI_VERSION=1.35.1
 # composer-merge-plugin does not support for composer 2.0
 # https://phabricator.wikimedia.org/T248908
 ARG COMPOSER_VERSION=1.10.19
