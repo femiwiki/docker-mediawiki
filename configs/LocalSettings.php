@@ -487,15 +487,15 @@ wfLoadExtension( 'Disambiguator' );
 // DiscordNotifications
 wfLoadExtension( 'DiscordNotifications' );
 $wgDiscordFromName = '바뀐글';
-$wgWikiUrl = "{$wgCanonicalServer}/";
+$wgDiscordNotificationWikiUrl = "{$wgCanonicalServer}/";
+$wgDiscordNotificationWikiUrlEndingUserRights = "Special:UserRights/";
+$wgDiscordNotificationWikiUrlEndingBlockUser = '특수:제재안목록/';
 $wgDiscordNotificationNewUser = false;
-$wgExcludedPermission = 'bot';
+$wgDiscordExcludedPermission = 'bot';
 $wgDiscordExcludeNotificationsFrom = [ 'Translations:' ];
 // VisualEditor setting
 // See https://github.com/kulttuuri/DiscordNotifications#customize-request-call-method-fix-extension-not-working-with-visualeditor
 $wgDiscordSendMethod = 'file_get_contents';
-$wgWikiUrlEndingUserRights = "Special:UserRights/";
-$wgWikiUrlEndingBlockUser = '특수:제재안목록/';
 
 // DiscussionTools
 wfLoadExtension( 'DiscussionTools' );
