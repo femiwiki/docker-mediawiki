@@ -73,7 +73,7 @@
   "non-WMF": {
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
-      "version": "v0.0.1"
+      "version": "v0.0.2"
     },
     "CategoryIntersectionSearch": {
       "template": "https://github.com/femiwiki/CategoryIntersectionSearch/releases/download/$1/$1.tar.gz",
