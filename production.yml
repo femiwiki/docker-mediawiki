@@ -1,7 +1,7 @@
 version: '3'
 services:
   http:
-    image: ghcr.io/femiwiki/mediawiki:2020-12-25t03-18-a471f194
+    image: ghcr.io/femiwiki/mediawiki:2020-12-27t14-06-7425b5b7
     command: caddy run
     ports:
       - 80:80
@@ -19,7 +19,7 @@ services:
         max_attempts: 3
         window: 120s
   fastcgi:
-    image: ghcr.io/femiwiki/mediawiki:2020-12-25t03-18-a471f194
+    image: ghcr.io/femiwiki/mediawiki:2020-12-27t14-06-7425b5b7
     volumes:
       - ./configs:/a:ro
       - l18n_cache:/tmp/cache
