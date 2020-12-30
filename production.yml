@@ -6,6 +6,10 @@ services:
     ports:
       - 80:80
       - 443:443
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
     volumes:
       - caddy:/etc/caddycerts
     environment:
