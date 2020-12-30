@@ -3,6 +3,9 @@
   storage file_system {
     root /etc/caddycerts
   }
+
+  # NOTE: See @filter for the further details
+  order respond before rewrite
 }
 femiwiki.com *.femiwiki.com 127.0.0.1:80 http:80 localhost:80
 tls {
@@ -22,6 +25,7 @@ header {
   # Avoid clickjacking
   X-Frame-Options "DENY"
 }
+
 rewrite /w/api.php /api.php
 rewrite /w/* /index.php
 
@@ -29,3 +33,12 @@ rewrite /w/* /index.php
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
 reverse_proxy /femiwiki.com/* {$RESTBASE_ADDR}
+
+
+
+# Ignore malformed requests
+@filter {
+  path /w/특수:내언어/페미위키:대문
+  query =*
+}
+respond @filter 200
