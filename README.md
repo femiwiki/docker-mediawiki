@@ -1,5 +1,5 @@
-페미위키 미디어위키 서버 [![Container Registry]][Container Registry Link] [![Github checks Status]][Github checks Link]
-========
+# 페미위키 미디어위키 서버 [![Container Registry]][container registry link] [![Github checks Status]][github checks link]
+
 한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 서버입니다.
 Dockerfile, 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
 데이터베이스와 memcached, 각종 봇들이 실행됩니다.
@@ -30,6 +30,7 @@ composer fix
 &nbsp;
 
 ### Production
+
 페미위키는 프로덕션 배포에도 [Docker Swarm]을 사용합니다. 페미위키에서 사용하는
 AWS EC2 AMI는 [femiwiki/ami]를 참고해주세요.
 
@@ -41,6 +42,8 @@ sudo docker swarm init
 sudo docker stack deploy --prune -c ~/mediawiki/production.yml mediawiki
 sudo docker stack deploy --prune -c ~/mediawiki/bots.yml bots
 ```
+
+See also [How to deploy weekly femiwiki to production].
 
 ### About Docker image
 
@@ -66,21 +69,22 @@ fastcgi:
 
 &nbsp;
 
---------
+---
 
-The source code of *femiwiki/mediawiki* is primarily distributed under the terms
+The source code of _femiwiki/mediawiki_ is primarily distributed under the terms
 of the [GNU Affero General Public License v3.0] or any later version. See
 [COPYRIGHT] for details.
 
-[Container Registry]: https://badgen.net/badge/icon/docker?icon=docker&label
-[Container Registry Link]: https://github.com/orgs/femiwiki/packages/container/mediawiki
-[Github checks Status]: https://badgen.net/github/checks/femiwiki/docker-mediawiki
-[Github checks Link]: https://github.com/femiwiki/docker-mediawiki
+[container registry]: https://badgen.net/badge/icon/docker?icon=docker&label
+[container registry link]: https://github.com/orgs/femiwiki/packages/container/mediawiki
+[github checks status]: https://badgen.net/github/checks/femiwiki/docker-mediawiki
+[github checks link]: https://github.com/femiwiki/docker-mediawiki
 [femiwiki.com]: https://femiwiki.com
-[Docker Swarm]: https://docs.docker.com/engine/swarm/
+[docker swarm]: https://docs.docker.com/engine/swarm/
 [femiwiki/ami]: https://github.com/femiwiki/ami
 [secret.php]: configs/secret.php.example
+[how to deploy weekly femiwiki to production]: https://github.com/femiwiki/femiwiki/blob/main/how-to-deploy-weekly-femi-wiki-to-production.md
 [php-fpm]: https://php-fpm.org/
-[Caddy]: https://caddyserver.com/
-[GNU Affero General Public License v3.0]: LICENSE
-[COPYRIGHT]: COPYRIGHT
+[caddy]: https://caddyserver.com/
+[gnu affero general public license v3.0]: LICENSE
+[copyright]: COPYRIGHT
