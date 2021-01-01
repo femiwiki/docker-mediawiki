@@ -420,6 +420,7 @@ $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 // AchievementBadges
 wfLoadExtension( 'AchievementBadges' );
 $wgAchievementBadgesEnableBetaFeature = true;
+$wgAchievementBadgesFacebookAppId = '1937597133150935';
 
 // AntiSpoof
 wfLoadExtension( 'AntiSpoof' );
