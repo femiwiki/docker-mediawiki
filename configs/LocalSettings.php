@@ -49,8 +49,10 @@ $wgLogos = [
 	'svg' => "$wgResourceBasePath/fw-resources/symbol-transparent-white.svg",
 	'wordmark' => [
 		'src' => "$wgResourceBasePath/fw-resources/logo-transparent-white.svg",
-		'width' => 1143.519,
-		'height' => 356.9,
+		// The unit of below sizes is considered pixel by Skin:Vector
+		// Skin:Femiwiki uses only the ratio of them.
+		'width' => 142.93,
+		'height' => 44.61,
 	]
 ];
 $wgAppleTouchIcon = "$wgResourceBasePath/fw-resources/favicons/favicon-180.png";
