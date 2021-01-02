@@ -43,22 +43,17 @@ $wgResourceLoaderMaxage = [
 
 // The URL path to the logo.
 $wgLogos = [
-	// maximally 50x50
+	// 'icon' is used by modern Skin:Vector (maximally 50x50)
 	'icon' => "$wgResourceBasePath/fw-resources/icon-transparent-white-50x50.png",
-	// maximally 135x135
-	'1x' => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-135x114.png",
-	// maximally 202x202
-	'1.5x' => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-202x170.png",
-	// maximally 270x270
-	'2x' => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet-240x200.png",
-	'svg' => "$wgResourceBasePath/fw-resources/logo-square-transparent-violet.svg",
+	// 'svg' and 'wordmark' are used by Skin:Femiwiki
+	'svg' => "$wgResourceBasePath/fw-resources/symbol-transparent-white.svg",
 	'wordmark' => [
-		'src' => "$wgResourceBasePath/fw-resources/logo-long-transparent-white-202x56.png",
-		'1x' => "$wgResourceBasePath/fw-resources/logo-long-transparent-white.svg",
-		'width' => 202,
-		'height' => 56
+		'src' => "$wgResourceBasePath/fw-resources/logo-transparent-white.svg",
+		'width' => 1143.519,
+		'height' => 356.9,
 	]
 ];
+$wgAppleTouchIcon = "$wgResourceBasePath/fw-resources/favicons/favicon-180.png";
 
 $wgSMTP = [
 	'host' => 'email-smtp.us-east-1.amazonaws.com',
@@ -172,23 +167,12 @@ $wgDefaultSkin = 'femiwiki';
 wfLoadSkin( 'Vector' );
 wfLoadSkin( 'Femiwiki' );
 $wgFemiwikiHeadItems = [
-	'fav1' => "<link rel='apple-touch-icon' sizes='57x75' href='/fw-resources/favicons/apple-icon-57x57.png'>",
-	'fav2' => "<link rel='apple-touch-icon' sizes='60x60' href='/fw-resources/favicons/apple-icon-60x60.png'>",
-	'fav3' => "<link rel='apple-touch-icon' sizes='72x72' href='/fw-resources/favicons/apple-icon-72x72.png'>",
-	'fav4' => "<link rel='apple-touch-icon' sizes='76x76' href='/fw-resources/favicons/apple-icon-76x76.png'>",
-	'fav5' => "<link rel='apple-touch-icon' sizes='114x114' href='/fw-resources/favicons/apple-icon-114x114.png'>",
-	'fav6' => "<link rel='apple-touch-icon' sizes='120x120' href='/fw-resources/favicons/apple-icon-120x120.png'>",
-	'fav7' => "<link rel='apple-touch-icon' sizes='144x144' href='/fw-resources/favicons/apple-icon-144x144.png'>",
-	'fav8' => "<link rel='apple-touch-icon' sizes='152x152' href='/fw-resources/favicons/apple-icon-152x152.png'>",
-	'fav9' => "<link rel='apple-touch-icon' sizes='180x180' href='/fw-resources/favicons/apple-icon-180x180.png'>",
-	'fav10' => "<link rel='icon' type='image/png' sizes='192x192' href='/fw-resources/favicons/android-icon-192x192.png'>",
-	'fav11' => "<link rel='icon' type='image/png' sizes='32x32' href='/fw-resources/favicons/favicon-32x32.png'>",
-	'fav12' => "<link rel='icon' type='image/png' sizes='96x96' href='/fw-resources/favicons/favicon-96x96.png'>",
-	'fav13' => "<link rel='icon' type='image/png' sizes='16x16' href='/fw-resources/favicons/favicon-16x16.png'>",
-	'fav14' => "<link rel='manifest' href='/fw-resources/favicons/manifest.json'>",
-	'fav15' => "<meta name='msapplication-TileColor' content='#ffffff'>",
-	'fav16' => "<meta name='msapplication-TileImage' content='/fw-resources/favicons/ms-icon-144x144.png'>",
-	'fav17' => "<meta name='theme-color' content='#ffffff'>"
+	'fav1' => '<link rel="icon" type="image/svg+xml" sizes="any" href="/fw-resources/favicons/favicon.svg">',
+	'fav2' => '<link rel="icon" type="image/png" sizes="96x96" href="/fw-resources/favicons/favicon-96.png">',
+	'fav3' => '<link rel="icon" type="image/png" sizes="32x32" href="/fw-resources/favicons/favicon-32.png">',
+	'fav4' => '<link rel="icon" type="image/png" sizes="16x16" href="/fw-resources/favicons/favicon-16.png">',
+	'fav6' => '<link rel="manifest" href="/fw-resources/favicons/manifest.json">',
+	'fav7' => '<meta name="theme-color" content="#aca6e4">',
 ];
 $wgFemiwikiTwitterAccount = 'femiwikidotcome';
 $wgFemiwikiFacebookAppId = '1937597133150935';
