@@ -44,7 +44,7 @@ $wgResourceLoaderMaxage = [
 // The URL path to the logo.
 $wgLogos = [
 	// 'icon' is used by modern Skin:Vector (maximally 50x50)
-	'icon' => "$wgResourceBasePath/fw-resources/icon-transparent-white-50x50.png",
+	'icon' => "$wgResourceBasePath/fw-resources/symbol-transparent-white.svg",
 	// 'svg' and 'wordmark' are used by Skin:Femiwiki
 	'svg' => "$wgResourceBasePath/fw-resources/symbol-transparent-white.svg",
 	'wordmark' => [
