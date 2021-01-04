@@ -84,8 +84,8 @@ jobs:
       run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u femiwiki-bot --password-stdin
 
     - name: Publish to Registry
-      # Publish only when in the master branch
-      if: github.ref == 'refs/heads/master'
+      # Publish only when in the default branch
+      if: github.ref == 'refs/heads/main'
       run: |
         docker push ghcr.io/femiwiki/mediawiki:latest
         docker push ghcr.io/femiwiki/mediawiki:${{ steps.version.outputs.version }}
