@@ -424,9 +424,6 @@ wfLoadExtension( 'BetaFeatures' );
 // BounceHandler
 wfLoadExtension( 'BounceHandler' );
 
-// CategoryIntersectionSearch
-wfLoadExtension( 'CategoryIntersectionSearch' );
-
 // CategoryTree
 wfLoadExtension( 'CategoryTree' );
 

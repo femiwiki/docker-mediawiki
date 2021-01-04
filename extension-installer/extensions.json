@@ -75,10 +75,6 @@
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
       "version": "v0.1.1"
     },
-    "CategoryIntersectionSearch": {
-      "template": "https://github.com/femiwiki/CategoryIntersectionSearch/releases/download/$1/$1.tar.gz",
-      "version": "v1.0.0"
-    },
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
       "version": "v1.0.0"
