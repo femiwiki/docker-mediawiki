@@ -596,8 +596,8 @@ $wgLocalisationUpdateRepositories = [
 		'skin' => 'https://raw.github.com/wikimedia/mediawiki-skins-%NAME%/master/%PATH%'
 	],
 	'femiwiki' => [
-		'extension' => 'https://raw.github.com/femiwiki/%NAME%/master/%PATH%',
-		'skin' => 'https://raw.github.com/femiwiki/FemiwikiSkin/master/%PATH%',
+		'extension' => 'https://raw.github.com/femiwiki/%NAME%/main/%PATH%',
+		'skin' => 'https://raw.github.com/femiwiki/FemiwikiSkin/main/%PATH%',
 	],
 	'kulttuuri' => [
 		'extension' => 'https://raw.github.com/kulttuuri/%NAME%/master/%PATH%',
