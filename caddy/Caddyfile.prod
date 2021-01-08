@@ -49,5 +49,5 @@ log {
   vars_regexp {query} ^[A-Z]{5}=[A-Z]{3}$
 }
 
-respond @filter0 200
-respond @filter1 200
+respond @filter0 200 { close }
+respond @filter1 200 { close }
