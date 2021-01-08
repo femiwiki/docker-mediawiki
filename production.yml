@@ -1,7 +1,7 @@
 version: '3'
 services:
   http:
-    image: ghcr.io/femiwiki/mediawiki:2021-01-08T08-36-3d7bef6a
+    image: ghcr.io/femiwiki/mediawiki:2021-01-08t12-08-5f1a4536
     command: caddy run
     ports:
       - 80:80
