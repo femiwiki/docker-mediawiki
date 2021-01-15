@@ -177,7 +177,10 @@ $wgFemiwikiHeadItems = [
 	'fav7' => '<meta name="theme-color" content="#aca6e4">',
 ];
 $wgFemiwikiTwitterAccount = 'femiwikidotcome';
-$wgFemiwikiFacebookAppId = '1937597133150935';
+$wgFemiwikiAddThisId = [
+	'pub' => 'ra-5ffbebf1fd382d20',
+	'tool' => 'ucmm',
+];
 
 //
 // Namespace settings
@@ -407,6 +410,10 @@ $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 wfLoadExtension( 'AchievementBadges' );
 $wgAchievementBadgesEnableBetaFeature = true;
 $wgAchievementBadgesFacebookAppId = '1937597133150935';
+$wgAchievementBadgesAddThisId = [
+	'pub' => 'ra-5ffbebf1fd382d20',
+	'tool' => 'kas4',
+];
 
 // AntiSpoof
 wfLoadExtension( 'AntiSpoof' );
@@ -691,7 +698,7 @@ wfLoadExtension( 'OATHAuth' );
 
 // OpenGraphMeta
 wfLoadExtension( 'OpenGraphMeta' );
-$egFacebookAppId = $wgFemiwikiFacebookAppId;
+$egFacebookAppId = '1937597133150935';
 
 // PageImages
 wfLoadExtension( 'PageImages' );
