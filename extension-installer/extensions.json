@@ -90,7 +90,7 @@
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v1.3.5"
+      "version": "v1.4.0"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.1.tar.gz"
