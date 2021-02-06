@@ -22,6 +22,9 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    logging:
+      options:
+        max-size: "100m"
   fastcgi:
     image: ghcr.io/femiwiki/mediawiki:2021-01-15T05-46-c7f97198
     volumes:
@@ -52,6 +55,12 @@ services:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
   memcached:
     image: memcached:1.6.6-alpine
+
+  service_name:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
 
 volumes:
   caddy:

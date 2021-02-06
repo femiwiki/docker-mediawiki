@@ -18,6 +18,9 @@ services:
         delay: 5s
         max_attempts: 3
         window: 120s
+    logging:
+      options:
+        max-size: "100m"
   fastcgi:
     image: ghcr.io/femiwiki/mediawiki:latest
     volumes:
