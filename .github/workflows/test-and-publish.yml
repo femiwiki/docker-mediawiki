@@ -80,8 +80,13 @@ jobs:
     - name: Try to access the mediawiki
       run: curl -sSLvo /dev/null 127.0.0.1 || docker service logs mediawiki_fastcgi
 
-    - name: Log into GitHub Container Registry
-      run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u femiwiki-bot --password-stdin
+    - name: Login to GitHub Container Registry
+      if: github.ref == 'refs/heads/main'
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: femiwiki-bot
+        password: ${{ secrets.CR_PAT }}
 
     - name: Publish to Registry
       # Publish only when in the default branch
