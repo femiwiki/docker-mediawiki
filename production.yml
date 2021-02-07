@@ -56,12 +56,6 @@ services:
   memcached:
     image: memcached:1.6.6-alpine
 
-  service_name:
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-
 volumes:
   caddy:
   l18n_cache:
