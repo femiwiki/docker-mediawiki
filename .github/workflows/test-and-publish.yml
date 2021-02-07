@@ -62,11 +62,10 @@ jobs:
     - name: Access 127.0.0.1 until success
       timeout-minutes: 3
       run: |
-        printf 'Waiting for http...'
+        echo 'Waiting for http...'
         until curl -sLfo /dev/null 127.0.0.1; do
           sleep 1;
-          printf '.';
-        done; printf '\n'
+        done;
     - name: backup of accessing
       if: ${{ failure() }}
       run: |
