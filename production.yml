@@ -35,7 +35,7 @@ services:
     environment:
       - MEDIAWIKI_LINTING=true
   restbase:
-    image: ghcr.io/femiwiki/restbase:2020-12-13T02-25-8388f4c4
+    image: ghcr.io/femiwiki/restbase:2021-03-18T08-44-a48f917b
     environment:
       # Workaround for https://github.com/femiwiki/femiwiki/issues/151
       - MEDIAWIKI_APIS_URI=https://femiwiki.com/api.php
@@ -44,7 +44,7 @@ services:
   mathoid:
     image: ghcr.io/femiwiki/mathoid:2020-12-09T04-56-c3db867c
   mysql:
-    image: mysql:8.0.21
+    image: mysql:8.0.23
     ports:
       - 3306:3306
     command: --default-authentication-plugin=mysql_native_password
@@ -54,7 +54,7 @@ services:
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
   memcached:
-    image: memcached:1.6.6-alpine
+    image: memcached:1.6.9-alpine
 
 volumes:
   caddy:
