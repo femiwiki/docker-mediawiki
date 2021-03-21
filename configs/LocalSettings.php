@@ -37,8 +37,10 @@ $wgResourceBasePath = $wgScriptPath;
 
 $wgStyleVersion = '20191101_0';
 $wgResourceLoaderMaxage = [
-	'versioned' => 90 * 24 * 60 * 60, // 90 days
-	'unversioned' => 3 * 60, // 3 minutes
+	// 90 days
+	'versioned' => 90 * 24 * 60 * 60,
+	// 3 minutes
+	'unversioned' => 3 * 60,
 ];
 
 // The URL path to the logo.
@@ -70,15 +72,18 @@ $wgSMTP = [
 // Reference:
 // - https://www.mediawiki.org/wiki/Help:User_preference_option
 $wgEnableEmail = true;
-$wgEnableUserEmail = true; // UPO
+// UPO
+$wgEnableUserEmail = true;
 $wgAllowHTMLEmail = true;
 $wgUserEmailUseReplyTo = true;
 
 $wgEmergencyContact = 'admin@femiwiki.com';
 $wgPasswordSender = 'admin@femiwiki.com';
 
-$wgEnotifUserTalk = false; // UPO
-$wgEnotifWatchlist = false; // UPO
+// UPO
+$wgEnotifUserTalk = false;
+// UPO
+$wgEnotifWatchlist = false;
 $wgEmailAuthentication = true;
 $wgEmailConfirmToEdit = true;
 $wgEnableUserEmailBlacklist = true;
@@ -536,14 +541,16 @@ $wgFlaggedRevsNamespaces = [
 	NS_MAIN,
 	NS_PROJECT,
 	NS_TEMPLATE,
-	828, // Module
+	// Module
+	828,
 ];
 // Use FlaggedRevs only as a protection-like mechanism
 $wgFlaggedRevsProtection = true;
 // Disable Special:ValidationStatistics updates
 $wgFlaggedRevsStatsAge = false;
 // Changes the settings of stable revisions of any page
-$wgDefaultUserOptions[ 'flaggedrevsstable' ] = 1; // FR_SHOW_STABLE_ALWAYS
+// FR_SHOW_STABLE_ALWAYS is 1.
+$wgDefaultUserOptions[ 'flaggedrevsstable' ] = 1;
 // Group permissions for femiwiki-team
 $wgGroupPermissions['femiwiki-team']['review'] = true;
 $wgGroupPermissions['femiwiki-team']['validate'] = true;
@@ -640,7 +647,8 @@ wfLoadExtension( 'LoginNotify' );
 // Math
 wfLoadExtension( 'Math' );
 $wgDefaultUserOptions['math'] = 'mathml';
-$wgMathMathMLUrl = 'http://mathoid:10044/'; // IP of Mathoid server
+// IP of Mathoid server
+$wgMathMathMLUrl = 'http://mathoid:10044/';
 
 // MobileFrontend
 wfLoadExtension( 'MobileFrontend' );
