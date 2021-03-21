@@ -96,7 +96,7 @@
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.1.tar.gz"
     },
     "DiscordNotifications": {
-      "template": "https://github.com/kulttuuri/DiscordNotifications/archive/eca3b3d013e916e8de255849c9e61196d0ea92eb.tar.gz"
+      "template": "https://github.com/femiwiki/DiscordNotifications/archive/refs/tags/v1.0.0-femiwiki.tar.gz"
     },
     "EmbedVideo": {
       "template": "https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz"

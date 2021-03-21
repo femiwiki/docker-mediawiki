@@ -477,13 +477,33 @@ wfLoadExtension( 'Disambiguator' );
 
 // DiscordNotifications
 wfLoadExtension( 'DiscordNotifications' );
-$wgDiscordFromName = '바뀐글';
-$wgDiscordNotificationWikiUrl = "{$wgCanonicalServer}/";
-$wgDiscordNotificationWikiUrlEndingUserRights = "Special:UserRights/";
-$wgDiscordNotificationWikiUrlEndingBlockUser = '특수:제재안목록/';
-$wgDiscordNotificationNewUser = false;
-$wgDiscordExcludedPermission = 'bot';
-$wgDiscordExcludeNotificationsFrom = [ 'Translations:' ];
+$wgDiscordNotificationsDisplay = [
+	'user-tools' => [
+		[
+			'target' => 'special',
+			'special' => 'Sanctions',
+			'text' => '제재안'
+		],
+		[
+			'target' => 'talk',
+			'msg' => 'discordnotifications-talk'
+		],
+		[
+			'target' => 'special',
+			'special' => 'Contributions',
+			'msg' => 'discordnotifications-contribs'
+		]
+	]
+];
+$wgDiscordNotificationsActions = [
+	'new-user' => false
+];
+$wgDiscordNotificationsExclude = [
+	'page' => [
+		'patterns' => '/^Translations:/',
+	],
+	'permissions' => [ 'bot' ],
+];
 // VisualEditor setting
 // See https://github.com/kulttuuri/DiscordNotifications#customize-request-call-method-fix-extension-not-working-with-visualeditor
 $wgDiscordSendMethod = 'file_get_contents';
