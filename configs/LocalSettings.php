@@ -979,6 +979,11 @@ if ( getenv( 'FEMIWIKI_SERVER' ) ) {
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 		str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
+
+	$domain = getenv( 'FEMIWIKI_DOMAIN' ) ?: 'femiwiki.com';
+	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
+	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
+	$wgMathFullRestbaseURL = "$wgServer/$domain/";
 }
 
 // Domain is an arbitrary keyword for communicate with MediaWiki node services
