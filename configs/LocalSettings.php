@@ -970,23 +970,31 @@ $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 require_once '/a/secret.php';
 
 //
-// Debug Mode
+// Overwrite server url
 //
-if ( defined( 'DEBUG_MODE' ) || getenv( 'FEMIWIKI_DEBUG_MODE' ) ) {
-	// 도메인 변경
-	$wgForceHTTPS = false;
-	$domain = getenv( 'FEMIWIKI_DEBUG_MODE' ) ?: DEBUG_MODE;
-	$wgServer = 'http://' . $domain;
-	$wgCanonicalServer = 'http://' . $domain;
-	$wgVirtualRestConfig['modules']['parsoid']['domain'] = 'localhost';
-	$wgVirtualRestConfig['modules']['restbase']['domain'] = 'localhost';
-	$wgVisualEditorRestbaseURL = 'http://' . $domain . '/localhost/v1/page/html/';
-	$wgVisualEditorFullRestbaseURL = 'http://' . $domain . '/localhost/';
-	$wgMathFullRestbaseURL = 'http://' . $domain . '/localhost/';
+if ( getenv( 'FEMIWIKI_SERVER' ) ) {
+	$wgServer = getenv( 'FEMIWIKI_SERVER' );
+	$wgForceHTTPS = substr( $wgServer, 0, 5 ) === 'https';
+	$wgCanonicalServer = $wgServer;
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 		str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
+}
 
+// Domain is an arbitrary keyword for communicate with MediaWiki node services
+if ( getenv( 'FEMIWIKI_DOMAIN' ) ) {
+	$domain = getenv( 'FEMIWIKI_DOMAIN' );
+	$wgVirtualRestConfig['modules']['parsoid']['server'] = $domain;
+	$wgVirtualRestConfig['modules']['restbase']['server'] = $domain;
+	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
+	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
+	$wgMathFullRestbaseURL = "$wgServer/$domain/";
+}
+
+//
+// Debug Mode
+//
+if ( getenv( 'FEMIWIKI_DEBUG_MODE' ) ) {
 	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0' ];
 
 	// 디버그 툴 활성화

@@ -35,8 +35,8 @@ jobs:
     - name: Edit configuration
       run: |
         mv configs/secret.php.example configs/secret.php;
-        sed -i -r 's/localhost/127.0.0.1/' configs/secret.php
-        sed -i -r 's/ghcr\.io\/femiwiki\/mediawiki:.+/ghcr\.io\/femiwiki\/mediawiki:docker-test/' development.yml
+        sed -i 's~http://localhost~http://127.0.0.1~' development.yml
+        sed -i -r 's~ghcr\.io\/femiwiki\/mediawiki:.+~ghcr\.io\/femiwiki\/mediawiki:docker-test~' development.yml
 
     - run: echo "::set-output name=version::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
       id: version
@@ -70,6 +70,7 @@ jobs:
       if: ${{ failure() }}
       run: |
         echo 'Failed to connect to 127.0.0.1';
+        curl -sLfo /dev/null localhost; echo $?
         docker ps;
         for s in $(docker service ls -q ); do docker service ps "$s"; done
         docker container ps;
