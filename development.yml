@@ -24,7 +24,10 @@ services:
   fastcgi:
     image: ghcr.io/femiwiki/mediawiki:latest
     volumes:
+      # Mount secret.php
       - ./configs:/a:ro
+      # Overwrite LocalSettings.php and site-list.xml
+      - ./configs:/config/mediawiki:ro
       - l18n_cache:/tmp/cache
       ## 스킨 등 개발할 때엔 아래 라인을 주석해제
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
