@@ -49,9 +49,7 @@ See also [How to deploy weekly femiwiki to production].
 
 페미위키를 위한 [PHP-FPM] 서버입니다.
 동일한 이미지를 `FASTCGI_ADDR`과 `RESTBASE_ADDR` 환경 변수를 설정한 후 `caddy run`
-커맨드로 사용할 경우에는 [Caddy] 웹 서버를 실행할 수 있습니다.
-개발 등의 목적으로 Caddyfile을 완전히 변경해야 할 경우에는 `/srv/femiwiki.com/Caddyfile`을 교체할 수 있습니다.
-다음 예시 Compose file를 참고해 주세요.
+커맨드로 사용할 경우에는 [Caddy] 웹 서버를 실행할 수 있습니다. 다음 예시 Compose file를 참고해 주세요.
 
 ```yml
 http:
@@ -59,13 +57,27 @@ http:
   command: caddy run
   ports:
     - 80:80
-  volumes:
-    - ./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
 fastcgi:
   image: ghcr.io/femiwiki/mediawiki
   volumes:
     - ./configs:/a:ro
 ```
+
+#### Configurations
+
+개발 등의 목적으로 Caddyfile을 완전히 변경해야 할 경우에는 `/srv/femiwiki.com/Caddyfile`을 교체할 수 있습니다. 파일 마운트의 경우 일부 텍스트 편집기로 인한 편집이 무시될 수 있음을 주의하세요. (https://github.com/moby/moby/issues/15793)
+
+```
+./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
+```
+
+LocalSettings.php 파일이나 site-list.xml 파일을 교체해야 할 경우 다음과 같이 마운트해주세요.
+
+```
+./configs:/config/mediawiki:ro
+```
+
+위 두 경우 모두 development.yml에 예시가 있습니다.
 
 &nbsp;
 

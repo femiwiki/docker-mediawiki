@@ -4,10 +4,8 @@
 #
 FROM ruby:2.7 AS base-extension
 
-ARG MEDIAWIKI_MAJOR_VERSION=1.35
-ARG MEDIAWIKI_BRANCH=REL1_35
 ARG MEDIAWIKI_VERSION=1.35.1
-# composer-merge-plugin does not support for composer 2.0
+# MW 1.35.1 does not support for composer 2.0
 # https://phabricator.wikimedia.org/T248908
 ARG COMPOSER_VERSION=1.10.19
 
@@ -56,11 +54,13 @@ RUN mkdir -p /tmp/mediawiki/ &&\
 # Extensions and skins setup
 COPY extension-installer/* /tmp/
 RUN bundle install --deployment --gemfile /tmp/Gemfile --path /var/www/.gem
-RUN sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
+RUN export MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
+    sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
 # MediaWiki setup
 COPY --chown=www-data configs/composer.local.json /tmp/mediawiki/
-RUN curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
+RUN export MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\
+    curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
     sudo -u www-data tar -xzf mediawiki.tar.gz --strip-components=1 --directory /tmp/mediawiki/ &&\
     rm mediawiki.tar.gz
 RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/mediawiki'
@@ -179,6 +179,9 @@ COPY cron/localisation-update /usr/local/bin/localisation-update
 
 # Store femiwiki resources
 COPY --chown=www-data:www-data resources /srv/femiwiki.com/
+
+# Store femiwiki-specific mediawiki configurations
+COPY --chown=www-data [ "configs/LocalSettings.php", "configs/site-list.xml", "/config/mediawiki/" ]
 # secret.php should be mounted to '/a/secret.php'
 VOLUME /a
 
