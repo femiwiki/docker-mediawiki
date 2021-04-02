@@ -77,9 +77,9 @@ LocalSettings.php 파일이나 site-list.xml 파일을 교체해야 할 경우 �
 
 다음 환경 변수를 설정할 수 있습니다.
 
-- `FEMIWIKI_SERVER`: `$wgServer`를 덮어씁니다. 기본값 `'https://femiwiki.com'`.
-- `FEMIWIKI_DOMAIN`: domain은 Parsoid, RESTBase 등과 통신할 때 사용하는 임의 문자열입니다. 기본값 `'femiwiki.com'`.
-- `FEMIWIKI_DEBUG_MODE`: 설정되었을 경우 미디어위키에서 제공하는 디버그 기능들을 켜고 개발 환경에서 세팅이 어려운 확장기능들을 비활성화합니다.
+- `MEDIAWIKI_SERVER`: `$wgServer`를 덮어씁니다. 기본값 `'https://femiwiki.com'`.
+- `MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE`: domain은 Parsoid, RESTBase 등과 통신할 때 사용하는 임의 문자열입니다. 기본값 `'femiwiki.com'`.
+- `MEDIAWIKI_DEBUG_MODE`: 설정되었을 경우 미디어위키에서 제공하는 디버그 기능들을 켜고 개발 환경에서 세팅이 어려운 확장기능들을 비활성화합니다.
 - `MEDIAWIKI_SKIP_INSTALL`: 설정되었을 경우 컨테이너 시작 시 install.php를 실행하지 않습니다. install.php는 데이터베이스가 세팅되지 않은지 검사하고 초기화하는 일과 LocalSettings.php 생성 작업을 하므로 둘 모두 이미 처리된 경우에 스킵할 수 있습니다.
 - `MEDIAWIKI_SKIP_UPDATE`: 설정되었을 경우 컨테이너 시작 시 update.php를 실행하지 않습니다. update.php 실행은 미디어위키 설치 직후 혹은 확장 기능 추가 시에만 필요합니다.
 - `MEDIAWIKI_SKIP_IMPORT_SITES`: 설정되었을 경우 컨테이너 시작 시 importSites.php를 실행하지 않습니다. 내용이 변경되지 않았다면 한 데이터베이스에 두 번 이상 실행할 필요가 없습니다.

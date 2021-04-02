@@ -972,23 +972,23 @@ require_once '/a/secret.php';
 //
 // Overwrite server url
 //
-if ( getenv( 'FEMIWIKI_SERVER' ) ) {
-	$wgServer = getenv( 'FEMIWIKI_SERVER' );
+if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
+	$wgServer = getenv( 'MEDIAWIKI_SERVER' );
 	$wgForceHTTPS = substr( $wgServer, 0, 5 ) === 'https';
 	$wgCanonicalServer = $wgServer;
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 		str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
 
-	$domain = getenv( 'FEMIWIKI_DOMAIN' ) ?: 'femiwiki.com';
+	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ?: 'femiwiki.com';
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
 	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
 	$wgMathFullRestbaseURL = "$wgServer/$domain/";
 }
 
 // Domain is an arbitrary keyword for communicate with MediaWiki node services
-if ( getenv( 'FEMIWIKI_DOMAIN' ) ) {
-	$domain = getenv( 'FEMIWIKI_DOMAIN' );
+if ( getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ) {
+	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' );
 	$wgVirtualRestConfig['modules']['parsoid']['server'] = $domain;
 	$wgVirtualRestConfig['modules']['restbase']['server'] = $domain;
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
@@ -999,7 +999,7 @@ if ( getenv( 'FEMIWIKI_DOMAIN' ) ) {
 //
 // Debug Mode
 //
-if ( getenv( 'FEMIWIKI_DEBUG_MODE' ) ) {
+if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0' ];
 
 	// 디버그 툴 활성화

@@ -30,9 +30,9 @@ services:
       - ./configs:/config/mediawiki:ro
       - l18n_cache:/tmp/cache
     environment:
-      - FEMIWIKI_SERVER=http://127.0.0.1
-      - FEMIWIKI_DOMAIN=localhost
-      - FEMIWIKI_DEBUG_MODE=1
+      - MEDIAWIKI_SERVER=http://127.0.0.1
+      - MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE=localhost
+      - MEDIAWIKI_DEBUG_MODE=1
       ## 스킨 등 개발할 때엔 아래 라인을 주석해제
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
       # - ../AchievementBadges:/srv/femiwiki.com/extensions/AchievementBadges
