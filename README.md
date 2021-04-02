@@ -29,7 +29,7 @@ composer fix
 
 &nbsp;
 
-### Production
+## Production
 
 페미위키는 프로덕션 배포에도 [Docker Swarm]을 사용합니다. 페미위키에서 사용하는
 AWS EC2 AMI는 [femiwiki/ami]를 참고해주세요.
@@ -45,7 +45,7 @@ sudo docker stack deploy --prune -c ~/mediawiki/bots.yml bots
 
 See also [How to deploy weekly femiwiki to production].
 
-### About Docker image
+## About Docker image
 
 페미위키를 위한 [PHP-FPM] 서버입니다.
 동일한 이미지를 `FASTCGI_ADDR`과 `RESTBASE_ADDR` 환경 변수를 설정한 후 `caddy run`
@@ -63,13 +63,11 @@ fastcgi:
     - ./configs:/a:ro
 ```
 
-#### Configurations
+### Configurations
 
-개발 등의 목적으로 Caddyfile을 완전히 변경해야 할 경우에는 `/srv/femiwiki.com/Caddyfile`을 교체할 수 있습니다. 파일 마운트의 경우 일부 텍스트 편집기로 인한 편집이 무시될 수 있음을 주의하세요. (https://github.com/moby/moby/issues/15793)
+development.yml에서 예시를 찾아볼 수 있습니다.
 
-```
-./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
-```
+#### MediaWiki
 
 LocalSettings.php 파일이나 site-list.xml 파일을 교체해야 할 경우 다음과 같이 마운트해주세요.
 
@@ -77,7 +75,22 @@ LocalSettings.php 파일이나 site-list.xml 파일을 교체해야 할 경우 �
 ./configs:/config/mediawiki:ro
 ```
 
-위 두 경우 모두 development.yml에 예시가 있습니다.
+다음 환경 변수를 설정할 수 있습니다.
+
+- `FEMIWIKI_SERVER`: `$wgServer`를 덮어씁니다. 기본값 `'https://femiwiki.com'`.
+- `FEMIWIKI_DOMAIN`: domain은 Parsoid, RESTBase 등과 통신할 때 사용하는 임의 문자열입니다. 기본값 `'femiwiki.com'`.
+- `FEMIWIKI_DEBUG_MODE`: 설정되었을 경우 미디어위키에서 제공하는 디버그 기능들을 켜고 개발 환경에서 세팅이 어려운 확장기능들을 비활성화합니다.
+- `MEDIAWIKI_SKIP_INSTALL`: 설정되었을 경우 컨테이너 시작 시 install.php를 실행하지 않습니다. install.php는 데이터베이스가 세팅되지 않은지 검사하고 초기화하는 일과 LocalSettings.php 생성 작업을 하므로 둘 모두 이미 처리된 경우에 스킵할 수 있습니다.
+- `MEDIAWIKI_SKIP_UPDATE`: 설정되었을 경우 컨테이너 시작 시 update.php를 실행하지 않습니다. update.php 실행은 미디어위키 설치 직후 혹은 확장 기능 추가 시에만 필요합니다.
+- `MEDIAWIKI_SKIP_IMPORT_SITES`: 설정되었을 경우 컨테이너 시작 시 importSites.php를 실행하지 않습니다. 내용이 변경되지 않았다면 한 데이터베이스에 두 번 이상 실행할 필요가 없습니다.
+
+#### Caddy
+
+개발 등의 목적으로 Caddyfile을 완전히 변경해야 할 경우에는 `/srv/femiwiki.com/Caddyfile`을 교체할 수 있습니다. 파일 마운트의 경우 일부 텍스트 편집기로 인한 편집이 무시될 수 있음을 주의하세요. (https://github.com/moby/moby/issues/15793)
+
+```
+./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
+```
 
 &nbsp;
 
