@@ -1,7 +1,7 @@
 version: '3'
 services:
   http:
-    image: ghcr.io/femiwiki/mediawiki:2021-03-21t09-12-c32a248f
+    image: ghcr.io/femiwiki/mediawiki:2021-04-07T21-56-e2dc8b41
     command: caddy run
     ports:
       - 80:80
@@ -16,6 +16,9 @@ services:
       - CADDYPATH=/etc/caddycerts
       - FASTCGI_ADDR=fastcgi:9000
       - RESTBASE_ADDR=restbase:7231
+      - MEDIAWIKI_SKIP_INSTALL=1
+      - MEDIAWIKI_SKIP_UPDATE=1
+      - MEDIAWIKI_SKIP_IMPORT_SITES=1
     deploy:
       restart_policy:
         condition: on-failure
@@ -26,7 +29,7 @@ services:
       options:
         max-size: "100m"
   fastcgi:
-    image: ghcr.io/femiwiki/mediawiki:2021-03-21t09-12-c32a248f
+    image: ghcr.io/femiwiki/mediawiki:2021-04-07T21-56-e2dc8b41
     volumes:
       - ./configs:/a:ro
       - l18n_cache:/tmp/cache
