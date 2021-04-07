@@ -30,6 +30,7 @@ services:
     volumes:
       - ./configs:/a:ro
       - l18n_cache:/tmp/cache
+      - file_cache:/tmp/file-cache
   parsoid:
     image: ghcr.io/femiwiki/parsoid:2020-12-10T14-51-f84b9d2d
     environment:
@@ -59,3 +60,4 @@ services:
 volumes:
   caddy:
   l18n_cache:
+  file_cache:

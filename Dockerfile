@@ -150,8 +150,10 @@ COPY php/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.i
 # Install Mediawiki extensions
 COPY --from=base-extension --chown=www-data /tmp/mediawiki /srv/femiwiki.com
 
-# Create a cache directory for mediawiki
-RUN sudo -u www-data mkdir -p /tmp/cache
+# Create cache directories for mediawiki
+RUN sudo -u www-data mkdir -p /tmp/file-cache
+# $wgCacheDirectory should not be accessible from the web.
+RUN mkdir -p /tmp/cache
 
 # Web server should be able to write 'extensions/Widgets/compiled_templates'
 # directory Required by 'Widgets' extension
