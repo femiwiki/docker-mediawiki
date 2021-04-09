@@ -32,6 +32,8 @@ services:
     image: ghcr.io/femiwiki/mediawiki:2021-04-07T21-56-e2dc8b41
     volumes:
       - ./configs:/a:ro
+      # Temporarily mount for hot fix https://github.com/femiwiki/femiwiki/issues/233
+      - ./configs:/config/mediawiki:ro
       - l18n_cache:/tmp/cache
       - file_cache:/tmp/file-cache
   parsoid:

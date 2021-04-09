@@ -380,13 +380,13 @@ $wgNamespaceAliases = [
 
 // Parsoid server Setting
 $wgVirtualRestConfig['modules']['parsoid'] = [
-	'url' => 'http://' . getenv( 'NOMAD_UPSTREAM_ADDR_parsoid' ) ?: 'parsoid:8000',
+	'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_parsoid' ) ?: 'parsoid:8000' ),
 	'domain' => 'femiwiki.com'
 ];
 
 // Restbase server Setting
 $wgVirtualRestConfig['modules']['restbase'] = [
-	'url' => 'http://' . getenv( 'NOMAD_UPSTREAM_ADDR_restbase' ) ?: 'restbase:7231',
+	'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_restbase' ) ?: 'restbase:7231' ),
 	'domain' => 'femiwiki.com'
 ];
 $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
@@ -649,7 +649,7 @@ wfLoadExtension( 'LoginNotify' );
 wfLoadExtension( 'Math' );
 $wgDefaultUserOptions['math'] = 'mathml';
 // IP of Mathoid server
-$wgMathMathMLUrl = 'http://' . getenv( 'NOMAD_UPSTREAM_ADDR_mathoid' ) ?: 'mathoid:10044';
+$wgMathMathMLUrl = 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_mathoid' ) ?: 'mathoid:10044' );
 
 // MobileFrontend
 wfLoadExtension( 'MobileFrontend' );
