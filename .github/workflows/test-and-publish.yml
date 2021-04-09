@@ -66,7 +66,11 @@ jobs:
         until curl -sLfo /dev/null 127.0.0.1; do
           sleep 1;
         done;
-    - name: backup of accessing
+    - name: Test Parsoid API
+      run: |
+        URL="http://127.0.0.1/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
+        [[ ! "$(curl -s "$URL")" = *\"error\"* ]]
+    - name: backup of failure
       if: ${{ failure() }}
       run: |
         echo 'Failed to connect to 127.0.0.1';
