@@ -990,8 +990,8 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 // Domain is an arbitrary keyword for communicate with MediaWiki node services
 if ( getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ) {
 	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' );
-	$wgVirtualRestConfig['modules']['parsoid']['server'] = $domain;
-	$wgVirtualRestConfig['modules']['restbase']['server'] = $domain;
+	$wgVirtualRestConfig['modules']['parsoid']['domain'] = $domain;
+	$wgVirtualRestConfig['modules']['restbase']['domain'] = $domain;
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
 	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
 	$wgMathFullRestbaseURL = "$wgServer/$domain/";
