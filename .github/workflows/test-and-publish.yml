@@ -64,17 +64,26 @@ jobs:
       run: |
         echo 'Waiting for http...'
         until curl -sLfo /dev/null 127.0.0.1; do
-          sleep 1;
-        done;
+          sleep 1; done
+
+        echo 'Waiting for parsoid...'
+        until [ -n "$(docker ps -qf 'name=^mediawiki_parsoid')" ]; do
+          sleep 1; done
+        ID="$(docker ps -qf 'name=^mediawiki_parsoid')"
+        until [ "$(docker inspect "$ID" --format='{{json .State.Health.Status}}')" = \"healthy\" ]; do
+          sleep 1; done
     - name: Test Parsoid API
       run: |
         URL="http://127.0.0.1/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
-        [[ ! "$(curl -s "$URL")" = *\"error\"* ]]
+        [[ ! "$(curl -Ls "$URL")" = *\"error\"* ]]
     - name: backup of failure
       if: ${{ failure() }}
+      # Allow fails
+      shell: bash
       run: |
         echo 'Failed to connect to 127.0.0.1';
-        curl -sLfo /dev/null localhost; echo $?
+        curl -sLo /dev/null localhost; echo $?
+        curl -Ls "$URL" http://127.0.0.1/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary
         docker ps;
         for s in $(docker service ls -q ); do docker service ps "$s"; done
         docker container ps;
