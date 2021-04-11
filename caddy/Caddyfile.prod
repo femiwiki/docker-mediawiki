@@ -4,6 +4,7 @@
     root /etc/caddycerts
   }
 
+  order mwcache before rewrite
   # NOTE: See @filter for the further details
   order respond before rewrite
 }
@@ -15,6 +16,12 @@ root * /srv/femiwiki.com
 php_fastcgi {$FASTCGI_ADDR}
 file_server
 encode gzip
+mwcache {
+  purge_acl {
+    10.0.0.0/8
+    127.0.0.1
+  }
+}
 header {
   # HSTS
   Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
