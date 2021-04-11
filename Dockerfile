@@ -63,7 +63,8 @@ RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --work
 FROM caddy:2.3.0-builder AS caddy
 
 RUN xcaddy build \
-      --with github.com/caddy-dns/route53
+      --with github.com/caddy-dns/route53 \
+      --with github.com/femiwiki/caddy-mwcache@9b224f09f28b6315eaff2978f36b891a33e9854a
 
 #
 # 미디어위키 도커이미지 생성 스테이지. 미디어위키 실행에 필요한 각종 PHP
@@ -139,8 +140,12 @@ COPY php/php.ini /usr/local/etc/php/php.ini
 COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-# Install Mediawiki extensions
+# Install Mediawiki and extensions
 COPY --from=base-extension --chown=www-data /tmp/mediawiki /srv/femiwiki.com
+# TODO Check the next line is valid when bump MediaWiki version
+# TODO Remove the next line in MW 1.36
+# Fix https://phabricator.wikimedia.org/T264735
+RUN sed -i 's/$pipelining ? 3 : 0/CURLPIPE_MULTIPLEX/' /srv/femiwiki.com/includes/libs/http/MultiHttpClient.php
 
 # Create cache directories for mediawiki
 # $wgCacheDirectory should not be accessible from the web and writable by the web server
