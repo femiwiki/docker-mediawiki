@@ -4,24 +4,19 @@
 #
 FROM ruby:2.7 AS base-extension
 
-ARG MEDIAWIKI_VERSION=1.35.1
-# MW 1.35.1 does not support for composer 2.0
-# https://phabricator.wikimedia.org/T248908
-ARG COMPOSER_VERSION=1.10.19
+ARG MEDIAWIKI_VERSION=1.35.2
+ARG COMPOSER_VERSION=2.0.12
 
-# Install composer, prestissimo, aria2, sudo and preload configuration file of
+# Install composer, aria2, sudo and preload configuration file of
 # aria2
 #
 # References:
 #   https://getcomposer.org/
-#   https://github.com/hirak/prestissimo
 #   https://aria2.github.io/
 RUN apt-get update && apt-get install -y \
       # Required for composer
       php7.3-cli \
       php7.3-mbstring \
-      # Required for prestissimo
-      php7.3-curl \
       # Required for aws-sdk-php
       php7.3-simplexml \
       # Install other CLI utilities
@@ -38,9 +33,6 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
       exit 1; \
     fi &&\
     php composer-setup.php --version "${COMPOSER_VERSION}" --install-dir=/usr/local/bin --filename=composer --quiet
-
-# Install prestissimo
-RUN composer global require hirak/prestissimo
 
 # Create a cache directory for composer
 RUN sudo -u www-data mkdir -p /tmp/composer
