@@ -27,6 +27,8 @@ $wgArticlePath = "/w/$1";
 // The protocol and server name to use in fully-qualified URLs
 $wgServer = 'https://femiwiki.com';
 $wgCanonicalServer = 'https://femiwiki.com';
+// Used to purge CDN cache (https://github.com/femiwiki/femiwiki/issues/239)
+$wgInternalServer = 'http://127.0.0.1';
 $wgEnableCanonicalServerLink = true;
 
 // Make the HTTP to HTTPS redirect be unconditional
