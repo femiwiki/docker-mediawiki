@@ -17,6 +17,7 @@ header {
   # Avoid clickjacking
   X-Frame-Options "DENY"
 }
+
 rewrite /w/api.php /api.php
 rewrite /w/* /index.php
 
@@ -25,6 +26,7 @@ rewrite /w/* /index.php
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
 reverse_proxy /localhost/* restbase:7231
 
+# Access log in stdout, others in stderr
 log {
   output stdout
 }
