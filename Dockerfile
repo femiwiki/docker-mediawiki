@@ -64,7 +64,7 @@ FROM caddy:2.3.0-builder AS caddy
 
 RUN xcaddy build \
       --with github.com/caddy-dns/route53 \
-      --with github.com/femiwiki/caddy-mwcache@9b224f09f28b6315eaff2978f36b891a33e9854a
+      --with github.com/femiwiki/caddy-mwcache@8a6bd8d91efc855d92f17b6cd414d4a393df0347
 
 #
 # 미디어위키 도커이미지 생성 스테이지. 미디어위키 실행에 필요한 각종 PHP
