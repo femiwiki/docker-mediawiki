@@ -41,11 +41,6 @@ rewrite /w/* /index.php
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
 reverse_proxy /femiwiki.com/* {$RESTBASE_ADDR}
 
-# Access log in stdout, others in stderr
-log {
-  output stdout
-}
-
 # Ignore malformed requests
 @filter0 {
   path /w/특수:내언어/페미위키:대문
