@@ -17,12 +17,11 @@ php_fastcgi {$FASTCGI_ADDR}
 file_server
 encode gzip
 mwcache {
-  badger {
-    in_memory true
-    value_log_file_size 2097152 # =1<<21, Unit: bit
-    num_memtables 2
-    mem_table_size 2097152 # =1<<21, Unit: byte
-  }
+	ristretto {
+		num_counters 100000
+		max_cost 10000
+		buffer_items 64
+	}
   purge_acl {
     10.0.0.0/8
     127.0.0.1
