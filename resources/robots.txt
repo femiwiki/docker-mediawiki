@@ -1,8 +1,21 @@
-User-agent: *
+# Visit https://github.com/wikimedia/operations-mediawiki-config/blob/master/robots.txt for Wikimedia's robots.txt.
 
-Disallow: /w/api.php
+# Allow the Internet Archiver to index action=raw and thereby store the raw wikitext of pages
+User-agent: ia_archiver
+Allow: /*&action=raw
+
+#
+# Friendly, low-speed bots are welcome viewing article pages, but not
+# dynamically-generated pages please.
+#
+User-agent: *
+Allow: /api.php?action=mobileview&
+Allow: /femiwiki.com/v1/?doc
 Disallow: /api.php
-Disallow: /w/Special:*
-Disallow: /w/%ED%8A%B9%EC%88%98:*
+Disallow: /w/api.php
+Disallow: /w/Special:
+Disallow: /w/Special%3A
+Disallow: /w/%ED%8A%B9%EC%88%98:
+Disallow: /w/%ED%8A%B9%EC%88%98%3A
 
 sitemap:https://femiwiki.com/sitemap/sitemap-index-femiwiki.xml
