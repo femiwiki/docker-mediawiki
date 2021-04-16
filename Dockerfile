@@ -2,7 +2,7 @@
 # 미디어위키 및 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM ruby:2.7 AS base-extension
+FROM ruby:3.0.1 AS base-extension
 
 ARG MEDIAWIKI_VERSION=1.35.2
 ARG COMPOSER_VERSION=2.0.12
