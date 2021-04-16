@@ -29,17 +29,18 @@ services:
       # Overwrite LocalSettings.php and site-list.xml
       - ./configs:/config/mediawiki:ro
       - l18n_cache:/tmp/cache
-    environment:
-      - MEDIAWIKI_SERVER=http://127.0.0.1
-      - MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE=localhost
-      - MEDIAWIKI_DEBUG_MODE=1
       ## 스킨 등 개발할 때엔 아래 라인을 주석해제
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
       # - ../AchievementBadges:/srv/femiwiki.com/extensions/AchievementBadges
       # - ../CategoryIntersectionSearch:/srv/femiwiki.com/extensions/CategoryIntersectionSearch
+      # - ../DiscordNotifications:/srv/femiwiki.com/extensions/DiscordNotifications
       # - ../FacetedCategory:/srv/femiwiki.com/extensions/FacetedCategory
       # - ../Sanctions:/srv/femiwiki.com/extensions/Sanctions
       # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
+    environment:
+      - MEDIAWIKI_SERVER=http://127.0.0.1
+      - MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE=localhost
+      - MEDIAWIKI_DEBUG_MODE=1
   parsoid:
     image: ghcr.io/femiwiki/parsoid:latest
     environment:
