@@ -77,7 +77,7 @@ RUN xcaddy build \
 #   /tmp/log/cron          크론 로그
 #   /tini                  tini
 #
-FROM php:7.4.16-fpm
+FROM php:8.0.3-fpm
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
