@@ -2,7 +2,7 @@
 # 미디어위키 및 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM ruby:3.0.1 AS base-extension
+FROM --platform=$TARGETPLATFORM ruby:3.0.1 AS base-extension
 
 ARG MEDIAWIKI_VERSION=1.35.2
 ARG COMPOSER_VERSION=2.0.12
@@ -60,7 +60,7 @@ RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --work
 #
 # Caddy에 Route53 패키지를 설치한다.
 #
-FROM caddy:2.3.0-builder AS caddy
+FROM --platform=$TARGETPLATFORM caddy:2.3.0-builder AS caddy
 
 RUN xcaddy build \
       --with github.com/caddy-dns/route53 \
@@ -78,7 +78,7 @@ RUN xcaddy build \
 #   /tmp/log/cron          크론 로그
 #   /tini                  tini
 #
-FROM php:7.4.16-fpm
+FROM --platform=$TARGETPLATFORM php:7.4.16-fpm
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
