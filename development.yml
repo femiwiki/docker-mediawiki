@@ -1,7 +1,7 @@
 version: '3'
 services:
   http:
-    image: ghcr.io/femiwiki/mediawiki:caddy-mwcache
+    image: ghcr.io/femiwiki/mediawiki:latest
     command: caddy run
     ports:
       - 80:80
@@ -22,7 +22,7 @@ services:
       options:
         max-size: "100m"
   fastcgi:
-    image: ghcr.io/femiwiki/mediawiki:caddy-mwcache
+    image: ghcr.io/femiwiki/mediawiki:latest
     volumes:
       # Mount secret.php
       - ./configs:/a:ro
