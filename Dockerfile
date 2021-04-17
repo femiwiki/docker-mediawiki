@@ -45,7 +45,9 @@ RUN mkdir -p /tmp/mediawiki/ &&\
 
 # Extensions and skins setup
 COPY extension-installer/* /tmp/
-RUN bundle install --deployment --gemfile /tmp/Gemfile --path /var/www/.gem
+RUN bundle config set deployment 'true' &&\
+    bundle config set path '/var/www/.gem' &&\
+    bundle install --gemfile /tmp/Gemfile
 RUN export MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
     sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
