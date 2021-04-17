@@ -12,7 +12,7 @@ jobs:
 
       - uses: actions/setup-ruby@v1
         with:
-          ruby-version: "2.6"
+          ruby-version: '2.6'
 
       - name: Update extensions.json
         run: ruby .github/bump_extension.rb '${{github.event.client_payload.extension}}' '${{github.event.client_payload.version}}'
