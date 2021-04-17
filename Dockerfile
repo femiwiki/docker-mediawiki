@@ -55,7 +55,7 @@ RUN export MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed '
 # MediaWiki setup
 COPY configs/composer.local.json /tmp/mediawiki/
 RUN export MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\
-    curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
+    wget -q -O mediawiki.tar.gz "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" &&\
     tar -xzf mediawiki.tar.gz --strip-components=1 --directory /tmp/mediawiki/ &&\
     rm mediawiki.tar.gz
 RUN COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/mediawiki'
