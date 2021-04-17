@@ -4,8 +4,8 @@
   "author": "Femiwiki Team <admin@femiwiki.com>",
   "license": "AGPL3+",
   "scripts": {
-    "lint": "prettier '**/*.{js,json,css,less,xml,yml}' --check",
-    "fix": "prettier '**/*.{js,json,css,less,xml,yml}' --write"
+    "lint": "prettier '**/*.{js,json,xml,yml}' --check",
+    "fix": "prettier '**/*.{js,json,xml,yml}' --write"
   },
   "dependencies": {
     "@prettier/plugin-xml": "^0.13.1",
