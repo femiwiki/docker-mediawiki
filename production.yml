@@ -27,7 +27,7 @@ services:
         window: 120s
     logging:
       options:
-        max-size: "100m"
+        max-size: '100m'
   fastcgi:
     image: ghcr.io/femiwiki/mediawiki:2021-04-07T21-56-e2dc8b41
     volumes:

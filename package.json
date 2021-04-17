@@ -1,0 +1,14 @@
+{
+  "name": "docker-mediawiki",
+  "repository": "git@github.com:femiwiki/docker-mediawiki.git",
+  "author": "Femiwiki Team <admin@femiwiki.com>",
+  "license": "AGPL3+",
+  "scripts": {
+    "lint": "prettier '**/*.{js,json,xml,yml}' --check",
+    "fix": "prettier '**/*.{js,json,xml,yml}' --write"
+  },
+  "dependencies": {
+    "@prettier/plugin-xml": "^0.13.1",
+    "prettier": "^2.2.1"
+  }
+}
