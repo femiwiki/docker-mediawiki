@@ -4,6 +4,7 @@
     root /etc/caddycerts
   }
 
+  order mwcache before rewrite
   # NOTE: See @filter for the further details
   order respond before rewrite
 }
@@ -15,6 +16,17 @@ root * /srv/femiwiki.com
 php_fastcgi {$FASTCGI_ADDR}
 file_server
 encode gzip
+mwcache {
+	ristretto {
+		num_counters 100000
+		max_cost 10000
+		buffer_items 64
+	}
+  purge_acl {
+    10.0.0.0/8
+    127.0.0.1
+  }
+}
 header {
   # HSTS
   Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
@@ -33,11 +45,6 @@ rewrite /w/* /index.php
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
 reverse_proxy /femiwiki.com/* {$RESTBASE_ADDR}
-
-# Access log in stdout, others in stderr
-log {
-  output stdout
-}
 
 # Ignore malformed requests
 @filter0 {

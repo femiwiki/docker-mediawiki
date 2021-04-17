@@ -27,6 +27,8 @@ $wgArticlePath = "/w/$1";
 // The protocol and server name to use in fully-qualified URLs
 $wgServer = 'https://femiwiki.com';
 $wgCanonicalServer = 'https://femiwiki.com';
+// Used to purge CDN cache (https://github.com/femiwiki/femiwiki/issues/239)
+$wgInternalServer = 'http://127.0.0.1';
 $wgEnableCanonicalServerLink = true;
 
 // Make the HTTP to HTTPS redirect be unconditional
@@ -116,6 +118,10 @@ $wgParserCacheType = CACHE_MEMCACHED;
 $wgMessageCacheType = CACHE_MEMCACHED;
 $wgMemCachedServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_memcached' ) ?: 'memcached:11211' ];
 
+// HTTP Cache setting
+$wgUseCdn = true;
+$wgCdnServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:80' ];
+
 // To enable image uploads, make sure the 'images' directory
 // is writable, then set this to true:
 $wgEnableUploads = true;
@@ -142,8 +148,6 @@ $wgShellLocale = 'C.UTF-8';
 // to make your wiki go slightly faster. The directory should not
 // be publically accessible from the web.
 $wgCacheDirectory = '/tmp/cache';
-$wgUseFileCache = true;
-$wgFileCacheDirectory = '/tmp/file-cache';
 
 // Site language code, should be one of the list in ./languages/data/Names.php
 $wgLanguageCode = 'ko';
@@ -1011,8 +1015,9 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	$wgDebugToolbar = true;
 	$wgShowDBErrorBacktrace = true;
 
-	// File Cache가 비활성화되어있어야 디버그 툴을 쓸 수 있음
+	// 다음이 비활성화되어있어야 디버그 툴을 쓸 수 있음
 	$wgUseFileCache = false;
+	$wgUseCdn = false;
 
 	// 이메일 인증 요구 비활성화
 	$wgEmailConfirmToEdit = false;

@@ -1,8 +1,19 @@
+{
+	order mwcache before rewrite
+}
 127.0.0.1:80 http:80 localhost:80
 root * /srv/femiwiki.com
 php_fastcgi fastcgi:9000
 file_server
 encode gzip
+mwcache {
+	ristretto {
+		num_counters 100000
+		max_cost 10000
+		buffer_items 64
+	}
+  purge_acl 10.0.0.0/8
+}
 header {
   # Enable XSS filtering for legacy browsers
   X-XSS-Protection "1; mode=block"
@@ -11,6 +22,7 @@ header {
   # Avoid clickjacking
   X-Frame-Options "DENY"
 }
+
 rewrite /w/api.php /api.php
 rewrite /w/* /index.php
 
