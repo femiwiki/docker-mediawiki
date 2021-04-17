@@ -16,7 +16,7 @@ updates:
       interval: 'daily'
 
   - package-ecosystem: 'bundler'
-    directory: '/'
+    directory: '/extension-installer'
     schedule:
       interval: 'daily'
 
