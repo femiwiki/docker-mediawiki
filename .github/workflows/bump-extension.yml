@@ -8,18 +8,19 @@ jobs:
   bump-extension:
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v2
-    - run: echo "::set-output name=version::$(echo ${{github.event.client_payload.version}} | cut -c1-8)"
-      id: version
-    - uses: actions/setup-ruby@v1
-      with:
-        ruby-version: '2.6'
-    - name: Update extensions.json
-      run: ruby .github/bump_extension.rb '${{github.event.client_payload.extension}}' '${{steps.version.outputs.version}}'
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: Bump ${{github.event.client_payload.extension}} to ${{steps.version.outputs.version}}
-        title: Bump ${{github.event.client_payload.extension}} to ${{steps.version.outputs.version}}
-        branch: bump-${{github.event.client_payload.extension}}
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: "2.6"
+
+      - name: Update extensions.json
+        run: ruby .github/bump_extension.rb '${{github.event.client_payload.extension}}' '${{github.event.client_payload.version}}'
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Bump ${{github.event.client_payload.extension}} to ${{github.event.client_payload.version}}
+          title: Bump ${{github.event.client_payload.extension}} to ${{github.event.client_payload.version}}
+          branch: bump-${{github.event.client_payload.extension}}
