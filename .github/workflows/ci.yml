@@ -64,17 +64,15 @@ jobs:
       - run: echo "::set-output name=version::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
         id: version
 
-      # Build amd64 only for testing, do not push.
-      - name: Build
+      - name: Build a test image on amd64 and cache
         uses: docker/build-push-action@v2
         with:
-          cache-to: type=inline
           platforms: linux/amd64
+          cache-from: ghcr.io/femiwiki/mediawiki:latest
+          cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
           load: true
-          tags: |
-            ghcr.io/femiwiki/mediawiki:latest
-            ghcr.io/femiwiki/mediawiki:docker-test
-            ghcr.io/femiwiki/mediawiki:${{ steps.version.outputs.version }}
+          push: false
+          tags: ghcr.io/femiwiki/mediawiki:docker-test
 
       - name: Initialize docker swarm and start services
         run: |
@@ -123,11 +121,15 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build a multi-platform docker image and push
         uses: docker/build-push-action@v2
         with:
-          cache-to: type=inline
           platforms: linux/amd64,linux/arm64
+          cache-from: |
+            ghcr.io/femiwiki/mediawiki:latest
+            type=local,src=/tmp/.buildx-cache
+          cache-to: mode=max,type=inline
+          load: false
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/femiwiki/mediawiki:latest
