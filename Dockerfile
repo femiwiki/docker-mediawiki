@@ -1,7 +1,7 @@
 ARG MEDIAWIKI_VERSION=1.35.2
 
 #
-# 미디어위키 및 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
+# 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
 FROM --platform=$TARGETPLATFORM ruby:3.0.1-alpine AS base-extension
@@ -10,11 +10,9 @@ FROM --platform=$TARGETPLATFORM ruby:3.0.1-alpine AS base-extension
 # value of an ARG declared before the first FROM use
 ARG MEDIAWIKI_VERSION
 
-# Install composer, aria2, sudo and preload configuration file of
 # aria2
 #
 # References:
-#   https://getcomposer.org/
 #   https://aria2.github.io/
 RUN apk update && apk add \
       aria2
@@ -29,11 +27,12 @@ COPY extension-installer/* /tmp/
 RUN bundle config set deployment 'true' &&\
     bundle config set path '/var/www/.gem' &&\
     bundle install --gemfile /tmp/Gemfile
-RUN export MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
+RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
     GEM_HOME=/var/www/.gem/ruby/3.0.0 ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
 #
-# 미디어위키 다운로드와 Composer 스테이지.
+# 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
+# Composer로 디펜던시들을 설치한다.
 #
 FROM --platform=$TARGETPLATFORM php:7.4.16-cli AS base-mediawiki
 
@@ -45,19 +44,12 @@ RUN apt-get update && apt-get install -y \
       # Required for composer
       git
 
-# RUN docker-php-ext-install \
-#       # Required for composer
-#       php7-cli \
-#       php7-mbstring \
-#       php7-openssl \
-#       php7-json \
-#       php7-phar \
-#       # Required for aws-sdk-php
-#       php7-simplexml
-
-COPY --from=base-extension --chown=www-data /tmp/mediawiki /tmp/mediawiki
+COPY --from=base-extension /tmp/mediawiki /tmp/mediawiki
 
 # Install Composer
+#
+# References:
+#   https://getcomposer.org/
 RUN EXPECTED_SIGNATURE="$(curl -fSL https://composer.github.io/installer.sig)" &&\
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&\
     ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")" &&\
@@ -73,14 +65,14 @@ RUN mkdir -p /tmp/composer
 
 # MediaWiki setup
 COPY configs/composer.local.json /tmp/mediawiki/
-RUN export MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\
+RUN MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\
     curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
     tar -xzf mediawiki.tar.gz --strip-components=1 --directory /tmp/mediawiki/ &&\
     rm mediawiki.tar.gz
 RUN COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/mediawiki'
 
 #
-# Caddy에 Route53 패키지를 설치한다.
+# Caddy 스테이지. Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 #
 FROM --platform=$TARGETPLATFORM caddy:2.3.0-builder AS caddy
 
