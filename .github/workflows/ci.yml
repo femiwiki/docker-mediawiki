@@ -64,21 +64,29 @@ jobs:
       - run: echo "::set-output name=version::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
         id: version
 
-      # Build amd64 only for testing, do not push.
-      - name: Build
+      # Pull cache from registry and save to local
+      # Due to specifying multiple cache exports is not supported by buildx currently
+      # https://github.com/moby/buildkit/blob/9065b18b/control/control.go#L253
+      - name: Build and local cache
         uses: docker/build-push-action@v2
         with:
-          # This cache-from value is the default and just for documentation purpose.
-          cache-from: type=registry,ref=ghcr.io/femiwiki/mediawiki:latest
-          cache-to: |
-            type=inline
-            type=local,dest=/tmp/.buildx-cache
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=registry,ref=ghcr.io/femiwiki/mediawiki:cache
+          cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
+          load: false
+          push: false
+          tags: ghcr.io/femiwiki/mediawiki:cache
+
+      # Build amd64 only for testing, without pushing.
+      - name: Build a test image
+        uses: docker/build-push-action@v2
+        with:
           platforms: linux/amd64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: mode=max,type=local,dest=/tmp/.buildx-cache-amd64
           load: true
-          tags: |
-            ghcr.io/femiwiki/mediawiki:latest
-            ghcr.io/femiwiki/mediawiki:docker-test
-            ghcr.io/femiwiki/mediawiki:${{ steps.version.outputs.version }}
+          push: false
+          tags: ghcr.io/femiwiki/mediawiki:docker-test
 
       - name: Initialize docker swarm and start services
         run: |
@@ -130,12 +138,14 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          cache-from: |
-            type=registry,ref=ghcr.io/femiwiki/mediawiki:latest
-            type=local,src=/tmp/.buildx-cache
-          cache-to: type=inline
           platforms: linux/amd64,linux/arm64
+          cache-from: |
+            type=local,src=/tmp/.buildx-cache
+            type=local,src=/tmp/.buildx-cache-amd64
+          cache-to: mode=max,type=inline
+          load: false
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/femiwiki/mediawiki:latest
+            ghcr.io/femiwiki/mediawiki:cache
             ghcr.io/femiwiki/mediawiki:${{ steps.version.outputs.version }}
