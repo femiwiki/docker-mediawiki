@@ -47,7 +47,7 @@ services:
       - MEDIAWIKI_LINTING=true
       - MEDIAWIKI_APIS_DOMAIN=localhost
   mysql:
-    image: mysql/mysql-sever:8.0
+    image: mysql/mysql-server:8.0
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - database:/var/lib/mysql
