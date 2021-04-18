@@ -1,30 +1,56 @@
+ARG MEDIAWIKI_VERSION=1.35.2
+
 #
-# 미디어위키 및 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
+# 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM ruby:2.7 AS base-extension
+FROM --platform=$TARGETPLATFORM ruby:3.0.1-alpine AS base-extension
 
-ARG MEDIAWIKI_VERSION=1.35.2
-ARG COMPOSER_VERSION=2.0.12
+# ARG instructions without a value inside of a build stage to use the default
+# value of an ARG declared before the first FROM use
+ARG MEDIAWIKI_VERSION
 
-# Install composer, aria2, sudo and preload configuration file of
 # aria2
 #
 # References:
-#   https://getcomposer.org/
 #   https://aria2.github.io/
+RUN apk update && apk add \
+      aria2
+
+# Install aria2.conf
+COPY extension-installer/aria2.conf /root/.config/aria2/aria2.conf
+
+RUN mkdir -p /tmp/mediawiki/
+
+# Extensions and skins setup
+COPY extension-installer/* /tmp/
+RUN bundle config set deployment 'true' &&\
+    bundle config set path '/var/www/.gem' &&\
+    bundle install --gemfile /tmp/Gemfile
+RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
+    GEM_HOME=/var/www/.gem/ruby/3.0.0 ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
+
+#
+# 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
+# Composer로 디펜던시들을 설치한다.
+#
+FROM --platform=$TARGETPLATFORM php:7.4.16-cli AS base-mediawiki
+
+ARG MEDIAWIKI_VERSION
+ARG COMPOSER_VERSION=2.0.12
+
+# Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
       # Required for composer
-      php7.3-cli \
-      php7.3-mbstring \
-      # Required for aws-sdk-php
-      php7.3-simplexml \
-      # Install other CLI utilities
-      aria2 \
-      sudo
+      git
+
+COPY --from=base-extension /tmp/mediawiki /tmp/mediawiki
 
 # Install Composer
-RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)" &&\
+#
+# References:
+#   https://getcomposer.org/
+RUN EXPECTED_SIGNATURE="$(curl -fSL https://composer.github.io/installer.sig)" &&\
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&\
     ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")" &&\
     if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then \
@@ -35,32 +61,20 @@ RUN EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)
     php composer-setup.php --version "${COMPOSER_VERSION}" --install-dir=/usr/local/bin --filename=composer --quiet
 
 # Create a cache directory for composer
-RUN sudo -u www-data mkdir -p /tmp/composer
-
-# Install aria2.conf
-COPY extension-installer/aria2.conf /root/.config/aria2/aria2.conf
-
-RUN mkdir -p /tmp/mediawiki/ &&\
-    chown www-data:www-data /tmp/mediawiki/
-
-# Extensions and skins setup
-COPY extension-installer/* /tmp/
-RUN bundle install --deployment --gemfile /tmp/Gemfile --path /var/www/.gem
-RUN export MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
-    sudo -u www-data ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
+RUN mkdir -p /tmp/composer
 
 # MediaWiki setup
-COPY --chown=www-data configs/composer.local.json /tmp/mediawiki/
-RUN export MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\
+COPY configs/composer.local.json /tmp/mediawiki/
+RUN MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\
     curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
-    sudo -u www-data tar -xzf mediawiki.tar.gz --strip-components=1 --directory /tmp/mediawiki/ &&\
+    tar -xzf mediawiki.tar.gz --strip-components=1 --directory /tmp/mediawiki/ &&\
     rm mediawiki.tar.gz
-RUN sudo -u www-data COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/mediawiki'
+RUN COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/mediawiki'
 
 #
-# Caddy에 Route53 패키지를 설치한다.
+# Caddy 스테이지. Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 #
-FROM caddy:2.3.0-builder AS caddy
+FROM --platform=$TARGETPLATFORM caddy:2.3.0-builder AS caddy
 
 RUN xcaddy build \
       --with github.com/caddy-dns/route53 \
@@ -78,7 +92,7 @@ RUN xcaddy build \
 #   /tmp/log/cron          크론 로그
 #   /tini                  tini
 #
-FROM php:7.4.16-fpm
+FROM --platform=$TARGETPLATFORM php:7.4.16-fpm
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
@@ -141,7 +155,7 @@ COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # Install Mediawiki and extensions
-COPY --from=base-extension --chown=www-data /tmp/mediawiki /srv/femiwiki.com
+COPY --from=base-mediawiki --chown=www-data /tmp/mediawiki /srv/femiwiki.com
 # TODO Check the next line is valid when bump MediaWiki version
 # TODO Remove the next line in MW 1.36
 # Fix https://phabricator.wikimedia.org/T264735
