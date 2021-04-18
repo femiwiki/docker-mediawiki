@@ -72,7 +72,7 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/femiwiki/mediawiki:latest
           cache-to: |
             type=inline
-            type=local,src=/tmp/.buildx-cache
+            type=local,dest=/tmp/.buildx-cache
           platforms: linux/amd64
           load: true
           tags: |
