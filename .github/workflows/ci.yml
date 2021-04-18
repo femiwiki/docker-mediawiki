@@ -69,8 +69,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           platforms: linux/amd64
-          cache-from: |
-            ghcr.io/femiwiki/mediawiki:latest
+          cache-from: ghcr.io/femiwiki/mediawiki:latest
           cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
           load: true
           push: false
