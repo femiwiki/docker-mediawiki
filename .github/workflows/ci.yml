@@ -100,12 +100,11 @@ jobs:
 
       - name: backup of failure
         if: ${{ failure() }}
-        # Allow fails
-        shell: bash
         run: |
           echo 'Failed to connect to 127.0.0.1';
-          curl -sLo /dev/null localhost; echo $?
-          curl -Ls "$URL" http://127.0.0.1/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary
+          curl -sLo /dev/null localhost && echo "success" || echo "failure"
+          URL="http://127.0.0.1/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
+          curl -Ls "$URL" && echo "success" || echo "failure"
           docker ps;
           for s in $(docker service ls -q ); do docker service ps "$s"; done
           docker container ps;
