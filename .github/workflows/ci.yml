@@ -64,8 +64,7 @@ jobs:
       - run: echo "::set-output name=version::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
         id: version
 
-      # Build and save the cache to local
-      - name: Build a test image on amd64
+      - name: Build a test image on amd64 and cache
         uses: docker/build-push-action@v2
         with:
           platforms: linux/amd64
