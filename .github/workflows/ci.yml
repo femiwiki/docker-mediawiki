@@ -68,7 +68,11 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v2
         with:
-          cache-to: type=inline
+          # This cache-from value is the default and just for documentation purpose.
+          cache-from: type=registry,ref=ghcr.io/femiwiki/mediawiki:latest
+          cache-to: |
+            type=inline
+            type=local,src=/tmp/.buildx-cache
           platforms: linux/amd64
           load: true
           tags: |
@@ -126,6 +130,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
+          cache-from: |
+            type=registry,ref=ghcr.io/femiwiki/mediawiki:latest
+            type=local,src=/tmp/.buildx-cache
           cache-to: type=inline
           platforms: linux/amd64,linux/arm64
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
