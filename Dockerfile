@@ -42,7 +42,8 @@ ARG COMPOSER_VERSION=2.0.12
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
       # Required for composer
-      git
+      git \
+      zip
 
 COPY --from=base-extension /tmp/mediawiki /tmp/mediawiki
 
