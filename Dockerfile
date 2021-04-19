@@ -93,6 +93,7 @@ RUN xcaddy build \
 #   /tini                  tini
 #
 FROM --platform=$TARGETPLATFORM php:7.4.16-fpm
+ARG TARGETPLATFORM
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
