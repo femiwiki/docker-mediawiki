@@ -135,8 +135,9 @@ RUN docker-php-ext-enable apcu
 # Tini
 #
 # See https://github.com/krallin/tini for the further details
-ARG TINI_VERSION=v0.18.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+ENV TINI_VERSION v0.18.0
+RUN PLATFORM="$(echo $TARGETPLATFORM | cut -d/ -f2)" &&\
+    curl -sLfo /tini "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${PLATFORM}"
 RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
 
