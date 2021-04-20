@@ -6,11 +6,6 @@ echo 'Starting Femiwiki ...'
 # Install.php 실행
 if [ -z ${MEDIAWIKI_SKIP_INSTALL:-} ]; then
   echo 'Start installing Mediawiki ...'
-
-  if [ ! -e /a/secret.php ]; then
-    curl -Lsfo /a/secret.php https://raw.githubusercontent.com/femiwiki/docker-mediawiki/main/configs/secret.php.example
-  fi
-
   DB_HOSTNAME="$(php -r 'require "/a/secret.php"; echo $wgDBserver;')"
   DB_USERNAME="$(php -r 'require "/a/secret.php"; echo $wgDBuser;')"
   DB_PASSWORD="$(php -r 'require "/a/secret.php"; echo $wgDBpassword;')"
