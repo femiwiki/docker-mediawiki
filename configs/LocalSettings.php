@@ -1034,3 +1034,5 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	$wgCaptchaTriggers['createaccount'] = false;
 	$wgCaptchaTriggers['badlogin'] = false;
 }
+
+require_once dirname( __FILE__ ) . '/Hotfix.php';

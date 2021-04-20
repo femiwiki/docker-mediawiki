@@ -6,8 +6,8 @@
   "scripts": {
     "fix": "phpcbf",
     "test": [
-      "parallel-lint configs/LocalSettings.php configs/secret.php.example",
-      "phpcs configs/LocalSettings.php configs/secret.php.example"
+      "parallel-lint configs/LocalSettings.php configs/Hotfix.php configs/secret.php.example",
+      "phpcs configs/LocalSettings.php configs/Hotfix.php configs/secret.php.example"
     ]
   }
 }
