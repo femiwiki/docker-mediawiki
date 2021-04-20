@@ -773,6 +773,9 @@ wfLoadExtension( 'Sanctions' );
 // Scribunto
 wfLoadExtension( 'Scribunto' );
 $wgScribuntoDefaultEngine = 'luastandalone';
+if ( php_uname( 'm' ) == 'aarch64' ) {
+	$wgScribuntoEngineConf['luastandalone']['luaPath'] = '/usr/bin/lua';
+}
 
 // SecureLinkFixer
 wfLoadExtension( 'SecureLinkFixer' );

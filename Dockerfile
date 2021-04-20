@@ -108,6 +108,10 @@ RUN apt-get update && apt-get install -y \
       git \
       # Required for SyntaxHighlighting
       python3 \
+      # Required for Scribunto when the machine is on aarch64 architecture
+      # Only 5.1.x is supported
+      #   Reference: https://www.mediawiki.org/wiki/Extension:Scribunto#Additional_binaries
+      lua5.1 \
       # CLI utilities
       cron \
       sudo
