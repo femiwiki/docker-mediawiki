@@ -58,8 +58,8 @@ jobs:
       - name: Edit configuration
         run: |
           mv configs/secret.php.example configs/secret.php;
-          sed -i 's~http://localhost~http://127.0.0.1~' development.yml
-          sed -i -r 's~ghcr\.io\/femiwiki\/mediawiki:.+~ghcr\.io\/femiwiki\/mediawiki:docker-test~' development.yml
+          sed -i 's~http://localhost~http://127.0.0.1~' docker-compose.dev.yml
+          sed -i -r 's~ghcr\.io\/femiwiki\/mediawiki:.+~ghcr\.io\/femiwiki\/mediawiki:docker-test~' docker-compose.dev.yml
 
       - run: echo "::set-output name=version::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
         id: version
@@ -77,7 +77,7 @@ jobs:
       - name: Initialize docker swarm and start services
         run: |
           docker swarm init
-          docker stack deploy -c development.yml mediawiki
+          docker stack deploy -c docker-compose.dev.yml mediawiki
 
       - name: Access 127.0.0.1 until success
         timeout-minutes: 3

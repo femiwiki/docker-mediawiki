@@ -183,6 +183,10 @@ RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 # Reference: https://www.mediawiki.org/wiki/Extension:FlaggedRevs
 RUN chmod o+r /srv/femiwiki.com/extensions/FlaggedRevs/frontend/modules
 
+# Web server should be able to execute lua binary
+# Reference: https://www.mediawiki.org/wiki/Extension:Scribunto#Additional_binaries
+RUN chmod o+x /usr/bin/lua
+
 
 #
 # Install and register cron
