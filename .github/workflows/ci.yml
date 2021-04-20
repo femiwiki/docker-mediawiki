@@ -98,9 +98,9 @@ jobs:
 
       - name: backup of failure
         if: ${{ failure() }}
+        timeout-minutes: 1
         run: |
-          echo 'Failed to connect to 127.0.0.1';
-          curl -sLo /dev/null localhost && echo "success" || echo "failure"
+          echo 'Failed to connect to 127.0.0.1'
           URL="http://127.0.0.1/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
           curl -Ls "$URL" && echo "success" || echo "failure"
           docker ps;
