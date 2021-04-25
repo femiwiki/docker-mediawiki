@@ -156,10 +156,9 @@ ONBUILD RUN apt-get autoremove -y --purge \
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Configure PHP
-COPY php/php.ini /usr/local/etc/php/php.ini
-COPY php/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY php/opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
+# Prepare PHP log
+RUN touch /var/log/php-fpm.log &&\
+    chown www-data:www-data /var/log/php-fpm.log
 
 # Install Mediawiki and extensions
 COPY --from=base-mediawiki --chown=www-data /tmp/mediawiki /srv/femiwiki.com
