@@ -238,7 +238,6 @@ $wgGroupPermissions['sysop']['renameuser'] = true;
 $wgGroupPermissions['sysop']['interwiki'] = true;
 $wgGroupPermissions['oversight']['deletelogentry'] = true;
 $wgGroupPermissions['oversight']['deleterevision'] = true;
-$wgGroupPermissions['bot']['patrolmarks'] = true;
 
 // Prevent anonymous users from edit pages
 $wgGroupPermissions['*']['edit'] = false;
