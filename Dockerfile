@@ -37,7 +37,7 @@ RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/
 FROM --platform=$TARGETPLATFORM php:7.4.16-cli AS base-mediawiki
 
 ARG MEDIAWIKI_VERSION
-ARG COMPOSER_VERSION=2.0.12
+ARG COMPOSER_VERSION=2.0.13
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
