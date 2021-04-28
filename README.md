@@ -14,6 +14,8 @@ http:
   command: caddy run
   ports:
     - 80:80
+  volumes:
+    - ./development/Caddyfile:/srv/femiwiki.com/Caddyfile:ro
 fastcgi:
   image: ghcr.io/femiwiki/mediawiki
   volumes:
@@ -39,7 +41,7 @@ LocalSettings.php 파일이나 site-list.xml 파일을 교체해야 할 경우 �
 
 #### Caddy
 
-개발 등의 목적으로 Caddyfile을 완전히 변경해야 할 경우에는 `/srv/femiwiki.com/Caddyfile`을 교체할 수 있습니다. 파일 마운트의 경우 일부 텍스트 편집기로 인한 편집이 무시될 수 있음을 주의하세요. (https://github.com/moby/moby/issues/15793)
+Caddy를 실행할 경우에는 `/srv/femiwiki.com/Caddyfile`로 Caddyfile을 마운트하여야 하고 `caddy run`을 커맨드로 사용하여야 합니다. [Usage of Docker Image](#usage-of-docker-image)를 참고하세요. 파일 마운트의 경우 일부 텍스트 편집기로 인한 편집이 무시될 수 있음을 주의하세요. (https://github.com/moby/moby/issues/15793)
 
 ```
 ./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
@@ -55,9 +57,7 @@ docker swarm init
 
 cp configs/secret.php.example configs/secret.php
 docker stack deploy --prune -c docker-compose.dev.yml mediawiki
-docker stack deploy --prune -c bots.yml bots
 ```
-
 
 ## Build
 
@@ -75,8 +75,6 @@ composer test
 # configs/LocalSettings.php 자동 교정
 composer fix
 ```
-
-&nbsp;
 
 &nbsp;
 

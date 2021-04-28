@@ -200,18 +200,15 @@ COPY cron/generate-sitemap /usr/local/bin/generate-sitemap
 # Install 'localisation-update' script
 COPY cron/localisation-update /usr/local/bin/localisation-update
 
-# Store femiwiki resources
+# Ship femiwiki resources
 COPY --chown=www-data:www-data resources /srv/femiwiki.com/
 
-# Store femiwiki-specific mediawiki configurations
+# Ship femiwiki-specific mediawiki configurations
 COPY --chown=www-data [ "configs/LocalSettings.php", "configs/Hotfix.php", "configs/site-list.xml", "/config/mediawiki/" ]
 # secret.php should be mounted to '/a/secret.php'
 VOLUME /a
 
 WORKDIR /srv/femiwiki.com
-
-# Copy Caddyfile for web server usage. See README.md for detail.
-COPY caddy/Caddyfile.prod /srv/femiwiki.com/Caddyfile
 
 EXPOSE 80
 EXPOSE 443

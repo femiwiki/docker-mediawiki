@@ -1,6 +1,7 @@
 # secret
-/configs/secret.php
-/configs/bot-secret.env
+/development/secret.php
+/development/LocalSettings.php
+/development/Hotfix.php
 
 # Composer
 /vendor
