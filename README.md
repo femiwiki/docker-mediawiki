@@ -50,12 +50,14 @@ Caddy를 실행할 경우에는 `/srv/femiwiki.com/Caddyfile`로 Caddyfile을 �
 ## Usage of Docker Compose file
 
 [Docker Swarm] 혹은 [Docker Composer]을 이용해, 아래와 같이 간편하게 페미위키를 로컬에서 실행할 수
-있습니다. 데이터베이스와 memcached, 백업을 위한 자동봇이 실행됩니다.
+있습니다. 데이터베이스와 memcached 등 미디어위키에 필요한 서비스들이 실행됩니다.
 
 ```bash
 docker swarm init
 
-cp configs/secret.php.example configs/secret.php
+cp configs/secret.php.example development/secret.php
+cp configs/LocalSettings.php development/LocalSettings.php
+cp configs/Hotfix.php development/Hotfix.php
 docker stack deploy --prune -c docker-compose.dev.yml mediawiki
 ```
 
