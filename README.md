@@ -56,8 +56,8 @@ Caddy를 실행할 경우에는 `/srv/femiwiki.com/Caddyfile`로 Caddyfile을 �
 docker swarm init
 
 cp configs/secret.php.example development/secret.php
-cp configs/LocalSettings.php development/LocalSettings.php
-cp configs/Hotfix.php development/Hotfix.php
+cp configs/LocalSettings.php development
+cp configs/Hotfix.php development
 docker stack deploy --prune -c docker-compose.dev.yml mediawiki
 ```
 

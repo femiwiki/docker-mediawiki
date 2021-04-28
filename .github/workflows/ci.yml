@@ -58,8 +58,8 @@ jobs:
       - name: Edit configuration
         run: |
           mv configs/secret.php.example development/secret.php
-          mv configs/LocalSettings.php development/LocalSettings.php
-          mv configs/Hotfix.php development/Hotfix.php
+          mv configs/LocalSettings.php development
+          mv configs/Hotfix.php development
           sed -i -r 's~ghcr\.io\/femiwiki\/mediawiki:.+~ghcr\.io\/femiwiki\/mediawiki:docker-test~' docker-compose.dev.yml
 
       - run: echo "::set-output name=version::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
