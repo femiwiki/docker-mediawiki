@@ -6,21 +6,23 @@
 
 ## Usage of Docker Image
 
-페미위키를 위한 [PHP-FPM] 서버입니다. 동일한 이미지를 `FASTCGI_ADDR`과 `RESTBASE_ADDR` 환경 변수를 설정한 후 `caddy run` 커맨드로 사용할 경우에는 [Caddy] 웹 서버를 실행할 수 있습니다. 다음 예시 Compose file를 참고해 주세요. docker-compose.dev.yml에서 전체 예시를 볼 수 있습니다.
+페미위키를 위한 [PHP-FPM] 서버이며 동일한 이미지로 [Caddy] 웹 서버를 실행할 수도 있습니다. 다음 예시 Compose file를 참고해 주세요. docker-compose.dev.yml에서 실행 가능한 개발용 전체 예시를 볼 수 있습니다.
 
 ```yml
+fastcgi:
+  image: ghcr.io/femiwiki/mediawiki
 http:
   image: ghcr.io/femiwiki/mediawiki
   command: caddy run
   ports:
     - 80:80
-fastcgi:
-  image: ghcr.io/femiwiki/mediawiki
   volumes:
-    - ./configs:/a:ro
+    - ./path/to/Caddyfile:/srv/femiwiki.com/Caddyfile:ro
 ```
 
 #### MediaWiki
+
+다음 환경 변수를 설정할 수 있습니다.
 
 - `MEDIAWIKI_SERVER`: `$wgServer`를 덮어씁니다. 기본값 `'https://femiwiki.com'`.
 - `MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE`: domain은 Parsoid, RESTBase 등과 통신할 때 사용하는 임의 문자열입니다. 기본값 `'femiwiki.com'`.
@@ -29,17 +31,11 @@ fastcgi:
 - `MEDIAWIKI_SKIP_UPDATE`: 설정되었을 경우 컨테이너 시작 시 update.php를 실행하지 않습니다. update.php 실행은 미디어위키 설치 직후 혹은 확장 기능 추가 시에만 필요합니다.
 - `MEDIAWIKI_SKIP_IMPORT_SITES`: 설정되었을 경우 컨테이너 시작 시 importSites.php를 실행하지 않습니다. 내용이 변경되지 않았다면 한 데이터베이스에 두 번 이상 실행할 필요가 없습니다.
 
-LocalSettings.php 파일이나 site-list.xml 파일을 교체해야 할 경우 다음과 같이 마운트해주세요.
-
-```
-./configs:/config/mediawiki:ro
-```
-
-다음 환경 변수를 설정할 수 있습니다.
+`/a`에 위치한 LocalSettings.php 파일이나 site-list.xml 파일은 테스트 목적에 따라 교체할 수 있습니다.
 
 #### Caddy
 
-개발 등의 목적으로 Caddyfile을 완전히 변경해야 할 경우에는 `/srv/femiwiki.com/Caddyfile`을 교체할 수 있습니다. 파일 마운트의 경우 일부 텍스트 편집기로 인한 편집이 무시될 수 있음을 주의하세요. (https://github.com/moby/moby/issues/15793)
+Caddy를 실행할 경우에는 Caddyfile을 `/srv/femiwiki.com/Caddyfile`로 마운트하고 `caddy run`을 커맨드로 사용하여야 합니다. [Usage of Docker Image](#usage-of-docker-image)를 참고하세요. 파일 마운트의 경우 일부 텍스트 편집기로 인한 편집이 무시될 수 있음을 주의하세요. (https://github.com/moby/moby/issues/15793)
 
 ```
 ./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
@@ -48,16 +44,16 @@ LocalSettings.php 파일이나 site-list.xml 파일을 교체해야 할 경우 �
 ## Usage of Docker Compose file
 
 [Docker Swarm] 혹은 [Docker Composer]을 이용해, 아래와 같이 간편하게 페미위키를 로컬에서 실행할 수
-있습니다. 데이터베이스와 memcached, 백업을 위한 자동봇이 실행됩니다.
+있습니다. 데이터베이스와 memcached 등 미디어위키에 필요한 서비스들이 실행됩니다.
 
 ```bash
 docker swarm init
 
-cp configs/secret.php.example configs/secret.php
+cp configs/secret.php.example development/secret.php
+cp configs/LocalSettings.php development
+cp configs/Hotfix.php development
 docker stack deploy --prune -c docker-compose.dev.yml mediawiki
-docker stack deploy --prune -c bots.yml bots
 ```
-
 
 ## Build
 
@@ -75,8 +71,6 @@ composer test
 # configs/LocalSettings.php 자동 교정
 composer fix
 ```
-
-&nbsp;
 
 &nbsp;
 

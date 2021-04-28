@@ -1,0 +1,9 @@
+<sites version="1.0" xmlns="https://www.mediawiki.org/xml/sitelist-1.0/">
+	<site type="mediawiki">
+		<globalid>femiwiki</globalid>
+		<group>femiwiki</group>
+		<language>ko</language>
+		<path type="file_path">http://127.0.0.1/w/$1</path>
+		<path type="page_path">http://127.0.0.1/w/$1</path>
+	</site>
+</sites>

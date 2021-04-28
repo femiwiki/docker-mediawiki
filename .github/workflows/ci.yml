@@ -57,8 +57,9 @@ jobs:
 
       - name: Edit configuration
         run: |
-          mv configs/secret.php.example configs/secret.php;
-          sed -i 's~http://localhost~http://127.0.0.1~' docker-compose.dev.yml
+          mv configs/secret.php.example development/secret.php
+          mv configs/LocalSettings.php development
+          mv configs/Hotfix.php development
           sed -i -r 's~ghcr\.io\/femiwiki\/mediawiki:.+~ghcr\.io\/femiwiki\/mediawiki:docker-test~' docker-compose.dev.yml
 
       - run: echo "::set-output name=version::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
