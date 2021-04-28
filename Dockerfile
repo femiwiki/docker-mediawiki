@@ -204,7 +204,7 @@ COPY cron/localisation-update /usr/local/bin/localisation-update
 COPY --chown=www-data:www-data resources /srv/femiwiki.com/
 
 # Ship femiwiki-specific mediawiki configurations
-COPY --chown=www-data [ "configs/LocalSettings.php", "configs/Hotfix.php", "configs/site-list.xml", "/config/mediawiki/" ]
+COPY --chown=www-data [ "configs/LocalSettings.php", "configs/Hotfix.php", "configs/site-list.xml", "/a/" ]
 # secret.php should be mounted to '/a/secret.php'
 VOLUME /a
 
