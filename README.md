@@ -6,20 +6,18 @@
 
 ## Usage of Docker Image
 
-페미위키를 위한 [PHP-FPM] 서버이며 동일한 이미지로 [Caddy] 웹 서버를 실행할 수도 있습니다. 다음 예시 Compose file를 참고해 주세요. docker-compose.dev.yml에서 실행 가능한 전체 예시를 볼 수 있습니다.
+페미위키를 위한 [PHP-FPM] 서버이며 동일한 이미지로 [Caddy] 웹 서버를 실행할 수도 있습니다. 다음 예시 Compose file를 참고해 주세요. docker-compose.dev.yml에서 실행 가능한 개발용 전체 예시를 볼 수 있습니다.
 
 ```yml
 fastcgi:
   image: ghcr.io/femiwiki/mediawiki
-  volumes:
-    - ./configs:/a:ro
 http:
   image: ghcr.io/femiwiki/mediawiki
   command: caddy run
   ports:
     - 80:80
   volumes:
-    - ./development/Caddyfile:/srv/femiwiki.com/Caddyfile:ro
+    - ./path/to/Caddyfile:/srv/femiwiki.com/Caddyfile:ro
 ```
 
 #### MediaWiki
