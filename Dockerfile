@@ -100,7 +100,7 @@ RUN xcaddy build \
 #   /srv/femiwiki.com      미디어위키 소스코드 및 확장들
 #   /usr/local/{bin,sbin}  임의로 설치한 실행파일들
 #   /tmp/cache             캐시 디렉토리
-#   /tmp/log/cron          크론 로그
+#   /var/log/cron.log      크론 로그
 #   /tini                  tini
 #
 FROM --platform=$TARGETPLATFORM php:${PHP_VERSION}-fpm
