@@ -1,10 +1,19 @@
+ARG RUBY_VERSION=3.0.1
+
+ARG PHP_VERSION=7.4.16
 ARG MEDIAWIKI_VERSION=1.35.2
+ARG COMPOSER_VERSION=2.0.13
+
+ARG CADDY_VERSION=2.3.0
+ARG CADDY_MWCACHE_VERSION=0.0.1
+
+ARG TINI_VERSION=0.18.0
 
 #
 # 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM --platform=$TARGETPLATFORM ruby:3.0.1-alpine AS base-extension
+FROM --platform=$TARGETPLATFORM ruby:${RUBY_VERSION}-alpine AS base-extension
 
 # ARG instructions without a value inside of a build stage to use the default
 # value of an ARG declared before the first FROM use
@@ -34,10 +43,10 @@ RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/
 # 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
 # Composer로 디펜던시들을 설치한다.
 #
-FROM --platform=$TARGETPLATFORM php:7.4.16-cli AS base-mediawiki
+FROM --platform=$TARGETPLATFORM php:${PHP_VERSION}-cli AS base-mediawiki
 
 ARG MEDIAWIKI_VERSION
-ARG COMPOSER_VERSION=2.0.13
+ARG COMPOSER_VERSION
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
@@ -75,11 +84,12 @@ RUN COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/med
 #
 # Caddy 스테이지. Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 #
-FROM --platform=$TARGETPLATFORM caddy:2.3.0-builder AS caddy
+FROM --platform=$TARGETPLATFORM caddy:${CADDY_VERSION}-builder AS caddy
+ARG CADDY_MWCACHE_VERSION
 
 RUN xcaddy build \
       --with github.com/caddy-dns/route53 \
-      --with github.com/femiwiki/caddy-mwcache@v0.0.1
+      --with "github.com/femiwiki/caddy-mwcache@v${CADDY_MWCACHE_VERSION}"
 
 #
 # 미디어위키 도커이미지 생성 스테이지. 미디어위키 실행에 필요한 각종 PHP
@@ -93,8 +103,9 @@ RUN xcaddy build \
 #   /tmp/log/cron          크론 로그
 #   /tini                  tini
 #
-FROM --platform=$TARGETPLATFORM php:7.4.16-fpm
+FROM --platform=$TARGETPLATFORM php:${PHP_VERSION}-fpm
 ARG TARGETPLATFORM
+ARG TINI_VERSION
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
@@ -141,9 +152,8 @@ RUN docker-php-ext-enable apcu
 # Tini
 #
 # See https://github.com/krallin/tini for the further details
-ENV TINI_VERSION v0.18.0
 RUN PLATFORM="$(echo $TARGETPLATFORM | cut -d/ -f2)" &&\
-    curl -sLfo /tini "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${PLATFORM}"
+    curl -sLfo /tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${PLATFORM}"
 RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
 
