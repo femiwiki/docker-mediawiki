@@ -5,32 +5,32 @@ updates:
     schedule:
       interval: 'daily'
     reviewers:
-      - "femiwiki/reviewer"
+      - 'femiwiki/reviewer'
 
   - package-ecosystem: 'composer'
     directory: '/'
     schedule:
       interval: 'daily'
     reviewers:
-      - "femiwiki/reviewer"
+      - 'femiwiki/reviewer'
 
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'daily'
     reviewers:
-      - "femiwiki/reviewer"
+      - 'femiwiki/reviewer'
 
   - package-ecosystem: 'bundler'
     directory: '/extension-installer'
     schedule:
       interval: 'daily'
     reviewers:
-      - "femiwiki/reviewer"
+      - 'femiwiki/reviewer'
 
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'daily'
     reviewers:
-      - "femiwiki/reviewer"
+      - 'femiwiki/reviewer'
