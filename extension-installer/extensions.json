@@ -67,7 +67,9 @@
     "Wikibase",
     "WikiEditor"
   ],
-  "WMF-skins": ["Vector"],
+  "WMF-skins": [
+    "Vector"
+  ],
   "non-WMF": {
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
@@ -83,7 +85,7 @@
     },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/releases/download/$1/$1.tar.gz",
-      "version": "v1.0.3"
+      "version": "v1.0.4"
     },
     "Femiwiki": {
       "type": "skin",
