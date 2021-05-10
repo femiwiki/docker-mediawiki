@@ -851,7 +851,7 @@ $wgDefaultUserOptions['uls-compact-links'] = 1;
 wfLoadExtension( 'UploadWizard' );
 // Needed to make UploadWizard work in IE, see https://phabricator.wikimedia.org/T41877
 $wgApiFrameOptions = 'SAMEORIGIN';
-$wgExtensionFunctions[] = function () {
+$wgExtensionFunctions[] = static function () {
 	$GLOBALS['wgUploadNavigationUrl'] = SpecialPage::getTitleFor( 'UploadWizard' )->getLocalURL();
 	return true;
 };
