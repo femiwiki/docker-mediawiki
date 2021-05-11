@@ -29,7 +29,6 @@ services:
       ## 스킨 등 개발할 때엔 아래 라인을 주석해제
       # - ../skin:/srv/femiwiki.com/skins/Femiwiki
       # - ../AchievementBadges:/srv/femiwiki.com/extensions/AchievementBadges
-      # - ../CategoryIntersectionSearch:/srv/femiwiki.com/extensions/CategoryIntersectionSearch
       # - ../DiscordNotifications:/srv/femiwiki.com/extensions/DiscordNotifications
       # - ../FacetedCategory:/srv/femiwiki.com/extensions/FacetedCategory
       # - ../Sanctions:/srv/femiwiki.com/extensions/Sanctions
@@ -38,11 +37,20 @@ services:
       - MEDIAWIKI_SERVER=http://127.0.0.1
       - MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE=localhost
       - MEDIAWIKI_DEBUG_MODE=1
+      # - MEDIAWIKI_SKIP_INSTALL=1
+      # - MEDIAWIKI_SKIP_UPDATE=1
+      # - MEDIAWIKI_SKIP_IMPORT_SITES=1
+    depends_on:
+      - mysql
+      - memcached
   parsoid:
     image: ghcr.io/femiwiki/parsoid:latest
     environment:
       - MEDIAWIKI_LINTING=true
       - MEDIAWIKI_APIS_DOMAIN=localhost
+    depends_on:
+      - fastcgi
+      - http
   mysql:
     image: mysql/mysql-server:8.0
     command: --default-authentication-plugin=mysql_native_password

@@ -52,7 +52,11 @@ docker swarm init
 cp configs/secret.php.example development/secret.php
 cp configs/LocalSettings.php development
 cp configs/Hotfix.php development
+
+# In case of Docker swarm
 docker stack deploy --prune -c docker-compose.dev.yml mediawiki
+# In case of Docker-compose
+docker-compose -f docker-compose.dev.yml up
 ```
 
 ## Build
