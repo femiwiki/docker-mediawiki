@@ -18,7 +18,7 @@ jobs:
         run: ruby .github/bump_extension.rb '${{github.event.client_payload.extension}}' '${{github.event.client_payload.version}}'
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v3.9.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Bump ${{github.event.client_payload.extension}} to ${{github.event.client_payload.version}}
