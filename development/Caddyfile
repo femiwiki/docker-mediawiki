@@ -12,7 +12,10 @@ mwcache {
 		max_cost 10000
 		buffer_items 64
 	}
-  purge_acl 10.0.0.0/8
+  purge_acl {
+    172.0.0.0/8
+    10.0.0.0/8
+  }
 }
 header {
   # Enable XSS filtering for legacy browsers
