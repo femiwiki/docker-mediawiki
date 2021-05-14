@@ -455,6 +455,10 @@ wfLoadExtension( 'Cite' );
 // CiteThisPage
 wfLoadExtension( 'CiteThisPage' );
 
+// Citoid
+wfLoadExtension( 'Citoid' );
+$wgCitoidFullRestbaseURL = 'https://ko.wikipedia.org/api/rest_';
+
 // CodeEditor
 wfLoadExtension( 'CodeEditor' );
 
