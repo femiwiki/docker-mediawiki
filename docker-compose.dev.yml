@@ -4,8 +4,7 @@ services:
     image: ghcr.io/femiwiki/mediawiki:latest
     command: caddy run
     ports:
-      - 80:80
-      - 443:443
+      - 8080:8080
     volumes:
       - caddy:/etc/caddycerts
       - ./development/Caddyfile:/srv/femiwiki.com/Caddyfile:ro
@@ -34,7 +33,7 @@ services:
       # - ../Sanctions:/srv/femiwiki.com/extensions/Sanctions
       # - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
     environment:
-      - MEDIAWIKI_SERVER=http://127.0.0.1
+      - MEDIAWIKI_SERVER=http://127.0.0.1:8080
       - MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE=localhost
       - MEDIAWIKI_DEBUG_MODE=1
       # - MEDIAWIKI_SKIP_INSTALL=1
@@ -47,6 +46,7 @@ services:
     image: ghcr.io/femiwiki/parsoid:latest
     environment:
       - MEDIAWIKI_LINTING=true
+      - MEDIAWIKI_APIS_URI=http://http:8080/api.php
       - MEDIAWIKI_APIS_DOMAIN=localhost
     depends_on:
       - fastcgi
@@ -70,6 +70,7 @@ services:
   restbase:
     image: ghcr.io/femiwiki/restbase:latest
     environment:
+      - MEDIAWIKI_APIS_URI=http://http:8080/api.php
       - MEDIAWIKI_APIS_DOMAIN=localhost
   mathoid:
     image: ghcr.io/femiwiki/mathoid:latest

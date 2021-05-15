@@ -28,7 +28,7 @@ $wgArticlePath = "/w/$1";
 $wgServer = 'https://femiwiki.com';
 $wgCanonicalServer = 'https://femiwiki.com';
 // Used to purge CDN cache (https://github.com/femiwiki/femiwiki/issues/239)
-$wgInternalServer = 'http://127.0.0.1';
+$wgInternalServer = getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080';
 $wgEnableCanonicalServerLink = true;
 
 // Determines how section IDs should be encoded
@@ -124,7 +124,7 @@ $wgMemCachedServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_memcached' ) ?: 'memcached:
 
 // HTTP Cache setting
 $wgUseCdn = true;
-$wgCdnServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:80' ];
+$wgCdnServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' ];
 
 // To enable image uploads, make sure the 'images' directory
 // is writable, then set this to true:
