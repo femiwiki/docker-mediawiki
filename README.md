@@ -86,7 +86,7 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 
 [container registry]: https://badgen.net/badge/icon/docker?icon=docker&label
 [container registry link]: https://github.com/orgs/femiwiki/packages/container/mediawiki
-[github checks status]: https://badgen.net/github/checks/femiwiki/docker-mediawiki
+[github checks status]: https://badgen.net/github/checks/femiwiki/docker-mediawiki/main
 [github checks link]: https://github.com/femiwiki/docker-mediawiki
 [femiwiki.com]: https://femiwiki.com
 [docker swarm]: https://docs.docker.com/engine/swarm/
