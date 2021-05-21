@@ -86,15 +86,8 @@ jobs:
           echo 'Waiting for http...'
           until curl -sLfo /dev/null 127.0.0.1:8080; do
             sleep 1; done
-      - name: Test Parsoid API
-        timeout-minutes: 3
+      - name: Test VisualEditor API
         run: |
-          echo 'Waiting for parsoid...'
-          until [ -n "$(docker ps -qf 'name=^mediawiki_parsoid')" ]; do
-            sleep 1; done
-          ID="$(docker ps -qf 'name=^mediawiki_parsoid')"
-          until [ "$(docker inspect "$ID" --format='{{json .State.Health.Status}}')" = \"healthy\" ]; do
-            sleep 1; done
           URL="127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
           curl -sLfo /dev/null "$URL"
 
