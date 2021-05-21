@@ -390,14 +390,34 @@ $wgParsoidSettings = [
 	'linting' => true
 ];
 
-// Restbase server Setting
-$wgVirtualRestConfig['modules']['restbase'] = [
-	'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_restbase' ) ?: 'restbase:7231' ),
-	'domain' => 'femiwiki.com'
+# Disable "zero configuration" VisualEditor
+# zero-conf VisualEditor assumes that all the services are served as the same host. ('/' for
+# MediaWiki, '/rest.php/<domain>/v3/' for Parsoid and '/restbase/<domain>/v1/' for RESTBase)
+# It is not our use case, we are serving those services behind the orchestration tool, Docker or
+# Nomad and a variety of addresses are used.
+$wgVisualEditorParsoidAutoConfig = false;
+
+$wgVirtualRestConfig = [
+	'modules' => [
+		'parsoid' => [
+			'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' ) . '/rest.php',
+		],
+		'restbase' => [
+			'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_restbase' ) ?: 'restbase:7231' ),
+		],
+	],
+	'global' => [
+		'domain' => 'femiwiki.com',
+		'restbaseCompat' => true,
+		'forwardCookies' => false,
+	],
 ];
+
 $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
 $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 $wgMathFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
+
+wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
 
 //
 // Extensions
@@ -1003,7 +1023,7 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 // Domain is an arbitrary keyword for communicate with MediaWiki node services
 if ( getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ) {
 	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' );
-	$wgVirtualRestConfig['modules']['restbase']['domain'] = $domain;
+	$wgVirtualRestConfig['global']['domain'] = $domain;
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
 	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
 	$wgMathFullRestbaseURL = "$wgServer/$domain/";
