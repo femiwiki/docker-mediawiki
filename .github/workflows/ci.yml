@@ -95,16 +95,16 @@ jobs:
           ID="$(docker ps -qf 'name=^mediawiki_parsoid')"
           until [ "$(docker inspect "$ID" --format='{{json .State.Health.Status}}')" = \"healthy\" ]; do
             sleep 1; done
-          URL="http://127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
-          [[ ! "$(curl -Ls "$URL")" = *\"error\"* ]]
+          URL="127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
+          curl -sLfo /dev/null "$URL"
 
       - name: backup of failure
         if: ${{ failure() }}
         timeout-minutes: 1
         run: |
           echo 'Failed to connect to 127.0.0.1:8080'
-          URL="http://127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
-          curl -Ls "$URL" && echo "success" || echo "failure"
+          URL="127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
+          curl -L "$URL" && echo "success" || echo "failure"
           docker ps;
           for s in $(docker service ls -q ); do docker service ps "$s"; done
           docker container ps;
