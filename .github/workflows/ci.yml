@@ -80,31 +80,24 @@ jobs:
           docker swarm init
           docker stack deploy -c docker-compose.dev.yml mediawiki
 
-      - name: Access 127.0.0.1 until success
+      - name: Access 127.0.0.1:8080 until success
         timeout-minutes: 3
         run: |
           echo 'Waiting for http...'
-          until curl -sLfo /dev/null 127.0.0.1; do
+          until curl -sLfo /dev/null 127.0.0.1:8080; do
             sleep 1; done
-      - name: Test Parsoid API
-        timeout-minutes: 3
+      - name: Test VisualEditor API
         run: |
-          echo 'Waiting for parsoid...'
-          until [ -n "$(docker ps -qf 'name=^mediawiki_parsoid')" ]; do
-            sleep 1; done
-          ID="$(docker ps -qf 'name=^mediawiki_parsoid')"
-          until [ "$(docker inspect "$ID" --format='{{json .State.Health.Status}}')" = \"healthy\" ]; do
-            sleep 1; done
-          URL="http://127.0.0.1/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
-          [[ ! "$(curl -Ls "$URL")" = *\"error\"* ]]
+          URL="127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
+          curl -sLfo /dev/null "$URL"
 
       - name: backup of failure
         if: ${{ failure() }}
         timeout-minutes: 1
         run: |
-          echo 'Failed to connect to 127.0.0.1'
-          URL="http://127.0.0.1/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
-          curl -Ls "$URL" && echo "success" || echo "failure"
+          echo 'Failed to connect to 127.0.0.1:8080'
+          URL="127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
+          curl -L "$URL" && echo "success" || echo "failure"
           docker ps;
           for s in $(docker service ls -q ); do docker service ps "$s"; done
           docker container ps;
@@ -113,7 +106,7 @@ jobs:
       - name: Check if the container is still up
         run: test "$(docker service ps -qf 'desired-state=Running' -f 'desired-state=Ready' mediawiki_fastcgi)"
       - name: Try to access the mediawiki
-        run: curl -sSLvo /dev/null 127.0.0.1 || docker service logs mediawiki_fastcgi
+        run: curl -sSLvo /dev/null 127.0.0.1:8080 || docker service logs mediawiki_fastcgi
 
       - name: Login to GitHub Container Registry
         if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'

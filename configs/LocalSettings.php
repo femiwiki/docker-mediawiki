@@ -28,7 +28,7 @@ $wgArticlePath = "/w/$1";
 $wgServer = 'https://femiwiki.com';
 $wgCanonicalServer = 'https://femiwiki.com';
 // Used to purge CDN cache (https://github.com/femiwiki/femiwiki/issues/239)
-$wgInternalServer = 'http://127.0.0.1';
+$wgInternalServer = getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080';
 $wgEnableCanonicalServerLink = true;
 
 // Determines how section IDs should be encoded
@@ -124,7 +124,7 @@ $wgMemCachedServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_memcached' ) ?: 'memcached:
 
 // HTTP Cache setting
 $wgUseCdn = true;
-$wgCdnServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:80' ];
+$wgCdnServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' ];
 
 // To enable image uploads, make sure the 'images' directory
 // is writable, then set this to true:
@@ -385,20 +385,39 @@ $wgNamespaceAliases = [
 	'페' => NS_PROJECT
 ];
 
-// Parsoid server Setting
-$wgVirtualRestConfig['modules']['parsoid'] = [
-	'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_parsoid' ) ?: 'parsoid:8000' ),
-	'domain' => 'femiwiki.com'
+// Parsoid Setting
+$wgParsoidSettings = [
+	'linting' => true
 ];
 
-// Restbase server Setting
-$wgVirtualRestConfig['modules']['restbase'] = [
-	'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_restbase' ) ?: 'restbase:7231' ),
-	'domain' => 'femiwiki.com'
+# Disable "zero configuration" VisualEditor
+# zero-conf VisualEditor assumes that all the services are served as the same host. ('/' for
+# MediaWiki, '/rest.php/<domain>/v3/' for Parsoid and '/restbase/<domain>/v1/' for RESTBase)
+# It is not our use case, we are serving those services behind the orchestration tool, Docker or
+# Nomad and a variety of addresses are used.
+$wgVisualEditorParsoidAutoConfig = false;
+
+$wgVirtualRestConfig = [
+	'modules' => [
+		'parsoid' => [
+			'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' ) . '/rest.php',
+		],
+		'restbase' => [
+			'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_restbase' ) ?: 'restbase:7231' ),
+		],
+	],
+	'global' => [
+		'domain' => 'femiwiki.com',
+		'restbaseCompat' => true,
+		'forwardCookies' => false,
+	],
 ];
+
 $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
 $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 $wgMathFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
+
+wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
 
 //
 // Extensions
@@ -1004,8 +1023,7 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 // Domain is an arbitrary keyword for communicate with MediaWiki node services
 if ( getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ) {
 	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' );
-	$wgVirtualRestConfig['modules']['parsoid']['domain'] = $domain;
-	$wgVirtualRestConfig['modules']['restbase']['domain'] = $domain;
+	$wgVirtualRestConfig['global']['domain'] = $domain;
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
 	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
 	$wgMathFullRestbaseURL = "$wgServer/$domain/";

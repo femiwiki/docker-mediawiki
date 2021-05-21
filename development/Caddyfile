@@ -1,7 +1,7 @@
 {
 	order mwcache before rewrite
 }
-127.0.0.1:80 http:80 localhost:80
+http://127.0.0.1:8080 http://http:8080 http://localhost:8080
 root * /srv/femiwiki.com
 php_fastcgi fastcgi:9000
 file_server
@@ -32,4 +32,4 @@ rewrite /w/* /index.php
 # Proxy requests to RESTBase
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
-reverse_proxy /localhost/* restbase:7231
+reverse_proxy /127.0.0.1/* restbase:7231

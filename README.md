@@ -59,6 +59,8 @@ docker stack deploy --prune -c docker-compose.dev.yml mediawiki
 docker-compose -f docker-compose.dev.yml up
 ```
 
+브라우저에서 [http://127.0.0.1:8080]을 방문할 수 있습니다.
+
 ## Build
 
 페미위키 개발하실 때엔 아래 커맨드들을 참고해주세요.
@@ -96,5 +98,6 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 [how to deploy weekly femiwiki to production]: https://github.com/femiwiki/femiwiki/blob/main/how-to-deploy-weekly-femi-wiki-to-production.md
 [php-fpm]: https://php-fpm.org/
 [caddy]: https://caddyserver.com/
+[http://127.0.0.1:8080]: http://127.0.0.1:8080
 [gnu affero general public license v3.0]: LICENSE
 [copyright]: COPYRIGHT
