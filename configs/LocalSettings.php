@@ -385,10 +385,9 @@ $wgNamespaceAliases = [
 	'페' => NS_PROJECT
 ];
 
-// Parsoid server Setting
-$wgVirtualRestConfig['modules']['parsoid'] = [
-	'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_parsoid' ) ?: 'parsoid:8000' ),
-	'domain' => 'femiwiki.com'
+// Parsoid Setting
+$wgParsoidSettings = [
+	'linting' => true
 ];
 
 // Restbase server Setting
@@ -1004,7 +1003,6 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 // Domain is an arbitrary keyword for communicate with MediaWiki node services
 if ( getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ) {
 	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' );
-	$wgVirtualRestConfig['modules']['parsoid']['domain'] = $domain;
 	$wgVirtualRestConfig['modules']['restbase']['domain'] = $domain;
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
 	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";

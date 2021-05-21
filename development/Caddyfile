@@ -32,4 +32,4 @@ rewrite /w/* /index.php
 # Proxy requests to RESTBase
 # Reference:
 #   https://www.mediawiki.org/wiki/RESTBase/Installation#Proxy_requests_to_RESTBase_from_your_webserver
-reverse_proxy /localhost/* restbase:7231
+reverse_proxy /127.0.0.1/* restbase:7231
