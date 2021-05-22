@@ -28,7 +28,7 @@ $wgArticlePath = "/w/$1";
 $wgServer = 'https://femiwiki.com';
 $wgCanonicalServer = 'https://femiwiki.com';
 // Used to purge CDN cache (https://github.com/femiwiki/femiwiki/issues/239)
-$wgInternalServer = getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080';
+$wgInternalServer = 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' );
 $wgEnableCanonicalServerLink = true;
 
 // Determines how section IDs should be encoded
