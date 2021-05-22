@@ -60,7 +60,7 @@ jobs:
           mv configs/secret.php.example development/secret.php
           mv configs/LocalSettings.php development
           mv configs/Hotfix.php development
-          sed -i -r 's~ghcr\.io\/femiwiki\/mediawiki:.+~ghcr\.io\/femiwiki\/mediawiki:docker-test~' docker-compose.dev.yml
+          sed -i -r 's~ghcr\.io\/femiwiki\/mediawiki:.+~ghcr\.io\/femiwiki\/mediawiki:docker-test~' docker-compose.yml
 
       - run: echo "::set-output name=version::$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)"
         id: version
@@ -78,7 +78,7 @@ jobs:
       - name: Initialize docker swarm and start services
         run: |
           docker swarm init
-          docker stack deploy -c docker-compose.dev.yml mediawiki
+          docker stack deploy -c docker-compose.yml mediawiki
 
       - name: Access 127.0.0.1:8080 until success
         timeout-minutes: 3
