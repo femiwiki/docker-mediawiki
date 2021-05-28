@@ -1058,4 +1058,4 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	$wgCaptchaTriggers['badlogin'] = false;
 }
 
-require_once '/srv/femiwiki.com/Hotfix.php';
+require_once '/a/Hotfix.php';
