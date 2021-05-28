@@ -71,31 +71,31 @@
   "non-WMF": {
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
-      "version": "v0.2.1"
+      "version": "v0.2.2"
     },
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
-      "version": "v1.1.0"
+      "version": "v1.0.1"
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
-      "version": "v1.1.5"
+      "version": "v1.1.6"
     },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/releases/download/$1/$1.tar.gz",
-      "version": "v1.0.4"
+      "version": "v1.0.5"
     },
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v1.5.0"
+      "version": "v1.6.0"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.1.tar.gz"
     },
     "DiscordNotifications": {
       "template": "https://github.com/femiwiki/DiscordNotifications/releases/download/$1/$1.tar.gz",
-      "version": "v1.0.1-femiwiki"
+      "version": "v1.0.2-femiwiki"
     },
     "EmbedVideo": {
       "template": "https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz"
