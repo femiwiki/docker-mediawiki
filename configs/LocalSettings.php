@@ -853,7 +853,16 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
-$wgSpecialPages['Whatlinkshere'] = 'SpecialOrderedWhatlinkshere';
+$wgSpecialPages['Whatlinkshere'] = [
+	'class' => 'SpecialOrderedWhatLinksHere',
+	'services' => [
+		'DBLoadBalancer',
+		'LinkBatchFactory',
+		'ContentHandlerFactory',
+		'SearchEngineFactory',
+		'NamespaceInfo',
+	]
+];
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
