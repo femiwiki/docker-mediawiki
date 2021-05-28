@@ -23,7 +23,7 @@ if [ -z ${MEDIAWIKI_SKIP_INSTALL:-} ]; then
       --installdbpass "${DB_PASSWORD}" \
       --pass 'admin_password_please_change' \
       '페미위키' Admin
-  else; then
+  else
     echo 'MediaWiki tables seem to already exist. Skipping creation.'
   fi
 fi
