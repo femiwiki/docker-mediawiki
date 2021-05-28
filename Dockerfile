@@ -1,4 +1,4 @@
-ARG MEDIAWIKI_VERSION=1.35.2
+ARG MEDIAWIKI_VERSION=1.36.0
 ARG COMPOSER_VERSION=2.0.14
 
 ARG CADDY_MWCACHE_VERSION=0.0.1
@@ -48,7 +48,12 @@ ARG COMPOSER_VERSION
 RUN apt-get update && apt-get install -y \
       # Required for composer
       git \
-      zip
+      zip \
+      # Build dependencies
+      libicu-dev
+
+# Install the PHP extensions we need
+RUN docker-php-ext-install -j8 intl
 
 COPY --from=base-extension /tmp/mediawiki /tmp/mediawiki
 
