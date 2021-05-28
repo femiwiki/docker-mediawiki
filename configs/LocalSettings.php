@@ -853,7 +853,16 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
-$wgSpecialPages['Whatlinkshere'] = 'SpecialOrderedWhatlinkshere';
+$wgSpecialPages['Whatlinkshere'] = [
+	'class' => 'SpecialOrderedWhatLinksHere',
+	'services' => [
+		'DBLoadBalancer',
+		'LinkBatchFactory',
+		'ContentHandlerFactory',
+		'SearchEngineFactory',
+		'NamespaceInfo',
+	]
+];
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
@@ -982,9 +991,6 @@ $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
 $wgHiddenPrefs[] = 'usebetatoolbar';
-// Enable Visual Editor to opt-out
-$wgDefaultUserOptions['visualeditor-enable'] = 1;
-$wgHiddenPrefs[] = 'visualeditor-enable';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 
 //
