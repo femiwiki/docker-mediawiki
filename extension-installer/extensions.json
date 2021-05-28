@@ -75,7 +75,7 @@
     },
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
-      "version": "v1.1.0"
+      "version": "v1.0.1"
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
