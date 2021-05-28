@@ -488,9 +488,6 @@ wfLoadExtension( 'CodeEditor' );
 // CodeMirror
 wfLoadExtension( 'CodeMirror' );
 
-// CollaborationKit
-wfLoadExtension( 'CollaborationKit' );
-
 // ConfirmEdit
 wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha' ] );
 $wgCaptchaClass = 'ReCaptchaNoCaptcha';
@@ -554,14 +551,6 @@ $wgEchoMaxMentionsInEditSummary = 5;
 
 // EmbedVideo
 wfLoadExtension( 'EmbedVideo' );
-
-// EventLogging
-wfLoadExtension( 'EventLogging' );
-$wgEventLoggingBaseUri = 'http://localhost:8080/event.gif';
-$wgEventLoggingFile = '/var/log/mediawiki/events.log';
-
-// EventStreamConfig
-wfLoadExtension( 'EventStreamConfig' );
 
 // FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
