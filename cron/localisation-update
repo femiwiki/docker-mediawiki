@@ -15,5 +15,4 @@ cd /srv/femiwiki.com/extensions/LocalisationUpdate
 
 sudo nice -n 19 php update.php
 sudo nice -n 19 php update.php --repoid femiwiki
-sudo nice -n 19 php update.php --repoid kulttuuri
 echo "All done at $(date --iso-8601=minutes)"
