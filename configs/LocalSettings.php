@@ -653,9 +653,6 @@ $wgLocalisationUpdateRepositories = [
 		'extension' => 'https://raw.github.com/femiwiki/%NAME%/main/%PATH%',
 		'skin' => 'https://raw.github.com/femiwiki/FemiwikiSkin/main/%PATH%',
 	],
-	'kulttuuri' => [
-		'extension' => 'https://raw.github.com/kulttuuri/%NAME%/master/%PATH%',
-	]
 ];
 $wgLocalisationUpdateHttpRequestOptions = [
 	'followRedirects' => true,
