@@ -91,9 +91,11 @@ jobs:
           URL="127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
           curl -sLfo /dev/null "$URL"
       - name: Test Extension:Math
+        timeout-minutes: 1
         run: |
           URL="127.0.0.1:8080/w/Special:MathStatus"
-          curl -sLfo /dev/null "$URL"
+          until curl -sLfo /dev/null "$URL"; do
+            sleep 1; done
 
       - name: backup of failure
         if: ${{ failure() }}
