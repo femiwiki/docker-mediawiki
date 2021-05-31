@@ -404,6 +404,8 @@ $wgVirtualRestConfig = [
 		],
 		'restbase' => [
 			'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_restbase' ) ?: 'restbase:7231' ),
+			# https://github.com/femiwiki/femiwiki/issues/266
+			'domain' => 'femiwiki.com',
 		],
 	],
 	'global' => [
@@ -1016,6 +1018,8 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 if ( getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ) {
 	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' );
 	$wgVirtualRestConfig['global']['domain'] = $domain;
+	# https://github.com/femiwiki/femiwiki/issues/266
+	$wgVirtualRestConfig['modules']['restbase']['domain'] = $domain;
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
 	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
 	$wgMathFullRestbaseURL = "$wgServer/$domain/";

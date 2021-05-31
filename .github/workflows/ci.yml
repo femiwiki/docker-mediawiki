@@ -90,6 +90,10 @@ jobs:
         run: |
           URL="127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
           curl -sLfo /dev/null "$URL"
+      - name: Test Extension:Math
+        run: |
+          URL="127.0.0.1:8080/w/Special:MathStatus"
+          curl -sLfo /dev/null "$URL"
 
       - name: backup of failure
         if: ${{ failure() }}
@@ -97,7 +101,9 @@ jobs:
         run: |
           echo 'Failed to connect to 127.0.0.1:8080'
           URL="127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
-          curl -L "$URL" && echo "success" || echo "failure"
+          curl -Lv "$URL" && echo "VE success" || echo "VE failure"
+          URL="127.0.0.1:8080/w/Special:MathStatus"
+          curl -Lv "$URL" && echo "Math success" || echo "Math failure"
           docker ps;
           for s in $(docker service ls -q ); do docker service ps "$s"; done
           docker container ps;

@@ -9,3 +9,12 @@
 
 //// 업로드를 막고싶을때엔 아래 라인 주석 해제하면 됨
 // $wgEnableUploads = false;
+
+// $wgGroupPermissions['*']['edit'] = true;
+// $wgGroupPermissions['sysop']['deletedhistory'] = true;
+// $wgGroupPermissions['sysop']['deletelogentry'] = true;
+// $wgGroupPermissions['sysop']['deleterevision'] = true;
+// $wgGroupPermissions['sysop']['suppressionlog'] = true;
+
+// ini_set( 'display_errors', 'Off' );
+// $wgDebugLogFile = '/srv/femiwiki.com/debug-femiwiki.log';
