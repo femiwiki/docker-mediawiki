@@ -173,6 +173,10 @@ RUN touch /var/log/php-fpm.log &&\
 
 # Install Mediawiki and extensions
 COPY --from=base-mediawiki --chown=www-data /tmp/mediawiki /srv/femiwiki.com
+# TODO Check the next line is valid when bump MediaWiki version
+# TODO Remove the next line in MW 1.36
+# Fix https://phabricator.wikimedia.org/T264735
+RUN sed -i 's/$pipelining ? 3 : 0/CURLPIPE_MULTIPLEX/' /srv/femiwiki.com/includes/libs/http/MultiHttpClient.php
 
 # Create cache directories for mediawiki
 # $wgCacheDirectory should not be accessible from the web and writable by the web server
