@@ -1,6 +1,4 @@
 ARG MEDIAWIKI_VERSION=1.36.0
-ARG COMPOSER_VERSION=2.1.1
-
 ARG CADDY_MWCACHE_VERSION=0.0.3
 
 ARG TINI_VERSION=0.18.0
@@ -39,37 +37,19 @@ RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/
 # 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
 # Composer로 디펜던시들을 설치한다.
 #
-FROM --platform=$TARGETPLATFORM php:7.4.16-cli AS base-mediawiki
+FROM --platform=$TARGETPLATFORM composer:2.1.2 AS base-mediawiki
 
 ARG MEDIAWIKI_VERSION
-ARG COMPOSER_VERSION
 
 # Install dependencies and utilities
-RUN apt-get update && apt-get install -y \
-      # Required for composer
-      git \
-      zip \
+RUN apk add \
       # Build dependencies
-      libicu-dev
+      icu-dev
 
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 intl
 
 COPY --from=base-extension /tmp/mediawiki /tmp/mediawiki
-
-# Install Composer
-#
-# References:
-#   https://getcomposer.org/
-RUN EXPECTED_SIGNATURE="$(curl -fSL https://composer.github.io/installer.sig)" &&\
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&\
-    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")" &&\
-    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then \
-      >&2 echo 'ERROR: Invalid installer signature' &&\
-      rm composer-setup.php &&\
-      exit 1; \
-    fi &&\
-    php composer-setup.php --version "${COMPOSER_VERSION}" --install-dir=/usr/local/bin --filename=composer --quiet
 
 # Create a cache directory for composer
 RUN mkdir -p /tmp/composer
