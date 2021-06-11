@@ -853,7 +853,7 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgSpecialPages['Whatlinkshere'] = [
-	'class' => 'SpecialOrderedWhatLinksHere',
+	'class' => 'MediaWiki\Extension\UnifiedExtensionForFemiwiki\Specials\SpecialOrderedWhatLinksHere',
 	'services' => [
 		'DBLoadBalancer',
 		'LinkBatchFactory',
