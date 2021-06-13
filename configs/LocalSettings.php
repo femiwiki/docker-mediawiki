@@ -554,6 +554,9 @@ $wgEchoMaxMentionsInEditSummary = 5;
 // EmbedVideo
 wfLoadExtension( 'EmbedVideo' );
 
+// EventLogging
+wfLoadExtension( 'EventLogging' );
+
 // FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
@@ -620,6 +623,60 @@ $wgGrantPermissions['editinterface']['gadgets-definition-edit'] = true;
 
 // Graph
 wfLoadExtension( 'Graph' );
+
+// GrowthExperiments
+wfLoadExtension( 'GrowthExperiments' );
+
+// HelpPanel
+$wgGEHelpPanelReadingModeNamespaces = [
+	NS_MAIN,
+	NS_USER,
+	NS_PROJECT,
+	NS_HELP,
+];
+
+// Cannot be configured via on-wiki configuration in MW 1.36
+// https://phabricator.wikimedia.org/T215911
+$wgGEHelpPanelLinks = [
+	[
+		"title" => "도움말:초보자 도움말",
+		"text" => "초보자 도움말",
+		"id" => "newcomer",
+	],
+	[
+		"title" => "도움말:문서 이름 바꾸기",
+		"text" => "문서 이름 바꾸기",
+		"id" => "move",
+	],
+];
+$wgGEHelpPanelHelpDeskTitle = '게시판:질문게시판';
+$wgGEHelpPanelViewMoreTitle = '도움말:색인';
+
+// Disable the homepage by default because the ext.growthExperiments.homepage.discovery.tour.js is broken
+// in FemiwikiSkin
+$wgGEHomepageNewAccountEnablePercentage = 0;
+$wgDefaultUserOptions['growthexperiments-tour-homepage-discovery'] = 1;
+
+// Disable Mentorship, we have few experienced users...
+$wgGEMentorshipEnabled = false;
+
+// Disable SuggestedEdits which requires either CirrusSearch or ORES.
+$wgGEHomepageSuggestedEditsEnabled = false;
+
+// Disable ImpactModule which requires PageViewInfo.
+// https://github.com/femiwiki/femiwiki/issues/115
+$wgGEHomepageImpactModuleEnabled = false;
+
+// Disable Welcome Survey
+// (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see the example)
+$wgWelcomeSurveyEnabled = false;
+
+// Do not override messages of ConfirmEdit and confirm mail
+$wgGEConfirmEmailEnabled = false;
+
+// We don't collect data via Extension:EventStream
+$wgGEHelpPanelLoggingEnabled = false;
+$wgGEHomepageLoggingEnabled = false;
 
 // GuidedTour
 wfLoadExtension( 'GuidedTour' );
