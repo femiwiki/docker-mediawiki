@@ -663,10 +663,6 @@ $wgGEMentorshipEnabled = false;
 // Disable SuggestedEdits which requires either CirrusSearch or ORES.
 $wgGEHomepageSuggestedEditsEnabled = false;
 
-// Disable ImpactModule which requires PageViewInfo.
-// https://github.com/femiwiki/femiwiki/issues/115
-$wgGEHomepageImpactModuleEnabled = false;
-
 // Disable Welcome Survey
 // (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see the example)
 $wgWelcomeSurveyEnabled = false;
