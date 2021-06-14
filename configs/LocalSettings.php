@@ -751,6 +751,9 @@ $egFacebookAppId = '1937597133150935';
 wfLoadExtension( 'PageImages' );
 $wgPageImagesLeadSectionOnly = false;
 
+// PageViewInfo
+wfLoadExtension( 'PageViewInfo' );
+
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
@@ -862,6 +865,8 @@ $wgSpecialPages['Whatlinkshere'] = [
 		'NamespaceInfo',
 	]
 ];
+$wgUnifiedExtensionForFemiwikiGoogleAnalyticsCredentialsFile = '/a/analytics-credentials-file.json';
+$wgUnifiedExtensionForFemiwikiGoogleAnalyticsProfileId = '127138848';
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
