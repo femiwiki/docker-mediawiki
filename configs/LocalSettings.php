@@ -630,9 +630,12 @@ wfLoadExtension( 'GrowthExperiments' );
 // HelpPanel
 $wgGEHelpPanelReadingModeNamespaces = [
 	NS_MAIN,
-	NS_USER,
 	NS_PROJECT,
+	NS_USER,
+	NS_TEMPLATE,
 	NS_HELP,
+	NS_CATEGORY,
+	NS_MODULE,
 ];
 
 // Cannot be configured via on-wiki configuration in MW 1.36
