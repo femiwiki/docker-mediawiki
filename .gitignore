@@ -2,6 +2,7 @@
 /development/secret.php
 /development/LocalSettings.php
 /development/Hotfix.php
+/development/analytics-credentials-file.json
 
 # Composer
 /vendor
