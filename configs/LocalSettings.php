@@ -652,11 +652,6 @@ $wgGEHelpPanelLinks = [
 $wgGEHelpPanelHelpDeskTitle = '게시판:질문게시판';
 $wgGEHelpPanelViewMoreTitle = '도움말:색인';
 
-// Disable the homepage by default because the ext.growthExperiments.homepage.discovery.tour.js is broken
-// in FemiwikiSkin
-$wgGEHomepageNewAccountEnablePercentage = 0;
-$wgDefaultUserOptions['growthexperiments-tour-homepage-discovery'] = 1;
-
 // Disable Mentorship, we have few experienced users...
 $wgGEMentorshipEnabled = false;
 
@@ -664,7 +659,7 @@ $wgGEMentorshipEnabled = false;
 $wgGEHomepageSuggestedEditsEnabled = false;
 
 // Disable Welcome Survey
-// (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see the example)
+// (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see an example)
 $wgWelcomeSurveyEnabled = false;
 
 // Do not override messages of ConfirmEdit and confirm mail
