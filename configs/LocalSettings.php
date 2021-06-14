@@ -240,6 +240,8 @@ $wgGroupPermissions['*']['createaccount'] = true;
 $wgGroupPermissions['sysop']['usermerge'] = true;
 $wgGroupPermissions['sysop']['renameuser'] = true;
 $wgGroupPermissions['sysop']['interwiki'] = true;
+$wgGroupPermissions['sysop']['import'] = false;
+$wgGroupPermissions['sysop']['importupload'] = false;
 $wgGroupPermissions['oversight']['deletelogentry'] = true;
 $wgGroupPermissions['oversight']['deleterevision'] = true;
 
@@ -260,16 +262,6 @@ $wgAutopromote = [
 // Allow autoconfirmed users to edit pages
 $wgGroupPermissions['user']['edit'] = false;
 $wgGroupPermissions['autoconfirmed']['edit'] = true;
-
-// Add restricted-sysop group
-$wgGroupPermissions['restricted-sysop'] = $wgGroupPermissions['sysop'];
-$wgGroupPermissions['restricted-sysop']['apihighlimits'] = false;
-$wgGroupPermissions['restricted-sysop']['editinterface'] = false;
-$wgGroupPermissions['restricted-sysop']['editusercss'] = false;
-$wgGroupPermissions['restricted-sysop']['edituserjs'] = false;
-$wgGroupPermissions['restricted-sysop']['managechangetags'] = false;
-$wgGroupPermissions['restricted-sysop']['move-rootuserpages'] = false;
-$wgGroupPermissions['restricted-sysop']['unblockself'] = false;
 
 // FemiwikiTeam is just a list of all Femiwiki team member
 $wgGroupPermissions['femiwiki-team']['editprotected'] = true;
