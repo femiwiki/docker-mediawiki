@@ -1,5 +1,5 @@
 ARG MEDIAWIKI_VERSION=1.36.0
-ARG CADDY_MWCACHE_VERSION=0.0.3
+ARG CADDY_MWCACHE_COMMIT=12b20d97a82e509f978a0c54a2a04d7e938c6769
 
 ARG TINI_VERSION=0.18.0
 
@@ -65,12 +65,12 @@ RUN COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/med
 #
 # Caddy 스테이지. Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 #
-FROM --platform=$TARGETPLATFORM caddy:2.4.1-builder AS caddy
-ARG CADDY_MWCACHE_VERSION
+FROM --platform=$TARGETPLATFORM caddy:2.4.2-builder AS caddy
+ARG CADDY_MWCACHE_COMMIT
 
 RUN xcaddy build \
       --with github.com/caddy-dns/route53 \
-      --with "github.com/femiwiki/caddy-mwcache@v${CADDY_MWCACHE_VERSION}"
+      --with "github.com/femiwiki/caddy-mwcache@${CADDY_MWCACHE_COMMIT}"
 
 #
 # 미디어위키 도커이미지 생성 스테이지. 미디어위키 실행에 필요한 각종 PHP
