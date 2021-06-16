@@ -1020,8 +1020,7 @@ require_once "$IP/extensions/Widgets/Widgets.php";
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
 // WikiBase - repo
-$wgEnableWikibaseRepo = true;
-require_once "$IP/extensions/Wikibase/repo/Wikibase.php";
+wfLoadExtension( 'WikibaseRepository', "$IP/extensions/Wikibase/extension-repo.json" );
 require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 $wgWBRepoSettings['enableEntitySearchUI'] = false;
 $wgWBRepoSettings['siteLinkGroups'] = [ 'femiwiki' ];
@@ -1029,13 +1028,12 @@ $wgWBRepoSettings['dataBridgeEnabled'] = true;
 $wgWBRepoSettings['conceptBaseUri'] = $wgCanonicalServer . str_replace( '$1', 'Item:', $wgArticlePath );
 
 // WikiBase - client
-$wgEnableWikibaseClient = true;
-require_once "$IP/extensions/Wikibase/client/WikibaseClient.php";
+wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 // See https://github.com/femiwiki/docker-mediawiki/issues/324
 $wgWBClientSettings['dataBridgeEnabled'] = true;
 $wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
-	str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
+	str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
 $wgWBClientSettings['repoSiteName'] = 'wikibase-repo-site-name';
 
 // WikiEditor
@@ -1061,7 +1059,7 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 	$wgCanonicalServer = $wgServer;
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
-		str_replace( '$1', 'Item:(Q[1-9][0-9]*).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
+		str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
 
 	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ?: 'femiwiki.com';
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
