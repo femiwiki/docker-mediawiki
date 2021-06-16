@@ -793,10 +793,6 @@ wfLoadExtension( 'Nuke' );
 // OATHAuth
 wfLoadExtension( 'OATHAuth' );
 
-// OpenGraphMeta
-wfLoadExtension( 'OpenGraphMeta' );
-$egFacebookAppId = '1937597133150935';
-
 // PageImages
 wfLoadExtension( 'PageImages' );
 $wgPageImagesLeadSectionOnly = false;
