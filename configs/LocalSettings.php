@@ -42,12 +42,6 @@ $wgForceHTTPS = true;
 $wgResourceBasePath = $wgScriptPath;
 
 $wgStyleVersion = '20191101_0';
-$wgResourceLoaderMaxage = [
-	// 90 days
-	'versioned' => 90 * 24 * 60 * 60,
-	// 3 minutes
-	'unversioned' => 3 * 60,
-];
 
 // The URL path to the logo.
 $wgLogos = [
