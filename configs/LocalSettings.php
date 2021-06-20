@@ -907,6 +907,11 @@ $wgSpecialPages['Whatlinkshere'] = [
 ];
 $wgUnifiedExtensionForFemiwikiGoogleAnalyticsCredentialsFile = '/a/analytics-credentials-file.json';
 $wgUnifiedExtensionForFemiwikiGoogleAnalyticsProfileId = '127138848';
+$wgUnifiedExtensionForFemiwikiRelatedArticlesTargetNamespaces = [
+	NS_MAIN,
+	NS_PROJECT,
+	NS_CATEGORY,
+];
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
