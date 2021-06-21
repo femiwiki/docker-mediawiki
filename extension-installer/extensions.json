@@ -38,6 +38,7 @@
     "Nuke",
     "OATHAuth",
     "PageImages",
+    "PageViewInfo",
     "ParserFunctions",
     "Poem",
     "Popups",
@@ -78,6 +79,10 @@
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
       "version": "v1.0.1"
     },
+    "PageViewInfoGA": {
+      "template": "https://github.com/femiwiki/PageViewInfoGA/releases/download/$1/$1.tar.gz",
+      "version": "v0.1.0"
+    },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
       "version": "v1.1.6"
@@ -100,9 +105,6 @@
     },
     "EmbedVideo": {
       "template": "https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz"
-    },
-    "PageViewInfo": {
-      "template": "https://github.com/femiwiki/mediawiki-extensions-PageViewInfo/archive/a98071ad.tar.gz"
     }
   }
 }

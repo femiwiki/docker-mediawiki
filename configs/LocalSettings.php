@@ -794,6 +794,14 @@ $wgPageImagesLeadSectionOnly = false;
 // PageViewInfo
 wfLoadExtension( 'PageViewInfo' );
 
+// PageViewInfoGA
+wfLoadExtension( 'PageViewInfoGA' );
+$wgPageViewInfoGACredentialsFile = '/a/analytics-credentials-file.json';
+$wgPageViewInfoGATrackingID = 'UA-82072330-1';
+$wgPageViewInfoGAProfileId = '127138848';
+// Activate the below line at september 2021.
+// $wgPageViewInfoGAReadCustomDimensions = true
+
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
@@ -905,8 +913,6 @@ $wgSpecialPages['Whatlinkshere'] = [
 		'NamespaceInfo',
 	]
 ];
-$wgUnifiedExtensionForFemiwikiGoogleAnalyticsCredentialsFile = '/a/analytics-credentials-file.json';
-$wgUnifiedExtensionForFemiwikiGoogleAnalyticsProfileId = '127138848';
 $wgUnifiedExtensionForFemiwikiRelatedArticlesTargetNamespaces = [
 	NS_MAIN,
 	NS_PROJECT,
@@ -1105,6 +1111,12 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	$wgCaptchaTriggers['addurl'] = false;
 	$wgCaptchaTriggers['createaccount'] = false;
 	$wgCaptchaTriggers['badlogin'] = false;
+
+	// Google Analytics 기록 비활성화
+	$wgPageViewInfoGATrackingID = false;
+
+	// Google Analytics 읽어오기 비활성화
+	$wgPageViewInfoGAProfileId = false;
 }
 
 require_once '/a/Hotfix.php';
