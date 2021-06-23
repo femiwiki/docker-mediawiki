@@ -12,18 +12,18 @@ mwcache {
 		max_cost 10000
 		buffer_items 64
 	}
-  purge_acl {
-    172.0.0.0/8
-    10.0.0.0/8
-  }
+	purge_acl {
+		172.0.0.0/8
+		10.0.0.0/8
+	}
 }
 header {
-  # Enable XSS filtering for legacy browsers
-  X-XSS-Protection "1; mode=block"
-  # Block content sniffing, and enable Cross-Origin Read Blocking
-  X-Content-Type-Options "nosniff"
-  # Avoid clickjacking
-  X-Frame-Options "DENY"
+	# Enable XSS filtering for legacy browsers
+	X-XSS-Protection "1; mode=block"
+	# Block content sniffing, and enable Cross-Origin Read Blocking
+	X-Content-Type-Options "nosniff"
+	# Avoid clickjacking
+	X-Frame-Options "DENY"
 }
 
 rewrite /w/api.php /api.php
