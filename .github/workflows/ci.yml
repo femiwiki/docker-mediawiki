@@ -35,7 +35,7 @@ jobs:
           cp Caddyfile Caddyfile.orig
           docker run -v $PWD:/srv caddy \
             caddy fmt --overwrite
-          cmp Caddyfile.orig Caddyfile
+          diff Caddyfile.orig Caddyfile
 
   etc-lint:
     runs-on: ubuntu-18.04
