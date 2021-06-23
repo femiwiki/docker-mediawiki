@@ -25,6 +25,17 @@ jobs:
           composer install --prefer-source --quiet --no-interaction
           composer test
 
+  caddy-fmt:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+        run: |
+          cd development
+          docker run -v $PWD:/srv caddy \
+            caddy fmt Caddyfile \
+            > Caddyfile2
+          cmp development/Caddyfile development/Caddyfile2
+
   etc-lint:
     runs-on: ubuntu-18.04
     steps:
@@ -43,7 +54,7 @@ jobs:
           yarn --dev
           yarn run lint
 
-  docker_image:
+  docker-image:
     name: Docker image test and publishing
     runs-on: ubuntu-18.04
     steps:
