@@ -1,5 +1,10 @@
 # Auto-generated json file
 extension-installer/extensions.json
+composer.lock
 
 # composer dependencies
 /vendor/
+
+*.svg
+/resources/google*.html
+/resources/naver*.html
