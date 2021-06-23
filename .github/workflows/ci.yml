@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-        run: |
+      - run: |
           cd development
           docker run -v $PWD:/srv caddy \
             caddy fmt Caddyfile \
