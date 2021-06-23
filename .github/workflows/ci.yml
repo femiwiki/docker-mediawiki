@@ -29,12 +29,13 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - run: |
+      - name: Format caddyfile
+        run: |
           cd development
           docker run -v $PWD:/srv caddy \
             caddy fmt Caddyfile \
             > Caddyfile2
-          cmp development/Caddyfile development/Caddyfile2
+          cmp Caddyfile Caddyfile2
 
   etc-lint:
     runs-on: ubuntu-18.04
