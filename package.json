@@ -5,10 +5,12 @@
   "license": "AGPL3+",
   "scripts": {
     "lint": "prettier . --check",
-    "fix": "prettier . --write"
+    "fix": "prettier . --write",
+    "minify-svg": "svgo --config=.svgo.config.js -q -r -f resources/"
   },
   "dependencies": {
     "@prettier/plugin-xml": "^0.13.1",
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "svgo": "^2.3.1"
   }
 }
