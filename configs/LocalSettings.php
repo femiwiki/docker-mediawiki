@@ -88,7 +88,7 @@ $wgEmailAuthentication = true;
 $wgEmailConfirmToEdit = true;
 $wgEnableUserEmailBlacklist = true;
 $wgEnableSpecialMute = true;
-$wgUnwatchedPageThreshold = 3;
+$wgUnwatchedPageThreshold = 0;
 $wgWatchlistExpiry = true;
 
 // Database settings
