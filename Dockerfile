@@ -185,6 +185,14 @@ COPY scripts/ /usr/local/bin/
 COPY systemd/ /etc/systemd/system/
 
 RUN sudo -u www-data mkdir -p /srv/femiwiki.com/sitemap
+RUN systemctl \
+      generate-sitemap \
+      localisation-update \
+    enable &&\
+    systemctl \
+      generate-sitemap \
+      localisation-update \
+    start
 
 
 # Ship femiwiki resources
