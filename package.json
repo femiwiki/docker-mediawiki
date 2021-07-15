@@ -9,7 +9,7 @@
     "minify-svg": "svgo --config=.svgo.config.js -q -r -f resources/"
   },
   "dependencies": {
-    "@prettier/plugin-xml": "^0.13.1",
+    "@prettier/plugin-xml": "^1.0.1",
     "prettier": "^2.3.2",
     "svgo": "^2.3.1"
   }
