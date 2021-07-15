@@ -81,7 +81,6 @@ RUN xcaddy build \
 #   /srv/femiwiki.com      미디어위키 소스코드 및 확장들
 #   /usr/local/{bin,sbin}  임의로 설치한 실행파일들
 #   /tmp/cache             캐시 디렉토리
-#   /var/log/cron.log      크론 로그
 #   /tini                  tini
 #
 FROM --platform=$TARGETPLATFORM php:7.4.21-fpm
@@ -100,12 +99,11 @@ RUN apt-get update && apt-get install -y \
       git \
       # Required for SyntaxHighlighting
       python3 \
-      # Required for Scribunto when the machine is on aarch64 architecture
+      # Required for Scribunto when the machine is on aarch64 architecture.
       # Only 5.1.x is supported
       #   Reference: https://www.mediawiki.org/wiki/Extension:Scribunto#Additional_binaries
       lua5.1 \
       # CLI utilities
-      cron \
       sudo
 
 # Install Caddy
@@ -178,17 +176,16 @@ RUN chmod o+x /usr/bin/lua
 
 
 #
-# Install and register cron
+# Install and register systemd services
 #
-COPY cron/crontab /tmp/crontab
-RUN crontab /tmp/crontab && rm /tmp/crontab
+# Copy scripts
+COPY scripts/ /usr/local/bin/
 
-# Install 'generate-sitemap' script
+# Copy systemd services
+COPY systemd/ /etc/systemd/system/
+
 RUN sudo -u www-data mkdir -p /srv/femiwiki.com/sitemap
-COPY cron/generate-sitemap /usr/local/bin/generate-sitemap
 
-# Install 'localisation-update' script
-COPY cron/localisation-update /usr/local/bin/localisation-update
 
 # Ship femiwiki resources
 COPY --chown=www-data:www-data resources /srv/femiwiki.com/

@@ -1,2 +1,0 @@
-0 1,5,9,13,17,21 * * * /usr/local/bin/generate-sitemap >> /var/log/cron.log 2>&1
-0 5 */7 * * /usr/local/bin/localisation-update >> /var/log/cron.log 2>&1

@@ -1,0 +1,10 @@
+[Unit]
+Description=Extension:LocalisationUpdate's update.php maintenance script
+Requires=localisation-update.service
+
+[Timer]
+Unit=localisation-update.service
+OnCalendar=*-*-1/7 05:00:00
+
+[Install]
+WantedBy=timers.target

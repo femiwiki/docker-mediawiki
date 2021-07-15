@@ -1,0 +1,12 @@
+[Unit]
+Description=MediaWiki's generateSitemap.php maintenance script
+Wants=generate-sitemap.timer
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+ExecStart=/usr/local/bin/generate-sitemap
+
+[Install]
+WantedBy=multi-user.target
