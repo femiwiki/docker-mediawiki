@@ -281,6 +281,9 @@ $wgGroupPermissions['seeder']['edit'] = true;
 // Show numbers on headings
 $wgDefaultUserOptions['numberheadings'] = 1;
 
+// Do not show page content below diffs
+$wgDefaultUserOptions['diffonly'] = '1';
+
 // Enable Enhanced recent changes to opt-out
 $wgDefaultUserOptions['rcenhancedfilters-disable'] = 0;
 
