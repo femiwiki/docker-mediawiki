@@ -109,6 +109,9 @@ $wgPasswordPolicy['policies']['default']['MinimalPasswordLength'] = [
 	'value' => 8, 'suggestChangeOnLogin' => true
 ];
 
+// Enable database-intensive features
+$wgMiserMode = true;
+
 // Shared memory settings
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgSessionCacheType = CACHE_MEMCACHED;

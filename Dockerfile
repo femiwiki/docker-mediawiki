@@ -183,12 +183,12 @@ RUN chmod o+x /usr/bin/lua
 COPY cron/crontab /tmp/crontab
 RUN crontab /tmp/crontab && rm /tmp/crontab
 
-# Install 'generate-sitemap' script
+# Install scripts
 RUN sudo -u www-data mkdir -p /srv/femiwiki.com/sitemap
-COPY cron/generate-sitemap /usr/local/bin/generate-sitemap
-
-# Install 'localisation-update' script
-COPY cron/localisation-update /usr/local/bin/localisation-update
+COPY cron/generate-sitemap \
+      cron/localisation-update \
+      cron/update-special-pages \
+      /usr/local/bin/
 
 # Ship femiwiki resources
 COPY --chown=www-data:www-data resources /srv/femiwiki.com/
