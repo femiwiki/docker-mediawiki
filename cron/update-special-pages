@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Reference:
+#   https://www.mediawiki.org/wiki/Manual:UpdateSpecialPages.php
+
+set -euo pipefail; IFS=$'\n\t'
+
+cd /srv/femiwiki.com
+
+sudo -u www-data php maintenance/updateSpecialPages.php
