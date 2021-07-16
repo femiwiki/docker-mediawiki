@@ -112,6 +112,9 @@ $wgPasswordPolicy['policies']['default']['MinimalPasswordLength'] = [
 // Enable database-intensive features
 $wgMiserMode = true;
 
+// Make no jobs will be performed during ordinary requests
+$wgJobRunRate = 0;
+
 // Shared memory settings
 $wgMainCacheType = CACHE_MEMCACHED;
 $wgSessionCacheType = CACHE_MEMCACHED;

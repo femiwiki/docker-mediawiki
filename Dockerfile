@@ -188,6 +188,7 @@ RUN sudo -u www-data mkdir -p /srv/femiwiki.com/sitemap
 COPY cron/generate-sitemap \
       cron/localisation-update \
       cron/update-special-pages \
+      cron/run-jobs \
       /usr/local/bin/
 
 # Ship femiwiki resources
