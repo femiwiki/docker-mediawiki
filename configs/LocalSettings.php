@@ -799,6 +799,7 @@ wfLoadExtension( 'OATHAuth' );
 // PageImages
 wfLoadExtension( 'PageImages' );
 $wgPageImagesLeadSectionOnly = false;
+$wgPageImagesOpenGraphFallbackImage = "/fw-resources/favicons/favicon-512.png";
 
 // PageViewInfo
 wfLoadExtension( 'PageViewInfo' );
