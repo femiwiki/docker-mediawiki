@@ -8,4 +8,4 @@ set -euo pipefail; IFS=$'\n\t'
 cd /srv/femiwiki.com
 
 sudo -u www-data php maintenance/runJobs.php \
-  --maxjobs 5
+  --maxjobs 10
