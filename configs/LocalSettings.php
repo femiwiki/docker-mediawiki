@@ -913,6 +913,7 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
+$wgUnifiedExtensionForFemiwikiPreAuth = true;
 $wgSpecialPages['Whatlinkshere'] = [
 	'class' => 'MediaWiki\Extension\UnifiedExtensionForFemiwiki\Specials\SpecialOrderedWhatLinksHere',
 	'services' => [
@@ -927,6 +928,10 @@ $wgUnifiedExtensionForFemiwikiRelatedArticlesTargetNamespaces = [
 	NS_MAIN,
 	NS_PROJECT,
 	NS_CATEGORY,
+];
+$wgUnifiedExtensionForFemiwikiSoftDefaultOptions = [
+	'visualeditor-newwikitext' => 1,
+	'visualeditor-tabs' => 'prefer-ve',
 ];
 
 // UniversalLanguageSelector
