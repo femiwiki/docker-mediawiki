@@ -202,6 +202,8 @@ $wgFemiwikiAddThisId = [
 	'pub' => 'ra-5ffbebf1fd382d20',
 	'tool' => 'ucmm',
 ];
+// https://github.com/femiwiki/FemiwikiSkin/issues/14
+$wgFemiwikiLegacySmallElementsForAnonymousUser = false;
 
 //
 // Namespace settings
@@ -932,6 +934,8 @@ $wgUnifiedExtensionForFemiwikiRelatedArticlesTargetNamespaces = [
 $wgUnifiedExtensionForFemiwikiSoftDefaultOptions = [
 	'visualeditor-newwikitext' => 1,
 	'visualeditor-tabs' => 'prefer-ve',
+	// https://github.com/femiwiki/FemiwikiSkin/issues/14
+	'FemiwikiUseLargerElements' => 1,
 ];
 
 // UniversalLanguageSelector
