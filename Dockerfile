@@ -70,6 +70,7 @@ ARG CADDY_MWCACHE_COMMIT
 
 RUN xcaddy build \
       --with github.com/caddy-dns/route53 \
+      --with github.com/dgraph-io/ristretto/010=github.com/dgraph-io/ristretto@v0.1.0 \
       --with "github.com/femiwiki/caddy-mwcache@${CADDY_MWCACHE_COMMIT}"
 
 #
