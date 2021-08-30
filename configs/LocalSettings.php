@@ -684,7 +684,6 @@ require_once "$IP/extensions/HTMLTags/HTMLTags.php";
 $wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
 $wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
 $wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
-$wgHTMLTagsAttributes['iframe'] = [ 'src', 'class', 'style' ];
 
 // InputBox
 wfLoadExtension( 'InputBox' );
