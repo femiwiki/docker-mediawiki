@@ -1,5 +1,5 @@
 ARG MEDIAWIKI_VERSION=1.36.1
-ARG CADDY_MWCACHE_COMMIT=256dee73df22f736d6ceb0f0d9d27d4ff50249da
+ARG CADDY_MWCACHE_COMMIT=8322c2622509823908230c93ec3ba092d81e5015
 
 ARG TINI_VERSION=0.18.0
 
@@ -70,7 +70,6 @@ ARG CADDY_MWCACHE_COMMIT
 
 RUN xcaddy build \
       --with github.com/caddy-dns/route53 \
-      --with github.com/dgraph-io/ristretto/010=github.com/dgraph-io/ristretto@v0.1.0 \
       --with "github.com/femiwiki/caddy-mwcache@${CADDY_MWCACHE_COMMIT}"
 
 #
