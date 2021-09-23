@@ -82,6 +82,10 @@
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
       "version": "v1.0.2"
     },
+    "DiscordRCFeed": {
+      "template": "https://github.com/femiwiki/DiscordRCFeed/releases/download/$1/$1.tar.gz",
+      "version": "v0.1.0"
+    },
     "PageViewInfoGA": {
       "template": "https://github.com/femiwiki/PageViewInfoGA/releases/download/$1/$1.tar.gz",
       "version": "v0.1.1"

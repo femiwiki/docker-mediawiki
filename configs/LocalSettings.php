@@ -547,6 +547,34 @@ $wgDiscordNotificationsExclude = [
 // See https://github.com/kulttuuri/DiscordNotifications#customize-request-call-method-fix-extension-not-working-with-visualeditor
 $wgDiscordSendMethod = 'file_get_contents';
 
+// DiscordRCFeed
+wfLoadExtension( 'DiscordRCFeed' );
+$wgRCFeeds['discord'] = [
+	'omit_bots' => true,
+	'user_tools' => [
+		[
+			'target' => 'special',
+			'special' => 'Sanctions',
+			'text' => '제재안'
+		],
+		[
+			'target' => 'talk',
+			'msg' => 'talkpagelinktext'
+		],
+		[
+			'target' => 'special',
+			'special' => 'Contributions',
+			'msg' => 'contribslink'
+		]
+	],
+	'omit_namespaces' => [
+		NS_TRANSLATIONS,
+	],
+	'omit_log_types' => [
+		'newusers',
+	],
+];
+
 // DiscussionTools
 wfLoadExtension( 'DiscussionTools' );
 $wgDiscussionToolsEnableVisual = true;

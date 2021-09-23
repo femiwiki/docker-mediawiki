@@ -122,7 +122,7 @@ ENV XDG_CONFIG_HOME /config
 ENV XDG_DATA_HOME /data
 
 # Install the PHP extensions we need
-RUN docker-php-ext-install -j8 mysqli opcache intl
+RUN docker-php-ext-install -j8 mysqli opcache intl sockets
 
 # Install the default object cache
 RUN pecl channel-update pecl.php.net
