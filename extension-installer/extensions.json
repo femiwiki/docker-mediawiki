@@ -84,7 +84,7 @@
     },
     "DiscordRCFeed": {
       "template": "https://github.com/femiwiki/DiscordRCFeed/releases/download/$1/$1.tar.gz",
-      "version": "v0.1.1"
+      "version": "v0.1.2"
     },
     "PageViewInfoGA": {
       "template": "https://github.com/femiwiki/PageViewInfoGA/releases/download/$1/$1.tar.gz",
