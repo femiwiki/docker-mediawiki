@@ -551,11 +551,22 @@ $wgDiscordSendMethod = 'file_get_contents';
 wfLoadExtension( 'DiscordRCFeed' );
 $wgRCFeeds['discord'] = [
 	'omit_bots' => true,
+	'omit_namespaces' => [
+		NS_TRANSLATIONS,
+	],
+	'omit_log_types' => [
+		'patrol',
+		'newusers',
+	],
 	'user_tools' => [
+		[
+			'target' => 'user_page',
+			'msg' => 'nstab-user'
+		],
 		[
 			'target' => 'special',
 			'special' => 'Sanctions',
-			'text' => '제재안'
+			'msg' => 'sanctions-link-on-user-page'
 		],
 		[
 			'target' => 'talk',
@@ -566,12 +577,6 @@ $wgRCFeeds['discord'] = [
 			'special' => 'Contributions',
 			'msg' => 'contribslink'
 		]
-	],
-	'omit_namespaces' => [
-		NS_TRANSLATIONS,
-	],
-	'omit_log_types' => [
-		'newusers',
 	],
 ];
 
