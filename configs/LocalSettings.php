@@ -843,8 +843,7 @@ wfLoadExtension( 'PageViewInfoGA' );
 $wgPageViewInfoGACredentialsFile = '/a/analytics-credentials-file.json';
 $wgPageViewInfoGATrackingID = 'UA-82072330-1';
 $wgPageViewInfoGAProfileId = '127138848';
-// Activate the below line at september 2021.
-// $wgPageViewInfoGAReadCustomDimensions = true
+$wgPageViewInfoGAReadCustomDimensions = true;
 
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
