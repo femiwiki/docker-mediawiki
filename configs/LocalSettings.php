@@ -587,6 +587,7 @@ $wgDiscussionToolsEnableVisual = true;
 // Echo
 wfLoadExtension( 'Echo' );
 $wgEchoMaxMentionsInEditSummary = 5;
+$wgEchoPollForUpdates = 60;
 
 // EmbedVideo
 wfLoadExtension( 'EmbedVideo' );
