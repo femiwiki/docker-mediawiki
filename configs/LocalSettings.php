@@ -514,39 +514,6 @@ $wgGroupPermissions['sysop']['disableaccount'] = true;
 // Disambiguator
 wfLoadExtension( 'Disambiguator' );
 
-// DiscordNotifications
-wfLoadExtension( 'DiscordNotifications' );
-$wgDiscordNotificationsDisplay = [
-	'user-tools' => [
-		[
-			'target' => 'special',
-			'special' => 'Sanctions',
-			'text' => '제재안'
-		],
-		[
-			'target' => 'talk',
-			'msg' => 'discordnotifications-talk'
-		],
-		[
-			'target' => 'special',
-			'special' => 'Contributions',
-			'msg' => 'discordnotifications-contribs'
-		]
-	]
-];
-$wgDiscordNotificationsActions = [
-	'new-user' => false
-];
-$wgDiscordNotificationsExclude = [
-	'page' => [
-		'patterns' => '/^Translations:/',
-	],
-	'permissions' => [ 'bot' ],
-];
-// VisualEditor setting
-// See https://github.com/kulttuuri/DiscordNotifications#customize-request-call-method-fix-extension-not-working-with-visualeditor
-$wgDiscordSendMethod = 'file_get_contents';
-
 // DiscordRCFeed
 wfLoadExtension( 'DiscordRCFeed' );
 $wgRCFeeds['discord'] = [
@@ -556,6 +523,7 @@ $wgRCFeeds['discord'] = [
 	],
 	'omit_log_types' => [
 		'patrol',
+		// To prevent abusing with names.
 		'newusers',
 	],
 	'user_tools' => [
