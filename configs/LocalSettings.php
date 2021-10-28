@@ -272,6 +272,9 @@ $wgAutopromote = [
 $wgGroupPermissions['user']['edit'] = false;
 $wgGroupPermissions['autoconfirmed']['edit'] = true;
 
+// Importer
+$wgGroupPermissions['importer']['import'] = true;
+
 // FemiwikiTeam is just a list of all Femiwiki team member
 $wgGroupPermissions['femiwiki-team']['editprotected'] = true;
 $wgGroupPermissions['femiwiki-team']['editsemiprotected'] = true;
