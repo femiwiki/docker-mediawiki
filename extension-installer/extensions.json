@@ -37,6 +37,7 @@
     "Newsletter",
     "Nuke",
     "OATHAuth",
+    "PageImages",
     "PageViewInfo",
     "ParserFunctions",
     "Poem",
@@ -70,10 +71,6 @@
     "Vector"
   ],
   "non-WMF": {
-    "PageImages": {
-      "@note": "See https://github.com/femiwiki/femiwiki/issues/158",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-PageImages/archive/4ff00f1566ea0d5929c29d10bb1fe6237064c0ab.tar.gz"
-    },
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
       "version": "v0.2.2"
