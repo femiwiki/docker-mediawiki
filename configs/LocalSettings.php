@@ -555,6 +555,9 @@ $wgRCFeeds['discord'] = [
 wfLoadExtension( 'DiscussionTools' );
 $wgDiscussionToolsEnableVisual = true;
 
+// DismissableSiteNotice
+wfLoadExtension( 'DismissableSiteNotice' );
+
 // Echo
 wfLoadExtension( 'Echo' );
 $wgEchoMaxMentionsInEditSummary = 5;

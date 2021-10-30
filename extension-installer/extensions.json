@@ -17,6 +17,7 @@
     "DisableAccount",
     "Disambiguator",
     "DiscussionTools",
+    "DismissableSiteNotice",
     "Echo",
     "EventLogging",
     "FlaggedRevs",
