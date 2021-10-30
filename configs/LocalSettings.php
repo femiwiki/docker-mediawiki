@@ -274,6 +274,7 @@ $wgGroupPermissions['autoconfirmed']['edit'] = true;
 
 // Importer
 $wgGroupPermissions['importer']['import'] = true;
+$wgGroupPermissions['importer']['importupload'] = true;
 
 // FemiwikiTeam is just a list of all Femiwiki team member
 $wgGroupPermissions['femiwiki-team']['editprotected'] = true;
