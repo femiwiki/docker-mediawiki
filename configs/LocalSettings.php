@@ -186,8 +186,17 @@ $wgDiff3 = '/usr/bin/diff3';
 $wgDefaultSkin = 'femiwiki';
 
 // Enabled skins.
-// The following skins were automatically enabled:
 wfLoadSkin( 'Vector' );
+$wgVectorDefaultSkinVersion = '2';
+$wgVectorDefaultSkinVersionForExistingAccounts = '2';
+$wgVectorDefaultSkinVersionForNewAccounts = '2';
+$wgVectorStickyHeader = [
+	'logged_in' => true,
+	'logged_out' => true,
+];
+$wgVectorLanguageInHeader = $wgVectorStickyHeader;
+$wgVectorResponsive = true;
+$wgVectorUseWvuiSearch = true;
 wfLoadSkin( 'Femiwiki' );
 $wgFemiwikiHeadItems = [
 	'fav1' => '<link rel="icon" type="image/svg+xml" sizes="any" href="/fw-resources/favicons/favicon.svg">',
