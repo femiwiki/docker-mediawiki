@@ -11,6 +11,6 @@
   "dependencies": {
     "@prettier/plugin-xml": "^1.1.0",
     "prettier": "^2.4.1",
-    "svgo": "^2.7.0"
+    "svgo": "^2.8.0"
   }
 }

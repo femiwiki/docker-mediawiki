@@ -37,7 +37,7 @@ RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/
 # 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
 # Composer로 디펜던시들을 설치한다.
 #
-FROM --platform=$TARGETPLATFORM composer:2.1.9 AS base-mediawiki
+FROM --platform=$TARGETPLATFORM composer:2.1.11 AS base-mediawiki
 
 ARG MEDIAWIKI_VERSION
 
@@ -65,7 +65,7 @@ RUN COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/med
 #
 # Caddy 스테이지. Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 #
-FROM --platform=$TARGETPLATFORM caddy:2.4.5-builder AS caddy
+FROM --platform=$TARGETPLATFORM caddy:2.4.6-builder AS caddy
 ARG CADDY_MWCACHE_COMMIT
 
 RUN xcaddy build \
@@ -84,7 +84,7 @@ RUN xcaddy build \
 #   /var/log/cron.log      크론 로그
 #   /tini                  tini
 #
-FROM --platform=$TARGETPLATFORM php:7.4.23-fpm
+FROM --platform=$TARGETPLATFORM php:7.4.25-fpm
 ARG TARGETPLATFORM
 ARG TINI_VERSION
 
