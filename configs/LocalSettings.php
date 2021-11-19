@@ -190,11 +190,10 @@ wfLoadSkin( 'Vector' );
 $wgVectorDefaultSkinVersion = '2';
 $wgVectorDefaultSkinVersionForExistingAccounts = '2';
 $wgVectorDefaultSkinVersionForNewAccounts = '2';
-$wgVectorStickyHeader = [
+$wgVectorLanguageInHeader = [
 	'logged_in' => true,
 	'logged_out' => true,
 ];
-$wgVectorLanguageInHeader = $wgVectorStickyHeader;
 $wgVectorResponsive = true;
 $wgVectorUseWvuiSearch = true;
 wfLoadSkin( 'Femiwiki' );
