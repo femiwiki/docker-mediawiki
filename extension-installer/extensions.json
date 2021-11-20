@@ -101,6 +101,9 @@
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
       "version": "v1.10.3"
     },
+    "QuickInstantCommons": {
+      "template": "https://github.com/wikimedia/mediawiki-extensions-QuickInstantCommons/archive/3682cdee4a9f778f51a79f9ebc10c2bb9598c2ec.tar.gz"
+    },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.1.tar.gz"
     },
