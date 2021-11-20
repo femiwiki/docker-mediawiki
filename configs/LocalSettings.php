@@ -838,7 +838,6 @@ wfLoadExtension( 'Poem' );
 
 // Popups
 wfLoadExtension( 'Popups' );
-$wgPopupsOptInDefaultState = '1';
 $wgDefaultUserOptions[ 'popupsreferencepreviews' ] = '1';
 
 // RelatedArticles
