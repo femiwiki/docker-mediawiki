@@ -572,6 +572,7 @@ wfLoadExtension( 'DismissableSiteNotice' );
 wfLoadExtension( 'Echo' );
 $wgEchoMaxMentionsInEditSummary = 5;
 $wgEchoPollForUpdates = 60;
+$wgEchoPerUserBlacklist = true;
 
 // EmbedVideo
 wfLoadExtension( 'EmbedVideo' );
