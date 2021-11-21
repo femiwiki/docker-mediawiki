@@ -827,10 +827,6 @@ wfLoadExtension( 'QuickInstantCommons' );
 
 // RelatedArticles
 wfLoadExtension( 'RelatedArticles' );
-$wgRelatedArticlesFooterWhitelistedSkins = [
-	'femiwiki',
-	'vector'
-];
 $wgRelatedArticlesCardLimit = 6;
 $wgRelatedArticlesDescriptionSource = 'textextracts';
 
