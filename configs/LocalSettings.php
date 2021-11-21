@@ -141,7 +141,8 @@ $wgSVGConverter = 'rsvg';
 $wgNativeImageLazyLoading = true;
 
 // InstantCommons allows wiki to use images from https://commons.wikimedia.org
-$wgUseInstantCommons = true;
+// We use Extension:QuickInstantCommons instead.
+$wgUseInstantCommons = false;
 
 // If you use ImageMagick (or any other shell command) on a
 // Linux server, this will need to be set to the name of an
@@ -839,6 +840,9 @@ wfLoadExtension( 'Poem' );
 // Popups
 wfLoadExtension( 'Popups' );
 $wgDefaultUserOptions[ 'popupsreferencepreviews' ] = '1';
+
+// QuickInstantCommons
+wfLoadExtension( 'QuickInstantCommons' );
 
 // RelatedArticles
 wfLoadExtension( 'RelatedArticles' );
