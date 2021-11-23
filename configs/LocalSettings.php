@@ -1031,6 +1031,13 @@ $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
 // Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
+// Enable Suggested values for template parameters
+$wgVisualEditorTransclusionDialogSuggestedValues = true;
+// Enable template dialog improvements
+$wgVisualEditorTransclusionDialogInlineDescriptions = true;
+$wgVisualEditorTransclusionDialogBackButton = true;
+$wgVisualEditorTransclusionDialogNewSidebar = true;
+$wgVisualEditorTemplateSearchImprovements = true;
 
 // Widgets
 require_once "$IP/extensions/Widgets/Widgets.php";
