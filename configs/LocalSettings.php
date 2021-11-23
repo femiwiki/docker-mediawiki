@@ -996,6 +996,9 @@ wfLoadExtension( 'UserMerge' );
 
 // VisualEditor
 wfLoadExtension( 'VisualEditor' );
+// Disallow switching from wikitext to visual editor if doing so may cause dirty diffs
+$wgVisualEditorAllowLossySwitching = false;
+// Namespaces in which to enable VisualEditor
 $wgVisualEditorAvailableNamespaces = [
 	NS_SPECIAL => true,
 	NS_MAIN => true,
@@ -1016,19 +1019,25 @@ $wgVisualEditorAvailableNamespaces = [
 	NS_CATEGORY_TALK => true,
 	'_merge_strategy' => 'array_plus',
 ];
+// Enable Visual diffs on history pages
+$wgVisualEditorEnableDiffPage = true;
+// Enable the Table Of Contents widget
 $wgVisualEditorEnableTocWidget = true;
+// Enable the section editing
+$wgVisualEditorEnableVisualSectionEditing = true;
 // Enable 2017 Wikitext Editor to opt-out
 $wgVisualEditorEnableWikitext = true;
 $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
-// Enable Visual diffs on history pages
-$wgVisualEditorEnableDiffPage = true;
 // Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
-// Enable the section editing
-$wgVisualEditorEnableVisualSectionEditing = true;
-// Disallow switching from wikitext to visual editor if doing so may cause dirty diffs
-$wgVisualEditorAllowLossySwitching = false;
+// Enable Suggested values for template parameters
+$wgVisualEditorTransclusionDialogSuggestedValues = true;
+// Enable template dialog improvements
+$wgVisualEditorTransclusionDialogInlineDescriptions = true;
+$wgVisualEditorTransclusionDialogBackButton = true;
+$wgVisualEditorTransclusionDialogNewSidebar = true;
+$wgVisualEditorTemplateSearchImprovements = true;
 
 // Widgets
 require_once "$IP/extensions/Widgets/Widgets.php";
