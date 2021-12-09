@@ -517,7 +517,7 @@ $wgCaptchaTriggers['create'] = false;
 $wgCaptchaTriggers['addurl'] = false;
 $wgCaptchaTriggers['badlogin'] = false;
 
-// Darkmode
+// DarkMode
 wfLoadExtension( 'DarkMode' );
 $wgDarkModeTogglePosition = 'footer';
 
