@@ -517,6 +517,10 @@ $wgCaptchaTriggers['create'] = false;
 $wgCaptchaTriggers['addurl'] = false;
 $wgCaptchaTriggers['badlogin'] = false;
 
+// DarkMode
+wfLoadExtension( 'DarkMode' );
+$wgDarkModeTogglePosition = 'footer';
+
 // Description2
 wfLoadExtension( 'Description2' );
 
