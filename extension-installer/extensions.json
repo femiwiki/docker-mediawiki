@@ -80,7 +80,7 @@
     },
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
-      "version": "v1.1.1"
+      "version": "v1.1.2"
     },
     "DiscordRCFeed": {
       "template": "https://github.com/femiwiki/DiscordRCFeed/releases/download/$1/$1.tar.gz",
