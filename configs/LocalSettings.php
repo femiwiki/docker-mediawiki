@@ -800,6 +800,10 @@ wfLoadExtension( 'Nuke' );
 // OATHAuth
 wfLoadExtension( 'OATHAuth' );
 
+// OAuth
+wfLoadExtension( 'OAuth' );
+$wgGroupPermissions['autoconfirmed']['mwoauthproposeconsumer'] = true;
+
 // PageImages
 wfLoadExtension( 'PageImages' );
 $wgPageImagesLeadSectionOnly = false;
