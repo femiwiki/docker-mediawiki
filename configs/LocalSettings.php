@@ -802,7 +802,10 @@ wfLoadExtension( 'OATHAuth' );
 
 // OAuth
 wfLoadExtension( 'OAuth' );
-$wgGroupPermissions['autoconfirmed']['mwoauthproposeconsumer'] = true;
+$wgGroupPermissions['oauthadmin']['mwoauthmanageconsumer'] = true;
+$wgGroupPermissions['user']['mwoauthmanagemygrants'] = true;
+$wgGroupPermissions['user']['mwoauthupdateownconsumer'] = true;
+$wgGroupPermissions['user']['mwoauthproposeconsumer'] = true;
 
 // PageImages
 wfLoadExtension( 'PageImages' );
