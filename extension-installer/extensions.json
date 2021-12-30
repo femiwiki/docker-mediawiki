@@ -7,7 +7,6 @@
     "CategoryTree",
     "CharInsert",
     "CheckUser",
-    "Cite",
     "CiteThisPage",
     "Citoid",
     "CodeEditor",
@@ -65,7 +64,6 @@
     "UniversalLanguageSelector",
     "UploadWizard",
     "UserMerge",
-    "VisualEditor",
     "Widgets",
     "Wikibase",
     "WikiEditor"
@@ -74,6 +72,14 @@
     "Vector"
   ],
   "non-WMF": {
+    "VisualEditor": {
+      "@note": "See https://github.com/femiwiki/femiwiki/issues/296",
+      "template": "https://github.com/femiwiki/mediawiki-extensions-VisualEditor/archive/refs/heads/REL1_37.tar.gz"
+    },
+    "Cite": {
+      "@note": "See https://github.com/femiwiki/femiwiki/issues/296",
+      "template": "https://github.com/femiwiki/mediawiki-extensions-Cite/archive/refs/heads/REL1_37.tar.gz"
+    },
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
       "version": "v0.3.0"
