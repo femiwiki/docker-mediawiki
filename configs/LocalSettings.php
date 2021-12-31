@@ -1061,6 +1061,7 @@ $wgWBRepoSettings['enableEntitySearchUI'] = false;
 $wgWBRepoSettings['siteLinkGroups'] = [ 'femiwiki' ];
 $wgWBRepoSettings['dataBridgeEnabled'] = true;
 $wgWBRepoSettings['conceptBaseUri'] = $wgCanonicalServer . str_replace( '$1', 'Item:', $wgArticlePath );
+$wgWBRepoSettings['formatterUrlProperty'] = 'P61';
 
 // WikiBase - client
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
@@ -1145,6 +1146,9 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	$wgCaptchaTriggers['addurl'] = false;
 	$wgCaptchaTriggers['createaccount'] = false;
 	$wgCaptchaTriggers['badlogin'] = false;
+
+	// 위키베이스 속성 초기화
+	$wgWBRepoSettings['formatterUrlProperty'] = null;
 
 	// Google Analytics 기록 비활성화
 	$wgPageViewInfoGATrackingID = false;
