@@ -1061,6 +1061,15 @@ $wgWBRepoSettings['enableEntitySearchUI'] = false;
 $wgWBRepoSettings['siteLinkGroups'] = [ 'femiwiki' ];
 $wgWBRepoSettings['dataBridgeEnabled'] = true;
 $wgWBRepoSettings['conceptBaseUri'] = $wgCanonicalServer . str_replace( '$1', 'Item:', $wgArticlePath );
+$wgWBRepoSettings['statementSections'] = [
+	'item' => [
+		'statements' => null,
+		'identifiers' => [
+			'type' => 'dataType',
+			'dataTypes' => [ 'external-id' ],
+		],
+	],
+];
 $wgWBRepoSettings['formatterUrlProperty'] = 'P61';
 
 // WikiBase - client
