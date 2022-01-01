@@ -74,7 +74,7 @@
   "non-WMF": {
     "VisualEditor": {
       "@note": "See https://github.com/femiwiki/femiwiki/issues/296",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-VisualEditor/archive/refs/heads/REL1_37.tar.gz"
+      "template": "https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_37/REL1_37.tar.gz"
     },
     "Cite": {
       "@note": "See https://github.com/femiwiki/femiwiki/issues/296",
