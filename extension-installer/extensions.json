@@ -111,7 +111,7 @@
     },
     "QuickInstantCommons": {
       "template": "https://github.com/wikimedia/mediawiki-extensions-QuickInstantCommons/archive/refs/tags/$1.tar.gz",
-      "version": "v1.1"
+      "version": "v1.4"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.1.tar.gz"
