@@ -255,7 +255,6 @@ $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
 // Permission
 $wgGroupPermissions['*']['createaccount'] = true;
-$wgGroupPermissions['sysop']['usermerge'] = true;
 $wgGroupPermissions['sysop']['renameuser'] = true;
 $wgGroupPermissions['sysop']['interwiki'] = true;
 $wgGroupPermissions['sysop']['import'] = false;
@@ -1001,9 +1000,6 @@ $wgAddGroups['sysop']['upwizcampeditors'] = false;
 $wgRemoveGroups['sysop']['upwizcampeditors'] = false;
 $wgAddGroups['bureaucrat']['upwizcampeditors'] = true;
 $wgRemoveGroups['bureaucrat']['upwizcampeditors'] = true;
-
-// UserMerge
-wfLoadExtension( 'UserMerge' );
 
 // VisualEditor
 wfLoadExtension( 'VisualEditor' );
