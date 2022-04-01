@@ -1,4 +1,4 @@
-ARG MEDIAWIKI_VERSION=1.37.1
+ARG MEDIAWIKI_VERSION=1.37.2
 ARG CADDY_MWCACHE_COMMIT=8322c2622509823908230c93ec3ba092d81e5015
 
 ARG TINI_VERSION=0.18.0
@@ -47,7 +47,9 @@ RUN apk add \
       icu-dev
 
 # Install the PHP extensions we need
-RUN docker-php-ext-install -j8 intl
+RUN docker-php-ext-install -j8 \
+    intl \
+    calendar
 
 COPY --from=base-extension /tmp/mediawiki /tmp/mediawiki
 
