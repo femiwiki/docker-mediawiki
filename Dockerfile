@@ -47,7 +47,9 @@ RUN apk add \
       icu-dev
 
 # Install the PHP extensions we need
-RUN docker-php-ext-install -j8 intl
+RUN docker-php-ext-install -j8 \
+    intl \
+    calendar
 
 COPY --from=base-extension /tmp/mediawiki /tmp/mediawiki
 
