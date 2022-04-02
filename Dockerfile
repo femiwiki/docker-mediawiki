@@ -29,7 +29,8 @@ RUN mkdir -p /tmp/mediawiki/
 COPY extension-installer/* /tmp/
 RUN bundle config set deployment 'true' &&\
     bundle config set path '/var/www/.gem' &&\
-    bundle install --gemfile /tmp/Gemfile --without development test
+    bundle config set without 'development test' &&\
+    bundle install --gemfile /tmp/Gemfile
 RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
     GEM_HOME=/var/www/.gem/ruby/3.1.0 ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
