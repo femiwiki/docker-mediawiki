@@ -31,7 +31,7 @@ RUN bundle config set deployment 'true' &&\
     bundle config set without 'development test' &&\
     bundle install --gemfile /tmp/Gemfile
 RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
-    ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
+    bundle exec ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
 #
 # 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
