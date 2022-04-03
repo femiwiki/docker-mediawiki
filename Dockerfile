@@ -23,15 +23,15 @@ RUN apk update && apk add \
 # Install aria2.conf
 COPY extension-installer/aria2.conf /root/.config/aria2/aria2.conf
 
-RUN mkdir -p /tmp/mediawiki/
+RUN mkdir /mediawiki/
 
 # Extensions and skins setup
-COPY extension-installer/* /tmp/
+COPY extension-installer/* /
 RUN bundle config set deployment 'true' &&\
     bundle config set without 'development test' &&\
-    bundle install --gemfile /tmp/Gemfile
+    bundle install
 RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
-    bundle exec ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
+    bundle exec ruby /install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
 #
 # 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
@@ -51,7 +51,7 @@ RUN docker-php-ext-install -j8 \
     intl \
     calendar
 
-COPY --from=base-extension /tmp/mediawiki /tmp/mediawiki
+COPY --from=base-extension /mediawiki /tmp/mediawiki
 
 # Create a cache directory for composer
 RUN mkdir -p /tmp/composer
