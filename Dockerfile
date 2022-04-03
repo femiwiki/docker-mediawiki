@@ -28,11 +28,10 @@ RUN mkdir -p /tmp/mediawiki/
 # Extensions and skins setup
 COPY extension-installer/* /tmp/
 RUN bundle config set deployment 'true' &&\
-    bundle config set path '/var/www/.gem' &&\
     bundle config set without 'development test' &&\
     bundle install --gemfile /tmp/Gemfile
 RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
-    GEM_HOME=/var/www/.gem/ruby/3.1.1 ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
+    ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
 #
 # 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
