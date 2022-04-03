@@ -7,7 +7,7 @@ ARG TINI_VERSION=0.18.0
 # 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM --platform=$TARGETPLATFORM ruby:3.0.3-alpine AS base-extension
+FROM --platform=$TARGETPLATFORM ruby:3.1.1-alpine AS base-extension
 
 # ARG instructions without a value inside of a build stage to use the default
 # value of an ARG declared before the first FROM use
@@ -23,15 +23,15 @@ RUN apk update && apk add \
 # Install aria2.conf
 COPY extension-installer/aria2.conf /root/.config/aria2/aria2.conf
 
-RUN mkdir -p /tmp/mediawiki/
+RUN mkdir /mediawiki/
 
 # Extensions and skins setup
-COPY extension-installer/* /tmp/
+COPY extension-installer/* /
 RUN bundle config set deployment 'true' &&\
-    bundle config set path '/var/www/.gem' &&\
-    bundle install --gemfile /tmp/Gemfile
+    bundle config set without 'development test' &&\
+    bundle install
 RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
-    GEM_HOME=/var/www/.gem/ruby/3.0.0 ruby /tmp/install_extensions.rb "${MEDIAWIKI_BRANCH}"
+    bundle exec ruby /install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
 #
 # 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
@@ -51,7 +51,7 @@ RUN docker-php-ext-install -j8 \
     intl \
     calendar
 
-COPY --from=base-extension /tmp/mediawiki /tmp/mediawiki
+COPY --from=base-extension /mediawiki /tmp/mediawiki
 
 # Create a cache directory for composer
 RUN mkdir -p /tmp/composer

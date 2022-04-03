@@ -16,7 +16,7 @@ MEDIAWIKI_BRANCH = ARGV[0]
 # Temporary directory path for downloading
 TEMP_DIRECTORY_PATH = '/tmp'
 # Target directory path for extensions and skins
-DESTINATION_PATH = '/tmp/mediawiki'
+DESTINATION_PATH = '/mediawiki'
 
 extensions_data = JSON.parse(File.read("#{__dir__}/extensions.json"))
 # WMF extensions and skins
