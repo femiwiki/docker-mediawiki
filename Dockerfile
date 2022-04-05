@@ -37,7 +37,7 @@ RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/
 # 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
 # Composer로 디펜던시들을 설치한다.
 #
-FROM --platform=$TARGETPLATFORM composer:2.3.2 AS base-mediawiki
+FROM --platform=$TARGETPLATFORM composer:2.3.3 AS base-mediawiki
 
 ARG MEDIAWIKI_VERSION
 
