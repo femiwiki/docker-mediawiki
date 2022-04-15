@@ -213,6 +213,7 @@ $wgFemiwikiAddThisId = [
 ];
 // https://github.com/femiwiki/FemiwikiSkin/issues/14
 $wgFemiwikiLegacySmallElementsForAnonymousUser = false;
+$wgDefaultUserOptions['FemiwikiUseLargerElements'] = 1;
 
 //
 // Namespace settings
@@ -936,12 +937,6 @@ $wgUnifiedExtensionForFemiwikiRelatedArticlesTargetNamespaces = [
 	NS_PROJECT,
 	NS_CATEGORY,
 ];
-$wgUnifiedExtensionForFemiwikiSoftDefaultOptions = [
-	'visualeditor-newwikitext' => 1,
-	'visualeditor-tabs' => 'prefer-ve',
-	// https://github.com/femiwiki/FemiwikiSkin/issues/14
-	'FemiwikiUseLargerElements' => 1,
-];
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
@@ -1037,7 +1032,7 @@ $wgVisualEditorEnableWikitext = true;
 $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
 // Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
-$wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
+$wgDefaultUserOptions['visualeditor-tabs'] = 'prefer-ve';
 // Enable Suggested values for template parameters
 $wgVisualEditorTransclusionDialogSuggestedValues = true;
 // Enable template dialog improvements
