@@ -45,6 +45,7 @@
     "ParserFunctions",
     "Poem",
     "Popups",
+    "QuickInstantCommons",
     "RelatedArticles",
     "Renameuser",
     "ReplaceText",
@@ -102,15 +103,12 @@
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
       "version": "v1.10.10"
     },
-    "QuickInstantCommons": {
-      "template": "https://github.com/wikimedia/mediawiki-extensions-QuickInstantCommons/archive/refs/tags/$1.tar.gz",
-      "version": "v1.4"
-    },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.1.tar.gz"
     },
     "EmbedVideo": {
-      "template": "https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz"
+      "template": "https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/$1/EmbedVideo-$1.tar.gz",
+      "version": "v2.9.0"
     }
   }
 }
