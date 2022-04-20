@@ -806,6 +806,17 @@ $wgGroupPermissions['oauthadmin']['mwoauthmanageconsumer'] = true;
 $wgGroupPermissions['user']['mwoauthmanagemygrants'] = true;
 $wgGroupPermissions['user']['mwoauthupdateownconsumer'] = true;
 $wgGroupPermissions['user']['mwoauthproposeconsumer'] = true;
+$wgOAuth2PublicKey = <<<EOK
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6yeSdmuGv4xyXD9idrQM
+oCqMbLIcPQg+mS6Qx0wig7sEihVikCntxhfW2VwtdnoEdDmuw1ClXBRhXAm/9IVV
+tCzdlp4emZBDUAEhPJ/UKJ8LwM4oLzh4LJ3ldaUsu0gUW6Ihu0vsfb7YssYwHiod
+Qzp1bkU7hhyyGYMbrb5eoDfzTnok9lnKXOkcAIRuK6SIQLCdoVZ5IDXUQ83zMxen
+/uCN15Y+aqMKWhuXK+o9D8AIY49pdTRbr9/6GUyOPfn81JEisxRwJK+jyDd/1SlY
+8pjLYSIfq5UsOgeoTt7QFuBzyjG0aZ0kZ5T/M+MeDYUy1Uck0b4OV9Jh4n4m/KVe
++QIDAQAB
+-----END PUBLIC KEY-----
+EOK;
 
 // PageImages
 wfLoadExtension( 'PageImages' );
