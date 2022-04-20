@@ -169,11 +169,6 @@ RUN sudo -u www-data mkdir -p /tmp/file-cache /tmp/cache
 # Reference: https://www.mediawiki.org/wiki/Extension:Widgets
 RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 
-# Web server should be able to READ 'extensions/FlaggedRevs/frontend/modules'
-# directory Required by 'FlaggedRevs' extension
-# Reference: https://www.mediawiki.org/wiki/Extension:FlaggedRevs
-RUN chmod o+r /srv/femiwiki.com/extensions/FlaggedRevs/frontend/modules
-
 # Web server should be able to execute lua binary
 # Reference: https://www.mediawiki.org/wiki/Extension:Scribunto#Additional_binaries
 RUN chmod o+x /usr/bin/lua
