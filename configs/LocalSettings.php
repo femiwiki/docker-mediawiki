@@ -434,7 +434,6 @@ $wgVirtualRestConfig = [
 
 $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
 $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
-$wgMathFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 
 wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
 
@@ -723,8 +722,6 @@ wfLoadExtension( 'LoginNotify' );
 // Math
 wfLoadExtension( 'Math' );
 $wgDefaultUserOptions['math'] = 'mathml';
-// IP of Mathoid server
-$wgMathMathMLUrl = 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_mathoid' ) ?: 'mathoid:10044' );
 
 // MobileFrontend
 wfLoadExtension( 'MobileFrontend' );
