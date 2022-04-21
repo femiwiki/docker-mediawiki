@@ -34,9 +34,6 @@ $wgEnableCanonicalServerLink = true;
 // Make the HTTP to HTTPS redirect be unconditional
 $wgForceHTTPS = true;
 
-// The URL path to static resources (images, scripts, etc.)
-$wgResourceBasePath = $wgScriptPath;
-
 $wgStyleVersion = '20191101_0';
 
 // The URL path to the logo.
@@ -67,20 +64,13 @@ $wgSMTP = [
 //
 // Reference:
 // - https://www.mediawiki.org/wiki/Help:User_preference_option
-$wgEnableEmail = true;
 // UPO
-$wgEnableUserEmail = true;
 $wgAllowHTMLEmail = true;
-$wgUserEmailUseReplyTo = true;
 
 $wgEmergencyContact = 'admin@femiwiki.com';
 $wgPasswordSender = 'admin@femiwiki.com';
 
 // UPO
-$wgEnotifUserTalk = false;
-// UPO
-$wgEnotifWatchlist = false;
-$wgEmailAuthentication = true;
 $wgEmailConfirmToEdit = true;
 $wgEnableUserEmailBlacklist = true;
 $wgEnableSpecialMute = true;
@@ -90,9 +80,6 @@ $wgWatchlistExpiry = true;
 // Database settings
 $wgDBtype = 'mysql';
 $wgDBname = 'femiwiki';
-
-// MySQL specific settings
-$wgDBprefix = '';
 
 // MySQL table options to use during installation or update
 $wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
@@ -135,10 +122,6 @@ $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = '/usr/bin/convert';
 $wgSVGConverter = 'rsvg';
 $wgNativeImageLazyLoading = true;
-
-// InstantCommons allows wiki to use images from https://commons.wikimedia.org
-// We use Extension:QuickInstantCommons instead.
-$wgUseInstantCommons = false;
 
 // Set $wgCacheDirectory to a writable directory on the web server
 // to make your wiki go slightly faster. The directory should not
