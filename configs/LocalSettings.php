@@ -72,7 +72,7 @@ $wgPasswordSender = 'admin@femiwiki.com';
 
 // UPO
 $wgEmailConfirmToEdit = true;
-$wgEnableUserEmailBlacklist = true;
+$wgEnableUserEmailMuteList = true;
 $wgEnableSpecialMute = true;
 $wgUnwatchedPageThreshold = 0;
 $wgWatchlistExpiry = true;
