@@ -569,8 +569,6 @@ $wgFlaggedRevsNamespaces = [
 ];
 // Use FlaggedRevs only as a protection-like mechanism
 $wgFlaggedRevsProtection = true;
-// Disable Special:ValidationStatistics updates
-$wgFlaggedRevsStatsAge = false;
 // Changes the settings of stable revisions of any page
 // FR_SHOW_STABLE_ALWAYS is 1.
 $wgDefaultUserOptions[ 'flaggedrevsstable' ] = 1;
