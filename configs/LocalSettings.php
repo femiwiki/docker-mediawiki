@@ -197,6 +197,7 @@ $wgVectorLanguageInHeader = [
 ];
 $wgVectorResponsive = true;
 $wgVectorUseWvuiSearch = true;
+
 wfLoadSkin( 'Femiwiki' );
 $wgFemiwikiHeadItems = [
 	'fav1' => '<link rel="icon" type="image/svg+xml" sizes="any" href="/fw-resources/favicons/favicon.svg">',
@@ -206,14 +207,10 @@ $wgFemiwikiHeadItems = [
 	'fav6' => '<link rel="manifest" href="/fw-resources/favicons/manifest.json">',
 	'fav7' => '<meta name="theme-color" content="#aca6e4">',
 ];
-$wgFemiwikiTwitterAccount = 'femiwikidotcome';
 $wgFemiwikiAddThisId = [
 	'pub' => 'ra-5ffbebf1fd382d20',
 	'tool' => 'ucmm',
 ];
-// https://github.com/femiwiki/FemiwikiSkin/issues/14
-$wgFemiwikiLegacySmallElementsForAnonymousUser = false;
-$wgDefaultUserOptions['FemiwikiUseLargerElements'] = 1;
 
 //
 // Namespace settings
