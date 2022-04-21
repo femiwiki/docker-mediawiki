@@ -68,7 +68,8 @@
     "VisualEditor",
     "Widgets",
     "Wikibase",
-    "WikiEditor"
+    "WikiEditor",
+    "WikiSEO"
   ],
   "WMF-skins": [
     "Vector"

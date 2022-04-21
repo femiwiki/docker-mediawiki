@@ -1089,6 +1089,11 @@ $wgDefaultUserOptions['wikieditor-publish'] = 1;
 $wgHiddenPrefs[] = 'usebetatoolbar';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 
+// WikiSEO
+wfLoadExtension( 'WikiSEO' );
+$wgFacebookAppID = '1937597133150935';
+$wgTwitterSiteHandle = '@femiwikidotcome';
+
 //
 // Load secret.php
 //
