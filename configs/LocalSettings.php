@@ -31,10 +31,6 @@ $wgCanonicalServer = 'https://femiwiki.com';
 $wgInternalServer = 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' );
 $wgEnableCanonicalServerLink = true;
 
-// Determines how section IDs should be encoded
-// Must be either [ 'html5', 'legacy' ] or [ 'html5' ] for DiscussionTools
-$wgFragmentMode = [ 'html5', 'legacy' ];
-
 // Make the HTTP to HTTPS redirect be unconditional
 $wgForceHTTPS = true;
 
