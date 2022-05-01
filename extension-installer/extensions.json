@@ -32,7 +32,6 @@
     "Josa",
     "Linter",
     "LoginNotify",
-    "Math",
     "MobileFrontend",
     "Newsletter",
     "Nuke",
@@ -70,6 +69,10 @@
     "Vector"
   ],
   "non-WMF": {
+    "Math": {
+      "@note": "See https://github.com/femiwiki/femiwiki/issues/304",
+      "template": "https://github.com/femiwiki/mediawiki-extensions-Math/archive/refs/heads/REL1_37-fw.tar.gz"
+    },
     "VisualEditor": {
       "@note": "See https://github.com/femiwiki/femiwiki/issues/296",
       "template": "https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_37/REL1_37.tar.gz"

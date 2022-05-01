@@ -55,8 +55,6 @@ services:
       - MEDIAWIKI_APIS_URI=http://http:8080/api.php
       - MEDIAWIKI_APIS_DOMAIN=127.0.0.1
       - PARSOID_URI=http://http:8080/rest.php
-  mathoid:
-    image: ghcr.io/femiwiki/mathoid:latest
 
 volumes:
   database:
