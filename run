@@ -30,9 +30,6 @@ ln -sf /a/LocalSettings.php /srv/femiwiki.com/LocalSettings.php
 if [ -z "${MEDIAWIKI_SKIP_UPDATE:-}" ]; then
   /srv/femiwiki.com/maintenance/update.php --quick
 fi
-# Update localisations for MediaWiki messages in the background
-# Temporarily disabled @See https://github.com/femiwiki/mediawiki/issues/216
-# php /srv/femiwiki.com/extensions/LocalisationUpdate/update.php &
 
 # Add Femiwiki to the sites table
 if [ -z "${MEDIAWIKI_SKIP_IMPORT_SITES:-}" ]; then
