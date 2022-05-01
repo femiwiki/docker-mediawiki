@@ -700,23 +700,6 @@ wfLoadExtension( 'Josa' );
 // Linter
 wfLoadExtension( 'Linter' );
 
-// LocalisationUpdate
-wfLoadExtension( 'LocalisationUpdate' );
-$wgLocalisationUpdateRepositories = [
-	'github' => [
-		'mediawiki' => 'https://raw.github.com/wikimedia/mediawiki/master/%PATH%',
-		'extension' => 'https://raw.github.com/wikimedia/mediawiki-extensions-%NAME%/master/%PATH%',
-		'skin' => 'https://raw.github.com/wikimedia/mediawiki-skins-%NAME%/master/%PATH%'
-	],
-	'femiwiki' => [
-		'extension' => 'https://raw.github.com/femiwiki/%NAME%/main/%PATH%',
-		'skin' => 'https://raw.github.com/femiwiki/FemiwikiSkin/main/%PATH%',
-	],
-];
-$wgLocalisationUpdateHttpRequestOptions = [
-	'followRedirects' => true,
-];
-
 // LoginNotify
 wfLoadExtension( 'LoginNotify' );
 
