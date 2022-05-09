@@ -264,9 +264,6 @@ $wgGroupPermissions['femiwiki-team']['protect'] = true;
 // Remain commemorative Seeder group
 $wgGroupPermissions['seeder']['edit'] = true;
 
-// Show numbers on headings
-$wgDefaultUserOptions['numberheadings'] = 1;
-
 // Do not show page content below diffs
 $wgDefaultUserOptions['diffonly'] = '1';
 
