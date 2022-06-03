@@ -671,6 +671,7 @@ wfLoadExtension( 'LoginNotify' );
 
 // Math
 wfLoadExtension( 'Math' );
+$wgMathUseInternalRestbasePath = false;
 
 // MobileFrontend
 wfLoadExtension( 'MobileFrontend' );
