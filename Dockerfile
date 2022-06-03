@@ -183,7 +183,6 @@ RUN crontab /tmp/crontab && rm /tmp/crontab
 # Install scripts
 RUN sudo -u www-data mkdir -p /srv/femiwiki.com/sitemap
 COPY cron/generate-sitemap \
-      cron/localisation-update \
       cron/update-special-pages \
       cron/run-jobs \
       /usr/local/bin/

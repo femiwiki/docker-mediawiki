@@ -173,6 +173,7 @@ $wgVectorResponsive = true;
 $wgVectorUseWvuiSearch = true;
 
 wfLoadSkin( 'Femiwiki' );
+$wgFemiwikiAddLinkClass = true;
 $wgFemiwikiHeadItems = [
 	'fav1' => '<link rel="icon" type="image/svg+xml" sizes="any" href="/fw-resources/favicons/favicon.svg">',
 	'fav2' => '<link rel="icon" type="image/png" sizes="96x96" href="/fw-resources/favicons/favicon-96.png">',
@@ -402,7 +403,6 @@ $wgVirtualRestConfig = [
 
 $wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
 $wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
-$wgMathFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
 
 wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
 
@@ -666,31 +666,11 @@ wfLoadExtension( 'Josa' );
 // Linter
 wfLoadExtension( 'Linter' );
 
-// LocalisationUpdate
-wfLoadExtension( 'LocalisationUpdate' );
-$wgLocalisationUpdateRepositories = [
-	'github' => [
-		'mediawiki' => 'https://raw.github.com/wikimedia/mediawiki/master/%PATH%',
-		'extension' => 'https://raw.github.com/wikimedia/mediawiki-extensions-%NAME%/master/%PATH%',
-		'skin' => 'https://raw.github.com/wikimedia/mediawiki-skins-%NAME%/master/%PATH%'
-	],
-	'femiwiki' => [
-		'extension' => 'https://raw.github.com/femiwiki/%NAME%/main/%PATH%',
-		'skin' => 'https://raw.github.com/femiwiki/FemiwikiSkin/main/%PATH%',
-	],
-];
-$wgLocalisationUpdateHttpRequestOptions = [
-	'followRedirects' => true,
-];
-
 // LoginNotify
 wfLoadExtension( 'LoginNotify' );
 
 // Math
 wfLoadExtension( 'Math' );
-$wgDefaultUserOptions['math'] = 'mathml';
-// IP of Mathoid server
-$wgMathMathMLUrl = 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_mathoid' ) ?: 'mathoid:10044' );
 
 // MobileFrontend
 wfLoadExtension( 'MobileFrontend' );
@@ -1082,7 +1062,6 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ?: 'femiwiki.com';
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
 	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
-	$wgMathFullRestbaseURL = "$wgServer/$domain/";
 }
 
 // Domain is an arbitrary keyword for communicate with MediaWiki node services
@@ -1093,7 +1072,6 @@ if ( getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ) {
 	$wgVirtualRestConfig['modules']['restbase']['domain'] = $domain;
 	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
 	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
-	$wgMathFullRestbaseURL = "$wgServer/$domain/";
 }
 
 //
