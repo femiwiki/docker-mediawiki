@@ -649,7 +649,7 @@ $wgGEHomepageLoggingEnabled = false;
 wfLoadExtension( 'GuidedTour' );
 
 // HTMLTags
-require_once "$IP/extensions/HTMLTags/HTMLTags.php";
+wfLoadExtension( 'HTMLTags' );
 $wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
 $wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
 $wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
@@ -1000,7 +1000,7 @@ $wgVisualEditorTransclusionDialogNewSidebar = true;
 $wgVisualEditorTemplateSearchImprovements = true;
 
 // Widgets
-require_once "$IP/extensions/Widgets/Widgets.php";
+wfLoadExtension( 'Widgets' );
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
 // WikiBase - repo
