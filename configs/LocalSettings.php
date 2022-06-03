@@ -608,7 +608,7 @@ $wgFlowDefaultLimit = 2;
 
 // Gadgets
 wfLoadExtension( 'Gadgets' );
-$wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
+$wgGadgetsRepoClass = '\MediaWiki\Extension\Gadgets\GadgetDefinitionNamespaceRepo';
 $wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
 $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 $wgGrantPermissions['editinterface']['gadgets-edit'] = true;
