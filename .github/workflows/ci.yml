@@ -81,7 +81,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64
-          cache-from: ghcr.io/femiwiki/mediawiki:latest
+          # Disabled while bumping MW 1.37 to 1.38. This is safe to undo.
+          # cache-from: ghcr.io/femiwiki/mediawiki:latest
           cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
           load: true
           push: false
