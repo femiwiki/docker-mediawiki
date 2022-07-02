@@ -44,7 +44,7 @@ FROM --platform=$TARGETPLATFORM composer:2.3.5 AS composer
 # 미디어위키 다운로드 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
 # Composer로 디펜던시들을 설치한다.
 #
-FROM --platform=$TARGETPLATFORM php:7.4.27-fpm AS base-mediawiki
+FROM --platform=$TARGETPLATFORM composer:2.3.7 AS base-mediawiki
 
 ARG MEDIAWIKI_VERSION
 
