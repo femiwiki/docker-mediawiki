@@ -3,6 +3,7 @@
     "merge-plugin": {
       "include": [
         "extensions/AWS/composer.json",
+        "extensions/OAuth/composer.json",
         "extensions/Wikibase/composer.json"
       ]
     }
