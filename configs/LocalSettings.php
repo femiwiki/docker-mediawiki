@@ -556,7 +556,8 @@ wfLoadExtension( 'EventLogging' );
 wfLoadExtension( 'FacetedCategory' );
 
 // FlaggedRevs
-wfLoadExtension( 'FlaggedRevs' );
+// Disabled. See https://github.com/femiwiki/femiwiki/issues/309
+// wfLoadExtension( 'FlaggedRevs' );
 $wgFlaggedRevsNamespaces = [
 	NS_MAIN,
 	NS_PROJECT,
@@ -748,8 +749,7 @@ wfLoadExtension( 'Nuke' );
 wfLoadExtension( 'OATHAuth' );
 
 // OAuth
-// Disabled. See https://github.com/femiwiki/femiwiki/issues/309
-// wfLoadExtension( 'OAuth' );
+wfLoadExtension( 'OAuth' );
 $wgGroupPermissions['oauthadmin']['mwoauthmanageconsumer'] = true;
 $wgGroupPermissions['user']['mwoauthmanagemygrants'] = true;
 $wgGroupPermissions['user']['mwoauthupdateownconsumer'] = true;
