@@ -1,4 +1,4 @@
-ARG MEDIAWIKI_VERSION=1.37.2
+ARG MEDIAWIKI_VERSION=1.37.4
 ARG CADDY_MWCACHE_COMMIT=8322c2622509823908230c93ec3ba092d81e5015
 
 ARG TINI_VERSION=0.18.0
@@ -34,17 +34,25 @@ RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/
     bundle exec ruby /install_extensions.rb "${MEDIAWIKI_BRANCH}"
 
 #
-# 미디어위키 다운로드와 Composer 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
+# Composer 스테이지. Composer 이미지는 PHP 버전을 따로 설정할 수 없어 스테이지를 생성해
+# /usr/bin/composer만 복사해 사용하여야 합니다.
+# See 'PHP version & extensions' section on https://hub.docker.com/_/composer for more details.
+#
+FROM --platform=$TARGETPLATFORM composer:2.3.8 AS composer
+
+#
+# 미디어위키 다운로드 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
 # Composer로 디펜던시들을 설치한다.
 #
-FROM --platform=$TARGETPLATFORM composer:2.3.8 AS base-mediawiki
+FROM --platform=$TARGETPLATFORM php:7.4.27-fpm AS base-mediawiki
 
 ARG MEDIAWIKI_VERSION
 
 # Install dependencies and utilities
-RUN apk add \
-      # Build dependencies
-      icu-dev
+RUN apt-get update && apt-get install -y \
+      libicu-dev \
+      # https://getcomposer.org/doc/00-intro.md#system-requirements
+      git
 
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 \
@@ -57,12 +65,14 @@ COPY --from=base-extension /mediawiki /tmp/mediawiki
 RUN mkdir -p /tmp/composer
 
 # MediaWiki setup
-COPY configs/composer.local.json /tmp/mediawiki/
 RUN MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\
     curl -fSL "https://releases.wikimedia.org/mediawiki/${MEDIAWIKI_MAJOR_VERSION}/mediawiki-core-${MEDIAWIKI_VERSION}.tar.gz" -o mediawiki.tar.gz &&\
     tar -xzf mediawiki.tar.gz --strip-components=1 --directory /tmp/mediawiki/ &&\
     rm mediawiki.tar.gz
-RUN COMPOSER_HOME=/tmp/composer composer update --no-dev --working-dir '/tmp/mediawiki'
+COPY configs/composer.local.json /tmp/mediawiki/
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+RUN COMPOSER_HOME=/tmp/composer /usr/bin/composer update --no-dev --working-dir '/tmp/mediawiki'
 
 #
 # Caddy 스테이지. Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
@@ -124,7 +134,12 @@ ENV XDG_CONFIG_HOME /config
 ENV XDG_DATA_HOME /data
 
 # Install the PHP extensions we need
-RUN docker-php-ext-install -j8 mysqli opcache intl sockets
+RUN docker-php-ext-install -j8 \
+    mysqli \
+    opcache \
+    intl \
+    sockets \
+    calendar
 
 # Install the default object cache
 RUN pecl channel-update pecl.php.net
