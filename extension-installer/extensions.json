@@ -111,7 +111,7 @@
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v2.0.0"
+      "version": "v3.0.0"
     },
     "QuickInstantCommons": {
       "template": "https://github.com/wikimedia/mediawiki-extensions-QuickInstantCommons/archive/refs/tags/$1.tar.gz",
