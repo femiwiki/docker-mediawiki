@@ -1,4 +1,4 @@
-ARG MEDIAWIKI_VERSION=1.37.4
+ARG MEDIAWIKI_VERSION=1.38.2
 ARG CADDY_MWCACHE_COMMIT=8322c2622509823908230c93ec3ba092d81e5015
 
 ARG TINI_VERSION=0.18.0
@@ -170,9 +170,6 @@ RUN touch /var/log/php-fpm.log &&\
 
 # Install Mediawiki and extensions
 COPY --from=base-mediawiki --chown=www-data /tmp/mediawiki /srv/femiwiki.com
-# TODO Check whether the next line is useful whenever bumping MediaWiki versions
-# Fix https://phabricator.wikimedia.org/T264735
-RUN sed -i 's/$pipelining ? 3 : 0/CURLPIPE_MULTIPLEX/' /srv/femiwiki.com/includes/libs/http/MultiHttpClient.php
 
 # Create cache directories for mediawiki
 # $wgCacheDirectory should not be accessible from the web and writable by the web server
@@ -183,11 +180,6 @@ RUN sudo -u www-data mkdir -p /tmp/file-cache /tmp/cache
 # directory Required by 'Widgets' extension
 # Reference: https://www.mediawiki.org/wiki/Extension:Widgets
 RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
-
-# Web server should be able to READ 'extensions/FlaggedRevs/frontend/modules'
-# directory Required by 'FlaggedRevs' extension
-# Reference: https://www.mediawiki.org/wiki/Extension:FlaggedRevs
-RUN chmod o+r /srv/femiwiki.com/extensions/FlaggedRevs/frontend/modules
 
 # Web server should be able to execute lua binary
 # Reference: https://www.mediawiki.org/wiki/Extension:Scribunto#Additional_binaries

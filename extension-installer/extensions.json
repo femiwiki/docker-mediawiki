@@ -7,6 +7,7 @@
     "CategoryTree",
     "CharInsert",
     "CheckUser",
+    "Cite",
     "CiteThisPage",
     "Citoid",
     "CodeEditor",
@@ -41,6 +42,7 @@
     "ParserFunctions",
     "Poem",
     "Popups",
+    "QuickInstantCommons",
     "RelatedArticles",
     "Renameuser",
     "ReplaceText",
@@ -60,29 +62,23 @@
     "TwoColConflict",
     "UniversalLanguageSelector",
     "UploadWizard",
+    "VisualEditor",
     "Widgets",
     "Wikibase",
-    "WikiEditor"
+    "WikiEditor",
+    "WikiSEO"
   ],
   "WMF-skins": [
     "Vector"
   ],
   "non-WMF": {
     "Math": {
-      "@note": "See https://github.com/femiwiki/femiwiki/issues/304",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Math/archive/refs/heads/REL1_37-fw.tar.gz"
-    },
-    "VisualEditor": {
-      "@note": "See https://github.com/femiwiki/femiwiki/issues/296",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-VisualEditor/releases/download/REL1_37/REL1_37.tar.gz"
-    },
-    "Cite": {
-      "@note": "See https://github.com/femiwiki/femiwiki/issues/296",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Cite/archive/refs/heads/REL1_37.tar.gz"
+      "@note": "See https://github.com/femiwiki/docker-mediawiki/issues/690",
+      "template": "https://github.com/femiwiki/mediawiki-extensions-Math/archive/refs/heads/REL1_38-fw.tar.gz"
     },
     "OAuth": {
       "@note": "See https://phabricator.wikimedia.org/T307864",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Oauth/archive/refs/heads/REL1_37.tar.gz"
+      "template": "https://github.com/femiwiki/mediawiki-extensions-Oauth/archive/refs/heads/REL1_38.tar.gz"
     },
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
@@ -98,11 +94,11 @@
     },
     "PageViewInfoGA": {
       "template": "https://github.com/femiwiki/PageViewInfoGA/releases/download/$1/$1.tar.gz",
-      "version": "v0.1.2"
+      "version": "v0.2.0"
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
-      "version": "v1.2.3"
+      "version": "v1.2.4"
     },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/releases/download/$1/$1.tar.gz",
@@ -111,17 +107,14 @@
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v2.0.0"
-    },
-    "QuickInstantCommons": {
-      "template": "https://github.com/wikimedia/mediawiki-extensions-QuickInstantCommons/archive/refs/tags/$1.tar.gz",
-      "version": "v1.4"
+      "version": "v3.0.0"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.1.tar.gz"
     },
     "EmbedVideo": {
-      "template": "https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/3c2a3e8/EmbedVideo-3c2a3e8.tar.gz"
+      "template": "https://gitlab.com/hydrawiki/extensions/EmbedVideo/-/archive/$1/EmbedVideo-$1.tar.gz",
+      "version": "v2.9.0"
     }
   }
 }

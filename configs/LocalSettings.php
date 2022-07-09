@@ -31,15 +31,8 @@ $wgCanonicalServer = 'https://femiwiki.com';
 $wgInternalServer = 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' );
 $wgEnableCanonicalServerLink = true;
 
-// Determines how section IDs should be encoded
-// Must be either [ 'html5', 'legacy' ] or [ 'html5' ] for DiscussionTools
-$wgFragmentMode = [ 'html5', 'legacy' ];
-
 // Make the HTTP to HTTPS redirect be unconditional
 $wgForceHTTPS = true;
-
-// The URL path to static resources (images, scripts, etc.)
-$wgResourceBasePath = $wgScriptPath;
 
 $wgStyleVersion = '20191101_0';
 
@@ -71,22 +64,15 @@ $wgSMTP = [
 //
 // Reference:
 // - https://www.mediawiki.org/wiki/Help:User_preference_option
-$wgEnableEmail = true;
 // UPO
-$wgEnableUserEmail = true;
 $wgAllowHTMLEmail = true;
-$wgUserEmailUseReplyTo = true;
 
 $wgEmergencyContact = 'admin@femiwiki.com';
 $wgPasswordSender = 'admin@femiwiki.com';
 
 // UPO
-$wgEnotifUserTalk = false;
-// UPO
-$wgEnotifWatchlist = false;
-$wgEmailAuthentication = true;
 $wgEmailConfirmToEdit = true;
-$wgEnableUserEmailBlacklist = true;
+$wgEnableUserEmailMuteList = true;
 $wgEnableSpecialMute = true;
 $wgUnwatchedPageThreshold = 0;
 $wgWatchlistExpiry = true;
@@ -94,9 +80,6 @@ $wgWatchlistExpiry = true;
 // Database settings
 $wgDBtype = 'mysql';
 $wgDBname = 'femiwiki';
-
-// MySQL specific settings
-$wgDBprefix = '';
 
 // MySQL table options to use during installation or update
 $wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
@@ -139,15 +122,6 @@ $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = '/usr/bin/convert';
 $wgSVGConverter = 'rsvg';
 $wgNativeImageLazyLoading = true;
-
-// InstantCommons allows wiki to use images from https://commons.wikimedia.org
-// We use Extension:QuickInstantCommons instead.
-$wgUseInstantCommons = false;
-
-// If you use ImageMagick (or any other shell command) on a
-// Linux server, this will need to be set to the name of an
-// available UTF-8 locale
-$wgShellLocale = 'C.UTF-8';
 
 // Set $wgCacheDirectory to a writable directory on the web server
 // to make your wiki go slightly faster. The directory should not
@@ -197,6 +171,7 @@ $wgVectorLanguageInHeader = [
 ];
 $wgVectorResponsive = true;
 $wgVectorUseWvuiSearch = true;
+
 wfLoadSkin( 'Femiwiki' );
 $wgFemiwikiAddLinkClass = true;
 $wgFemiwikiHeadItems = [
@@ -207,13 +182,10 @@ $wgFemiwikiHeadItems = [
 	'fav6' => '<link rel="manifest" href="/fw-resources/favicons/manifest.json">',
 	'fav7' => '<meta name="theme-color" content="#aca6e4">',
 ];
-$wgFemiwikiTwitterAccount = 'femiwikidotcome';
 $wgFemiwikiAddThisId = [
 	'pub' => 'ra-5ffbebf1fd382d20',
 	'tool' => 'ucmm',
 ];
-// https://github.com/femiwiki/FemiwikiSkin/issues/14
-$wgFemiwikiLegacySmallElementsForAnonymousUser = false;
 
 //
 // Namespace settings
@@ -292,9 +264,6 @@ $wgGroupPermissions['femiwiki-team']['protect'] = true;
 
 // Remain commemorative Seeder group
 $wgGroupPermissions['seeder']['edit'] = true;
-
-// Show numbers on headings
-$wgDefaultUserOptions['numberheadings'] = 1;
 
 // Do not show page content below diffs
 $wgDefaultUserOptions['diffonly'] = '1';
@@ -597,8 +566,6 @@ $wgFlaggedRevsNamespaces = [
 ];
 // Use FlaggedRevs only as a protection-like mechanism
 $wgFlaggedRevsProtection = true;
-// Disable Special:ValidationStatistics updates
-$wgFlaggedRevsStatsAge = false;
 // Changes the settings of stable revisions of any page
 // FR_SHOW_STABLE_ALWAYS is 1.
 $wgDefaultUserOptions[ 'flaggedrevsstable' ] = 1;
@@ -641,7 +608,7 @@ $wgFlowDefaultLimit = 2;
 
 // Gadgets
 wfLoadExtension( 'Gadgets' );
-$wgGadgetsRepoClass = 'GadgetDefinitionNamespaceRepo';
+$wgGadgetsRepoClass = '\MediaWiki\Extension\Gadgets\GadgetDefinitionNamespaceRepo';
 $wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
 $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 $wgGrantPermissions['editinterface']['gadgets-edit'] = true;
@@ -682,7 +649,7 @@ $wgGEHomepageLoggingEnabled = false;
 wfLoadExtension( 'GuidedTour' );
 
 // HTMLTags
-require_once "$IP/extensions/HTMLTags/HTMLTags.php";
+wfLoadExtension( 'HTMLTags' );
 $wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
 $wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
 $wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
@@ -704,6 +671,7 @@ wfLoadExtension( 'LoginNotify' );
 
 // Math
 wfLoadExtension( 'Math' );
+$wgMathUseInternalRestbasePath = false;
 
 // MobileFrontend
 wfLoadExtension( 'MobileFrontend' );
@@ -1032,7 +1000,7 @@ $wgVisualEditorTransclusionDialogNewSidebar = true;
 $wgVisualEditorTemplateSearchImprovements = true;
 
 // Widgets
-require_once "$IP/extensions/Widgets/Widgets.php";
+wfLoadExtension( 'Widgets' );
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
 // WikiBase - repo
@@ -1070,6 +1038,11 @@ $wgDefaultUserOptions['wikieditor-preview'] = 1;
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
 $wgHiddenPrefs[] = 'usebetatoolbar';
 $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
+
+// WikiSEO
+wfLoadExtension( 'WikiSEO' );
+$wgFacebookAppID = '1937597133150935';
+$wgTwitterSiteHandle = '@femiwikidotcome';
 
 //
 // Load secret.php
