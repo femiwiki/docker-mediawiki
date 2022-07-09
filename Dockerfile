@@ -77,7 +77,7 @@ RUN COMPOSER_HOME=/tmp/composer /usr/bin/composer update --no-dev --working-dir 
 #
 # Caddy 스테이지. Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 #
-FROM --platform=$TARGETPLATFORM caddy:2.4.6-builder AS caddy
+FROM --platform=$TARGETPLATFORM caddy:2.5.1-builder AS caddy
 ARG CADDY_MWCACHE_COMMIT
 
 RUN xcaddy build \
