@@ -748,7 +748,8 @@ wfLoadExtension( 'Nuke' );
 wfLoadExtension( 'OATHAuth' );
 
 // OAuth
-wfLoadExtension( 'OAuth' );
+// Disabled. See https://github.com/femiwiki/femiwiki/issues/309
+// wfLoadExtension( 'OAuth' );
 $wgGroupPermissions['oauthadmin']['mwoauthmanageconsumer'] = true;
 $wgGroupPermissions['user']['mwoauthmanagemygrants'] = true;
 $wgGroupPermissions['user']['mwoauthupdateownconsumer'] = true;
