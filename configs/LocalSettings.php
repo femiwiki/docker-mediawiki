@@ -556,8 +556,7 @@ wfLoadExtension( 'EventLogging' );
 wfLoadExtension( 'FacetedCategory' );
 
 // FlaggedRevs
-// Disabled. See https://github.com/femiwiki/femiwiki/issues/309
-// wfLoadExtension( 'FlaggedRevs' );
+wfLoadExtension( 'FlaggedRevs' );
 $wgFlaggedRevsNamespaces = [
 	NS_MAIN,
 	NS_PROJECT,
