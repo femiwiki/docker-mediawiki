@@ -33,10 +33,12 @@
     "Josa",
     "Linter",
     "LoginNotify",
+    "Math",
     "MobileFrontend",
     "Newsletter",
     "Nuke",
     "OATHAuth",
+    "OAuth",
     "PageImages",
     "PageViewInfo",
     "ParserFunctions",
@@ -72,10 +74,6 @@
     "Vector"
   ],
   "non-WMF": {
-    "Math": {
-      "@note": "See https://github.com/femiwiki/docker-mediawiki/issues/690",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Math/archive/refs/heads/REL1_38-fw.tar.gz"
-    },
     "OAuth": {
       "@note": "See https://phabricator.wikimedia.org/T307864",
       "template": "https://github.com/femiwiki/mediawiki-extensions-Oauth/archive/refs/heads/REL1_38.tar.gz"
