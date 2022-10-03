@@ -149,3 +149,11 @@ jobs:
           tags: |
             ghcr.io/femiwiki/mediawiki:latest
             ghcr.io/femiwiki/mediawiki:${{ steps.version.outputs.version }}
+
+      - name: save docker image
+        run: docker save -o "$(pwd)/docker-mediawiki" ghcr.io/femiwiki/mediawiki:latest
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: docker-image
+          path: docker-mediawiki
