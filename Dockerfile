@@ -1,4 +1,4 @@
-ARG MEDIAWIKI_VERSION=1.39.0-rc.1
+ARG MEDIAWIKI_VERSION=1.39.0
 ARG CADDY_MWCACHE_COMMIT=8322c2622509823908230c93ec3ba092d81e5015
 
 ARG TINI_VERSION=0.18.0
@@ -44,7 +44,7 @@ FROM --platform=$TARGETPLATFORM composer:2.3.8 AS composer
 # 미디어위키 다운로드 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
 # Composer로 디펜던시들을 설치한다.
 #
-FROM --platform=$TARGETPLATFORM php:8.1.11-cli AS base-mediawiki
+FROM --platform=$TARGETPLATFORM php:8.1.13-cli AS base-mediawiki
 
 ARG MEDIAWIKI_VERSION
 
