@@ -56,6 +56,7 @@ input_file = Tempfile.new
 
 def name_to_aria2_input_line(name, type)
   branch_info_url = "https://gerrit.wikimedia.org/r/projects/mediawiki%2F#{type}s%2F#{name}/branches/#{MEDIAWIKI_BRANCH}"
+  puts "Fetching the infomation of #{name} from #{branch_info_url}"
   response = Net::HTTP.get(URI(branch_info_url))
   # Response starts with a magic prefix line ")]}'\n", so strip it.
   # See:
@@ -66,7 +67,8 @@ def name_to_aria2_input_line(name, type)
 end
 
 input_file.write(
-  Parallel.map(WMF_extensions) do |extension|
+  # There is maybe a rate limit on gerrit, so explicitly use connection pool.
+  Parallel.map(WMF_extensions, in_threads: 2) do |extension|
     name_to_aria2_input_line(extension, 'extension')
   end.join +
   Parallel.map(WMF_skins) do |skin|
