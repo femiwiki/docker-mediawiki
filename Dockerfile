@@ -96,7 +96,7 @@ RUN xcaddy build \
 #   /var/log/cron.log      크론 로그
 #   /tini                  tini
 #
-FROM --platform=$TARGETPLATFORM php:8.1.11-fpm
+FROM --platform=$TARGETPLATFORM php:8.1.13-fpm
 ARG TARGETPLATFORM
 ARG TINI_VERSION
 
