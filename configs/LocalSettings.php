@@ -700,23 +700,25 @@ $wgMFNamespacesWithoutCollapsibleSections = [
 	NS_MEDIA,
 ];
 // Disable mobile transformations to page content.
-$wgMFMobileFormatterNamespaceBlacklist = [
-	NS_MAIN,
-	NS_TALK,
-	NS_USER,
-	NS_USER_TALK,
-	NS_PROJECT,
-	NS_PROJECT_TALK,
-	NS_FILE,
-	NS_FILE_TALK,
-	NS_MEDIAWIKI,
-	NS_MEDIAWIKI_TALK,
-	NS_TEMPLATE,
-	NS_TEMPLATE_TALK,
-	NS_HELP,
-	NS_HELP_TALK,
-	NS_CATEGORY,
-	NS_CATEGORY_TALK,
+$wgMFMobileFormatterOptions = [
+	'excludeNamespaces' => [
+		NS_MAIN,
+		NS_TALK,
+		NS_USER,
+		NS_USER_TALK,
+		NS_PROJECT,
+		NS_PROJECT_TALK,
+		NS_FILE,
+		NS_FILE_TALK,
+		NS_MEDIAWIKI,
+		NS_MEDIAWIKI_TALK,
+		NS_TEMPLATE,
+		NS_TEMPLATE_TALK,
+		NS_HELP,
+		NS_HELP_TALK,
+		NS_CATEGORY,
+		NS_CATEGORY_TALK,
+	],
 ];
 $wgDefaultUserOptions['mobile-specialpages'] = false;
 // Use the user's preferred editor (i.e. visual editor or source editor)
