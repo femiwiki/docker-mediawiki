@@ -289,8 +289,6 @@ $wgDefaultUserOptions['rcfilters-saved-queries'] = FormatJson::encode( [
 // Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
-// See https://github.com/femiwiki/mediawiki/issues/211
-$wgHiddenPrefs[] = 'numberheadings';
 
 // Allow display titles not only to titles that normalize to the same canonical
 // DB key as the real page title.
