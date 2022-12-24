@@ -159,18 +159,15 @@ $wgDiff3 = '/usr/bin/diff3';
 // Default skin: you can change the default skin. Use the internal symbolic
 // names, ie 'vector', 'monobook':
 $wgDefaultSkin = 'femiwiki';
+$wgSkinsPreferred = [ 'femiwiki', 'vector-2022', 'vector' ];
 
 // Enabled skins.
 wfLoadSkin( 'Vector' );
-$wgVectorDefaultSkinVersion = '2';
-$wgVectorDefaultSkinVersionForExistingAccounts = '2';
-$wgVectorDefaultSkinVersionForNewAccounts = '2';
 $wgVectorLanguageInHeader = [
 	'logged_in' => true,
 	'logged_out' => true,
 ];
 $wgVectorResponsive = true;
-$wgVectorUseWvuiSearch = true;
 
 wfLoadSkin( 'Femiwiki' );
 $wgFemiwikiAddLinkClass = true;
