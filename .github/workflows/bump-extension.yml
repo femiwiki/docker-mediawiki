@@ -4,23 +4,42 @@ on:
   repository_dispatch:
     types: [bump-extension]
 
+  workflow_dispatch:
+    inputs:
+      ext:
+        description: The name of extension or skin
+        type: string
+
+      ver:
+        description: The version released
+        type: string
+
 jobs:
   bump-extension:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.6'
+          ruby-version: '3.1'
+
+      - uses: actions/github-script@v6
+        id: vars
+        with:
+          script: |
+            return {
+              ext: '${{github.event.client_payload.extension}}' || '${{github.event.inputs.ext}}',
+              ver: '${{github.event.client_payload.version}}' || '${{github.event.inputs.ver}}',
+            }
 
       - name: Update extensions.json
-        run: ruby .github/bump_extension.rb '${{github.event.client_payload.extension}}' '${{github.event.client_payload.version}}'
+        run: ruby .github/bump_extension.rb '${{fromJSON(steps.vars.outputs.result).ext}}' '${{fromJSON(steps.vars.outputs.result).ver}}'
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Bump ${{github.event.client_payload.extension}} to ${{github.event.client_payload.version}}
-          title: Bump ${{github.event.client_payload.extension}} to ${{github.event.client_payload.version}}
-          branch: bump-${{github.event.client_payload.extension}}
+          token: ${{secrets.GITHUB_TOKEN}}
+          commit-message: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
+          title: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
+          branch: bump-${{fromJSON(steps.vars.outputs.result).ext}}
