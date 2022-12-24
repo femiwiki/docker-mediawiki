@@ -34,8 +34,6 @@ $wgEnableCanonicalServerLink = true;
 // Make the HTTP to HTTPS redirect be unconditional
 $wgForceHTTPS = true;
 
-$wgStyleVersion = '20191101_0';
-
 // The URL path to the logo.
 $wgLogos = [
 	// 'icon' is used by modern Skin:Vector (maximally 50x50)
@@ -877,16 +875,6 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgUnifiedExtensionForFemiwikiPreAuth = true;
-$wgSpecialPages['Whatlinkshere'] = [
-	'class' => 'MediaWiki\Extension\UnifiedExtensionForFemiwiki\Specials\SpecialOrderedWhatLinksHere',
-	'services' => [
-		'DBLoadBalancer',
-		'LinkBatchFactory',
-		'ContentHandlerFactory',
-		'SearchEngineFactory',
-		'NamespaceInfo',
-	]
-];
 $wgUnifiedExtensionForFemiwikiRelatedArticlesTargetNamespaces = [
 	NS_MAIN,
 	NS_PROJECT,
@@ -988,13 +976,6 @@ $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
 // Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'prefer-ve';
-// Enable Suggested values for template parameters
-$wgVisualEditorTransclusionDialogSuggestedValues = true;
-// Enable template dialog improvements
-$wgVisualEditorTransclusionDialogInlineDescriptions = true;
-$wgVisualEditorTransclusionDialogBackButton = true;
-$wgVisualEditorTransclusionDialogNewSidebar = true;
-$wgVisualEditorTemplateSearchImprovements = true;
 
 // Widgets
 wfLoadExtension( 'Widgets' );
