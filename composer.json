@@ -1,7 +1,9 @@
 {
   "require-dev": {
     "mediawiki/mediawiki-codesniffer": "40.0.1",
-    "php-parallel-lint/php-parallel-lint": "1.3.2"
+    "php-parallel-lint/php-parallel-lint": "1.3.2",
+    "phpcompatibility/php-compatibility": "9.3.5",
+    "dealerdirect/phpcodesniffer-composer-installer": "0.7.2"
   },
   "scripts": {
     "fix": "phpcbf",
@@ -9,5 +11,10 @@
       "parallel-lint configs/LocalSettings.php configs/Hotfix.php configs/secret.php.example",
       "phpcs configs/LocalSettings.php configs/Hotfix.php configs/secret.php.example"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
