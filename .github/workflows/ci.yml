@@ -4,14 +4,13 @@ on: [push, pull_request]
 
 jobs:
   php-lint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.3'
-          tools: composer:v1
+          php-version: '7.4'
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
@@ -26,7 +25,7 @@ jobs:
           composer test
 
   caddy-fmt:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Format caddyfile
@@ -38,7 +37,7 @@ jobs:
           diff Caddyfile.orig Caddyfile
 
   etc-lint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: Get yarn cache
@@ -57,7 +56,7 @@ jobs:
 
   docker-image:
     name: Docker image test and publishing
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
 
