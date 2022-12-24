@@ -33,10 +33,12 @@
     "Josa",
     "Linter",
     "LoginNotify",
+    "Math",
     "MobileFrontend",
     "Newsletter",
     "Nuke",
     "OATHAuth",
+    "OAuth",
     "PageImages",
     "PageViewInfo",
     "ParserFunctions",
@@ -72,14 +74,6 @@
     "Vector"
   ],
   "non-WMF": {
-    "Math": {
-      "@note": "See https://github.com/femiwiki/docker-mediawiki/issues/690",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Math/archive/refs/heads/REL1_38-fw.tar.gz"
-    },
-    "OAuth": {
-      "@note": "See https://phabricator.wikimedia.org/T307864",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Oauth/archive/refs/heads/REL1_38.tar.gz"
-    },
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
       "version": "v0.3.0"
@@ -98,16 +92,16 @@
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
-      "version": "v1.2.4"
+      "version": "v1.2.5"
     },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/releases/download/$1/$1.tar.gz",
-      "version": "v3.0.2"
+      "version": "v4.0.0"
     },
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v3.0.0"
+      "version": "v3.1.0"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.11.1.tar.gz"

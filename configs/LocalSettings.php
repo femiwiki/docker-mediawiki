@@ -34,8 +34,6 @@ $wgEnableCanonicalServerLink = true;
 // Make the HTTP to HTTPS redirect be unconditional
 $wgForceHTTPS = true;
 
-$wgStyleVersion = '20191101_0';
-
 // The URL path to the logo.
 $wgLogos = [
 	// 'icon' is used by modern Skin:Vector (maximally 50x50)
@@ -159,18 +157,15 @@ $wgDiff3 = '/usr/bin/diff3';
 // Default skin: you can change the default skin. Use the internal symbolic
 // names, ie 'vector', 'monobook':
 $wgDefaultSkin = 'femiwiki';
+$wgSkinsPreferred = [ 'femiwiki', 'vector-2022', 'vector' ];
 
 // Enabled skins.
 wfLoadSkin( 'Vector' );
-$wgVectorDefaultSkinVersion = '2';
-$wgVectorDefaultSkinVersionForExistingAccounts = '2';
-$wgVectorDefaultSkinVersionForNewAccounts = '2';
 $wgVectorLanguageInHeader = [
 	'logged_in' => true,
 	'logged_out' => true,
 ];
 $wgVectorResponsive = true;
-$wgVectorUseWvuiSearch = true;
 
 wfLoadSkin( 'Femiwiki' );
 $wgFemiwikiAddLinkClass = true;
@@ -294,8 +289,6 @@ $wgDefaultUserOptions['rcfilters-saved-queries'] = FormatJson::encode( [
 // Hide some Preferences
 $wgHiddenPrefs[] = 'gender';
 $wgHiddenPrefs[] = 'realname';
-// See https://github.com/femiwiki/mediawiki/issues/211
-$wgHiddenPrefs[] = 'numberheadings';
 
 // Allow display titles not only to titles that normalize to the same canonical
 // DB key as the real page title.
@@ -427,7 +420,8 @@ $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
 // AchievementBadges
 wfLoadExtension( 'AchievementBadges' );
-$wgAchievementBadgesEnableBetaFeature = true;
+$wgAchievementBadgesReplaceEchoThankYouEdit = true;
+$wgAchievementBadgesReplaceEchoWelcome = true;
 $wgAchievementBadgesFacebookAppId = '1937597133150935';
 $wgAchievementBadgesAddThisId = [
 	'pub' => 'ra-5ffbebf1fd382d20',
@@ -706,23 +700,25 @@ $wgMFNamespacesWithoutCollapsibleSections = [
 	NS_MEDIA,
 ];
 // Disable mobile transformations to page content.
-$wgMFMobileFormatterNamespaceBlacklist = [
-	NS_MAIN,
-	NS_TALK,
-	NS_USER,
-	NS_USER_TALK,
-	NS_PROJECT,
-	NS_PROJECT_TALK,
-	NS_FILE,
-	NS_FILE_TALK,
-	NS_MEDIAWIKI,
-	NS_MEDIAWIKI_TALK,
-	NS_TEMPLATE,
-	NS_TEMPLATE_TALK,
-	NS_HELP,
-	NS_HELP_TALK,
-	NS_CATEGORY,
-	NS_CATEGORY_TALK,
+$wgMFMobileFormatterOptions = [
+	'excludeNamespaces' => [
+		NS_MAIN,
+		NS_TALK,
+		NS_USER,
+		NS_USER_TALK,
+		NS_PROJECT,
+		NS_PROJECT_TALK,
+		NS_FILE,
+		NS_FILE_TALK,
+		NS_MEDIAWIKI,
+		NS_MEDIAWIKI_TALK,
+		NS_TEMPLATE,
+		NS_TEMPLATE_TALK,
+		NS_HELP,
+		NS_HELP_TALK,
+		NS_CATEGORY,
+		NS_CATEGORY_TALK,
+	],
 ];
 $wgDefaultUserOptions['mobile-specialpages'] = false;
 // Use the user's preferred editor (i.e. visual editor or source editor)
@@ -880,16 +876,6 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgUnifiedExtensionForFemiwikiPreAuth = true;
-$wgSpecialPages['Whatlinkshere'] = [
-	'class' => 'MediaWiki\Extension\UnifiedExtensionForFemiwiki\Specials\SpecialOrderedWhatLinksHere',
-	'services' => [
-		'DBLoadBalancer',
-		'LinkBatchFactory',
-		'ContentHandlerFactory',
-		'SearchEngineFactory',
-		'NamespaceInfo',
-	]
-];
 $wgUnifiedExtensionForFemiwikiRelatedArticlesTargetNamespaces = [
 	NS_MAIN,
 	NS_PROJECT,
@@ -991,13 +977,6 @@ $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
 // Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'prefer-ve';
-// Enable Suggested values for template parameters
-$wgVisualEditorTransclusionDialogSuggestedValues = true;
-// Enable template dialog improvements
-$wgVisualEditorTransclusionDialogInlineDescriptions = true;
-$wgVisualEditorTransclusionDialogBackButton = true;
-$wgVisualEditorTransclusionDialogNewSidebar = true;
-$wgVisualEditorTemplateSearchImprovements = true;
 
 // Widgets
 wfLoadExtension( 'Widgets' );
