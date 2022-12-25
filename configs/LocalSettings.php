@@ -614,17 +614,6 @@ wfLoadExtension( 'Graph' );
 // GrowthExperiments
 wfLoadExtension( 'GrowthExperiments' );
 
-// HelpPanel
-$wgGEHelpPanelReadingModeNamespaces = [
-	NS_MAIN,
-	NS_PROJECT,
-	NS_USER,
-	NS_TEMPLATE,
-	NS_HELP,
-	NS_CATEGORY,
-	NS_MODULE,
-];
-
 // Disable SuggestedEdits which requires either CirrusSearch or ORES.
 $wgGEHomepageSuggestedEditsEnabled = false;
 
