@@ -55,6 +55,8 @@ cp configs/Hotfix.php development
 
 # In case of Docker swarm
 docker stack deploy --prune -c docker-compose.yml mediawiki
+# If you want some tweaks
+docker stack deploy --prune -c docker-compose.yml -c docker-compose.override.yml mediawiki
 # In case of Docker-compose
 docker-compose -f docker-compose.yml up
 ```
