@@ -879,6 +879,9 @@ $wgULSCompactLinksEnableAnon = true;
 // Enable ULS compact links beta feature to opt-out
 $wgDefaultUserOptions['uls-compact-links'] = 1;
 
+// UnlinkedWikibase
+wfLoadExtension( 'UnlinkedWikibase' );
+
 // UploadWizard
 wfLoadExtension( 'UploadWizard' );
 // Needed to make UploadWizard work in IE, see https://phabricator.wikimedia.org/T41877
