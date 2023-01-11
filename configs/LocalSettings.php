@@ -233,21 +233,6 @@ $wgGroupPermissions['oversight']['deleterevision'] = true;
 // Prevent anonymous users from edit pages
 $wgGroupPermissions['*']['edit'] = false;
 
-// Set when users become autoconfirmed users
-$wgAutoConfirmCount = 0;
-$wgAutoConfirmAge = 3600;
-
-$wgAutopromote = [
-	'autoconfirmed' => [ '&',
-		[ APCOND_EDITCOUNT, &$wgAutoConfirmCount ],
-		[ APCOND_AGE, &$wgAutoConfirmAge ],
-	],
-];
-
-// Allow autoconfirmed users to edit pages
-$wgGroupPermissions['user']['edit'] = false;
-$wgGroupPermissions['autoconfirmed']['edit'] = true;
-
 // Importer
 $wgGroupPermissions['importer']['import'] = true;
 $wgGroupPermissions['importer']['importupload'] = true;
