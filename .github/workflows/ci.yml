@@ -77,7 +77,7 @@ jobs:
         id: version
 
       - name: Build a test image on amd64 and cache
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64
           cache-from: ghcr.io/femiwiki/mediawiki:latest
@@ -144,7 +144,7 @@ jobs:
           path: docker-mediawiki
 
       - name: Build a multi-platform docker image and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64,linux/arm64
           cache-from: |
