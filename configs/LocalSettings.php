@@ -593,6 +593,11 @@ $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 $wgGrantPermissions['editinterface']['gadgets-edit'] = true;
 $wgGrantPermissions['editinterface']['gadgets-definition-edit'] = true;
 
+// GoogleSiteSearch
+wfLoadExtension( 'GoogleSiteSearch' );
+$wgGoogleSiteSearchCSEID = '44508684d5c0e489c';
+$wgGoogleSiteSearchAppend = true;
+
 // Graph
 wfLoadExtension( 'Graph' );
 
