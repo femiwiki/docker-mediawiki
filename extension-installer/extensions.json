@@ -81,7 +81,7 @@
     },
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
-      "version": "v1.1.3"
+      "version": "v1.1.4"
     },
     "DiscordRCFeed": {
       "template": "https://github.com/femiwiki/DiscordRCFeed/releases/download/$1/$1.tar.gz",
@@ -111,7 +111,7 @@
       "template": "https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo/archive/refs/tags/$1.tar.gz",
       "version": "v3.1.0"
     },
-    "GoogleSiteSearch":{
+    "GoogleSiteSearch": {
       "template": "https://github.com/wikimedia/mediawiki-extensions-GoogleSiteSearch/archive/$1.tar.gz",
       "version": "e121def9095fec79eb044867978a6c8b84699e31"
     }
