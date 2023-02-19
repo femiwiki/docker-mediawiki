@@ -157,3 +157,11 @@ jobs:
           tags: |
             ghcr.io/femiwiki/mediawiki:latest
             ghcr.io/femiwiki/mediawiki:${{ steps.version.outputs.version }}
+
+      - name: Submit a PR to our nomad repository
+        if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          gh workflow run -R femiwiki/nomad bump-mediawiki.yml \
+            -f tag=${{ steps.version.outputs.version }}
