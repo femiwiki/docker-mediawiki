@@ -958,7 +958,7 @@ $wgVisualEditorEnableWikitext = true;
 $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
 // Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
-$wgDefaultUserOptions['visualeditor-tabs'] = 'prefer-ve';
+$wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 
 // Widgets
 wfLoadExtension( 'Widgets' );
