@@ -403,6 +403,9 @@ $wgGroupPermissions['sysop']['abusefilter-privatedetails'] = false;
 $wgGroupPermissions['checkuser']['abusefilter-privatedetails'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
+// AdvancedSearch
+wfLoadExtension( 'AdvancedSearch' );
+
 // AchievementBadges
 wfLoadExtension( 'AchievementBadges' );
 $wgAchievementBadgesReplaceEchoThankYouEdit = true;

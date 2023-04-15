@@ -1,6 +1,7 @@
 {
   "WMF-extensions": [
     "AbuseFilter",
+    "AdvancedSearch",
     "AntiSpoof",
     "BetaFeatures",
     "BounceHandler",
