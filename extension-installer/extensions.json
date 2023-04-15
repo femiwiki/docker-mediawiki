@@ -112,7 +112,7 @@
     },
     "EmbedVideo": {
       "template": "https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo/archive/refs/tags/$1.tar.gz",
-      "version": "v3.1.0"
+      "version": "v3.2.6"
     },
     "GoogleSiteSearch": {
       "template": "https://github.com/wikimedia/mediawiki-extensions-GoogleSiteSearch/archive/$1.tar.gz",
