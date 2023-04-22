@@ -602,7 +602,8 @@ $wgGoogleSiteSearchCSEID = '44508684d5c0e489c';
 $wgGoogleSiteSearchAppend = true;
 
 // Graph
-wfLoadExtension( 'Graph' );
+// https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/EWL4AGBEZEDMNNFTM4FRD4MHOU3CVESO/
+// wfLoadExtension( 'Graph' );
 
 // GrowthExperiments
 wfLoadExtension( 'GrowthExperiments' );
