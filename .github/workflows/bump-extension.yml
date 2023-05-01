@@ -37,7 +37,7 @@ jobs:
         run: ruby .github/bump_extension.rb '${{fromJSON(steps.vars.outputs.result).ext}}' '${{fromJSON(steps.vars.outputs.result).ver}}'
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           commit-message: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
