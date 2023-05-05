@@ -41,6 +41,7 @@
     "OAuth",
     "PageImages",
     "PageViewInfo",
+    "PageViewInfoGA",
     "ParserFunctions",
     "Poem",
     "Popups",
@@ -90,10 +91,6 @@
     "DiscordRCFeed": {
       "template": "https://github.com/femiwiki/DiscordRCFeed/releases/download/$1/$1.tar.gz",
       "version": "v1.0.2"
-    },
-    "PageViewInfoGA": {
-      "template": "https://github.com/femiwiki/PageViewInfoGA/releases/download/$1/$1.tar.gz",
-      "version": "v0.2.1"
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
