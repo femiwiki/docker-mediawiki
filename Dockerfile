@@ -44,7 +44,7 @@ FROM --platform=$TARGETPLATFORM composer:2.5.8 AS composer
 # 미디어위키 다운로드 스테이지. 다운받은 확장기능에 더해 미디어위키를 추가로 받고
 # Composer로 디펜던시들을 설치한다.
 #
-FROM --platform=$TARGETPLATFORM php:8.1.13-cli AS base-mediawiki
+FROM --platform=$TARGETPLATFORM php:8.1.18-cli AS base-mediawiki
 
 ARG MEDIAWIKI_VERSION
 
@@ -97,7 +97,7 @@ RUN XCADDY_DEBUG=1 xcaddy build v2.7.3 \
 #   /var/log/cron.log      크론 로그
 #   /tini                  tini
 #
-FROM --platform=$TARGETPLATFORM php:8.1.13-fpm
+FROM --platform=$TARGETPLATFORM php:8.1.18-fpm
 ARG TARGETPLATFORM
 ARG TINI_VERSION
 
