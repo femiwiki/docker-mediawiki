@@ -24,7 +24,6 @@
     "EventLogging",
     "FlaggedRevs",
     "Flow",
-    "GoogleSiteSearch",
     "Graph",
     "GrowthExperiments",
     "GuidedTour",
@@ -79,7 +78,7 @@
   "non-WMF": {
     "Gadgets": {
       "@note": "See https://github.com/femiwiki/remote-gadgets/issues/33",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Gadgets/archive/refs/heads/REL1_40.tar.gz"
+      "template": "https://github.com/femiwiki/mediawiki-extensions-Gadgets/archive/refs/heads/REL1_39.tar.gz"
     },
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
@@ -104,7 +103,7 @@
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v3.3.0"
+      "version": "v4.0.0"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.12.0.tar.gz"
@@ -112,6 +111,10 @@
     "EmbedVideo": {
       "template": "https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo/archive/refs/tags/$1.tar.gz",
       "version": "v3.2.6"
+    },
+    "GoogleSiteSearch": {
+      "template": "https://github.com/wikimedia/mediawiki-extensions-GoogleSiteSearch/archive/$1.tar.gz",
+      "version": "e121def9095fec79eb044867978a6c8b84699e31"
     }
   }
 }
