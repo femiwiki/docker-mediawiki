@@ -10,3 +10,6 @@
 # npm dependencies
 /node_modules/
 yarn-error.log
+
+# Ruby
+/extension-installer/vendor
