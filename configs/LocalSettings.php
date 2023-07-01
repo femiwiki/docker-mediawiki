@@ -459,7 +459,7 @@ wfLoadExtension( 'CodeMirror' );
 
 // ConfirmEdit
 wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha' ] );
-$wgCaptchaClass = 'ReCaptchaNoCaptcha';
+$wgCaptchaClass = 'MediaWiki\Extension\ConfirmEdit\ReCaptchaNoCaptcha';
 $wgCaptchaTriggers['createaccount'] = true;
 // If you plan to use VisualEditor forget about this new and better No Captcha solution from Google.
 $wgCaptchaTriggers['edit'] = false;
