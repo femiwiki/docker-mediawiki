@@ -69,7 +69,7 @@ docker-compose -f docker-compose.yml up
 
 ```bash
 # 도커이미지 빌드
-docker build -t femiwiki/mediawiki .
+docker build -t femiwiki/mediawiki:dev .
 # 수정된 도커이미지를 실행할때엔 아래와 같이
 docker service update --force femiwiki_fastcgi
 
