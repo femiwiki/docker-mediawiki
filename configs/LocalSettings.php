@@ -919,8 +919,6 @@ $wgRemoveGroups['bureaucrat']['upwizcampeditors'] = true;
 
 // VisualEditor
 wfLoadExtension( 'VisualEditor' );
-// Disallow switching from wikitext to visual editor if doing so may cause dirty diffs
-$wgVisualEditorAllowLossySwitching = false;
 // Namespaces in which to enable VisualEditor
 $wgVisualEditorAvailableNamespaces = [
 	NS_SPECIAL => true,
