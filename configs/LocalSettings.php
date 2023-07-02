@@ -354,13 +354,6 @@ $wgParsoidSettings = [
 	'linting' => true
 ];
 
-# Disable "zero configuration" VisualEditor
-# zero-conf VisualEditor assumes that all the services are served as the same host. ('/' for
-# MediaWiki, '/rest.php/<domain>/v3/' for Parsoid and '/restbase/<domain>/v1/' for RESTBase)
-# It is not our use case, we are serving those services behind the orchestration tool, Docker or
-# Nomad and a variety of addresses are used.
-$wgVisualEditorParsoidAutoConfig = false;
-
 $wgVirtualRestConfig = [
 	'modules' => [
 		'parsoid' => [
