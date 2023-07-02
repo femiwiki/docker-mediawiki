@@ -555,7 +555,6 @@ $wgGroupPermissions['*']['unreviewedpages'] = true;
 
 // Flow
 wfLoadExtension( 'Flow' );
-$wgFlowEditorList = [ 'visualeditor', 'none' ];
 foreach ( [
 	NS_TALK,
 	NS_USER_TALK,
