@@ -52,10 +52,11 @@ ARG MEDIAWIKI_VERSION
 RUN apt-get update && apt-get install -y \
       libicu-dev \
       # https://getcomposer.org/doc/00-intro.md#system-requirements
-      git
+      git \
+      unzip
 
 # Install the PHP extensions we need
-RUN docker-php-ext-install -j8 \
+RUN IPE_DEBUG=1 docker-php-ext-install -j8 \
     intl \
     calendar
 
