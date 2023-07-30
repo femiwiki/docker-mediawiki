@@ -81,7 +81,7 @@ RUN COMPOSER_HOME=/tmp/composer /usr/bin/composer update --no-dev --working-dir 
 FROM --platform=$TARGETPLATFORM caddy:2.6.4-builder AS caddy
 ARG CADDY_MWCACHE_COMMIT
 
-RUN xcaddy build \
+RUN XCADDY_DEBUG=1 xcaddy build \
       --with github.com/caddy-dns/route53 \
       --with "github.com/femiwiki/caddy-mwcache@${CADDY_MWCACHE_COMMIT}"
 
