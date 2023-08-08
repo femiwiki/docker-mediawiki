@@ -28,7 +28,6 @@ services:
       - l18n_cache:/tmp/cache
     environment:
       - MEDIAWIKI_SERVER=http://127.0.0.1:8080
-      - MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE=127.0.0.1
       - MEDIAWIKI_DEBUG_MODE=1
     depends_on:
       - mysql
@@ -49,12 +48,6 @@ services:
           - DB_HOSTNAME # secret.php.example에 적힌 기본값
   memcached:
     image: memcached:1-alpine
-  restbase:
-    image: ghcr.io/femiwiki/restbase:latest
-    environment:
-      - MEDIAWIKI_APIS_URI=http://http:8080/api.php
-      - MEDIAWIKI_APIS_DOMAIN=127.0.0.1
-      - PARSOID_URI=http://http:8080/rest.php
 
 volumes:
   database:
