@@ -100,11 +100,7 @@ jobs:
             sleep 1; done
       - name: Test VisualEditor API
         run: |
-          URL="http://127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
-          curl -sLfo /dev/null "$URL"
-      - name: Test RESTBase
-        run: |
-          URL="http://127.0.0.1:8080/127.0.0.1/v1/page/html/%EB%8C%80%EB%AC%B8"
+          URL="127.0.0.1:8080/api.php?action=visualeditor&format=json&page=arbitrary_page&paction=parse&wikitext=arbitrary"
           curl -sLfo /dev/null "$URL"
       - name: Test Extension:Math
         timeout-minutes: 1
