@@ -23,7 +23,7 @@
     "Echo",
     "EventLogging",
     "FlaggedRevs",
-    "Flow",
+    "GoogleSiteSearch",
     "Graph",
     "GrowthExperiments",
     "GuidedTour",
@@ -77,8 +77,12 @@
   ],
   "non-WMF": {
     "Gadgets": {
-      "@note": "See https://github.com/femiwiki/remote-gadgets/issues/33",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Gadgets/archive/refs/heads/REL1_39.tar.gz"
+      "@note": "https://github.com/femiwiki/remote-gadgets/issues/33",
+      "template": "https://github.com/femiwiki/mediawiki-extensions-Gadgets/archive/refs/heads/REL1_40.tar.gz"
+    },
+    "Flow": {
+      "@note": "https://lists.wikimedia.org/hyperkitty/list/mediawiki-l@lists.wikimedia.org/thread/MEM3ZPLZVVAUV7ZVDZB2CSNC4ENRJY7Y/",
+      "template": "https://github.com/femiwiki/mediawiki-extensions-Flow/releases/download/REL1_40/REL1_40.tar.gz"
     },
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
@@ -110,11 +114,7 @@
     },
     "EmbedVideo": {
       "template": "https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo/archive/refs/tags/$1.tar.gz",
-      "version": "v3.2.6"
-    },
-    "GoogleSiteSearch": {
-      "template": "https://github.com/wikimedia/mediawiki-extensions-GoogleSiteSearch/archive/$1.tar.gz",
-      "version": "e121def9095fec79eb044867978a6c8b84699e31"
+      "version": "v3.2.8"
     }
   }
 }
