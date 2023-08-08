@@ -354,29 +354,6 @@ $wgParsoidSettings = [
 	'linting' => true
 ];
 
-$wgVirtualRestConfig = [
-	'modules' => [
-		'parsoid' => [
-			'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' ) . '/rest.php',
-		],
-		'restbase' => [
-			'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_restbase' ) ?: 'restbase:7231' ),
-			# https://github.com/femiwiki/femiwiki/issues/266
-			'domain' => 'femiwiki.com',
-		],
-	],
-	'global' => [
-		'domain' => 'femiwiki.com',
-		'restbaseCompat' => true,
-		'forwardCookies' => false,
-	],
-];
-
-$wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
-$wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
-
-wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
-
 //
 // Extensions
 //
@@ -1014,20 +991,6 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 		str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
-
-	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ?: 'femiwiki.com';
-	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
-	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
-}
-
-// Domain is an arbitrary keyword for communicate with MediaWiki node services
-if ( getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ) {
-	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' );
-	$wgVirtualRestConfig['global']['domain'] = $domain;
-	# https://github.com/femiwiki/femiwiki/issues/266
-	$wgVirtualRestConfig['modules']['restbase']['domain'] = $domain;
-	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
-	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
 }
 
 //
