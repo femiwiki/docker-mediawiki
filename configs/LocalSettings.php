@@ -354,36 +354,6 @@ $wgParsoidSettings = [
 	'linting' => true
 ];
 
-# Disable "zero configuration" VisualEditor
-# zero-conf VisualEditor assumes that all the services are served as the same host. ('/' for
-# MediaWiki, '/rest.php/<domain>/v3/' for Parsoid and '/restbase/<domain>/v1/' for RESTBase)
-# It is not our use case, we are serving those services behind the orchestration tool, Docker or
-# Nomad and a variety of addresses are used.
-$wgVisualEditorParsoidAutoConfig = false;
-
-$wgVirtualRestConfig = [
-	'modules' => [
-		'parsoid' => [
-			'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' ) . '/rest.php',
-		],
-		'restbase' => [
-			'url' => 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_restbase' ) ?: 'restbase:7231' ),
-			# https://github.com/femiwiki/femiwiki/issues/266
-			'domain' => 'femiwiki.com',
-		],
-	],
-	'global' => [
-		'domain' => 'femiwiki.com',
-		'restbaseCompat' => true,
-		'forwardCookies' => false,
-	],
-];
-
-$wgVisualEditorRestbaseURL = 'https://femiwiki.com/femiwiki.com/v1/page/html/';
-$wgVisualEditorFullRestbaseURL = 'https://femiwiki.com/femiwiki.com/';
-
-wfLoadExtension( 'Parsoid', 'vendor/wikimedia/parsoid/extension.json' );
-
 //
 // Extensions
 //
@@ -459,7 +429,6 @@ wfLoadExtension( 'CodeMirror' );
 
 // ConfirmEdit
 wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha' ] );
-$wgCaptchaClass = 'ReCaptchaNoCaptcha';
 $wgCaptchaTriggers['createaccount'] = true;
 // If you plan to use VisualEditor forget about this new and better No Captcha solution from Google.
 $wgCaptchaTriggers['edit'] = false;
@@ -563,7 +532,6 @@ $wgGroupPermissions['*']['unreviewedpages'] = true;
 
 // Flow
 wfLoadExtension( 'Flow' );
-$wgFlowEditorList = [ 'visualeditor', 'none' ];
 foreach ( [
 	NS_TALK,
 	NS_USER_TALK,
@@ -928,8 +896,6 @@ $wgRemoveGroups['bureaucrat']['upwizcampeditors'] = true;
 
 // VisualEditor
 wfLoadExtension( 'VisualEditor' );
-// Disallow switching from wikitext to visual editor if doing so may cause dirty diffs
-$wgVisualEditorAllowLossySwitching = false;
 // Namespaces in which to enable VisualEditor
 $wgVisualEditorAvailableNamespaces = [
 	NS_SPECIAL => true,
@@ -1025,20 +991,6 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 		str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
-
-	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ?: 'femiwiki.com';
-	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
-	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
-}
-
-// Domain is an arbitrary keyword for communicate with MediaWiki node services
-if ( getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' ) ) {
-	$domain = getenv( 'MEDIAWIKI_DOMAIN_FOR_NODE_SERVICE' );
-	$wgVirtualRestConfig['global']['domain'] = $domain;
-	# https://github.com/femiwiki/femiwiki/issues/266
-	$wgVirtualRestConfig['modules']['restbase']['domain'] = $domain;
-	$wgVisualEditorRestbaseURL = "$wgServer/$domain/v1/page/html/";
-	$wgVisualEditorFullRestbaseURL = "$wgServer/$domain/";
 }
 
 //

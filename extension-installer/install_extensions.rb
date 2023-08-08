@@ -64,6 +64,9 @@ def name_to_aria2_input_line(name, type)
   response = response[5..-1]
   sha = JSON.parse(response)['revision']
   "https://extdist.wmflabs.org/dist/#{type}s/#{name}-#{MEDIAWIKI_BRANCH}-#{sha[0..6]}.tar.gz\n out=#{name}.tar.gz\n"
+rescue JSON::ParserError => e
+  puts "#{e.message} #{type}s/#{name}"
+  raise e
 end
 
 input_file.write(
