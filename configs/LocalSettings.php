@@ -721,7 +721,8 @@ $wgPageImagesOpenGraphFallbackImage = "/fw-resources/favicons/favicon-512.png";
 wfLoadExtension( 'PageViewInfo' );
 
 // PageViewInfoGA
-wfLoadExtension( 'PageViewInfoGA' );
+// Disabled. https://github.com/femiwiki/femiwiki/issues/346
+// wfLoadExtension( 'PageViewInfoGA' );
 $wgPageViewInfoGACredentialsFile = '/a/analytics-credentials-file.json';
 $wgPageViewInfoGATrackingID = 'UA-82072330-1';
 $wgPageViewInfoGAProfileId = '127138848';
