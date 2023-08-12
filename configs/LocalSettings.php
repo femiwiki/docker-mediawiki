@@ -103,6 +103,32 @@ $wgParserCacheType = CACHE_MEMCACHED;
 $wgMessageCacheType = CACHE_MEMCACHED;
 $wgMemCachedServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_memcached' ) ?: 'memcached:11211' ];
 
+$wgMWLoggerDefaultSpi = [
+	'class' => '\\MediaWiki\\Logger\\MonologSpi',
+	'args' => [ [
+		'loggers' => [
+			'@default' => [
+				'processors' => [ 'wiki', 'psr' ],
+				'handlers' => [ 'stream' ]
+			],
+		],
+		'processors' => [
+			'wiki' => [ 'class' => '\\MediaWiki\\Logger\\Monolog\\WikiProcessor' ],
+			'psr' => [ 'class' => '\\Monolog\\Processor\\PsrLogMessageProcessor' ],
+		],
+		'handlers' => [
+			'stream' => [
+				'class' => '\\Monolog\\Handler\\StreamHandler',
+				'args' => [ 'php://stdout' ],
+				'formatter' => 'json'
+			],
+		],
+		'formatters' => [
+			'json' => [ 'class' => '\\Monolog\\Formatter\\JsonFormatter' ],
+		],
+	] ],
+];
+
 // HTTP Cache setting
 $wgUseCdn = true;
 $wgCdnServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' ];
