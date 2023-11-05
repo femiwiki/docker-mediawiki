@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@prettier/plugin-xml@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@prettier/plugin-xml/-/plugin-xml-3.2.0.tgz#4fff675eab134dcfd65dd42491fe8c53e4a22f4f"
-  integrity sha512-1SgnoMIOLjGcKqstr6gmly7J6VoVSXULz0kMDimBE36yj59GrNvaOBPjoeYUmcpU3/IwLiCIJRaCX8qiVSvy/A==
+"@prettier/plugin-xml@^3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@prettier/plugin-xml/-/plugin-xml-3.2.2.tgz#ccc53d39b333aef140433b62449ea9f74d8e2eb6"
+  integrity sha512-SoE70SQF1AKIvK7LVK80JcdAe6wrDcbodFFjcoqb1FkOqV0G0oSlgAFDwoRXPqkUE5p/YF2nGsnUbnfm6471sw==
   dependencies:
     "@xml-tools/parser" "^1.0.11"
 
