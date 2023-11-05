@@ -6,7 +6,7 @@ jobs:
   php-lint:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup PHP Action
         uses: shivammathur/setup-php@v2
         with:
@@ -27,7 +27,7 @@ jobs:
   caddy-fmt:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Format caddyfile
         run: |
           cd development
@@ -39,7 +39,7 @@ jobs:
   etc-lint:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Get yarn cache
         id: yarn-cache
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -58,7 +58,7 @@ jobs:
     name: Docker image test and publishing
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
