@@ -1,5 +1,5 @@
 ARG MEDIAWIKI_VERSION=1.40.0
-ARG CADDY_MWCACHE_COMMIT=6fd44b88b911e9e0ad1055a8f8f2b85080b3b50e
+ARG CADDY_MWCACHE_COMMIT=9e9ac234170400406c6a328bbaaaa4c95e05bd73
 
 ARG TINI_VERSION=0.18.0
 
@@ -81,7 +81,7 @@ RUN COMPOSER_HOME=/tmp/composer /usr/bin/composer update --no-dev --working-dir 
 FROM --platform=$TARGETPLATFORM caddy:2-builder AS caddy
 ARG CADDY_MWCACHE_COMMIT
 
-RUN XCADDY_DEBUG=1 xcaddy build v2.7.3 \
+RUN XCADDY_DEBUG=1 xcaddy build v2.7.5 \
       --with github.com/caddy-dns/route53 \
       --with "github.com/femiwiki/caddy-mwcache@${CADDY_MWCACHE_COMMIT}"
 
