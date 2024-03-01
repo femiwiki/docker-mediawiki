@@ -1,19 +1,24 @@
-name: Femiwiki Docker
+name: 'Docker: femiwiki'
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'dockers/femiwiki/**'
+      - .github/workflows/docker-femiwiki.yml
+  pull_request:
+    paths:
+      - 'dockers/femiwiki/**'
+      - .github/workflows/docker-femiwiki.yml
 
 jobs:
-  docker-images:
-    name: Docker image test and publishing
-    runs-on: ubuntu-22.04
+  docker-image:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-qemu-action@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v3
 
       - name: Edit configuration
         run: |
@@ -26,10 +31,9 @@ jobs:
           echo "version=$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
         id: version
 
-      - name: Build a test image on amd64 and cache
-        uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v5
         with:
-          context: '{{defaultContext}}:dockers/femiwiki'
+          context: '{{ defaultContext }}:dockers/femiwiki'
           platforms: linux/amd64
           cache-from: ghcr.io/femiwiki/mediawiki:latest
           cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
@@ -78,9 +82,8 @@ jobs:
       - name: Try to access the mediawiki
         run: curl -sSLvo /dev/null 127.0.0.1:8080 || docker service logs mediawiki_fastcgi
 
-      - name: Login to GitHub Container Registry
+      - uses: docker/login-action@v3
         if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
-        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
