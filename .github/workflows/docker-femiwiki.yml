@@ -102,8 +102,8 @@ jobs:
           load: false
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
           tags: |
-            ghcr.io/femiwiki/mediawiki:latest
-            ghcr.io/femiwiki/mediawiki:${{ steps.version.outputs.version }}
+            ghcr.io/femiwiki/femiwiki:latest
+            ghcr.io/femiwiki/femiwiki:${{ steps.version.outputs.version }}
 
       - name: Submit a PR to our nomad repository
         if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
