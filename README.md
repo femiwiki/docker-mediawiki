@@ -48,9 +48,9 @@ Caddy를 실행할 경우에는 Caddyfile을 `/srv/femiwiki.com/Caddyfile`로 �
 ```bash
 docker swarm init
 
-cp configs/secret.php.example development/secret.php
-cp configs/LocalSettings.php development
-cp configs/Hotfix.php development
+cp dockers/femiwiki/configs/secret.php.example dockers/femiwiki/development/secret.php
+cp dockers/femiwiki/configs/LocalSettings.php dockers/femiwiki/development
+cp dockers/femiwiki/configs/Hotfix.php dockers/femiwiki/development
 
 # In case of Docker swarm
 docker stack deploy --prune -c docker-compose.yml mediawiki
