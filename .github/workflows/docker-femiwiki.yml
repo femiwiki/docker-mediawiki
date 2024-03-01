@@ -90,14 +90,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: save docker image
-        run: docker save -o "$(pwd)/docker-mediawiki" ghcr.io/femiwiki/mediawiki:docker-test
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: docker-image
-          path: docker-mediawiki
-
       - name: Build a multi-platform docker image and push
         uses: docker/build-push-action@v5
         with:
