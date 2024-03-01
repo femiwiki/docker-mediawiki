@@ -31,11 +31,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Format caddyfile
         run: |
-          cd dockers/femiwiki/development
-          cp Caddyfile Caddyfile.orig
-          docker run -v $PWD:/srv caddy \
-            caddy fmt --overwrite
-          diff Caddyfile.orig Caddyfile
+          for CADDYFILE_PATH in **/Caddyfile; do
+            docker run -v $(dirname $(realpath $CADDYFILE_PATH)):/srv caddy \
+              caddy fmt --diff
+          done
 
   etc-lint:
     runs-on: ubuntu-22.04

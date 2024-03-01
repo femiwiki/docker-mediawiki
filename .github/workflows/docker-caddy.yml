@@ -1,4 +1,4 @@
-name: 'Docker: php'
+name: 'Docker: caddy'
 
 env:
   TAG: '1.0.0'
@@ -6,12 +6,12 @@ env:
 on:
   push:
     paths:
-      - 'dockers/php/**'
-      - .github/workflows/docker-php.yml
+      - 'dockers/caddy/**'
+      - .github/workflows/docker-caddy.yml
   pull_request:
     paths:
-      - 'dockers/php/**'
-      - .github/workflows/docker-php.yml
+      - 'dockers/caddy/**'
+      - .github/workflows/docker-caddy.yml
   workflow_dispatch:
 
 jobs:
@@ -33,11 +33,11 @@ jobs:
 
       - uses: docker/build-push-action@v5
         with:
-          context: '{{ defaultContext }}:dockers/php'
+          context: '{{ defaultContext }}:dockers/caddy'
           platforms: linux/amd64,linux/arm64
-          cache-from: ghcr.io/femiwiki/php:latest
+          cache-from: ghcr.io/femiwiki/caddy:latest
           load: false
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
           tags: |
-            ghcr.io/femiwiki/php:latest
-            ghcr.io/femiwiki/php:${{ env.TAG }}
+            ghcr.io/femiwiki/caddy:latest
+            ghcr.io/femiwiki/caddy:${{ env.TAG }}

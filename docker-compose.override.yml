@@ -3,20 +3,20 @@
 # 혹은:
 #   docker-compose up
 version: '3'
-services:
-  # http:
-  #   volumes:
-  #     - ../Femiwiki:/srv/femiwiki.com/skins/Femiwiki
-  # fastcgi:
-  #   volumes:
-  #     - ../Femiwiki:/srv/femiwiki.com/skins/Femiwiki
-  #     - ../AchievementBadges:/srv/femiwiki.com/extensions/AchievementBadges
-  #     - ../DiscordRCFeed:/srv/femiwiki.com/extensions/DiscordRCFeed
-  #     - ../FacetedCategory:/srv/femiwiki.com/extensions/FacetedCategory
-  #     - ../PageViewInfoGA:/srv/femiwiki.com/extensions/PageViewInfoGA
-  #     - ../Sanctions:/srv/femiwiki.com/extensions/Sanctions
-  #     - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
-  #   environment:
-  #     - MEDIAWIKI_SKIP_INSTALL=1
-  #     - MEDIAWIKI_SKIP_UPDATE=1
-  #     - MEDIAWIKI_SKIP_IMPORT_SITES=1
+# services:
+#   http:
+#     volumes:
+#       - ../Femiwiki:/srv/femiwiki.com/skins/Femiwiki
+#   fastcgi:
+#     volumes:
+#       - ../Femiwiki:/srv/femiwiki.com/skins/Femiwiki
+#       - ../AchievementBadges:/srv/femiwiki.com/extensions/AchievementBadges
+#       - ../DiscordRCFeed:/srv/femiwiki.com/extensions/DiscordRCFeed
+#       - ../FacetedCategory:/srv/femiwiki.com/extensions/FacetedCategory
+#       - ../PageViewInfoGA:/srv/femiwiki.com/extensions/PageViewInfoGA
+#       - ../Sanctions:/srv/femiwiki.com/extensions/Sanctions
+#       - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
+#     environment:
+#       - MEDIAWIKI_SKIP_INSTALL=1
+#       - MEDIAWIKI_SKIP_UPDATE=1
+#       - MEDIAWIKI_SKIP_IMPORT_SITES=1
