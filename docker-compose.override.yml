@@ -3,7 +3,7 @@
 # 혹은:
 #   docker-compose up
 version: '3'
-services:
+# services:
   # http:
   #   volumes:
   #     - ../Femiwiki:/srv/femiwiki.com/skins/Femiwiki
