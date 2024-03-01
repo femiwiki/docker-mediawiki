@@ -8,8 +8,8 @@
   "scripts": {
     "fix": "phpcbf",
     "test": [
-      "parallel-lint configs/LocalSettings.php configs/Hotfix.php configs/secret.php.example",
-      "phpcs configs/LocalSettings.php configs/Hotfix.php configs/secret.php.example"
+      "parallel-lint dockers/femiwiki/configs/LocalSettings.php dockers/femiwiki/configs/Hotfix.php dockers/femiwiki/configs/secret.php.example",
+      "phpcs dockers/femiwiki/configs/LocalSettings.php dockers/femiwiki/configs/Hotfix.php dockers/femiwiki/configs/secret.php.example"
     ]
   },
   "config": {
