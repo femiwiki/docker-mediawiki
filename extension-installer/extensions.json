@@ -18,11 +18,14 @@
     "Description2",
     "DisableAccount",
     "Disambiguator",
+    "DiscordRCFeed",
     "DiscussionTools",
     "DismissableSiteNotice",
     "Echo",
     "EventLogging",
     "FlaggedRevs",
+    "Flow",
+    "Gadgets",
     "GoogleSiteSearch",
     "Graph",
     "GrowthExperiments",
@@ -76,14 +79,6 @@
     "Vector"
   ],
   "non-WMF": {
-    "Gadgets": {
-      "@note": "https://github.com/femiwiki/remote-gadgets/issues/33",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Gadgets/archive/refs/heads/REL1_40.tar.gz"
-    },
-    "Flow": {
-      "@note": "https://lists.wikimedia.org/hyperkitty/list/mediawiki-l@lists.wikimedia.org/thread/MEM3ZPLZVVAUV7ZVDZB2CSNC4ENRJY7Y/",
-      "template": "https://github.com/femiwiki/mediawiki-extensions-Flow/releases/download/REL1_40/REL1_40.tar.gz"
-    },
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
       "version": "v0.3.0"
@@ -91,10 +86,6 @@
     "FacetedCategory": {
       "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
       "version": "v1.1.4"
-    },
-    "DiscordRCFeed": {
-      "template": "https://github.com/femiwiki/DiscordRCFeed/releases/download/$1/$1.tar.gz",
-      "version": "v1.0.2"
     },
     "Sanctions": {
       "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
@@ -107,14 +98,15 @@
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v4.0.2"
+      "version": "v5.0.0"
     },
     "AWS": {
-      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/v0.12.0.tar.gz"
+      "@note": "https://github.com/edwardspec/mediawiki-aws-s3/issues/76",
+      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/b277b87eeb73bbb970f295a50cd54d868092316d.tar.gz"
     },
     "EmbedVideo": {
       "template": "https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo/archive/refs/tags/$1.tar.gz",
-      "version": "v3.2.8"
+      "version": "v3.4.1"
     }
   }
 }

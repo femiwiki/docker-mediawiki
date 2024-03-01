@@ -943,10 +943,9 @@ $wgVisualEditorAvailableNamespaces = [
 	NS_CATEGORY_TALK => true,
 	'_merge_strategy' => 'array_plus',
 ];
-// Enable Visual diffs on history pages
-$wgVisualEditorEnableDiffPage = true;
-// Enable the Table Of Contents widget
-$wgVisualEditorEnableTocWidget = true;
+// the Table Of Contents widget
+// Disable https://github.com/femiwiki/femiwiki/issues/356
+$wgVisualEditorEnableTocWidget = false;
 // Enable the section editing
 $wgVisualEditorEnableVisualSectionEditing = true;
 // Enable 2017 Wikitext Editor to opt-out

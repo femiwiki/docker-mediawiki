@@ -1,4 +1,4 @@
-ARG MEDIAWIKI_VERSION=1.40.0
+ARG MEDIAWIKI_VERSION=1.41.0
 ARG CADDY_MWCACHE_COMMIT=9e9ac234170400406c6a328bbaaaa4c95e05bd73
 
 ARG TINI_VERSION=0.18.0
@@ -7,7 +7,7 @@ ARG TINI_VERSION=0.18.0
 # 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM --platform=$TARGETPLATFORM ruby:3.1.3-alpine AS base-extension
+FROM --platform=$TARGETPLATFORM ruby:3.3.0-alpine AS base-extension
 
 # ARG instructions without a value inside of a build stage to use the default
 # value of an ARG declared before the first FROM use
