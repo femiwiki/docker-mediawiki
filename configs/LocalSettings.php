@@ -943,8 +943,6 @@ $wgVisualEditorAvailableNamespaces = [
 	NS_CATEGORY_TALK => true,
 	'_merge_strategy' => 'array_plus',
 ];
-// Enable Visual diffs on history pages
-$wgVisualEditorEnableDiffPage = true;
 // Enable the Table Of Contents widget
 $wgVisualEditorEnableTocWidget = true;
 // Enable the section editing
