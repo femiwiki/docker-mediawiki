@@ -1,9 +1,7 @@
 ARG MEDIAWIKI_VERSION=1.41.0
 ARG CADDY_MWCACHE_COMMIT=9e9ac234170400406c6a328bbaaaa4c95e05bd73
 
-ARG TINI_VERSION=0.18.0
-
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:$MEDIAWIKI_VERSION AS base-extension
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:1.0.0 AS base-extension
 #
 # Composer 스테이지. Composer 이미지는 PHP 버전을 따로 설정할 수 없어 스테이지를 생성해
 # /usr/bin/composer만 복사해 사용하여야 합니다.
@@ -68,29 +66,8 @@ RUN XCADDY_DEBUG=1 xcaddy build v2.7.5 \
 #   /var/log/cron.log      크론 로그
 #   /tini                  tini
 #
-FROM --platform=$TARGETPLATFORM php:8.1.22-fpm
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/php:1.0.0
 ARG TARGETPLATFORM
-ARG TINI_VERSION
-
-# Install dependencies and utilities
-RUN apt-get update && apt-get install -y \
-      # Build dependencies
-      build-essential \
-      libicu-dev \
-      # Runtime depenencies
-      imagemagick \
-      librsvg2-bin \
-      # See https://github.com/femiwiki/docker-mediawiki/issues/442
-      git \
-      # Required for SyntaxHighlighting
-      python3 \
-      # Required for Scribunto when the machine is on aarch64 architecture
-      # Only 5.1.x is supported
-      #   Reference: https://www.mediawiki.org/wiki/Extension:Scribunto#Additional_binaries
-      lua5.1 \
-      # CLI utilities
-      cron \
-      sudo
 
 # Install Caddy
 COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
@@ -101,44 +78,9 @@ RUN mkdir -p \
       /etc/caddy \
       /usr/share/caddy
 
-# See https://caddyserver.com/docs/conventions#file-locations for details
-ENV XDG_CONFIG_HOME /config
-ENV XDG_DATA_HOME /data
-
-# Install the PHP extensions we need
-RUN docker-php-ext-install -j8 \
-    mysqli \
-    opcache \
-    intl \
-    sockets \
-    calendar
-
-# Install the default object cache
-RUN pecl channel-update pecl.php.net
-RUN pecl install apcu
-RUN docker-php-ext-enable apcu
-
-#
-# Tini
-#
-# See https://github.com/krallin/tini for the further details
-RUN PLATFORM="$(echo $TARGETPLATFORM | cut -d/ -f2)" &&\
-    curl -sLfo /tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${PLATFORM}"
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
-
-# Remove packages which is not needed anymore (build dependencies of PHP extensions)
-ONBUILD RUN apt-get autoremove -y --purge \
-              build-essential \
-              libicu-dev
-
 # Set timezone
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-# Prepare PHP log
-RUN touch /var/log/php-fpm.log &&\
-    chown www-data:www-data /var/log/php-fpm.log
 
 # Install Mediawiki and extensions
 COPY --from=base-mediawiki --chown=www-data /tmp/mediawiki /srv/femiwiki.com
