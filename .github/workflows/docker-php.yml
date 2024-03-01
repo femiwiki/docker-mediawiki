@@ -1,4 +1,4 @@
-name: 'Docker: femiwiki-extensions'
+name: 'Docker: php'
 
 env:
   TAG: '1.0.0'
@@ -6,12 +6,12 @@ env:
 on:
   push:
     paths:
-      - 'dockers/femiwiki-extensions/**'
-      - .github/workflows/docker-femiwiki-extensions.yml
+      - 'dockers/php/**'
+      - .github/workflows/docker-php.yml
   pull_request:
     paths:
-      - 'dockers/femiwiki-extensions/**'
-      - .github/workflows/docker-femiwiki-extensions.yml
+      - 'dockers/php/**'
+      - .github/workflows/docker-php.yml
 
 jobs:
   docker-image:
@@ -32,11 +32,11 @@ jobs:
 
       - uses: docker/build-push-action@v5
         with:
-          context: '{{ defaultContext }}:dockers/femiwiki-extensions'
+          context: '{{ defaultContext }}:dockers/php'
           platforms: linux/amd64,linux/arm64
-          cache-from: ghcr.io/femiwiki/femiwiki-extensions:latest
+          cache-from: ghcr.io/femiwiki/php:latest
           load: false
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
           tags: |
-            ghcr.io/femiwiki/femiwiki-extensions:latest
-            ghcr.io/femiwiki/femiwiki-extensions:${{ env.TAG }}
+            ghcr.io/femiwiki/php:latest
+            ghcr.io/femiwiki/php:${{ env.TAG }}
