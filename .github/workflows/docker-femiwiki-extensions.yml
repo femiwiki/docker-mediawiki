@@ -12,6 +12,7 @@ on:
     paths:
       - 'dockers/femiwiki-extensions/**'
       - .github/workflows/docker-femiwiki-extensions.yml
+  workflow_dispatch:
 
 jobs:
   docker-image:

@@ -9,6 +9,7 @@ on:
     paths:
       - 'dockers/femiwiki/**'
       - .github/workflows/docker-femiwiki.yml
+  workflow_dispatch:
 
 jobs:
   docker-image:

@@ -12,6 +12,7 @@ on:
     paths:
       - 'dockers/php/**'
       - .github/workflows/docker-php.yml
+  workflow_dispatch:
 
 jobs:
   docker-image:
