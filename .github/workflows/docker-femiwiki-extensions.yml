@@ -12,12 +12,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-docker-workflow:
-    - run: |
-        echo "version=$(sed --quiet --regexp-extended 's/^.+MEDIAWIKI_VERSION=(.+)$/\1/p' dockers/femiwiki-extensions/Dockerfile)" >> $GITHUB_OUTPUT
-      id: version
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    - uses: .github/workflows/docker.yml
-      with:
-        image: femiwiki-extensions
-        tag: ${{steps.version.outputs.version}}
+      - run: |
+          echo "version=$(sed --quiet --regexp-extended 's/^.+MEDIAWIKI_VERSION=(.+)$/\1/p' dockers/femiwiki-extensions/Dockerfile)" >> $GITHUB_OUTPUT
+        id: version
+
+      - uses: ./.github/workflows/docker.yml
+        with:
+          image: femiwiki-extensions
+          tag: ${{steps.version.outputs.version}}
