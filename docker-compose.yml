@@ -8,7 +8,7 @@ services:
       - 8080:8080
     volumes:
       - caddy:/etc/caddycerts
-      - ./development/Caddyfile:/srv/femiwiki.com/Caddyfile:ro
+      - ./dockers/femiwiki/development/Caddyfile:/srv/femiwiki.com/Caddyfile:ro
     environment:
       - CADDYPATH=/etc/caddycerts
     deploy:
@@ -24,7 +24,7 @@ services:
     image: ghcr.io/femiwiki/mediawiki:latest
     volumes:
       # Mount secret.php, LocalSettings.php and site-list.xml
-      - ./development:/a:ro
+      - ./dockers/femiwiki/development:/a:ro
       - l18n_cache:/tmp/cache
     environment:
       - MEDIAWIKI_SERVER=http://127.0.0.1:8080

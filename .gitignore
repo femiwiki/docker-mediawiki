@@ -1,8 +1,8 @@
 # secret
-/development/secret.php
-/development/LocalSettings.php
-/development/Hotfix.php
-/development/analytics-credentials-file.json
+/dockers/femiwiki/development/secret.php
+/dockers/femiwiki/development/LocalSettings.php
+/dockers/femiwiki/development/Hotfix.php
+/dockers/femiwiki/development/analytics-credentials-file.json
 
 # Composer
 /vendor

@@ -75,9 +75,7 @@
     "WikiEditor",
     "WikiSEO"
   ],
-  "WMF-skins": [
-    "Vector"
-  ],
+  "WMF-skins": ["Vector"],
   "non-WMF": {
     "AchievementBadges": {
       "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
