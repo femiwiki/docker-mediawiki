@@ -1,5 +1,5 @@
 # secret
-/configs/secret.php
+/development/secret.php
 
 # Composer
 /vendor
