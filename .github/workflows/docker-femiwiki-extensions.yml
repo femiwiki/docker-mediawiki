@@ -1,7 +1,7 @@
 name: 'Docker: femiwiki-extensions'
 
 env:
-  TAG: '1.0.0'
+  TAG: '1.0.1'
 
 on:
   push:
