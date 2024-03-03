@@ -99,8 +99,7 @@
       "version": "v5.0.0"
     },
     "AWS": {
-      "@note": "https://github.com/edwardspec/mediawiki-aws-s3/issues/76",
-      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/b277b87eeb73bbb970f295a50cd54d868092316d.tar.gz"
+      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/refs/tags/v0.13.0.tar.gz"
     },
     "EmbedVideo": {
       "template": "https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo/archive/refs/tags/$1.tar.gz",
