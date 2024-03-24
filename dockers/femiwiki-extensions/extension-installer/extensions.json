@@ -1,6 +1,7 @@
 {
   "WMF-extensions": [
     "AbuseFilter",
+    "AchievementBadges",
     "AdvancedSearch",
     "AntiSpoof",
     "BetaFeatures",
@@ -23,6 +24,7 @@
     "DismissableSiteNotice",
     "Echo",
     "EventLogging",
+    "FacetedCategory",
     "FlaggedRevs",
     "Flow",
     "Gadgets",
@@ -53,6 +55,7 @@
     "Renameuser",
     "ReplaceText",
     "RevisionSlider",
+    "Sanctions",
     "Scribunto",
     "SecureLinkFixer",
     "SpamBlacklist",
@@ -77,18 +80,6 @@
   ],
   "WMF-skins": ["Vector"],
   "non-WMF": {
-    "AchievementBadges": {
-      "template": "https://github.com/femiwiki/AchievementBadges/releases/download/$1/$1.tar.gz",
-      "version": "v0.3.0"
-    },
-    "FacetedCategory": {
-      "template": "https://github.com/femiwiki/FacetedCategory/releases/download/$1/$1.tar.gz",
-      "version": "v1.1.4"
-    },
-    "Sanctions": {
-      "template": "https://github.com/femiwiki/Sanctions/releases/download/$1/$1.tar.gz",
-      "version": "v1.2.5"
-    },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/releases/download/$1/$1.tar.gz",
       "version": "v4.0.1"
