@@ -8,7 +8,7 @@
 #
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.0.0 AS caddy
 
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:1.0.1
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:1.1.0
 
 # Set timezone
 ENV TZ=Asia/Seoul
