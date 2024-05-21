@@ -5,7 +5,7 @@ ARG MEDIAWIKI_VERSION=1.41.0
 # See 'PHP version & extensions' section on https://hub.docker.com/_/composer for more details.
 FROM --platform=$TARGETPLATFORM composer:2.6.6 AS composer
 
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:1.1.0 AS extensions
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:1.1.1 AS extensions
 
 FROM --platform=$TARGETPLATFORM php:8.1.22-cli AS base-mediawiki
 ARG MEDIAWIKI_VERSION
