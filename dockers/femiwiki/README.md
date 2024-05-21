@@ -5,6 +5,7 @@
 - Bump femiwiki/mediawiki to v2.0.0
 - Run Composer
 - Download extensions from femiwiki/femiwiki-extensions v1.1.1
+- Embed LocalSettings.php in this image
 
 ## v1.1.0
 

@@ -46,6 +46,8 @@ COPY --chown=www-data:www-data resources /srv/femiwiki.com/
 COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/a/"]
 RUN mkdir /mediawiki/
 
+COPY --chown=www-data LocalSettings.php /a/
+
 EXPOSE 80
 EXPOSE 443
 EXPOSE 9000
