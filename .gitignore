@@ -4,6 +4,9 @@
 /development/Hotfix.php
 /development/analytics-credentials-file.json
 
+# PHP
+.phpactor.json
+
 # Composer
 /vendor
 
