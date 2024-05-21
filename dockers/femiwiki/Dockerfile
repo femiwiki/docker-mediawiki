@@ -8,11 +8,18 @@
 #
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.0.0 AS caddy
 
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:1.1.1 AS extensions
+
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:1.1.0
 
 # Set timezone
 ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Install Mediawiki and extensions
+COPY --from=base-mediawiki --chown=www-data /mediawiki /srv/femiwiki.com/
+COPY --from=extensions /mediawiki/extensions /srv/femiwiki.com/extensions
+COPY --from=extensions /mediawiki/skins /srv/femiwiki.com/skins
 
 # Install Caddy
 COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
@@ -27,6 +34,11 @@ RUN mkdir -p \
 RUN mv /mediawiki /srv/femiwiki.com
 
 WORKDIR /srv/femiwiki.com
+
+COPY composer.local.json /srv/femiwiki.com
+
+RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --working-dir /srv/femiwiki.com
+
 
 # Ship femiwiki resources
 COPY --chown=www-data:www-data resources /srv/femiwiki.com/
