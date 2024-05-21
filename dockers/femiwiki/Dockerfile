@@ -8,7 +8,7 @@
 #
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.0.0 AS caddy
 
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:1.1.1 AS extensions
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:1.2.0 AS extensions
 
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:2.0.0
 
@@ -17,7 +17,9 @@ ENV TZ=Asia/Seoul
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install Mediawiki and extensions
-RUN mv /mediawiki /srv/femiwiki.com/
+RUN mv /mediawiki /srv/femiwiki.com/ &&\
+    rm -rf /srv/femiwiki.com/extensions &&\
+    rm -rf /srv/femiwiki.com/skins
 COPY --from=extensions /mediawiki/extensions /srv/femiwiki.com/extensions
 COPY --from=extensions /mediawiki/skins /srv/femiwiki.com/skins
 
