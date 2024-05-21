@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## 2.0.1
+
+- Do not embed LocalSettings.php
+
 ## 2.0.0
 
 - Remove extensions

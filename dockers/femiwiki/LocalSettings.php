@@ -590,6 +590,9 @@ $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 $wgGrantPermissions['editinterface']['gadgets-edit'] = true;
 $wgGrantPermissions['editinterface']['gadgets-definition-edit'] = true;
 
+// GoogleNewsSitemap
+wfLoadExtension( 'GoogleNewsSitemap' );
+
 // GoogleSiteSearch
 wfLoadExtension( 'GoogleSiteSearch' );
 $wgGoogleSiteSearchCSEID = '44508684d5c0e489c';
@@ -767,6 +770,9 @@ $wgDefaultUserOptions[ 'popupsreferencepreviews' ] = '1';
 // QuickInstantCommons
 wfLoadExtension( 'QuickInstantCommons' );
 
+// RealMe
+wfLoadExtension( 'RealMe' );
+
 // RelatedArticles
 wfLoadExtension( 'RelatedArticles' );
 $wgRelatedArticlesCardLimit = 6;
@@ -832,6 +838,9 @@ wfLoadExtension( 'Thanks' );
 
 // TitleBlacklist
 wfLoadExtension( 'TitleBlacklist' );
+
+// TorBlock
+wfLoadExtension( 'TorBlock' );
 
 // Translate
 wfLoadExtension( 'Translate' );

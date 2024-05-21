@@ -2,7 +2,7 @@
 version: '3'
 services:
   http:
-    image: ghcr.io/femiwiki/femiwiki:latest
+    image: ghcr.io/femiwiki/femiwiki:dev
     command: caddy run
     ports:
       - 8080:8080
@@ -21,7 +21,7 @@ services:
       options:
         max-size: '100m'
   fastcgi:
-    image: ghcr.io/femiwiki/femiwiki:latest
+    image: ghcr.io/femiwiki/femiwiki:dev
     volumes:
       # Mount secret.php, LocalSettings.php and site-list.xml
       - ./development:/a:ro
