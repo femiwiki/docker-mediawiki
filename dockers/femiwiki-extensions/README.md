@@ -2,6 +2,11 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v1.2.0
+
+- Install RealMe
+- Install GoogleNewsSitemap
+
 ## v1.1.1
 
 - Download FlaggedRevs from GitHub
