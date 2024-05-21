@@ -38,6 +38,9 @@ COPY composer.local.json /srv/femiwiki.com
 
 RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --working-dir /srv/femiwiki.com
 
+# https://phabricator.wikimedia.org/T363063
+RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --working-dir /srv/femiwiki.com/extensions/TemplateStyles
+
 # Web server should be able to write 'extensions/Widgets/compiled_templates'
 # directory Required by 'Widgets' extension
 # Reference: https://www.mediawiki.org/wiki/Extension:Widgets
