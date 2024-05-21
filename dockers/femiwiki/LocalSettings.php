@@ -833,6 +833,9 @@ wfLoadExtension( 'Thanks' );
 // TitleBlacklist
 wfLoadExtension( 'TitleBlacklist' );
 
+// TorBlock
+wfLoadExtension( 'TorBlock' );
+
 // Translate
 wfLoadExtension( 'Translate' );
 $wgGroupPermissions['autoconfirmed']['translate'] = true;
