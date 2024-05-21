@@ -1,3 +1,8 @@
+# Composer 이미지는 PHP 버전을 따로 설정할 수 없어 스테이지를 생성해 /usr/bin/composer만 복사해
+# 사용하여야 합니다.
+# See 'PHP version & extensions' section on https://hub.docker.com/_/composer for more details.
+FROM --platform=$TARGETPLATFORM composer:2.6.6 AS composer
+
 FROM --platform=$TARGETPLATFORM php:8.1.22-fpm
 ARG TARGETPLATFORM
 ARG TINI_VERSION=0.18.0
@@ -20,7 +25,9 @@ RUN apt-get update && apt-get install -y \
       lua5.1 \
       # CLI utilities
       cron \
-      sudo
+      sudo \
+      # https://getcomposer.org/doc/00-intro.md#system-requirements
+      unzip
 
 # See https://caddyserver.com/docs/conventions#file-locations for details
 ENV XDG_CONFIG_HOME /config
@@ -56,3 +63,8 @@ ONBUILD RUN apt-get autoremove -y --purge \
 # Prepare PHP log
 RUN touch /var/log/php-fpm.log &&\
     chown www-data:www-data /var/log/php-fpm.log
+
+# Install Composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+# Cache directory for composer
+RUN mkdir -p /composer
