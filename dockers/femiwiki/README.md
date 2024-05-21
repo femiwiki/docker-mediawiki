@@ -6,6 +6,7 @@
 - Run Composer
 - Download extensions from femiwiki/femiwiki-extensions v1.1.1
 - Embed LocalSettings.php in this image
+- Load TorBlock, RealMe, GoogleNewsSitemap
 
 ## v1.1.0
 
