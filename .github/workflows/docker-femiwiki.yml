@@ -26,7 +26,7 @@ jobs:
           mv development/secret.php.example development/secret.php
           mv dockers/femiwiki/LocalSettings.php development
           mv dockers/femiwiki/Hotfix.php development
-          sed -i -r 's~ghcr\.io\/femiwiki\/mediawiki:.+~ghcr\.io\/femiwiki\/mediawiki:docker-test~' docker-compose.yml
+          sed -i -r 's~ghcr\.io\/femiwiki\/femiwiki:.+~ghcr\.io\/femiwiki\/femiwiki:docker-test~' docker-compose.yml
 
       - run: |
           echo "version=$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
@@ -36,11 +36,11 @@ jobs:
         with:
           context: '{{ defaultContext }}:dockers/femiwiki'
           platforms: linux/amd64
-          cache-from: ghcr.io/femiwiki/mediawiki:latest
+          cache-from: ghcr.io/femiwiki/femiwiki:latest
           cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
           load: true
           push: false
-          tags: ghcr.io/femiwiki/mediawiki:docker-test
+          tags: ghcr.io/femiwiki/femiwiki:docker-test
 
       - name: Initialize docker swarm and start services
         run: |
@@ -96,7 +96,7 @@ jobs:
           context: '{{defaultContext}}:dockers/femiwiki'
           platforms: linux/amd64,linux/arm64
           cache-from: |
-            ghcr.io/femiwiki/mediawiki:latest
+            ghcr.io/femiwiki/femiwiki:latest
             type=local,src=/tmp/.buildx-cache
           cache-to: mode=max,type=inline
           load: false
