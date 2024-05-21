@@ -28,8 +28,5 @@ COPY cron/generate-sitemap \
 RUN mkdir -p /mediawiki/sitemap &&\
     chown www-data:www-data /mediawiki/sitemap
 
-# Ship femiwiki-specific mediawiki configurations
-COPY --chown=www-data LocalSettings.php /a/
-
 # secret.php should be mounted to '/a/secret.php'
 VOLUME /a
