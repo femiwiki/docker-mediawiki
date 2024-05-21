@@ -48,7 +48,7 @@ jobs:
           docker stack deploy -c docker-compose.yml mediawiki
 
       - name: Access 127.0.0.1:8080 until success
-        timeout-minutes: 3
+        timeout-minutes: 2
         run: |
           echo 'Waiting for http...'
           until curl -sLfo /dev/null 127.0.0.1:8080; do
