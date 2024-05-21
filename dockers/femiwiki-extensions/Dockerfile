@@ -1,21 +1,30 @@
-ARG MEDIAWIKI_VERSION=1.41.0
-
 #
-# 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
-# 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
+# 루비 스크립트를 이용해 많은 미디어위키
+# 확장들을 병렬로 빠르게 다운받아 놓는다.
 #
 FROM --platform=$TARGETPLATFORM ruby:3.3.0-alpine
 
-# ARG instructions without a value inside of a build stage to use the default
-# value of an ARG declared before the first FROM use
-ARG MEDIAWIKI_VERSION
+ARG MEDIAWIKI_VERSION=1.41.0
+ARG COMPOSER_VERSION=2.6.6
 
 # aria2
 #
 # References:
 #   https://aria2.github.io/
 RUN apk update && apk add \
-      aria2
+    aria2 \
+    # Required for composer
+    php81-cli \
+    php81-mbstring \
+    php81-phar \
+    php81-openssl \
+    # Required for aws-sdk-php
+    php81-simplexml \
+    ;
+
+# Install Composer
+RUN wget 'https://getcomposer.org/installer' -O 'composer-setup.php' &&\
+    php81 composer-setup.php --version "${COMPOSER_VERSION}" --install-dir=/usr/local/bin --filename=composer --quiet
 
 # Install aria2.conf
 COPY extension-installer/aria2.conf /root/.config/aria2/aria2.conf

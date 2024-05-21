@@ -13,6 +13,8 @@ if ARGV.empty?
 end
 MEDIAWIKI_BRANCH = ARGV[0]
 
+# Temporary directory path for Composer
+COMPOSER_HOME_PATH = '/tmp/composer'
 # Temporary directory path for downloading
 TEMP_DIRECTORY_PATH = '/tmp'
 # Target directory path for extensions and skins
@@ -98,6 +100,14 @@ Parallel.each(extensions_all) do |extension|
 end
 Parallel.each(skins_all) do |skin|
   `tar -xzf '#{TEMP_DIRECTORY_PATH}/#{skin}.tar.gz' --strip-components=1 --directory '#{DESTINATION_PATH}/skins/#{skin}'`
+end
+
+# Install composer dependencies via 'composer update'
+Parallel.each(extensions_all) do |extension|
+  next unless File.exist? "#{DESTINATION_PATH}/extensions/#{extension}/composer.json"
+
+  # '/var/www/.composer' is not writable for www-data. Overriding $COMPOSER_HOME
+  `COMPOSER_HOME=#{COMPOSER_HOME_PATH} composer update --no-dev --working-dir '#{DESTINATION_PATH}/extensions/#{extension}'`
 end
 
 puts 'Finished extension intalling'

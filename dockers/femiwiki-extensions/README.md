@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v1.2.1
+
+- Run Composer for WMF extensions
+
 ## v1.2.0
 
 - Install RealMe
