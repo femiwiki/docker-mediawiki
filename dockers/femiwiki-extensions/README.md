@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## 1.3.0
+
+- Bump UnifiedExtensionForFemiwiki
+
 ## v1.2.0
 
 - Install RealMe
