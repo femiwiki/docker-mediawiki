@@ -83,8 +83,8 @@
   "WMF-skins": ["Vector"],
   "non-WMF": {
     "UnifiedExtensionForFemiwiki": {
-      "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/releases/download/$1/$1.tar.gz",
-      "version": "v4.1.0"
+      "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/refs/tags/$1.tar.gz",
+      "version": "v4.1.1"
     },
     "Femiwiki": {
       "type": "skin",
