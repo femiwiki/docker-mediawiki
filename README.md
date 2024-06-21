@@ -1,6 +1,7 @@
 # 페미위키 미디어위키 서버 [![Container Registry]][container registry link] [![Github checks Status]][github checks link]
 
-:warning: This docker image is specifically designed for the needs of FemiWiki, contains FemiWiki-specific configurations and includes arbitrary MediaWiki extensions. It is not recommended to use this image for general purposes. We recommend using the [Docker official image for MediaWiki](https://hub.docker.com/_/mediawiki/).
+> [!IMPORTANT]  
+> This docker image is specifically designed for the needs of FemiWiki, contains FemiWiki-specific configurations and includes arbitrary MediaWiki extensions. It is not recommended to use this image for general purposes. We recommend using the [Docker official image for MediaWiki](https://hub.docker.com/_/mediawiki/).
 
 한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 도커 이미지입니다. Dockerfile, 테스트용 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
 
