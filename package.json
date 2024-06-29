@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "prettier . --check",
     "fix": "prettier . --write",
-    "minify-svg": "svgo --config=.svgo.config.js -q -r -f resources/"
+    "minify-svg": "svgo --config=.svgo.config.js -q -r -f dockers/femiwiki/resources/"
   },
   "dependencies": {
     "@prettier/plugin-xml": "^3.4.1",
