@@ -10,7 +10,7 @@ end
 EXTENSION = ARGV[0]
 VERSION = ARGV[1]
 
-FILE_PATH = "#{__dir__}/../extension-installer/extensions.json"
+FILE_PATH = "#{__dir__}/../dockers/femiwiki-extensions/extension-installer/extensions.json"
 data = JSON.parse(File.read(FILE_PATH))
 
 if not data['non-WMF'].key?(EXTENSION)
