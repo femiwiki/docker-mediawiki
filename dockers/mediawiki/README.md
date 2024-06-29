@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## 3.0.0
+
+- Bump MediaWiki to v1.42.1
+
 ## 2.0.1
 
 - Do not embed LocalSettings.php
