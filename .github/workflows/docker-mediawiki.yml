@@ -1,7 +1,7 @@
 name: 'Docker: mediawiki'
 
 env:
-  TAG: '2.0.1'
+  TAG: '3.0.0'
 
 on:
   push:
