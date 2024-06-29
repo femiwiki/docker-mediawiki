@@ -22,7 +22,7 @@ updates:
       - 'femiwiki/reviewer'
 
   - package-ecosystem: 'bundler'
-    directory: '/extension-installer'
+    directory: '/dockers/femiwiki-extensions/extension-installer'
     schedule:
       interval: monthly
     reviewers:
