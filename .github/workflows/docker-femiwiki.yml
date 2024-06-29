@@ -32,7 +32,7 @@ jobs:
           echo "version=$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
         id: version
 
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         with:
           context: '{{ defaultContext }}:dockers/femiwiki'
           platforms: linux/amd64
@@ -91,7 +91,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build a multi-platform docker image and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: '{{defaultContext}}:dockers/femiwiki'
           platforms: linux/amd64,linux/arm64
