@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## 1.5.0
+
+- Bump MediaWiki to REL1_42
+
 ## 1.4.0
 
 - Bump UnifiedExtensionForFemiwiki
