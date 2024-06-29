@@ -25,6 +25,7 @@
     "Echo",
     "EventLogging",
     "FacetedCategory",
+    "FlaggedRevs",
     "Flow",
     "Gadgets",
     "GoogleNewsSitemap",
@@ -83,25 +84,20 @@
   "WMF-skins": ["Vector"],
   "non-WMF": {
     "UnifiedExtensionForFemiwiki": {
-      "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/refs/tags/$1.tar.gz",
-      "version": "v4.2.0"
+      "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/$1.tar.gz",
+      "version": "0a49596abc8f24e5223e8948f9b5befaeb0a585e"
     },
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v5.0.0"
+      "version": "v5.0.1"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/refs/tags/v0.13.0.tar.gz"
     },
     "EmbedVideo": {
       "template": "https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo/archive/refs/tags/$1.tar.gz",
-      "version": "v3.4.1"
-    },
-    "FlaggedRevs": {
-      "@note": "https://phabricator.wikimedia.org/T365416",
-      "template": "https://github.com/wikimedia/mediawiki-extensions-FlaggedRevs/archive/refs/heads/$1.tar.gz",
-      "version": "REL1_41"
+      "version": "v3.4.2"
     }
   }
 }
