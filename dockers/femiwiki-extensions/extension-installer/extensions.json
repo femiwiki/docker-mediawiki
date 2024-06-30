@@ -93,7 +93,7 @@
       "version": "v5.0.1"
     },
     "AWS": {
-      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/refs/tags/v0.13.0.tar.gz"
+      "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/29db5b45e4c4931e00424b636d2bc4026c42b8ad.tar.gz"
     },
     "EmbedVideo": {
       "template": "https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo/archive/refs/tags/$1.tar.gz",

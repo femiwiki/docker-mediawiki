@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## 1.5.1
+
+- Bump AWS to a commit which has added 1.42 support
+
 ## 1.5.0
 
 - Bump MediaWiki to REL1_42
