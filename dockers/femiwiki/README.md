@@ -1,5 +1,9 @@
 # femiwiki
 
+## v1.2.3
+
+- Bump femiwiki/femiwiki-extensions to v1.5.1
+
 ## v1.2.2
 
 - `chmod` before executing scripts
