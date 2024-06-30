@@ -8,7 +8,7 @@
 #
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.0.0 AS caddy
 
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:1.5.0 AS extensions
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:1.5.1 AS extensions
 
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:3.0.0
 
@@ -56,5 +56,5 @@ EXPOSE 80
 EXPOSE 443
 EXPOSE 9000
 
-COPY run /usr/local/bin/
+COPY ["run", "prerun", "postrun", "/usr/local/bin/"]
 CMD ["/usr/local/bin/run"]

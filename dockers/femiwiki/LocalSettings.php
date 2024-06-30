@@ -259,9 +259,13 @@ $wgGroupPermissions['oversight']['deleterevision'] = true;
 // Prevent anonymous users from edit pages
 $wgGroupPermissions['*']['edit'] = false;
 
-// Importer
+// Additional groups
 $wgGroupPermissions['importer']['import'] = true;
 $wgGroupPermissions['importer']['importupload'] = true;
+$wgGroupPermissions['autopatrolled']['autopatrol'] = true;
+$wgGroupPermissions['blocker']['block'] = true;
+$wgGroupPermissions['blocker']['blockemail'] = true;
+$wgGroupPermissions['blocker']['unblockself'] = true;
 
 // FemiwikiTeam is just a list of all Femiwiki team member
 $wgGroupPermissions['femiwiki-team']['editprotected'] = true;
@@ -796,6 +800,7 @@ $wgScribuntoDefaultEngine = 'luastandalone';
 if ( php_uname( 'm' ) == 'aarch64' ) {
 	$wgScribuntoEngineConf['luastandalone']['luaPath'] = '/usr/bin/lua';
 }
+$wgScribuntoEngineConf['luastandalone']['cpuLimit'] = 3;
 
 // SecureLinkFixer
 wfLoadExtension( 'SecureLinkFixer' );
@@ -841,6 +846,7 @@ wfLoadExtension( 'TitleBlacklist' );
 
 // TorBlock
 wfLoadExtension( 'TorBlock' );
+$wgGroupPermissions['user']['torunblocked'] = false;
 
 // Translate
 wfLoadExtension( 'Translate' );

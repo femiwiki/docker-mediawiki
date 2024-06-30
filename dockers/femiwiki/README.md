@@ -1,5 +1,9 @@
 # femiwiki
 
+## v1.2.1
+
+- Add scripts to override
+
 ## v1.2.0
 
 - Bump femiwiki/mediawiki to v3.0.0
