@@ -56,5 +56,5 @@ EXPOSE 80
 EXPOSE 443
 EXPOSE 9000
 
-COPY run /usr/local/bin/
+COPY ["run", "prerun", "postrun", "/usr/local/bin/"]
 CMD ["/usr/local/bin/run"]
