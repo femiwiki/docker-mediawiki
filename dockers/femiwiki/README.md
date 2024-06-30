@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.2.0
+
+- Bump femiwiki/mediawiki to v3.0.0
+- Bump femiwiki/femiwiki-extensions to v1.5.0
+
 ## v1.1.2
 
 - Composer install for TemplateStyles [https://phabricator.wikimedia.org/T363063]
