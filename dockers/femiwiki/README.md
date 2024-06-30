@@ -1,5 +1,9 @@
 # femiwiki
 
+## v1.2.2
+
+- `chmod` before executing scripts
+
 ## v1.2.1
 
 - Add scripts to override
