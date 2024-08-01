@@ -19,15 +19,12 @@ RUN apt-get update && apt-get install -y \
       git \
       # Required for SyntaxHighlighting
       python3 \
-      # Required for Scribunto when the machine is on aarch64 architecture
-      # Only 5.1.x is supported
-      #   Reference: https://www.mediawiki.org/wiki/Extension:Scribunto#Additional_binaries
-      lua5.1 \
       # CLI utilities
       cron \
       sudo \
       # https://getcomposer.org/doc/00-intro.md#system-requirements
-      unzip
+      unzip \
+      ;
 
 # See https://caddyserver.com/docs/conventions#file-locations for details
 ENV XDG_CONFIG_HOME /config
@@ -35,11 +32,19 @@ ENV XDG_DATA_HOME /data
 
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 \
+    calendar \
+    intl \
     mysqli \
     opcache \
-    intl \
     sockets \
-    calendar
+    ;
+
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN install-php-extensions \
+    # Required by Scribunto
+    luasandbox \
+    wikidiff2 \
+    ;
 
 # Install the default object cache
 RUN pecl channel-update pecl.php.net
