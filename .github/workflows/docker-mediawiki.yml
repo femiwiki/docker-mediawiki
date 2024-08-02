@@ -1,8 +1,5 @@
 name: 'Docker: mediawiki'
 
-env:
-  TAG: '3.0.0'
-
 on:
   push:
     paths:
@@ -31,6 +28,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - id: get-version
+        run: echo "ver=$(grep -m 1 '## ' dockers/mediawiki/README.md | cut -d' ' -f2)" >> $GITHUB_OUTPUT
+
       - uses: docker/build-push-action@v6
         with:
           context: '{{ defaultContext }}:dockers/mediawiki'
@@ -40,4 +40,4 @@ jobs:
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/femiwiki/mediawiki:latest
-            ghcr.io/femiwiki/mediawiki:${{ env.TAG }}
+            ghcr.io/femiwiki/mediawiki:${{ steps.get-version.outputs.ver }}
