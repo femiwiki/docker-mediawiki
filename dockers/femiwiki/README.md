@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.3.0
+
+- Bump femiwiki/mediawiki to v3.1.0
+- Use luaSandbox and set luastandalone
+
 ## v1.2.3
 
 - Bump femiwiki/femiwiki-extensions to v1.5.2
