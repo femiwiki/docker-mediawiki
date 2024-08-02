@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/php-fpm:1.1.0
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/php-fpm:1.2.0
 ARG MEDIAWIKI_VERSION=1.42.1
 
 RUN mkdir /mediawiki/
@@ -11,10 +11,6 @@ RUN MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\
 # $wgCacheDirectory should not be accessible from the web and writable by the web server
 # See https://www.mediawiki.org/wiki/Manual:$wgCacheDirectory for details
 RUN sudo -u www-data mkdir -p /tmp/file-cache /tmp/cache
-
-# Web server should be able to execute lua binary
-# Reference: https://www.mediawiki.org/wiki/Extension:Scribunto#Additional_binaries
-RUN chmod o+x /usr/bin/lua
 
 # Install and register cron
 COPY cron/crontab /tmp/crontab
