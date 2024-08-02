@@ -797,11 +797,9 @@ wfLoadExtension( 'Sanctions' );
 
 // Scribunto
 wfLoadExtension( 'Scribunto' );
-$wgScribuntoDefaultEngine = 'luastandalone';
-if ( php_uname( 'm' ) == 'aarch64' ) {
-	$wgScribuntoEngineConf['luastandalone']['luaPath'] = '/usr/bin/lua';
-}
-$wgScribuntoEngineConf['luastandalone']['cpuLimit'] = 3;
+$wgScribuntoDefaultEngine = 'luasandbox';
+$wgScribuntoEngineConf['luasandbox']['cpuLimit'] = 3;
+$wgScribuntoEngineConf['luasandbox']['memoryLimit'] = 10485760;
 
 // SecureLinkFixer
 wfLoadExtension( 'SecureLinkFixer' );
