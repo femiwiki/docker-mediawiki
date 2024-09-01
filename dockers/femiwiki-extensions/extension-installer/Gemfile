@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 source "https://rubygems.org"
 
-gem 'parallel', "1.25.1"
+gem 'parallel', "1.26.3"
