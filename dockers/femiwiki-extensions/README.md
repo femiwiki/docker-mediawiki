@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## 1.5.4
+
+- Bump UnifiedExtensionForFemiwiki
+
 ## 1.5.3
 
 - Bump UnifiedExtensionForFemiwiki

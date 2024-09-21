@@ -85,7 +85,7 @@
   "non-WMF": {
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/$1.tar.gz",
-      "version": "cb1b7e001546733b622d5e245903f83c9c20d4b7"
+      "version": "7c8e46e373b8506a707105e2bc20fa42681ed719"
     },
     "Femiwiki": {
       "type": "skin",
