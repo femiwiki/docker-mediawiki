@@ -1,8 +1,5 @@
 name: 'Docker: php-fpm'
 
-env:
-  TAG: '1.2.0'
-
 on:
   push:
     paths:
