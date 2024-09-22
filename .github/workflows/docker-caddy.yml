@@ -31,6 +31,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - id: get-version
+        run: echo "ver=$(grep -m 1 '## v' dockers/caddy/README.md | cut -d'v' -f2)" >> $GITHUB_OUTPUT
+
       - uses: docker/build-push-action@v6
         with:
           context: '{{ defaultContext }}:dockers/caddy'
@@ -40,4 +43,4 @@ jobs:
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/femiwiki/caddy:latest
-            ghcr.io/femiwiki/caddy:${{ env.TAG }}
+            ghcr.io/femiwiki/caddy:${{ steps.get-version.outputs.ver }}
