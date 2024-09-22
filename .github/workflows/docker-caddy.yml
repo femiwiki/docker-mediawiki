@@ -1,8 +1,5 @@
 name: 'Docker: caddy'
 
-env:
-  TAG: '1.0.0'
-
 on:
   push:
     paths:
