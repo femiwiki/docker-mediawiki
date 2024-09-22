@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v1.5.7
+
+- Rebuild for https://gerrit.wikimedia.org/r/c/mediawiki/extensions/PageViewInfoGA/+/1074723?usp=dashboard
+
 ## v1.5.6
 
 - Bump UnifiedExtensionForFemiwiki
@@ -46,20 +50,20 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 - Bump UnifiedExtensionForFemiwiki
 
-## vv1.2.0
+## v1.2.0
 
 - Install RealMe
 - Install GoogleNewsSitemap
 
-## vv1.1.1
+## v1.1.1
 
 - Download FlaggedRevs from GitHub
 
-## vv1.1.0
+## v1.1.0
 
 - Install TorBlock
 
-## vv1.0.1
+## v1.0.1
 
 - Use tag for extension:AWS
 - Bump FacetedCategory
