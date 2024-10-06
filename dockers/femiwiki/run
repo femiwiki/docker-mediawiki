@@ -9,15 +9,9 @@ echo 'Starting Femiwiki ...'
 # Run Install.php
 if [ -z "${MEDIAWIKI_SKIP_INSTALL:-}" ]; then
   echo 'Start installing Mediawiki ...'
-  if [ -f /a/secret.php ]; then
-    DB_HOSTNAME="$(php -r 'require "/a/secret.php"; echo $wgDBserver;')"
-    DB_USERNAME="$(php -r 'require "/a/secret.php"; echo $wgDBuser;')"
-    DB_PASSWORD="$(php -r 'require "/a/secret.php"; echo $wgDBpassword;')"
-  else
-    DB_HOSTNAME="$(php -r 'require "/a/secrets.php"; echo $wgDBserver;')"
-    DB_USERNAME="$(php -r 'require "/a/secrets.php"; echo $wgDBuser;')"
-    DB_PASSWORD="$(php -r 'require "/a/secrets.php"; echo $wgDBpassword;')"
-  fi
+  DB_HOSTNAME="$(php -r 'require "/a/secrets.php"; echo $wgDBserver;')"
+  DB_USERNAME="$(php -r 'require "/a/secrets.php"; echo $wgDBuser;')"
+  DB_PASSWORD="$(php -r 'require "/a/secrets.php"; echo $wgDBpassword;')"
   php /srv/femiwiki.com/maintenance/install.php \
     --lang ko \
     --scriptpath '/w' \
