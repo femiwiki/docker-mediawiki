@@ -24,5 +24,5 @@ COPY cron/generate-sitemap \
 RUN mkdir -p /mediawiki/sitemap &&\
     chown www-data:www-data /mediawiki/sitemap
 
-# secret.php should be mounted to '/a/secret.php'
+# secrets.php should be mounted to '/a/secrets.php'
 VOLUME /a

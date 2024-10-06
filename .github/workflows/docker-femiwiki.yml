@@ -23,7 +23,7 @@ jobs:
 
       - name: Edit configuration
         run: |
-          mv development/secret.php.example development/secret.php
+          mv development/secrets.php.example development/secrets.php
           mv dockers/femiwiki/LocalSettings.php development
           mv dockers/femiwiki/Hotfix.php development
           sed -i -r 's~ghcr\.io\/femiwiki\/femiwiki:.+~ghcr\.io\/femiwiki\/femiwiki:docker-test~' docker-compose.yml
