@@ -1018,7 +1018,10 @@ $wgTwitterSiteHandle = '@femiwikidotcome';
 //
 // Load secret.php
 //
-require_once '/a/secret.php';
+if ( file_exists( '/a/secret.php' ) ) {
+	require_once '/a/secret.php';
+}
+require_once '/a/secrets.php';
 
 //
 // Overwrite server url
