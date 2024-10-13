@@ -119,7 +119,7 @@ $wgMWLoggerDefaultSpi = [
 		'handlers' => [
 			'stream' => [
 				'class' => '\\Monolog\\Handler\\StreamHandler',
-				'args' => [ 'php://stdout' ],
+				'args' => [ 'php://stdout', 'info' ],
 				'formatter' => 'json'
 			],
 		],
@@ -179,6 +179,8 @@ $wgSkinMetaTags = [
 
 // Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = '/usr/bin/diff3';
+
+$wgBlockTargetMigrationStage = SCHEMA_COMPAT_WRITE_BOTH | SCHEMA_COMPAT_READ_OLD;
 
 // Default skin: you can change the default skin. Use the internal symbolic
 // names, ie 'vector', 'monobook':
@@ -249,6 +251,14 @@ $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
 // Permission
 $wgGroupPermissions['*']['createaccount'] = true;
+$wgGroupPermissions['user']['flow-hide'] = false;
+$wgGroupPermissions['user']['flow-lock'] = false;
+$wgGroupPermissions['user']['editcontentmodel'] = false;
+$wgGroupPermissions['user']['move'] = false;
+$wgGroupPermissions['autoconfirmed']['flow-hide'] = true;
+$wgGroupPermissions['autoconfirmed']['flow-lock'] = true;
+$wgGroupPermissions['autoconfirmed']['editcontentmodel'] = true;
+$wgGroupPermissions['autoconfirmed']['move'] = true;
 $wgGroupPermissions['sysop']['renameuser'] = true;
 $wgGroupPermissions['sysop']['interwiki'] = true;
 $wgGroupPermissions['sysop']['import'] = false;
@@ -266,6 +276,7 @@ $wgGroupPermissions['autopatrolled']['autopatrol'] = true;
 $wgGroupPermissions['blocker']['block'] = true;
 $wgGroupPermissions['blocker']['blockemail'] = true;
 $wgGroupPermissions['blocker']['unblockself'] = true;
+$wgGroupPermissions['rollbacker']['rollback'] = true;
 
 // FemiwikiTeam is just a list of all Femiwiki team member
 $wgGroupPermissions['femiwiki-team']['editprotected'] = true;
@@ -390,7 +401,10 @@ $wgParsoidSettings = [
 
 // AbuseFilter
 wfLoadExtension( 'AbuseFilter' );
+$wgAbuseFilterEnableBlockedExternalDomain = true;
 $wgGroupPermissions['sysop']['abusefilter-modify'] = false;
+$wgGroupPermissions['abusefilter']['abusefilter-bypass-blocked-external-domains'] = true;
+$wgGroupPermissions['abusefilter']['abusefilter-modify-blocked-external-domains'] = true;
 $wgGroupPermissions['abusefilter']['abusefilter-modify'] = true;
 $wgGroupPermissions['abusefilter']['changetags'] = true;
 $wgGroupPermissions['abusefilter']['managechangetags'] = true;
@@ -799,18 +813,24 @@ wfLoadExtension( 'Sanctions' );
 wfLoadExtension( 'Scribunto' );
 $wgScribuntoDefaultEngine = 'luasandbox';
 $wgScribuntoEngineConf['luasandbox']['cpuLimit'] = 3;
-$wgScribuntoEngineConf['luasandbox']['memoryLimit'] = 10485760;
+$wgScribuntoEngineConf['luasandbox']['memoryLimit'] = 52428800; # 50 MiB
 
 // SecureLinkFixer
 wfLoadExtension( 'SecureLinkFixer' );
 
 // SpamBlacklist
 wfLoadExtension( 'SpamBlacklist' );
-// Empty Meta-Wiki blacklist
 $wgBlacklistSettings = [
 	'spam' => [
-		'files' => []
-	]
+		'files' => [
+			"https://meta.wikimedia.org/w/index.php?title=Spam_blacklist&action=raw&sb_ver=1",
+		],
+	],
+	'email' => [
+		'files' => [
+			"https://meta.wikimedia.org/w/index.php?title=Email_blacklist&action=raw&sb_ver=1",
+		],
+	],
 ];
 
 // SyntaxHighlight
