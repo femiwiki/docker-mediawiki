@@ -813,7 +813,8 @@ wfLoadExtension( 'Sanctions' );
 wfLoadExtension( 'Scribunto' );
 $wgScribuntoDefaultEngine = 'luasandbox';
 $wgScribuntoEngineConf['luasandbox']['cpuLimit'] = 3;
-$wgScribuntoEngineConf['luasandbox']['memoryLimit'] = 52428800; # 50 MiB
+# 50 MiB
+$wgScribuntoEngineConf['luasandbox']['memoryLimit'] = 52428800;
 
 // SecureLinkFixer
 wfLoadExtension( 'SecureLinkFixer' );
