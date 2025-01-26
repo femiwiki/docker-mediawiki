@@ -1,0 +1,13 @@
+on:
+  registry_package:
+    types:
+      - published
+      - updated
+
+jobs:
+  dump_registry_package:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
