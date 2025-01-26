@@ -31,7 +31,7 @@ ENV XDG_CONFIG_HOME /config
 ENV XDG_DATA_HOME /data
 
 # Install the PHP extensions we need
-RUN docker-php-ext-install -j8 \
+RUN docker-php-ext-install \
     calendar \
     intl \
     mysqli \
