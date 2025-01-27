@@ -6,7 +6,7 @@
 #   /var/log/cron.log      크론 로그
 #   /tini                  tini
 #
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.0.0 AS caddy
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.2.0 AS caddy
 
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/femiwiki-extensions:1.5.7 AS extensions
 
