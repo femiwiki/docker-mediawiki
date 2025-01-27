@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/php-fpm:1.2.0
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/php-fpm:1.2.1
 ARG MEDIAWIKI_VERSION=1.42.4
 
 RUN mkdir /mediawiki/
