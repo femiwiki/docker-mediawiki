@@ -81,9 +81,7 @@
     "WikiEditor",
     "WikiSEO"
   ],
-  "WMF-skins": [
-    "Vector"
-  ],
+  "WMF-skins": ["Vector"],
   "non-WMF": {
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/$1.tar.gz",
