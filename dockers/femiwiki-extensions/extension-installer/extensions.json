@@ -81,7 +81,9 @@
     "WikiEditor",
     "WikiSEO"
   ],
-  "WMF-skins": ["Vector"],
+  "WMF-skins": [
+    "Vector"
+  ],
   "non-WMF": {
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/$1.tar.gz",
@@ -90,7 +92,7 @@
     "Femiwiki": {
       "type": "skin",
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v5.0.1"
+      "version": "v5.0.2"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/29db5b45e4c4931e00424b636d2bc4026c42b8ad.tar.gz"
