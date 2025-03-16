@@ -6,11 +6,11 @@
 #   /var/log/cron.log      크론 로그
 #   /tini                  tini
 #
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.0.0 AS caddy
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.2.0 AS caddy
 
 FROM ghcr.io/femiwiki/femiwiki-extensions:1.5.8 AS extensions
 
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:3.1.0
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:3.2.1
 
 # Set timezone
 ENV TZ=Asia/Seoul

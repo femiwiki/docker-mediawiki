@@ -6,6 +6,10 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 - Do not build arm64 image.
 
+## v1.5.8
+
+- Bump Femiwiki Skin to v5.0.2
+
 ## v1.5.7
 
 - Rebuild for https://gerrit.wikimedia.org/r/c/mediawiki/extensions/PageViewInfoGA/+/1074723?usp=dashboard
