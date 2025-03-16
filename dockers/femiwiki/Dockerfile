@@ -8,7 +8,7 @@
 #
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.2.0 AS caddy
 
-FROM ghcr.io/femiwiki/femiwiki-extensions:2.0.0 AS extensions
+FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2.0.0 AS extensions
 
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:3.2.1
 
