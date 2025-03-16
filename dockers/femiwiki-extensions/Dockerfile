@@ -4,7 +4,7 @@ ARG MEDIAWIKI_VERSION=1.42.1
 # 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
 # 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
 #
-FROM --platform=$TARGETPLATFORM ruby:3.3.0-alpine
+FROM ruby:3.3.0-alpine
 
 # ARG instructions without a value inside of a build stage to use the default
 # value of an ARG declared before the first FROM use
