@@ -819,6 +819,12 @@ $wgScribuntoEngineConf['luasandbox']['memoryLimit'] = 52428800;
 // SecureLinkFixer
 wfLoadExtension( 'SecureLinkFixer' );
 
+// SecurePoll
+wfLoadExtension( 'SecurePoll' );
+$wgGroupPermissions['electionadmin']['securepoll-create-poll'] = true;
+$wgGroupPermissions['electionadmin']['securepoll-edit-poll'] = true;
+$wgGroupPermissions['electionadmin']['securepoll-view-voter-pii'] = true;
+
 // SpamBlacklist
 wfLoadExtension( 'SpamBlacklist' );
 $wgBlacklistSettings = [
