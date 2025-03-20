@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.1.0
+
+- Install SecurePoll.
+
 ## v2.0.0
 
 - Do not build arm64 image.
