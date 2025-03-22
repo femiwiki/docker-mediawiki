@@ -56,7 +56,7 @@ jobs:
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: Bump femiwiki-extensions docker image
-          title: 'femiwiki: Bump femiwiki-extensions docker image'
+          title: 'femiwiki: Bump femiwiki-extensions docker image to v${{ steps.get-version.outputs.ver }}'
           branch: bump-femiwiki-extensions-v${{ steps.get-version.outputs.ver }}-femiwiki
 
       - name: Enable Pull Request Automerge

@@ -56,7 +56,7 @@ jobs:
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: Bump femiwiki docker image
-          title: 'femiwiki: Bump caddy docker image'
+          title: 'femiwiki: Bump caddy docker image to v${{ steps.get-version.outputs.ver }}'
           branch: bump-caddy-v${{ steps.get-version.outputs.ver }}-femiwiki
 
       - name: Enable Pull Request Automerge

@@ -56,7 +56,7 @@ jobs:
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: Bump php-fpm docker image
-          title: 'mediawiki: Bump php-fpm docker image'
+          title: 'mediawiki: Bump php-fpm docker image to v${{ steps.get-version.outputs.ver }}'
           branch: bump-php-fpm-v${{ steps.get-version.outputs.ver }}-femiwiki
 
       - name: Enable Pull Request Automerge
