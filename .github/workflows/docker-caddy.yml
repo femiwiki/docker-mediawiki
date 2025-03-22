@@ -37,7 +37,7 @@ jobs:
           downstream: femiwiki
 
       - name: Create Pull Request
-        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        if: true || ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
