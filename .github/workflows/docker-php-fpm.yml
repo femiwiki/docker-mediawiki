@@ -34,7 +34,7 @@ jobs:
         with:
           version: ${{ steps.get-version.outputs.ver }}
           upstream: php-fpm
-          downstream: femiwiki
+          downstream: mediawiki
 
       - name: Create Pull Request
         id: create-pull-request
