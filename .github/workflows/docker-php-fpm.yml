@@ -49,7 +49,7 @@ jobs:
         with:
           token: ${{ secrets.CREATE_PR_PAT }}
           commit-message: Bump php-fpm docker image
-          title: 'femiwiki: Bump php-fpm docker image'
+          title: 'mediawiki: Bump php-fpm docker image'
           branch: bump-php-fpm-v${{ steps.get-version.outputs.ver }}-femiwiki
 
       - name: Enable Pull Request Automerge
