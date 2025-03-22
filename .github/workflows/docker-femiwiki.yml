@@ -11,6 +11,10 @@ on:
       - .github/workflows/docker-femiwiki.yml
   workflow_dispatch:
 
+concurrency:
+  group: docker-femiwiki
+  cancel-in-progress: true
+
 jobs:
   docker-image:
     runs-on: ubuntu-latest
