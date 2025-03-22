@@ -105,10 +105,16 @@ jobs:
             ghcr.io/femiwiki/femiwiki:latest
             ghcr.io/femiwiki/femiwiki:${{ steps.version.outputs.version }}
 
+      - uses: peter-murray/workflow-application-token-action@v4
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
       - name: Submit a PR to our nomad repository
         if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
         env:
-          GH_TOKEN: ${{ secrets.CREATE_PR_PAT }}
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
         run: |
           gh workflow run -R femiwiki/nomad bump-mediawiki.yml \
             -f tag=${{ steps.version.outputs.version }}
