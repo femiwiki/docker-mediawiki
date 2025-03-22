@@ -41,7 +41,7 @@ jobs:
       - uses: peter-murray/workflow-application-token-action@v4
         id: get_workflow_token
         with:
-          application_id: ${{ secrets.PAT_APPLICATION_ID }}
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
           application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
       - name: Create Pull Request
