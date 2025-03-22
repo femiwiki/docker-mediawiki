@@ -17,7 +17,7 @@ runs:
 
         # Update Dockerfile
         sed -i "s/$OLD_VER/${{ inputs.version }}/" dockers/${{ inputs.downstream }}/Dockerfile
-        if ! git status --porcelain; then
+        if [ ! -z "$(git status --porcelain)" ]; then
           # Add an entry to README.md
           head -n 2 dockers/${{ inputs.downstream }}/README.md > temp.md
           grep -m 1 '## v' dockers/${{ inputs.downstream }}/README.md | cut -d. -f1-2 | tr -d '\n' >> temp.md
