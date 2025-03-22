@@ -1,0 +1,30 @@
+name: docker-caddy
+inputs:
+  version:
+    required: true
+    default: false
+  upstream:
+    required: true
+    default: false
+  downstream:
+    required: false
+    default: false
+runs:
+  using: composite
+  steps:
+    - run: |
+        OLD_VER=$(grep '## v' dockers/${{ inputs.upstream }}/README.md | tail -n +2  | head -n 1 | cut -dv -f2)
+
+        # Update Dockerfile
+        sed -i "s/$OLD_VER/${{ inputs.version }}/" dockers/${{ inputs.downstream }}/Dockerfile
+
+        # Add an entry to README.md
+        head -n 2 dockers/${{ inputs.downstream }}/README.md > temp.md
+        grep -m 1 '## v' dockers/${{ inputs.downstream }}/README.md | cut -d. -f1-2 | tr -d '\n' >> temp.md
+        grep -m 1 '## v' dockers/${{ inputs.downstream }}/README.md | cut -d. -f3 | awk '{print $1 + 1}' >> temp.md
+        echo >> temp.md
+        echo '- Bump femiwiki/${{ inputs.upstream }} to v${{ inputs.version }}' >> temp.md
+        echo >> temp.md
+        tail -n + 3 dockers/${{ inputs.downstream }}/README.md > temp.md
+        mv -f temp.md dockers/${{ inputs.downstream }}/README.md
+
