@@ -2,14 +2,6 @@ name: 'Docker: php-fpm'
 
 on:
   push:
-    paths:
-      - 'dockers/php-fpm/**'
-      - .github/workflows/docker-php-fpm.yml
-  pull_request:
-    paths:
-      - 'dockers/php-fpm/**'
-      - .github/workflows/docker-php-fpm.yml
-  workflow_dispatch:
 
 jobs:
   docker-image:
@@ -32,19 +24,20 @@ jobs:
         run: echo "ver=$(grep -m 1 '## v' dockers/php-fpm/README.md | cut -d'v' -f2)" >> $GITHUB_OUTPUT
 
       - uses: ./.github/actions/docker-php-fpm
+        if: false
         with:
           version: ${{ steps.get-version.outputs.ver }}
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
 
       - uses: ./.github/actions/add-nev-version-entry-to-changelog
-        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        if: true || ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         with:
           version: ${{ steps.get-version.outputs.ver }}
           upstream: php-fpm
           downstream: femiwiki
 
       - name: Create Pull Request
-        id: create-pull-request
+        id: true || create-pull-request
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         uses: peter-evans/create-pull-request@v7
         with:
