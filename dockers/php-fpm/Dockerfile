@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
       unzip \
       ;
 
-RUN sh -c 'curl https://getmic.ro | bash'
+RUN sh -c 'cd /usr/bin; wget -O- https://getmic.ro | GETMICRO_REGISTER=y sh'
 
 # See https://caddyserver.com/docs/conventions#file-locations for details
 ENV XDG_CONFIG_HOME /config
