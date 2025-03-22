@@ -56,11 +56,11 @@ jobs:
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: Bump femiwiki-extensions docker image
-          title: 'femiwiki: Bump femiwiki-extensions docker image'
+          title: 'femiwiki: Bump femiwiki-extensions docker image to v${{ steps.get-version.outputs.ver }}'
           branch: bump-femiwiki-extensions-v${{ steps.get-version.outputs.ver }}-femiwiki
 
       - name: Enable Pull Request Automerge
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
-        run: gh pr merge --merge --auto ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: gh pr merge --squash --auto ${{ steps.create-pull-request.outputs.pull-request-number }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
