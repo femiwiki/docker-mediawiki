@@ -43,17 +43,24 @@ jobs:
           upstream: mediawiki
           downstream: femiwiki
 
+      - uses: peter-murray/workflow-application-token-action@v4
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
       - name: Create Pull Request
         id: create-pull-request
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.CREATE_PR_PAT }}
+          token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: Bump mediawiki docker image
           title: 'femiwiki: Bump mediawiki docker image'
           branch: bump-mediawiki-v${{ steps.get-version.outputs.ver }}-femiwiki
 
       - name: Enable Pull Request Automerge
+        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         run: gh pr merge --merge --auto ${{ steps.create-pull-request.outputs.pull-request-number }}
         env:
-          GH_TOKEN: ${{ secrets.CREATE_PR_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
