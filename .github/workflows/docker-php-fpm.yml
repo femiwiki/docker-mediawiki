@@ -3,10 +3,6 @@ name: 'Docker: php-fpm'
 on:
   push:
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   docker-image:
     runs-on: ubuntu-latest
