@@ -2,6 +2,11 @@
 
 미디어위키 실행에 필요한 각종 PHP 디펜던시들을 설치한다.
 
+## v1.2.2
+
+- Bump Composer to 2.8.6
+- Bump php to 8.1.32
+
 ## v1.2.1
 
 - Bump Composer to 2.8.5
