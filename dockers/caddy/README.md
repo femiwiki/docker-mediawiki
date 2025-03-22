@@ -2,6 +2,10 @@
 
 Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 
+## v1.3.1
+
+- Bump Caddy-mwcache to fd96237785afb28c3ebd06b7b0ec35e590ff8342
+
 ## v1.3.0
 
 - Bump Caddy to v2.9.1
