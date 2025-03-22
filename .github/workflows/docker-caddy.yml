@@ -44,6 +44,7 @@ jobs:
           downstream: femiwiki
 
       - uses: peter-murray/workflow-application-token-action@v4
+        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         id: get_workflow_token
         with:
           application_id: ${{ vars.PAT_APPLICATION_ID }}
