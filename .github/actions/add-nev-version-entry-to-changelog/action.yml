@@ -21,6 +21,7 @@ runs:
         # Add an entry to README.md
         head -n 2 dockers/${{ inputs.downstream }}/README.md > temp.md
         grep -m 1 '## v' dockers/${{ inputs.downstream }}/README.md | cut -d. -f1-2 | tr -d '\n' >> temp.md
+        echo -n . >> temp.md
         grep -m 1 '## v' dockers/${{ inputs.downstream }}/README.md | cut -d. -f3 | awk '{print $1 + 1}' >> temp.md
         echo >> temp.md
         echo '- Bump femiwiki/${{ inputs.upstream }} to v${{ inputs.version }}' >> temp.md
