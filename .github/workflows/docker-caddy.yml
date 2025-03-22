@@ -29,15 +29,25 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - id: get-version
-        run: echo "ver=$(grep -m 1 '## v' dockers/caddy/README.md | cut -d'v' -f2)" >> $GITHUB_OUTPUT
+        run: echo "ver=$(grep '## v' dockers/caddy/README.md | head -n 1 | cut -d'v' -f2)" >> $GITHUB_OUTPUT
 
-      - uses: docker/build-push-action@v6
+      - uses: ./.github/actions/docker-caddy
         with:
-          context: '{{ defaultContext }}:dockers/caddy'
-          platforms: linux/amd64,linux/arm64
-          cache-from: ghcr.io/femiwiki/caddy:latest
-          load: false
+          version: ${{ steps.get-version.outputs.ver }}
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
-          tags: |
-            ghcr.io/femiwiki/caddy:latest
-            ghcr.io/femiwiki/caddy:${{ steps.get-version.outputs.ver }}
+
+      - uses: ./.github/actions/add-nev-version-entry-to-changelog
+        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        with:
+          version: ${{ steps.get-version.outputs.ver }}
+          upstream: caddy
+          downstream: femiwiki
+
+      - name: Create Pull Request
+        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Bump femiwiki docker image
+          title: 'femiwiki: Bump caddy docker image'
+          branch: bump-caddy-v${{ steps.get-version.outputs.ver }}-femiwiki
