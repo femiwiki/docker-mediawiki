@@ -2,14 +2,6 @@ name: 'Docker: caddy'
 
 on:
   push:
-    paths:
-      - 'dockers/caddy/**'
-      - .github/workflows/docker-caddy.yml
-  pull_request:
-    paths:
-      - 'dockers/caddy/**'
-      - .github/workflows/docker-caddy.yml
-  workflow_dispatch:
 
 jobs:
   docker-image:
@@ -32,6 +24,7 @@ jobs:
         run: echo "ver=$(grep '## v' dockers/caddy/README.md | head -n 1 | cut -d'v' -f2)" >> $GITHUB_OUTPUT
 
       - uses: ./.github/actions/docker-caddy
+        if: false
         with:
           version: ${{ steps.get-version.outputs.ver }}
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
