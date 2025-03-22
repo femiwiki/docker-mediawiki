@@ -27,3 +27,4 @@ runs:
         echo >> temp.md
         tail -n + 3 dockers/${{ inputs.downstream }}/README.md > temp.md
         mv -f temp.md dockers/${{ inputs.downstream }}/README.md
+      shell: bash
