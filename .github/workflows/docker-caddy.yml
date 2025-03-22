@@ -44,10 +44,16 @@ jobs:
           downstream: femiwiki
 
       - name: Create Pull Request
+        id: create-pull-request
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CREATE_PR_PAT }}
           commit-message: Bump femiwiki docker image
           title: 'femiwiki: Bump caddy docker image'
           branch: bump-caddy-v${{ steps.get-version.outputs.ver }}-femiwiki
+
+      - name: Enable Pull Request Automerge
+        run: gh pr merge --merge --auto ${{ steps.create-pull-request.outputs.pull-request-number }}
+        env:
+          GH_TOKEN: ${{ secrets.CREATE_PR_PAT }}
