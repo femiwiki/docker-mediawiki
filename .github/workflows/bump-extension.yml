@@ -36,10 +36,17 @@ jobs:
       - name: Update extensions.json
         run: ruby .github/bump_extension.rb '${{fromJSON(steps.vars.outputs.result).ext}}' '${{fromJSON(steps.vars.outputs.result).ver}}'
 
+      - uses: peter-murray/workflow-application-token-action@v4
+        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
           title: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
           branch: bump-${{fromJSON(steps.vars.outputs.result).ext}}
