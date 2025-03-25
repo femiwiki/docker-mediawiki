@@ -30,8 +30,10 @@ services:
       - MEDIAWIKI_SERVER=http://127.0.0.1:8080
       - MEDIAWIKI_DEBUG_MODE=1
     depends_on:
-      - mysql
-      - memcached
+      mysql:
+        condition: service_healthy
+      memcached:
+        condition: service_started
   mysql:
     image: mysql/mysql-server:8.0
     command: --default-authentication-plugin=mysql_native_password
