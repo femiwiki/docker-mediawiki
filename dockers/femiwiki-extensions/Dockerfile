@@ -1,4 +1,4 @@
-ARG MEDIAWIKI_VERSION=1.42.1
+ARG MEDIAWIKI_VERSION=1.43.1
 
 #
 # 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
