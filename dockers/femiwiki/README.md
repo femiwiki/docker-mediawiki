@@ -1,5 +1,9 @@
 # femiwiki
 
+## v1.3.10
+
+- Bump femiwiki/femiwiki-extensions to v2.2.2
+
 ## v1.3.9
 
 - Bump femiwiki/femiwiki-extensions to v2.2.1
