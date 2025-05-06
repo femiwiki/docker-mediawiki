@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.2.3
+
+- Bump Femiwiki Skin to v5.0.10
+
 ## v2.2.2
 
 - Bump Femiwiki Skin to v5.0.9
