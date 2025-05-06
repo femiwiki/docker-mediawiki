@@ -1,6 +1,6 @@
 # 페미위키 미디어위키 서버 [![Container Registry]][container registry link] [![Github checks Status]][github checks link]
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > This docker image is specifically designed for the needs of FemiWiki, contains FemiWiki-specific configurations and includes arbitrary MediaWiki extensions. It is not recommended to use this image for general purposes. We recommend using the [Docker official image for MediaWiki](https://hub.docker.com/_/mediawiki/).
 
 한국의 페미니즘 위키인 [femiwiki.com]에 사용되는 미디어위키 도커 이미지입니다. Dockerfile, 테스트용 도커 컴포즈 파일 등 다양한 코드를 담고있습니다.
@@ -49,9 +49,9 @@ Caddy를 실행할 경우에는 Caddyfile을 `/srv/femiwiki.com/Caddyfile`로 �
 ```bash
 docker swarm init
 
+cp dockers/femiwiki/LocalSettings.php development/LocalSettings.php
 cp development/secrets.php.example development/secrets.php
-cp dockers/mediawiki/LocalSettings.php development/
-cp dockers/femiwiki/Hotfix.php development/
+cp dockers/femiwiki/Hotfix.php development/Hotfix.php
 
 # In case of Docker swarm
 docker stack deploy --prune -c docker-compose.yml mediawiki
