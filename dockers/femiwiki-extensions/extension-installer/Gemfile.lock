@@ -1,13 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    parallel (1.26.3)
+    parallel (1.27.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  parallel (= 1.26.3)
+  parallel (= 1.27.0)
 
 BUNDLED WITH
    2.5.3
