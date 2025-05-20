@@ -576,28 +576,6 @@ $wgGroupPermissions['*']['unreviewedpages'] = true;
 
 // Flow
 wfLoadExtension( 'Flow' );
-foreach ( [
-	NS_TALK,
-	NS_USER_TALK,
-	NS_PROJECT_TALK,
-	NS_FILE_TALK,
-	NS_MEDIAWIKI_TALK,
-	NS_TEMPLATE_TALK,
-	NS_HELP_TALK,
-	NS_CATEGORY_TALK,
-	NS_ITEM_TALK,
-	NS_PROPERTY_TALK,
-	NS_WIDGET_TALK,
-	NS_MODULE_TALK,
-	NS_TRANSLATIONS_TALK,
-	NS_GADGET_TALK,
-	NS_GADGET_DEFINITION_TALK,
-	NS_NEWSLETTER_TALK,
-	NS_BBS,
-	NS_BBS_TALK,
-] as $space ) {
-	$wgNamespaceContentModels[$space] = 'flow-board';
-}
 $wgFlowDefaultLimit = 2;
 
 // Gadgets
