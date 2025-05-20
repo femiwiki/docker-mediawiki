@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.2.5
+
+- Bump DiscordRCFeed
+
 ## v2.2.4
 
 - Bump Femiwiki Skin to v5.1.2
