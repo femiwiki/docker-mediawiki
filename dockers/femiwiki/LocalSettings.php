@@ -55,7 +55,6 @@ $wgSMTP = [
 	'IDHost' => 'femiwiki.com',
 	'port' => 587,
 	'auth' => true,
-	'username' => 'AKIAJ472HG7XALTXZ5QA',
 ];
 
 // UPO means: this is also a user preference option
