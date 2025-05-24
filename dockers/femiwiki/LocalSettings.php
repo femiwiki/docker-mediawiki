@@ -204,10 +204,6 @@ $wgFemiwikiHeadItems = [
 	'fav6' => '<link rel="manifest" href="/fw-resources/favicons/manifest.json">',
 	'fav7' => '<meta name="theme-color" content="#aca6e4">',
 ];
-$wgFemiwikiAddThisId = [
-	'pub' => 'ra-5ffbebf1fd382d20',
-	'tool' => 'ucmm',
-];
 
 //
 // Namespace settings
@@ -424,10 +420,6 @@ wfLoadExtension( 'AchievementBadges' );
 $wgAchievementBadgesReplaceEchoThankYouEdit = true;
 $wgAchievementBadgesReplaceEchoWelcome = true;
 $wgAchievementBadgesFacebookAppId = '1937597133150935';
-$wgAchievementBadgesAddThisId = [
-	'pub' => 'ra-5ffbebf1fd382d20',
-	'tool' => 'kas4',
-];
 
 // AntiSpoof
 wfLoadExtension( 'AntiSpoof' );
