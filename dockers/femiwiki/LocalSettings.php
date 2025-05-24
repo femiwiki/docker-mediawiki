@@ -28,7 +28,7 @@ $wgArticlePath = "/w/$1";
 $wgServer = 'https://femiwiki.com';
 $wgCanonicalServer = 'https://femiwiki.com';
 // Used to purge CDN cache (https://github.com/femiwiki/femiwiki/issues/239)
-$wgInternalServer = 'http://' . ( getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' );
+$wgInternalServer = getenv( 'WG_INTERNAL_SERVER' );
 $wgEnableCanonicalServerLink = true;
 
 // Make the HTTP to HTTPS redirect be unconditional
@@ -76,6 +76,10 @@ $wgWatchlistExpiry = true;
 
 // Database settings
 $wgDBtype = 'mysql';
+$wgDBserver = getenv( 'WG_DB_SERVER' ) ?: '';
+$wgDBuser = getenv( 'WG_DB_USER' ) ?: '';
+$wgDBpassword = getenv( 'WG_DB_PASSWORD' ) ?:
+    (getenv( 'DB_PASSWORD_FILE' ) ? file_get_contents( 'DB_PASSWORD_FILE' ) : '');
 $wgDBname = 'femiwiki';
 
 // MySQL table options to use during installation or update
@@ -100,7 +104,7 @@ $wgMainCacheType = CACHE_MEMCACHED;
 $wgSessionCacheType = CACHE_MEMCACHED;
 $wgParserCacheType = CACHE_MEMCACHED;
 $wgMessageCacheType = CACHE_MEMCACHED;
-$wgMemCachedServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_memcached' ) ?: 'memcached:11211' ];
+$wgMemCachedServers = explode( ',', getenv( 'WG_MEMCACHED_SERVERS' ) );
 
 $wgMWLoggerDefaultSpi = [
 	'class' => '\\MediaWiki\\Logger\\MonologSpi',
@@ -130,7 +134,7 @@ $wgMWLoggerDefaultSpi = [
 
 // HTTP Cache setting
 $wgUseCdn = true;
-$wgCdnServers = [ getenv( 'NOMAD_UPSTREAM_ADDR_http' ) ?: 'http:8080' ];
+$wgCdnServers = explode( ',', getenv( 'WG_CDN_SERVERS' ) );
 
 // To enable image uploads, make sure the 'images' directory
 // is writable, then set this to true:
