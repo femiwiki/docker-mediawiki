@@ -79,7 +79,7 @@ $wgDBtype = 'mysql';
 $wgDBserver = getenv( 'WG_DB_SERVER' ) ?: '';
 $wgDBuser = getenv( 'WG_DB_USER' ) ?: '';
 $wgDBpassword = getenv( 'WG_DB_PASSWORD' ) ?:
-	( getenv( 'DB_PASSWORD_FILE' ) ? file_get_contents( getenv( 'DB_PASSWORD_FILE' ) ) : '' );
+	( getenv( 'DB_PASSWORD_FILE' ) ? trim( file_get_contents( getenv( 'DB_PASSWORD_FILE' ) ) ) : '' );
 $wgDBname = 'femiwiki';
 
 // MySQL table options to use during installation or update
