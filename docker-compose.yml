@@ -27,8 +27,13 @@ services:
       - ./development:/a:ro
       - l18n_cache:/tmp/cache
     environment:
-      - MEDIAWIKI_SERVER=http://127.0.0.1:8080
-      - MEDIAWIKI_DEBUG_MODE=1
+      MEDIAWIKI_DEBUG_MODE: 'true'
+      MEDIAWIKI_SERVER: http://127.0.0.1:8080
+      WG_INTERNAL_SERVER: http://http:8080
+      WG_DB_SERVER: mysql
+      WG_DB_USER: DB_USERNAME
+      WG_DB_PASSWORD: DB_PASSWORD
+      WG_MEMCACHED_SERVERS: http:8080
     # https://github.com/docker/cli/issues/3880
     depends_on:
       - mysql
