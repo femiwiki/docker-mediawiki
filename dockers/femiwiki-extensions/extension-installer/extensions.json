@@ -74,7 +74,6 @@
     "Translate",
     "TwoColConflict",
     "UniversalLanguageSelector",
-    "UnlinkedWikibase",
     "UploadWizard",
     "VisualEditor",
     "Widgets",
@@ -86,6 +85,10 @@
     "Vector"
   ],
   "non-WMF": {
+    "UnlinkedWikibase": {
+      "template": "https://github.com/wikimedia/mediawiki-extensions-UnlinkedWikibase/archive/refs/tags/$1.tar.gz",
+      "version": "3.0.1"
+    },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/$1.tar.gz",
       "version": "a20ed49e018e23316aedcb47c94fd4c1576c5c45"
