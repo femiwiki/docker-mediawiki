@@ -10,7 +10,7 @@ set -euo pipefail; IFS=$'\n\t'
 
 cd /srv/femiwiki.com
 
-sudo -u www-data php maintenance/generateSitemap.php \
+php maintenance/generateSitemap.php \
   --fspath sitemap \
   --server 'https://femiwiki.com' \
   --urlpath '/sitemap/' \
