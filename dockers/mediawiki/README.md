@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v3.4.2
+
+- Configure crontab.
+
 ## v3.4.1
 
 - Run jobs without a break.
