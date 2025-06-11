@@ -7,5 +7,6 @@ set -euo pipefail; IFS=$'\n\t'
 
 cd /srv/femiwiki.com
 
-sudo -u www-data php maintenance/runJobs.php \
-  --maxtime 60
+php maintenance/runJobs.php \
+  --maxtime 60 \
+  --memory-limit max
