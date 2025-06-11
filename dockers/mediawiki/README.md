@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v3.4.1
+
+- Run jobs without a break.
+
 ## v3.4.0
 
 - Bump MediaWiki to v1.43.1
