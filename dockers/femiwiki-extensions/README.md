@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.2.7
+
+- Bump UnlinkedWikibase to v3.3.1
+
 ## v2.2.6
 
 - Fix UnlinkedWikibase to v3.0.1
