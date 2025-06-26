@@ -98,6 +98,10 @@
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
       "version": "v5.1.2"
     },
+    "FemiwikiCrawlingBlocker": {
+      "template": "https://github.com/femiwiki/mediawiki-extensions-FemiwikiCrawlingBlocker/archive/refs/tags/$1.tar.gz",
+      "version": "v1.0.0"
+    },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/refs/tags/$1.tar.gz",
       "version": "v0.13.1"
