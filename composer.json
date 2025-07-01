@@ -3,7 +3,7 @@
     "mediawiki/mediawiki-codesniffer": "47.0.0",
     "php-parallel-lint/php-parallel-lint": "1.4.0",
     "phpcompatibility/php-compatibility": "9.3.5",
-    "dealerdirect/phpcodesniffer-composer-installer": "1.0.0"
+    "dealerdirect/phpcodesniffer-composer-installer": "1.1.1"
   },
   "scripts": {
     "fix": "phpcbf",
