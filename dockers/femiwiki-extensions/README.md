@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.3.0
+
+- Add to mw-extenstion FemiwikiCrawlingBlocker
+
 ## v2.2.7
 
 - Bump UnlinkedWikibase to v3.3.1
