@@ -30,7 +30,7 @@ jobs:
           mv development/secrets.php.example development/secrets.php
           mv dockers/femiwiki/LocalSettings.php development
           mv dockers/femiwiki/Hotfix.php development
-          sed -i -r 's~ghcr\.io\/femiwiki\/femiwiki:.+~ghcr\.io\/femiwiki\/femiwiki:docker-test~' docker-compose.yml
+          sed -i -r 's~ghcr\.io\/femiwiki\/femiwiki:.+~ghcr\.io\/femiwiki\/femiwiki:docker-test~' compose.yml
 
       - run: |
           echo "version=$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
@@ -49,7 +49,7 @@ jobs:
       - name: Initialize docker swarm and start services
         run: |
           docker swarm init
-          docker stack deploy -c docker-compose.yml mediawiki
+          docker stack deploy -c compose.yml mediawiki
 
       - name: Access 127.0.0.1:8080 until success
         timeout-minutes: 2
