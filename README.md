@@ -50,7 +50,7 @@ Caddy를 실행할 경우에는 Caddyfile을 `/srv/femiwiki.com/Caddyfile`로 �
 docker swarm init
 
 cp development/secrets.php.example development/secrets.php
-cp dockers/mediawiki/LocalSettings.php development/
+cp dockers/femiwiki/LocalSettings.php development/
 cp dockers/femiwiki/Hotfix.php development/
 
 # In case of Docker swarm
