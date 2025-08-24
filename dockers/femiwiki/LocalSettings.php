@@ -545,6 +545,10 @@ wfLoadExtension( 'EventLogging' );
 // FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
+// FemiwikiCrawlingBlocker
+wfLoadExtension( 'FemiwikiCrawlingBlocker' );
+$wgFemiwikiCrawlingBlockerEnabled = true;
+
 // FlaggedRevs
 wfLoadExtension( 'FlaggedRevs' );
 $wgFlaggedRevsNamespaces = [
