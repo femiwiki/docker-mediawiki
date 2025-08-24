@@ -1071,6 +1071,7 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	$wgCaptchaTriggers['addurl'] = false;
 	$wgCaptchaTriggers['createaccount'] = false;
 	$wgCaptchaTriggers['badlogin'] = false;
+	$wgFemiwikiCrawlingBlockerEnabled = false;
 
 	// 위키베이스 속성 초기화
 	$wgWBRepoSettings['formatterUrlProperty'] = null;
