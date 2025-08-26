@@ -1,0 +1,69 @@
+{
+	# Global options
+	storage s3
+
+	order mwcache before rewrite
+	# NOTE: See @filter for the further details
+	order respond before rewrite
+}
+femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
+	tls {
+		dns route53
+	}
+	root * /srv/femiwiki.com
+	php_fastcgi {$FASTCGI_ADDR}
+	file_server
+	encode gzip
+	mwcache {
+		ristretto {
+			num_counters 10000
+			max_cost 1000
+			buffer_items 64
+		}
+		purge_acl {
+			10.0.0.0/8
+			127.0.0.1
+		}
+	}
+	header {
+		# HSTS
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		# Enable XSS filtering for legacy browsers
+		X-XSS-Protection "1; mode=block"
+		# Block content sniffing, and enable Cross-Origin Read Blocking
+		X-Content-Type-Options "nosniff"
+		# Avoid clickjacking
+		X-Frame-Options "DENY"
+	}
+	log {
+		format json
+	}
+
+	rewrite /w/api.php /api.php
+	rewrite /w/* /index.php
+
+	respond /health-check 200
+
+	# Ignore malformed requests
+	@filter0 {
+		path /w/특수:내언어/페미위키:대문
+		vars_regexp {query} ^=[0-9]{1,5}$
+	}
+	@filter1 {
+		path /
+		vars_regexp {query} ^[A-Z]{5}=[A-Z]{3}$
+	}
+	@filter2 {
+		header User-Agent *ClaudeBot*
+	}
+
+	respond @filter0 200 {
+		close
+	}
+	respond @filter1 200 {
+		close
+	}
+	respond @filter2 200 {
+		close
+	}
+}
