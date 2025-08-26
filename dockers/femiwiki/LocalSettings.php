@@ -53,6 +53,8 @@ $wgAppleTouchIcon = "$wgResourceBasePath/fw-resources/favicons/favicon-180.png";
 $wgSMTP = [
 	'host' => 'email-smtp.us-east-1.amazonaws.com',
 	'IDHost' => 'femiwiki.com',
+	'username' => getenv( 'WG_SMTP_USERNAME' ) ?: '',
+	'password' => getenv( 'WG_SMTP_PASSWORD' ) ?: '',
 	'port' => 587,
 	'auth' => true,
 ];
@@ -81,6 +83,12 @@ $wgDBuser = getenv( 'WG_DB_USER' ) ?: '';
 $wgDBpassword = getenv( 'WG_DB_PASSWORD' ) ?:
 	( getenv( 'DB_PASSWORD_FILE' ) ? trim( file_get_contents( getenv( 'DB_PASSWORD_FILE' ) ) ) : '' );
 $wgDBname = 'femiwiki';
+
+// Site secret key
+$wgSecretKey = getenv( 'WG_SECRET_KEY' ) ?: '';
+// Site upgrade key. Must be set to a string (default provided) to turn on the
+// web installer while LocalSettings.php is in place
+$wgUpgradeKey = getenv( 'WG_UPGRADE_KEY' ) ?: '';
 
 // MySQL table options to use during installation or update
 $wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
@@ -440,6 +448,7 @@ wfLoadExtension( 'BetaFeatures' );
 
 // BounceHandler
 wfLoadExtension( 'BounceHandler' );
+$wgBounceHandlerInternalIPs = explode( ',', getenv( 'WG_BOUNCE_HANDLER_INTERNAL_IPS' ) );
 
 // CategoryTree
 wfLoadExtension( 'CategoryTree' );
@@ -468,6 +477,8 @@ wfLoadExtension( 'CodeMirror' );
 
 // ConfirmEdit
 wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha' ] );
+$wgReCaptchaSiteKey = getenv( 'WG_RE_CAPTCHA_SITE_KEY' ) ?: '';
+$wgReCaptchaSecretKey = getenv( 'WG_RE_CAPTCHA_SECRET_KEY' ) ?: '';
 $wgCaptchaTriggers['createaccount'] = true;
 // If you plan to use VisualEditor forget about this new and better No Captcha solution from Google.
 $wgCaptchaTriggers['edit'] = false;
@@ -492,6 +503,7 @@ wfLoadExtension( 'Disambiguator' );
 // DiscordRCFeed
 wfLoadExtension( 'DiscordRCFeed' );
 $wgRCFeeds['discord'] = [
+	'url' => getenv( 'WG_RC_FEEDS_DISCORD_URL' ) ?: '',
 	'omit_bots' => true,
 	'omit_namespaces' => [
 		NS_TRANSLATIONS,
@@ -725,7 +737,7 @@ $wgGroupPermissions['oauthadmin']['mwoauthmanageconsumer'] = true;
 $wgGroupPermissions['user']['mwoauthmanagemygrants'] = true;
 $wgGroupPermissions['user']['mwoauthupdateownconsumer'] = true;
 $wgGroupPermissions['user']['mwoauthproposeconsumer'] = true;
-$wgOAuth2PublicKey = <<<EOK
+$wgOAuth2PublicKey = getenv( 'WG_O_AUTH_2_PUBLIC_KEY' ) ?: <<<EOK
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6yeSdmuGv4xyXD9idrQM
 oCqMbLIcPQg+mS6Qx0wig7sEihVikCntxhfW2VwtdnoEdDmuw1ClXBRhXAm/9IVV
@@ -736,6 +748,7 @@ Qzp1bkU7hhyyGYMbrb5eoDfzTnok9lnKXOkcAIRuK6SIQLCdoVZ5IDXUQ83zMxen
 +QIDAQAB
 -----END PUBLIC KEY-----
 EOK;
+$wgOAuth2PrivateKey = getenv( 'WG_O_AUTH_2_PRIVATE_KEY' );
 
 // PageImages
 wfLoadExtension( 'PageImages' );
@@ -1018,14 +1031,6 @@ $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 wfLoadExtension( 'WikiSEO' );
 $wgFacebookAppID = '1937597133150935';
 $wgTwitterSiteHandle = '@femiwikidotcome';
-
-//
-// Load secret.php
-//
-if ( file_exists( '/a/secret.php' ) ) {
-	require_once '/a/secret.php';
-}
-require_once '/a/secrets.php';
 
 //
 // Overwrite server url

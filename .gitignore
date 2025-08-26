@@ -1,6 +1,3 @@
-# Maybe contains secrets
-/development/secret.php
-/development/secrets.php
 /development/LocalSettings.php
 /development/Hotfix.php
 /development/analytics-credentials-file.json

@@ -49,7 +49,6 @@ Caddy를 실행할 경우에는 Caddyfile을 `/srv/femiwiki.com/Caddyfile`로 �
 ```bash
 docker swarm init
 
-cp development/secrets.php.example development/secrets.php
 cp dockers/femiwiki/LocalSettings.php development/
 cp dockers/femiwiki/Hotfix.php development/
 
@@ -96,7 +95,6 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 [docker swarm]: https://docs.docker.com/engine/swarm/
 [docker composer]: https://docs.docker.com/compose/
 [femiwiki/ami]: https://github.com/femiwiki/ami
-[secrets.php]: development/secrets.php.example
 [how to deploy weekly femiwiki to production]: https://github.com/femiwiki/femiwiki/blob/main/how-to-deploy-weekly-femi-wiki-to-production.md
 [php-fpm]: https://php-fpm.org/
 [caddy]: https://caddyserver.com/
