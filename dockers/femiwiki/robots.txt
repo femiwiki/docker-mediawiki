@@ -1,0 +1,39 @@
+# Visit https://github.com/wikimedia/operations-mediawiki-config/blob/master/robots.txt for Wikimedia's robots.txt.
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+# Allow the Internet Archiver to index action=raw and thereby store the raw wikitext of pages
+User-agent: ia_archiver
+Allow: /*&action=raw
+
+#
+# Friendly, low-speed bots are welcome viewing article pages, but not
+# dynamically-generated pages please.
+#
+User-agent: *
+Allow: /api.php?action=mobileview&
+Allow: /femiwiki.com/v1/?doc
+Disallow: /*&diff=
+Disallow: /*&oldid=
+Disallow: /*&direction=
+Disallow: /*&redlink=
+Disallow: /api.php
+Disallow: /w/api.php
+Disallow: /w/Special:
+Disallow: /w/Special%3A
+Disallow: /w/%ED%8A%B9%EC%88%98:
+Disallow: /w/%ED%8A%B9%EC%88%98%3A
+Disallow: /*?title=%ED%8A%B9%EC%88%98:
+Disallow: /*?title=%ED%8A%B9%EC%88%98%3A
+Disallow: /*&title=%ED%8A%B9%EC%88%98:
+Disallow: /*&title=%ED%8A%B9%EC%88%98%3A
+
+# https://github.com/femiwiki/nomad/issues/270
+Disallow: /index.php?hidelinks=1&hidetrans=1&title=
+Disallow: /*&mobileaction=toggle_view_mobile
+
+sitemap:https://femiwiki.com/sitemap/sitemap-index-femiwiki.xml
