@@ -53,6 +53,11 @@ RUN pecl channel-update pecl.php.net
 RUN pecl install apcu
 RUN docker-php-ext-enable apcu
 
+COPY ./php.ini                 /usr/local/etc/php/php.ini
+COPY ./opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
+COPY ./php-fpm.conf            /usr/local/etc/php-fpm.conf
+COPY ./www.conf                /usr/local/etc/php-fpm.d/www.conf
+
 #
 # Tini
 #
