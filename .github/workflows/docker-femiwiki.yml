@@ -16,12 +16,20 @@ concurrency:
   cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
 
 jobs:
-  docker-image:
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - run: |
+          echo "version=$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
+        id: version
+
+  test-and-build-amd64:
+    needs: get-version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: docker/setup-qemu-action@v3
 
       - uses: docker/setup-buildx-action@v3
 
@@ -30,10 +38,6 @@ jobs:
           mv dockers/femiwiki/LocalSettings.php development
           mv dockers/femiwiki/Hotfix.php development
           sed -i -r 's~ghcr\.io\/femiwiki\/femiwiki:.+~ghcr\.io\/femiwiki\/femiwiki:docker-test~' compose.yml
-
-      - run: |
-          echo "version=$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
-        id: version
 
       - uses: docker/build-push-action@v6
         with:
@@ -102,17 +106,61 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build a multi-platform docker image and push
+      - name: Build and push amd64 image
+        if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
         with:
           context: '{{defaultContext}}:dockers/femiwiki'
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           cache-from: |
             ghcr.io/femiwiki/femiwiki:latest
             type=local,src=/tmp/.buildx-cache
           cache-to: mode=max,type=inline
           load: false
-          push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+          push: true
           tags: |
-            ghcr.io/femiwiki/femiwiki:latest
-            ghcr.io/femiwiki/femiwiki:${{ steps.version.outputs.version }}
+            ghcr.io/femiwiki/femiwiki:latest-amd64
+            ghcr.io/femiwiki/femiwiki:${{ needs.get-version.outputs.version }}-amd64
+
+  build-arm64:
+    needs: get-version
+    runs-on: ubuntu-latest-arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push arm64 image
+        if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: '{{defaultContext}}:dockers/femiwiki'
+          platforms: linux/arm64
+          cache-from: ghcr.io/femiwiki/femiwiki:latest
+          cache-to: mode=max,type=inline
+          load: false
+          push: true
+          tags: |
+            ghcr.io/femiwiki/femiwiki:latest-arm64
+            ghcr.io/femiwiki/femiwiki:${{ needs.get-version.outputs.version }}-arm64
+
+  push-manifest:
+    needs: [get-version, test-and-build-amd64, build-arm64]
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push manifest
+        run: |
+          docker manifest create ghcr.io/femiwiki/femiwiki:latest ghcr.io/femiwiki/femiwiki:latest-amd64 ghcr.io/femiwiki/femiwiki:latest-arm64
+          docker manifest push ghcr.io/femiwiki/femiwiki:latest
+          docker manifest create ghcr.io/femiwiki/femiwiki:${{ needs.get-version.outputs.version }} ghcr.io/femiwiki/femiwiki:${{ needs.get-version.outputs.version }}-amd64 ghcr.io/femiwiki/femiwiki:${{ needs.get-version.outputs.version }}-arm64
+          docker manifest push ghcr.io/femiwiki/femiwiki:${{ needs.get-version.outputs.version }}
