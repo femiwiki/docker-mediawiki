@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
       sudo \
       # https://getcomposer.org/doc/00-intro.md#system-requirements
       unzip \
-      ;
+  ;
 
 RUN sh -c 'cd /usr/bin; wget -O- https://getmic.ro | GETMICRO_REGISTER=y sh'
 
@@ -39,19 +39,39 @@ RUN docker-php-ext-install -j8 \
     mysqli \
     opcache \
     sockets \
-    ;
+;
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN install-php-extensions \
     # Required by Scribunto
     luasandbox \
     wikidiff2 \
-    ;
+;
 
 # Install the default object cache
 RUN pecl channel-update pecl.php.net
 RUN pecl install apcu
 RUN docker-php-ext-enable apcu
+
+COPY ./php.ini                 /usr/local/etc/php/php.ini
+COPY ./opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
+COPY ./php-fpm.conf            /usr/local/etc/php-fpm.conf
+COPY ./www.conf                /usr/local/etc/php-fpm.d/www.conf
+
+# As of PHP 8.3.0, a fallback value can be specified that will be used when the referenced variable
+# is not defined. (https://www.php.net/manual/en/configuration.file.php)
+# However, at the time of writing, PHP 8.3 is not yet available for MediaWiki.
+ENV PHP_POST_MAX_SIZE=10M \
+    PHP_UPLOAD_MAX_FILESIZE=10M \
+    PHP_FPM_EMERGENCY_RESTART_THRESHOLD=5 \
+    PHP_FPM_EMERGENCY_RESTART_INTERVAL=1m \
+    PHP_FPM_PROCESS_CONTROL_TIMEOUT=10s \
+    PHP_FPM_PM_MAX_CHILDREN=20 \
+    PHP_FPM_PM_START_SERVERS=2 \
+    PHP_FPM_PM_MIN_SPARE_SERVERS=1 \
+    PHP_FPM_PM_MAX_SPARE_SERVERS=3 \
+    PHP_FPM_PM_MAX_REQUESTS=200 \
+    PHP_FPM_REQUEST_TERMINATE_TIMEOUT=30
 
 #
 # Tini
@@ -64,8 +84,9 @@ ENTRYPOINT ["/tini", "--"]
 
 # Remove packages which is not needed anymore (build dependencies of PHP extensions)
 ONBUILD RUN apt-get autoremove -y --purge \
-              build-essential \
-              libicu-dev
+    build-essential \
+    libicu-dev \
+;
 
 # Prepare PHP log
 RUN touch /var/log/php-fpm.log &&\
