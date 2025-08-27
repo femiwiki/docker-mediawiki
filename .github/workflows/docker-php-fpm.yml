@@ -64,4 +64,4 @@ jobs:
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         run: gh pr merge --squash --auto ${{ steps.create-pull-request.outputs.pull-request-number }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
