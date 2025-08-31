@@ -27,7 +27,7 @@ fi
 mv -f /a/LocalSettings.php /srv/femiwiki.com/LocalSettings.php
 
 if [ -n "${MEDIAWIKI_HOTFIX_SNIPPET:-}" ]; then
-  cat <<'EOF' > /a/Hotfix.php
+  cat <<EOF > /a/Hotfix.php
 ${MEDIAWIKI_HOTFIX_SNIPPET}
 EOF
 fi
