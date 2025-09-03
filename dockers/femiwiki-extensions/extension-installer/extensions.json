@@ -100,7 +100,7 @@
     },
     "FemiwikiCrawlingBlocker": {
       "template": "https://github.com/femiwiki/FemiwikiCrawlingBlocker/archive/refs/tags/$1.tar.gz",
-      "version": "2.0.1"
+      "version": "v2.0.1"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/refs/tags/$1.tar.gz",
