@@ -16,12 +16,30 @@ concurrency:
   cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
 
 jobs:
-  docker-image:
+  get-version:
     runs-on: ubuntu-latest
+    outputs:
+      ver: ${{ steps.get-version.outputs.ver }}
     steps:
       - uses: actions/checkout@v4
+      - id: get-version
+        run: echo "ver=$(grep -m 1 '## v' dockers/femiwiki-extensions/README.md | cut -d'v' -f2)" >> $GITHUB_OUTPUT
 
-      - uses: docker/setup-qemu-action@v3
+  build:
+    # This image only contains PHP code, so there is no difference in building it for each platform.
+    # However, we build them in parallel on native runners for consistency with other workflows.
+    needs: get-version
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            os: ubuntu-latest
+          - platform: linux/arm64
+            os: ubuntu-latest-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
 
       - uses: docker/setup-buildx-action@v3
 
@@ -32,29 +50,43 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: get-version
-        run: echo "ver=$(grep -m 1 '## v' dockers/femiwiki-extensions/README.md | cut -d'v' -f2)" >> $GITHUB_OUTPUT
-
       - uses: docker/build-push-action@v6
         with:
           context: '{{ defaultContext }}:dockers/femiwiki-extensions'
-          platforms: linux/amd64
-          cache-from: ghcr.io/femiwiki/femiwiki-extensions:latest
+          platforms: ${{ matrix.platform }}
+          cache-from: type=registry,ref=ghcr.io/femiwiki/femiwiki-extensions:latest
           load: false
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
           tags: |
-            ghcr.io/femiwiki/femiwiki-extensions:latest
-            ghcr.io/femiwiki/femiwiki-extensions:${{ steps.get-version.outputs.ver }}
+            ghcr.io/femiwiki/femiwiki-extensions:${{ needs.get-version.outputs.ver }}-${{ replace(matrix.platform, 'linux/', '') }}
+            ghcr.io/femiwiki/femiwiki-extensions:latest-${{ replace(matrix.platform, 'linux/', '') }}
+
+  push-manifest:
+    needs: [get-version, build]
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push manifest
+        run: |
+          docker manifest create ghcr.io/femiwiki/femiwiki-extensions:latest ghcr.io/femiwiki/femiwiki-extensions:latest-amd64 ghcr.io/femiwiki/femiwiki-extensions:latest-arm64
+          docker manifest push ghcr.io/femiwiki/femiwiki-extensions:latest
+          docker manifest create ghcr.io/femiwiki/femiwiki-extensions:${{ needs.get-version.outputs.ver }} ghcr.io/femiwiki/femiwiki-extensions:${{ needs.get-version.outputs.ver }}-amd64 ghcr.io/femiwiki/femiwiki-extensions:${{ needs.get-version.outputs.ver }}-arm64
+          docker manifest push ghcr.io/femiwiki/femiwiki-extensions:${{ needs.get-version.outputs.ver }}
 
       - uses: ./.github/actions/add-nev-version-entry-to-changelog
-        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         with:
-          version: ${{ steps.get-version.outputs.ver }}
+          version: ${{ needs.get-version.outputs.ver }}
           upstream: femiwiki-extensions
           downstream: femiwiki
 
       - uses: peter-murray/workflow-application-token-action@v4
-        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         id: get_workflow_token
         with:
           application_id: ${{ vars.PAT_APPLICATION_ID }}
@@ -62,10 +94,9 @@ jobs:
 
       - name: Create Pull Request
         id: create-pull-request
-        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: Bump femiwiki-extensions docker image
-          title: 'femiwiki: Bump femiwiki-extensions docker image to v${{ steps.get-version.outputs.ver }}'
-          branch: bump-femiwiki-extensions-v${{ steps.get-version.outputs.ver }}-femiwiki
+          title: 'femiwiki: Bump femiwiki-extensions docker image to v${{ needs.get-version.outputs.ver }}'
+          branch: bump-femiwiki-extensions-v${{ needs.get-version.outputs.ver }}-femiwiki

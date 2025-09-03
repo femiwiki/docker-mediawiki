@@ -12,12 +12,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker-image:
+  get-version:
     runs-on: ubuntu-latest
+    outputs:
+      ver: ${{ steps.get-version.outputs.ver }}
     steps:
       - uses: actions/checkout@v4
+      - id: get-version
+        run: echo "ver=$(grep -m 1 '## v' dockers/php-fpm/README.md | cut -d'v' -f2)" >> $GITHUB_OUTPUT
 
-      - uses: docker/setup-qemu-action@v3
+  build:
+    needs: get-version
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            os: ubuntu-latest
+          - platform: linux/arm64
+            os: ubuntu-latest-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
 
       - uses: docker/setup-buildx-action@v3
 
@@ -28,29 +44,43 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: get-version
-        run: echo "ver=$(grep -m 1 '## v' dockers/php-fpm/README.md | cut -d'v' -f2)" >> $GITHUB_OUTPUT
-
       - uses: docker/build-push-action@v6
         with:
           context: '{{ defaultContext }}:dockers/php-fpm'
-          platforms: linux/amd64,linux/arm64
-          cache-from: ghcr.io/femiwiki/php-fpm:latest
+          platforms: ${{ matrix.platform }}
+          cache-from: type=registry,ref=ghcr.io/femiwiki/php-fpm:latest
           load: false
           push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
           tags: |
-            ghcr.io/femiwiki/php-fpm:latest
-            ghcr.io/femiwiki/php-fpm:${{ steps.get-version.outputs.ver }}
+            ghcr.io/femiwiki/php-fpm:${{ needs.get-version.outputs.ver }}-${{ replace(matrix.platform, 'linux/', '') }}
+            ghcr.io/femiwiki/php-fpm:latest-${{ replace(matrix.platform, 'linux/', '') }}
+
+  push-manifest:
+    needs: [get-version, build]
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push manifest
+        run: |
+          docker manifest create ghcr.io/femiwiki/php-fpm:latest ghcr.io/femiwiki/php-fpm:latest-amd64 ghcr.io/femiwiki/php-fpm:latest-arm64
+          docker manifest push ghcr.io/femiwiki/php-fpm:latest
+          docker manifest create ghcr.io/femiwiki/php-fpm:${{ needs.get-version.outputs.ver }} ghcr.io/femiwiki/php-fpm:${{ needs.get-version.outputs.ver }}-amd64 ghcr.io/femiwiki/php-fpm:${{ needs.get-version.outputs.ver }}-arm64
+          docker manifest push ghcr.io/femiwiki/php-fpm:${{ needs.get-version.outputs.ver }}
 
       - uses: ./.github/actions/add-nev-version-entry-to-changelog
-        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         with:
-          version: ${{ steps.get-version.outputs.ver }}
+          version: ${{ needs.get-version.outputs.ver }}
           upstream: php-fpm
           downstream: mediawiki
 
       - uses: peter-murray/workflow-application-token-action@v4
-        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         id: get_workflow_token
         with:
           application_id: ${{ vars.PAT_APPLICATION_ID }}
@@ -58,13 +88,12 @@ jobs:
 
       - name: Create Pull Request
         id: create-pull-request
-        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: Bump php-fpm docker image
-          title: 'mediawiki: Bump php-fpm docker image to v${{ steps.get-version.outputs.ver }}'
-          branch: bump-php-fpm-v${{ steps.get-version.outputs.ver }}-femiwiki
+          title: 'mediawiki: Bump php-fpm docker image to v${{ needs.get-version.outputs.ver }}'
+          branch: bump-php-fpm-v${{ needs.get-version.outputs.ver }}-femiwiki
 
       - name: Enable Pull Request Automerge
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
