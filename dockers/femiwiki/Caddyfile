@@ -44,6 +44,14 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 
 	respond /health-check 200
 
+  @block_cidr {
+    remote_ip {$BLOCKED_CIDR}
+  }
+
+	respond @block_cidr 200 {
+		close
+	}
+
 	# Ignore malformed requests
 	@filter0 {
 		path /w/특수:내언어/페미위키:대문
