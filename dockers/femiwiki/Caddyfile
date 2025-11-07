@@ -44,11 +44,11 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 
 	respond /health-check 200
 
-  @block_cidr {
-    remote_ip {$BLOCKED_CIDR}
-  }
+	@block_cidr {
+		remote_ip {$BLOCKED_CIDR}
+	}
 
-	respond @block_cidr 200 {
+	respond @block_cidr 403 {
 		close
 	}
 
@@ -65,13 +65,13 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		header User-Agent *ClaudeBot*
 	}
 
-	respond @filter0 200 {
+	respond @filter0 403 {
 		close
 	}
-	respond @filter1 200 {
+	respond @filter1 403 {
 		close
 	}
-	respond @filter2 200 {
+	respond @filter2 403 {
 		close
 	}
 }
