@@ -1,5 +1,9 @@
 # femiwiki
 
+## v1.4.1
+
+- Bump femiwiki/femiwiki-extensions to v2.4.0
+
 ## v1.4.0
 
 - Read BLOCKED_CIDR from env and block.
