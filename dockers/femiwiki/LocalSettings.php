@@ -648,6 +648,10 @@ wfLoadExtension( 'Josa' );
 // Linter
 wfLoadExtension( 'Linter' );
 
+// Lockdown
+wfLoadExtension( 'Lockdown' );
+$wgActionLockdown['history'] = [ 'user' ];
+
 // LoginNotify
 wfLoadExtension( 'LoginNotify' );
 
