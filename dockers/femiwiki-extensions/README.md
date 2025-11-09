@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.4.0
+
+- Install Lockdown
+
 ## v2.3.1
 
 - Bump FemiwikiCrawlingBlocker to v2.0.1
