@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.4.1
+
+- Bump UnifiedExtensionForFemiwiki to v5.0.0
+
 ## v2.4.0
 
 - Install Lockdown
