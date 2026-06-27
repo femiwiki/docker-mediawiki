@@ -1,0 +1,54 @@
+name: Add changelog entry
+description: >
+  Prepend a new "## vX.Y.(Z+1)" entry to a docker image's README.md, which is
+  the source of truth for that image's tag. Records one bullet per non-empty
+  line of `message`. Idempotent (skips if the first bullet is already present)
+  and header-length agnostic, so any image workflow can reuse it.
+
+inputs:
+  image:
+    description: Image directory under dockers/ whose README.md to update.
+    required: true
+  message:
+    description: One changelog bullet per non-empty line (the leading "- " is added).
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        IMAGE: ${{ inputs.image }}
+        MESSAGE: ${{ inputs.message }}
+      run: |
+        set -euo pipefail
+        README="dockers/${IMAGE}/README.md"
+
+        bullets=""
+        while IFS= read -r line; do
+          [ -z "$line" ] && continue
+          bullets+="- ${line}"$'\n'
+        done <<< "$MESSAGE"
+        if [ -z "$bullets" ]; then
+          echo "add-changelog-entry: empty message, nothing to do"
+          exit 0
+        fi
+
+        first_bullet=$(printf '%s' "$bullets" | head -n1)
+        if grep -qF -- "$first_bullet" "$README"; then
+          echo "add-changelog-entry: '${first_bullet}' already present, skipping"
+          exit 0
+        fi
+
+        cur=$(grep -m1 '^## v' "$README" | sed 's/^## v//')
+        IFS=. read -r ma mi pa <<< "$cur"
+        next="${ma}.${mi}.$((pa + 1))"
+
+        line_no=$(grep -n -m1 '^## v' "$README" | cut -d: -f1)
+        {
+          head -n "$((line_no - 1))" "$README"
+          printf '## v%s\n\n%s\n' "$next" "$bullets"
+          tail -n "+${line_no}" "$README"
+        } > "${README}.tmp"
+        mv -f "${README}.tmp" "$README"
+        echo "add-changelog-entry: added v${next} to ${README}"
