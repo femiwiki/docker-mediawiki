@@ -1,0 +1,70 @@
+name: Sync extension README
+
+# When a PR bumps an extension in extensions.json but forgets to add the
+# matching dockers/femiwiki-extensions/README.md entry (which drives the image
+# tag), add it automatically and push it back to the PR branch.
+
+on:
+  pull_request:
+    paths:
+      - dockers/femiwiki-extensions/extension-installer/extensions.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync-readme:
+    # A workflow cannot push to a fork's branch, so only handle same-repo PRs.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: peter-murray/workflow-application-token-action@v4
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Compute changed extensions
+        id: diff
+        run: |
+          ext=dockers/femiwiki-extensions/extension-installer/extensions.json
+          git show "origin/${{ github.base_ref }}:${ext}" > "${RUNNER_TEMP}/base.json"
+          msg=$(jq -r -n \
+            --slurpfile b "${RUNNER_TEMP}/base.json" \
+            --slurpfile h "$ext" '
+              ($h[0]["non-WMF"]) as $head | ($b[0]["non-WMF"]) as $base
+              | [ $head | to_entries[]
+                  | select(($base[.key].version // "") != .value.version)
+                  | .value.version as $v
+                  | "Bump \(.key) to \(if ($v|test("^v")) then $v elif ($v|test("^[0-9]")) then "v"+$v else $v end)" ]
+              | join("\n")')
+          {
+            echo "msg<<__EOF__"
+            echo "$msg"
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Add README entry
+        if: steps.diff.outputs.msg != ''
+        uses: ./.github/actions/add-changelog-entry
+        with:
+          image: femiwiki-extensions
+          message: ${{ steps.diff.outputs.msg }}
+
+      - name: Commit and push if changed
+        run: |
+          if [ -z "$(git status --porcelain dockers/femiwiki-extensions/README.md)" ]; then
+            echo 'README already up to date.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dockers/femiwiki-extensions/README.md
+          git commit -m 'chore: auto-add femiwiki-extensions README changelog entry'
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
