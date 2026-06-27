@@ -88,7 +88,7 @@
   "non-WMF": {
     "UnlinkedWikibase": {
       "template": "https://github.com/wikimedia/mediawiki-extensions-UnlinkedWikibase/archive/refs/tags/$1.tar.gz",
-      "version": "3.3.1"
+      "version": "4.0.0"
     },
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/$1.tar.gz",
@@ -99,13 +99,9 @@
       "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
       "version": "v5.1.2"
     },
-    "FemiwikiCrawlingBlocker": {
-      "template": "https://github.com/femiwiki/FemiwikiCrawlingBlocker/archive/refs/tags/$1.tar.gz",
-      "version": "v2.0.1"
-    },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/refs/tags/$1.tar.gz",
-      "version": "v0.13.1"
+      "version": "v0.14.0"
     },
     "EmbedVideo": {
       "template": "https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo/archive/refs/tags/$1.tar.gz",
