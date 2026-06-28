@@ -151,6 +151,11 @@ RUN THREADS=1; php -m | grep -qi '^pcntl$' && THREADS="$(nproc)"; \
       php maintenance/run.php rebuildLocalisationCache "$@" --threads="$THREADS" --no-progress \
  && chown -R www-data:www-data /var/cache/mw-l10n
 
+# Strip the Debian base image's stock cron schedule (only /etc/cron.d/e2scrub_all from e2fsprogs
+# ships here, an fs-scrub job, inert without a cron daemon). Removing it makes the no-cron guarantee
+# literally complete so the assertion below validates a genuinely cron-free image.
+RUN rm -rf /etc/cron.d /etc/crontab /etc/cron.daily /etc/cron.hourly /etc/cron.weekly /etc/cron.monthly /var/spool/cron
+
 # ── Build-time assertions ────────────────────────────────────────────────────
 # cron MUST be absent (binaries + schedule files); entrypoint must exec FrankenPHP and must NOT
 # invoke the FPM master. The php-fpm grep strips comments first (so the entrypoint's own prose can
