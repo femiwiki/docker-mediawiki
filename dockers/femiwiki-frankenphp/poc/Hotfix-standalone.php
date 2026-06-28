@@ -4,5 +4,6 @@ require_once __DIR__ . '/backend-overrides.php';
 // Functionally first-class but materially slower (per-request IPC, higher DB-thread occupancy);
 // acceptable as a fallback, NOT a steady state. Valid keys: 'luasandbox' | 'luastandalone'.
 $wgScribuntoDefaultEngine = 'luastandalone';
-$wgScribuntoEngineConf['luastandalone']['cpuLimit']    = 3;          // matches LocalSettings.php:805
-$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 52428800;   // matches LocalSettings.php:807
+// cpuLimit/memoryLimit match LocalSettings.php:805,807
+$wgScribuntoEngineConf['luastandalone']['cpuLimit'] = 3;
+$wgScribuntoEngineConf['luastandalone']['memoryLimit'] = 52428800;

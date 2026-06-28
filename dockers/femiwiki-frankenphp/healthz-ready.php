@@ -31,7 +31,8 @@ if ( function_exists( 'apcu_fetch' ) ) {
 
 // READINESS. Mirror load.php (a session-independent entry point): no session handler.
 define( 'MW_NO_SESSION', 1 );
-define( 'MW_ENTRY_POINT', 'healthz' );  // not 'cli', not 'index'; Setup.php defaults unknown safely
+// not 'cli', not 'index'; Setup.php defaults unknown safely
+define( 'MW_ENTRY_POINT', 'healthz' );
 
 $fail = static function ( string $component ): void {
 	http_response_code( 503 );
@@ -78,10 +79,12 @@ try {
 	}
 	$sess->delete( $skey );
 } catch ( \Throwable $e ) {
-	$fail( get_class( $e ) ); // never leak message/stack
+	// never leak message/stack
+	$fail( get_class( $e ) );
 }
 
 if ( function_exists( 'apcu_store' ) ) {
-	apcu_store( $apcuKey, true, 3 ); // cache only the positive verdict, 3s
+	// cache only the positive verdict, 3s
+	apcu_store( $apcuKey, true, 3 );
 }
 $ok();

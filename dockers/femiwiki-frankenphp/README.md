@@ -650,18 +650,18 @@ services:
     environment:
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: femiwiki
-    command: ["--max-connections=200"]
+    command: ['--max-connections=200']
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: ['CMD', 'healthcheck.sh', '--connect', '--innodb_initialized']
       interval: 5s
       timeout: 3s
       retries: 30
-    ports: ["13306:3306"]
+    ports: ['13306:3306']
 
   memcached:
     image: docker.io/memcached:1.6-alpine
     container_name: poc-memcached
-    command: ["-m", "256"]
+    command: ['-m', '256']
 
   # One-shot schema bootstrap. Same image, entrypoint overridden to migrate.sh.
   migrate:
@@ -672,28 +672,28 @@ services:
         APP_IMAGE: ghcr.io/femiwiki/femiwiki:latest
         # Build the current image locally first if GHCR is not pullable, then pass its tag:
         #   APP_IMAGE: localhost/femiwiki:current
-        L10N_LANGS: "ko,en"   # PoC: subset for fast builds. Prod default (empty) builds ALL.
+        L10N_LANGS: 'ko,en' # PoC: subset for fast builds. Prod default (empty) builds ALL.
     container_name: poc-migrate
     depends_on:
       db: { condition: service_healthy }
       memcached: { condition: service_started }
-    restart: "no"
-    entrypoint: ["/bin/sh", "/migrate.sh"]
+    restart: 'no'
+    entrypoint: ['/bin/sh', '/migrate.sh']
     volumes:
       - ./migrate.sh:/migrate.sh:ro
     environment: &mwenv
-      MEDIAWIKI_SERVER: "http://localhost:8080"
-      WG_DB_SERVER: "db"
-      WG_DB_USER: "root"
-      WG_DB_PASSWORD: "root"
-      WG_MEMCACHED_SERVERS: "memcached:11211"
-      WG_SECRET_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-      WG_UPGRADE_KEY: "0123456789abcdef"
-      WG_INTERNAL_SERVER: "http://localhost:8080"
-      WG_CDN_SERVERS: "127.0.0.1"
-      WG_CDN_SERVERS_NO_PURGE: "10.0.0.0/8,127.0.0.1"
-      MEDIAWIKI_ADMIN_USER: "Admin"
-      MEDIAWIKI_ADMIN_PASS: "poc_admin_pw_123"
+      MEDIAWIKI_SERVER: 'http://localhost:8080'
+      WG_DB_SERVER: 'db'
+      WG_DB_USER: 'root'
+      WG_DB_PASSWORD: 'root'
+      WG_MEMCACHED_SERVERS: 'memcached:11211'
+      WG_SECRET_KEY: '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+      WG_UPGRADE_KEY: '0123456789abcdef'
+      WG_INTERNAL_SERVER: 'http://localhost:8080'
+      WG_CDN_SERVERS: '127.0.0.1'
+      WG_CDN_SERVERS_NO_PURGE: '10.0.0.0/8,127.0.0.1'
+      MEDIAWIKI_ADMIN_USER: 'Admin'
+      MEDIAWIKI_ADMIN_PASS: 'poc_admin_pw_123'
 
   app:
     build:
@@ -701,24 +701,24 @@ services:
       dockerfile: Dockerfile
       args:
         APP_IMAGE: ghcr.io/femiwiki/femiwiki:latest
-        L10N_LANGS: "ko,en"
+        L10N_LANGS: 'ko,en'
     container_name: poc-app
     depends_on:
       db: { condition: service_healthy }
       memcached: { condition: service_started }
       migrate: { condition: service_completed_successfully }
-    restart: "no"                       # a crash must STAY down and be visible during the soak
+    restart: 'no' # a crash must STAY down and be visible during the soak
     environment:
       <<: *mwenv
-      SERVER_NAME: ":8080"
+      SERVER_NAME: ':8080'
       # SOAK SIZING: 4 threads so a Soak request and a CpuBomb run in sibling threads at once.
-      FRANKENPHP_NUM_THREADS: "4"
+      FRANKENPHP_NUM_THREADS: '4'
       # PoC-only: disable AWS(S3)/captcha/CDN via a TARGETED hotfix (NOT MEDIAWIKI_DEBUG_MODE, whose
       # debug toolbar + display_errors would make the soak latency/RSS unrepresentative).
       MEDIAWIKI_HOTFIX_SNIPPET: "<?php require __DIR__ . '/poc-overrides.php';"
     volumes:
       - ./poc-overrides.php:/a/poc-overrides.php:ro
-    ports: ["8080:8080"]
+    ports: ['8080:8080']
 ```
 
 `poc/migrate.sh` (one-shot; closes schema + admin-password gaps):
@@ -951,32 +951,65 @@ import { check } from 'k6';
 import { Trend, Counter } from 'k6/metrics';
 
 const BASE = __ENV.BASE || 'http://localhost:8080';
-const SOAK_N = __ENV.SOAK_N || '5000000';            // tune so Module:Soak burns ~1-1.5s CPU
+const SOAK_N = __ENV.SOAK_N || '5000000'; // tune so Module:Soak burns ~1-1.5s CPU
 const soakLat = new Trend('soak_latency', true);
 const bombLat = new Trend('bomb_latency', true);
 const soakBadTimeout = new Counter('soak_spurious_timeout'); // cross-thread timer bleed
-const bombNoTimeout  = new Counter('bomb_missing_timeout');  // per-thread timer failed to fire
-const http5xx        = new Counter('http_5xx');              // segfault/500 reaching clients
-const backpressure   = new Counter('backpressure_503');      // Caddy max_wait_time, NOT a crash
+const bombNoTimeout = new Counter('bomb_missing_timeout'); // per-thread timer failed to fire
+const http5xx = new Counter('http_5xx'); // segfault/500 reaching clients
+const backpressure = new Counter('backpressure_503'); // Caddy max_wait_time, NOT a crash
 
 export const options = {
   scenarios: {
-    soak: { executor: 'constant-vus', vus: 3, duration: __ENV.DUR || '30m', exec: 'soak' },
-    bomb: { executor: 'constant-vus', vus: 1, duration: __ENV.DUR || '30m', exec: 'bomb' },
+    soak: {
+      executor: 'constant-vus',
+      vus: 3,
+      duration: __ENV.DUR || '30m',
+      exec: 'soak',
+    },
+    bomb: {
+      executor: 'constant-vus',
+      vus: 1,
+      duration: __ENV.DUR || '30m',
+      exec: 'bomb',
+    },
   },
   thresholds: {
     soak_spurious_timeout: ['count==0'],
-    bomb_missing_timeout:  ['count==0'],
-    http_5xx:              ['count==0'],
-    soak_latency:          ['p(99)<3000'],   // tune to a recorded single-request baseline
+    bomb_missing_timeout: ['count==0'],
+    http_5xx: ['count==0'],
+    soak_latency: ['p(99)<3000'], // tune to a recorded single-request baseline
   },
 };
 // uselang=en makes the timeout message a stable English string we can match.
-function parse(t){ return http.get(`${BASE}/api.php?action=parse&format=json&uselang=en&contentmodel=wikitext&disablelimitreport=1&text=${encodeURIComponent(t)}`); }
-function classify(r){ if (r.status === 503) { backpressure.add(1); return false; } if (r.status >= 500) { http5xx.add(1); } return true; }
-const MARK = /time allocated for running scripts|scribunto-common-timeout|exceeded the time/i;
-export function soak(){ const r=parse(`<!--${Math.random()}-->{{#invoke:Soak|run|${SOAK_N}}}`); soakLat.add(r.timings.duration); if(classify(r) && MARK.test(r.body)) soakBadTimeout.add(1); check(r,{'200':x=>x.status===200||x.status===503}); }
-export function bomb(){ const r=parse(`<!--${Math.random()}-->{{#invoke:CpuBomb|run}}`); bombLat.add(r.timings.duration); if(classify(r) && !MARK.test(r.body)) bombNoTimeout.add(1); }
+function parse(t) {
+  return http.get(
+    `${BASE}/api.php?action=parse&format=json&uselang=en&contentmodel=wikitext&disablelimitreport=1&text=${encodeURIComponent(t)}`,
+  );
+}
+function classify(r) {
+  if (r.status === 503) {
+    backpressure.add(1);
+    return false;
+  }
+  if (r.status >= 500) {
+    http5xx.add(1);
+  }
+  return true;
+}
+const MARK =
+  /time allocated for running scripts|scribunto-common-timeout|exceeded the time/i;
+export function soak() {
+  const r = parse(`<!--${Math.random()}-->{{#invoke:Soak|run|${SOAK_N}}}`);
+  soakLat.add(r.timings.duration);
+  if (classify(r) && MARK.test(r.body)) soakBadTimeout.add(1);
+  check(r, { 200: (x) => x.status === 200 || x.status === 503 });
+}
+export function bomb() {
+  const r = parse(`<!--${Math.random()}-->{{#invoke:CpuBomb|run}}`);
+  bombLat.add(r.timings.duration);
+  if (classify(r) && !MARK.test(r.body)) bombNoTimeout.add(1);
+}
 ```
 
 ```bash
@@ -996,23 +1029,23 @@ watch -n2 'podman inspect -f "{{.State.Status}} exit={{.State.ExitCode}} restart
 
 Pass/fail criteria:
 
-| # | Check | PASS | FAIL |
-|---|---|---|---|
-| F1 | Build (native + arm64 parity) | both build; all ZTS `.so` present incl. MW core reqs; `PHP_ZTS=1` | any missing / arm64 link error |
-| F2 | Cron guard | build fails if cron installed; `ENABLE_CRON=1` exits non-zero; no `cron`/`crond` in image | cron present or starts |
-| F3 | Serves pages | `index.php`, `Special:Version`, siteinfo, `load.php`, `rest.php/v1/...` all correct | any non-200/wrong body or REST routing error |
-| F4 | Login + CSRF edit | `clientlogin` Pass with the installed admin pass; non-anon csrf; `edit` `"result":"Success"` | login/edit fails or `badtoken` |
-| F5 | Health routes | `/healthz-live` 200 always (incl. DB down); `/healthz-ready` 200 healthy, 503 DB-down and memcached-down | wrong code, or live depends on DB |
-| F6 | Proxy trust | `X-Forwarded-Proto: https` -> 200 no loop; real client IP via XFF | redirect loop or edge IP recorded |
-| S1 | No crashes (the gate) | 30-min soak (threads=4, soak3/bomb1): no exit/restart; zero segfault/panic/SIG/OOM; `http_5xx==0` | any crash/restart/5xx (excl. backpressure_503) |
-| S2 | Per-thread CPU timer | `bomb_missing_timeout==0`; CpuBomb latency ~3s (cpuLimit), not ~30s nor unbounded | bomb hangs / 500 / ~30s |
-| S3 | No cross-thread timer bleed | `soak_spurious_timeout==0` while CpuBomb saturates a sibling thread | any Soak request spuriously times out |
-| S4 | Latency | `soak_latency p99` within target (< ~3x single-request baseline) | p99 regresses / climbs over time |
-| S5 | Memory stability | RSS plateaus after warmup; thread count stable | unbounded RSS/thread growth |
-| S6 | LuaStandalone fallback | identical soak on `luastandalone` passes S1-S3 | fallback also fails => app-level problem |
-| D1 | Connection budget | connects/request ~1-2; peak `Max_used_connections` ~= `num_threads x connects/req`; `Aborted_connects` flat | per-request connects high, or peak >> num_threads (leak) |
+| #   | Check                         | PASS                                                                                                        | FAIL                                                     |
+| --- | ----------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| F1  | Build (native + arm64 parity) | both build; all ZTS `.so` present incl. MW core reqs; `PHP_ZTS=1`                                           | any missing / arm64 link error                           |
+| F2  | Cron guard                    | build fails if cron installed; `ENABLE_CRON=1` exits non-zero; no `cron`/`crond` in image                   | cron present or starts                                   |
+| F3  | Serves pages                  | `index.php`, `Special:Version`, siteinfo, `load.php`, `rest.php/v1/...` all correct                         | any non-200/wrong body or REST routing error             |
+| F4  | Login + CSRF edit             | `clientlogin` Pass with the installed admin pass; non-anon csrf; `edit` `"result":"Success"`                | login/edit fails or `badtoken`                           |
+| F5  | Health routes                 | `/healthz-live` 200 always (incl. DB down); `/healthz-ready` 200 healthy, 503 DB-down and memcached-down    | wrong code, or live depends on DB                        |
+| F6  | Proxy trust                   | `X-Forwarded-Proto: https` -> 200 no loop; real client IP via XFF                                           | redirect loop or edge IP recorded                        |
+| S1  | No crashes (the gate)         | 30-min soak (threads=4, soak3/bomb1): no exit/restart; zero segfault/panic/SIG/OOM; `http_5xx==0`           | any crash/restart/5xx (excl. backpressure_503)           |
+| S2  | Per-thread CPU timer          | `bomb_missing_timeout==0`; CpuBomb latency ~3s (cpuLimit), not ~30s nor unbounded                           | bomb hangs / 500 / ~30s                                  |
+| S3  | No cross-thread timer bleed   | `soak_spurious_timeout==0` while CpuBomb saturates a sibling thread                                         | any Soak request spuriously times out                    |
+| S4  | Latency                       | `soak_latency p99` within target (< ~3x single-request baseline)                                            | p99 regresses / climbs over time                         |
+| S5  | Memory stability              | RSS plateaus after warmup; thread count stable                                                              | unbounded RSS/thread growth                              |
+| S6  | LuaStandalone fallback        | identical soak on `luastandalone` passes S1-S3                                                              | fallback also fails => app-level problem                 |
+| D1  | Connection budget             | connects/request ~1-2; peak `Max_used_connections` ~= `num_threads x connects/req`; `Aborted_connects` flat | per-request connects high, or peak >> num_threads (leak) |
 
-Go/No-Go for Step 2: all F* and S1-S3 + D1 PASS on native x86_64, then S1-S4 re-confirmed on a real arm64/Graviton host. Break-glass mitigations to keep documented: `USE_ZEND_ALLOC=0` (ZTS-on-ARM64 allocator reports) and the LuaStandalone engine.
+Go/No-Go for Step 2: all F\* and S1-S3 + D1 PASS on native x86_64, then S1-S4 re-confirmed on a real arm64/Graviton host. Break-glass mitigations to keep documented: `USE_ZEND_ALLOC=0` (ZTS-on-ARM64 allocator reports) and the LuaStandalone engine.
 
 LuaStandalone fallback toggle (`poc/Hotfix-standalone.php`; mount over `/a/Hotfix.php` after the entrypoint writes it, or pass via `MEDIAWIKI_HOTFIX_SNIPPET`):
 
@@ -1038,12 +1071,14 @@ podman compose stop app
 ## 8. Phase-0 / Step-1 prep checklist
 
 COMMIT (the drafted files, no production change):
+
 - [ ] `Dockerfile`, `Caddyfile`, `entrypoint.sh`, `zz-frankenphp.ini`, `healthz-ready.php`, `backend-overrides.php`, `l10n-build.php`, plus `poc/` (`compose.yaml`, `migrate.sh`, `poc-overrides.php`, `functional.sh`, `lua-content.sh`, `Hotfix-standalone.php`, `soak.js`).
 - [ ] Pin the FrankenPHP base by digest (resolve `dunglas/frankenphp:1.12-php8.3-bookworm`); keep `composer:2.8.6` (matches `php-fpm/Dockerfile:4`).
 - [ ] Keep pinned `luasandbox-4.1.3` (floor 4.1.1 per T322748), `wikidiff2-1.14.1`, `apcu-5.1.24` (single consistent value); confirm each tag exists and builds ZTS on arm64; bump only after re-verifying.
 - [ ] Confirm `install-php-extensions` is present in the chosen FrankenPHP tag (the build asserts this; `ADD` it pinned if absent).
 
 VALIDATE locally (podman/docker, no AWS):
+
 - [ ] Native x86_64: F1-F6 all PASS; record a single-request latency baseline; confirm `migrate` ran once and created the `objectcache` table.
 - [ ] luasandbox ZTS soak: S1-S3 + D1 PASS (30 min, threads=4); capture RSS/thread plots for S4/S5; confirm `backpressure_503` is excluded from the crash metric.
 - [ ] arm64 parity build links cleanly and shows all required ZTS `.so` + `PHP_ZTS=1` (build-only; not benchmarked under QEMU).
@@ -1052,6 +1087,7 @@ VALIDATE locally (podman/docker, no AWS):
 - [ ] Confirm `/rest.php/v1/...` and `/load.php` are correct (PATH_INFO + ResourceLoader).
 
 EXPLICITLY OUT OF SCOPE (deploy-time, Step 2+, not in this image):
+
 - [ ] The edge Caddy (TLS/Let's Encrypt via route53, certmagic-s3, caddy-mwcache + `purge_acl`, security headers, gzip, `@block_cidr`/`@filter` WAF). Stays the edge build (`dockers/caddy`), unchanged. Backend drops all of `Caddyfile:3,10-12,17-37,47-76`.
 - [ ] The PROD one-shot migration job (the `poc/migrate.sh` is the PoC shape only): `install.php` / `update.php --quick` / `importSites.php` (`run:10-43`) + the `objectcache` table for CACHE_DB sessions + driving `$wgBlockTargetMigrationStage` (`LocalSettings.php:194`) to completion. Runs exactly once, not per node.
 - [ ] The singleton job/sitemap/specialpages runner replacing the removed in-image cron. Must run ALL THREE (`mediawiki/cron`): `run-jobs` (`runJobs.php --maxtime 60`), `generate-sitemap` (`generateSitemap.php --fspath sitemap`, output published to S3 or routed by the edge since web nodes will not see local `sitemap/` files), and `update-special-pages` (`updateSpecialPages.php`, required because `$wgMiserMode=true`, `LocalSettings.php:105`, serves QueryPages from `querycache`). Monitored SPOF: exactly-one, auto-restart, alert on queue depth.
@@ -1066,25 +1102,25 @@ EXPLICITLY OUT OF SCOPE (deploy-time, Step 2+, not in this image):
 
 ## Gap-closure map
 
-| Gap (severity) | Fix | Where |
-|---|---|---|
-| l10n wrong LocalSettings path (build-breaking) | read `/a/LocalSettings.php` (staged), not the webroot | `l10n-build.php`; Dockerfile prebuild RUN |
-| cron/php-fpm assertion self-aborts on comments | strip comments before grep, match a real token, cron-detection at FS level only | Dockerfile build-assertion RUN |
-| PoC schema never created | one-shot `migrate` service runs install/update/importSites; app keeps SKIP flags | `poc/compose.yaml`, `poc/migrate.sh` |
-| Admin password never set | install with `--pass "$MEDIAWIKI_ADMIN_PASS"`; `functional.sh` reads same env | `poc/migrate.sh`, `poc/functional.sh` |
-| l10n built ko,en only (English fallback) | default builds ALL languages (`L10N_LANGS` empty); subset documented as a conscious regression | Dockerfile `ARG L10N_LANGS`; section 5 note |
-| opcache too small (4000 files) | `zz-frankenphp.ini`: 50000 files / 512M / interned 32 + realpath cache | `zz-frankenphp.ini` |
-| l10n build non-hermetic | force CACHE_NONE + clear memcached after loading LocalSettings | `l10n-build.php` |
-| soak under DEBUG_MODE | targeted `poc-overrides.php` (no debug toolbar) instead of `MEDIAWIKI_DEBUG_MODE` | `poc/poc-overrides.php`, `compose.yaml` |
-| soak overlap not guaranteed | threads=4, soak3/bomb1, ~1.5s Module:Soak, real Lua source, 503 excluded from crash metric, `uselang=en` | `soak.js`, `lua-content.sh`, `compose.yaml` |
-| rest.php PATH_INFO untested | dedicated `@pathstyle` handle + `/rest.php/v1/...` functional test | Caddyfile, functional checks |
-| verification omits MW core ext reqs | assert mbstring/dom/xml/xmlreader/simplexml/ctype/fileinfo/iconv/libxml/openssl/json/filter | Dockerfile verify loop |
-| NUM_THREADS unguarded | sizing math documented; entrypoint soft RAM warning; recommend lowering until D1 | Caddyfile, Dockerfile, entrypoint step 2b |
-| readiness heavy/unprotected | APCu 3s positive-result cache; keep internal/one-shot | `healthz-ready.php` |
-| readiness ignores CACHE_DB session store | add `getInstance(CACHE_DB)` set/get check | `healthz-ready.php` (d) |
-| apcu pin inconsistency / install-php-extensions assumed | single `apcu-5.1.24` everywhere; assert installer presence | Dockerfile |
-| gd/exif absent, PDF coder blocked | install `gd`+`exif`; relax ImageMagick PDF policy | Dockerfile |
-| /load.php + pcntl untested | `/load.php` smoke test; install `pcntl` and use it for threads with a `--threads=1` fallback | functional checks, Dockerfile |
+| Gap (severity)                                          | Fix                                                                                                      | Where                                       |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| l10n wrong LocalSettings path (build-breaking)          | read `/a/LocalSettings.php` (staged), not the webroot                                                    | `l10n-build.php`; Dockerfile prebuild RUN   |
+| cron/php-fpm assertion self-aborts on comments          | strip comments before grep, match a real token, cron-detection at FS level only                          | Dockerfile build-assertion RUN              |
+| PoC schema never created                                | one-shot `migrate` service runs install/update/importSites; app keeps SKIP flags                         | `poc/compose.yaml`, `poc/migrate.sh`        |
+| Admin password never set                                | install with `--pass "$MEDIAWIKI_ADMIN_PASS"`; `functional.sh` reads same env                            | `poc/migrate.sh`, `poc/functional.sh`       |
+| l10n built ko,en only (English fallback)                | default builds ALL languages (`L10N_LANGS` empty); subset documented as a conscious regression           | Dockerfile `ARG L10N_LANGS`; section 5 note |
+| opcache too small (4000 files)                          | `zz-frankenphp.ini`: 50000 files / 512M / interned 32 + realpath cache                                   | `zz-frankenphp.ini`                         |
+| l10n build non-hermetic                                 | force CACHE_NONE + clear memcached after loading LocalSettings                                           | `l10n-build.php`                            |
+| soak under DEBUG_MODE                                   | targeted `poc-overrides.php` (no debug toolbar) instead of `MEDIAWIKI_DEBUG_MODE`                        | `poc/poc-overrides.php`, `compose.yaml`     |
+| soak overlap not guaranteed                             | threads=4, soak3/bomb1, ~1.5s Module:Soak, real Lua source, 503 excluded from crash metric, `uselang=en` | `soak.js`, `lua-content.sh`, `compose.yaml` |
+| rest.php PATH_INFO untested                             | dedicated `@pathstyle` handle + `/rest.php/v1/...` functional test                                       | Caddyfile, functional checks                |
+| verification omits MW core ext reqs                     | assert mbstring/dom/xml/xmlreader/simplexml/ctype/fileinfo/iconv/libxml/openssl/json/filter              | Dockerfile verify loop                      |
+| NUM_THREADS unguarded                                   | sizing math documented; entrypoint soft RAM warning; recommend lowering until D1                         | Caddyfile, Dockerfile, entrypoint step 2b   |
+| readiness heavy/unprotected                             | APCu 3s positive-result cache; keep internal/one-shot                                                    | `healthz-ready.php`                         |
+| readiness ignores CACHE_DB session store                | add `getInstance(CACHE_DB)` set/get check                                                                | `healthz-ready.php` (d)                     |
+| apcu pin inconsistency / install-php-extensions assumed | single `apcu-5.1.24` everywhere; assert installer presence                                               | Dockerfile                                  |
+| gd/exif absent, PDF coder blocked                       | install `gd`+`exif`; relax ImageMagick PDF policy                                                        | Dockerfile                                  |
+| /load.php + pcntl untested                              | `/load.php` smoke test; install `pcntl` and use it for threads with a `--threads=1` fallback             | functional checks, Dockerfile               |
 
 Relevant absolute paths (current image, read-only, used to verify every citation):
 `/home/nemo/git/fw/docker-mediawiki/dockers/femiwiki/{run,Dockerfile,Caddyfile,LocalSettings.php,Hotfix.php,site-list.xml,prerun,postrun}`, `/home/nemo/git/fw/docker-mediawiki/dockers/php-fpm/{Dockerfile,php.ini,opcache-recommended.ini,www.conf}`, `/home/nemo/git/fw/docker-mediawiki/dockers/mediawiki/{Dockerfile,cron/crontab,cron/run-jobs,cron/generate-sitemap,cron/update-special-pages}`.
