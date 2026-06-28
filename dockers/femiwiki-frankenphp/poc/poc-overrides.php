@@ -13,8 +13,13 @@ $wgCaptchaTriggers['edit']          = false;
 $wgCaptchaTriggers['create']        = false;
 $wgCaptchaTriggers['badlogin']      = false;
 
-// Plain-HTTP PoC: no CDN pur520ging, allow anon edit so the smoke test can write without email-confirm.
+// Plain-HTTP PoC: no CDN purging, allow anon edit so the smoke test can write without email-confirm.
 $wgUseCdn             = false;
 $wgEmailConfirmToEdit = false;
+
+// Plain-HTTP PoC has no edge sending X-Forwarded-Proto: https, so $wgForceHTTPS (LocalSettings.php:35)
+// would 301-redirect every request. Disable it for the PoC only; production keeps it (the edge Caddy
+// sends X-Forwarded-Proto: https and the backend trusts it).
+$wgForceHTTPS = false;
 
 // Keep error visibility production-like (do NOT turn on display_errors).

@@ -37,15 +37,18 @@ services:
     entrypoint: ["/bin/sh", "/migrate.sh"]
     volumes:
       - ./migrate.sh:/migrate.sh:ro
+      # migrate.sh composes /a/Hotfix.php to require backend-overrides + poc-overrides, so the PoC
+      # override must be present in the migrate container too (not just app).
+      - ./poc-overrides.php:/a/poc-overrides.php:ro
     environment: &mwenv
-      MEDIAWIKI_SERVER: "http://localhost:8080"
+      MEDIAWIKI_SERVER: "http://localhost:18080"
       WG_DB_SERVER: "db"
       WG_DB_USER: "root"
       WG_DB_PASSWORD: "root"
       WG_MEMCACHED_SERVERS: "memcached:11211"
       WG_SECRET_KEY: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
       WG_UPGRADE_KEY: "0123456789abcdef"
-      WG_INTERNAL_SERVER: "http://localhost:8080"
+      WG_INTERNAL_SERVER: "http://localhost:18080"
       WG_CDN_SERVERS: "127.0.0.1"
       WG_CDN_SERVERS_NO_PURGE: "10.0.0.0/8,127.0.0.1"
       MEDIAWIKI_ADMIN_USER: "Admin"
@@ -74,4 +77,4 @@ services:
       MEDIAWIKI_HOTFIX_SNIPPET: "<?php require __DIR__ . '/poc-overrides.php';"
     volumes:
       - ./poc-overrides.php:/a/poc-overrides.php:ro
-    ports: ["8080:8080"]
+    ports: ["18080:8080"]
