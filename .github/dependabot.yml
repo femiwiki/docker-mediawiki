@@ -34,8 +34,7 @@ updates:
       interval: monthly
     reviewers:
       - 'femiwiki/reviewer'
-    ignore:
-      - dependency-name: '*'
-        update-types:
-          - 'version-update:semver-minor'
-          - 'version-update:semver-patch'
+    groups:
+      github-actions:
+        patterns:
+          - "*"
