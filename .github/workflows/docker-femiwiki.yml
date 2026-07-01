@@ -15,41 +15,37 @@ concurrency:
   group: docker-femiwiki
   cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
 
+permissions: {}
+
 jobs:
-  docker-image:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: docker/setup-qemu-action@v3
-
-      - uses: docker/setup-buildx-action@v3
-
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
       - name: Edit configuration
         run: |
           mv dockers/femiwiki/LocalSettings.php development
           mv dockers/femiwiki/Hotfix.php development
           sed -i -r 's~ghcr\.io\/femiwiki\/femiwiki:.+~ghcr\.io\/femiwiki\/femiwiki:docker-test~' compose.yml
-
-      - run: |
-          echo "version=$(date +%Y-%m-%dT%H-%M)-$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
-        id: version
-
-      - uses: docker/build-push-action@v6
+      - name: Build amd64 image for testing
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           context: '{{ defaultContext }}:dockers/femiwiki'
           platforms: linux/amd64
-          cache-from: ghcr.io/femiwiki/femiwiki:latest
-          cache-to: mode=max,type=local,dest=/tmp/.buildx-cache
+          cache-from: type=gha,scope=femiwiki-amd64
+          cache-to: type=gha,mode=max,scope=femiwiki-amd64
           load: true
           push: false
           tags: ghcr.io/femiwiki/femiwiki:docker-test
-
       - name: Initialize docker swarm and start services
         run: |
           docker swarm init
           docker stack deploy -c compose.yml mediawiki
-
       - name: Access 127.0.0.1:8080 until success
         timeout-minutes: 2
         run: |
@@ -66,7 +62,6 @@ jobs:
           URL="127.0.0.1:8080/w/Special:MathStatus"
           until curl -sLfo /dev/null "$URL"; do
             sleep 1; done
-
       - name: backup of failure
         if: ${{ failure() }}
         timeout-minutes: 1
@@ -77,42 +72,106 @@ jobs:
           curl -Lv "$URL" && echo "VE success" || echo "VE failure"
           URL="127.0.0.1:8080/w/Special:MathStatus"
           curl -Lv "$URL" && echo "Math success" || echo "Math failure"
-
       - name: backup of failure - docker status
         if: ${{ failure() }}
         run: |
           docker ps;
           for s in $(docker service ls -q ); do docker service ps "$s"; done
           docker container ps;
-
       - name: backup of failure - docker logs
         if: ${{ failure() }}
         run: |
           for s in $(docker service ls -q ); do docker service logs "$s"; done
-
       - name: Check if the container is still up
         run: test "$(docker service ps -qf 'desired-state=Running' -f 'desired-state=Ready' mediawiki_fastcgi)"
       - name: Try to access the mediawiki
         run: curl -sSLvo /dev/null 127.0.0.1:8080 || docker service logs mediawiki_fastcgi
 
-      - uses: docker/login-action@v3
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-24.04
+          - platform: linux/arm64
+            arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+      - name: Log in to ghcr.io
         if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build a multi-platform docker image and push
-        uses: docker/build-push-action@v6
+      - name: Build ${{ matrix.platform }}
+        id: build
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
-          context: '{{defaultContext}}:dockers/femiwiki'
-          platforms: linux/amd64,linux/arm64
-          cache-from: |
-            ghcr.io/femiwiki/femiwiki:latest
-            type=local,src=/tmp/.buildx-cache
-          cache-to: mode=max,type=inline
-          load: false
-          push: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
-          tags: |
-            ghcr.io/femiwiki/femiwiki:latest
-            ghcr.io/femiwiki/femiwiki:${{ steps.version.outputs.version }}
+          context: '{{ defaultContext }}:dockers/femiwiki'
+          platforms: ${{ matrix.platform }}
+          cache-from: type=gha,scope=femiwiki-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=femiwiki-${{ matrix.arch }}
+          outputs: ${{ (github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main') && 'type=image,name=ghcr.io/femiwiki/femiwiki,push-by-digest=true,name-canonical=true,push=true' || 'type=cacheonly' }}
+      - name: Export digest
+        if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          mkdir -p "${RUNNER_TEMP}/digests"
+          touch "${RUNNER_TEMP}/digests/${DIGEST#sha256:}"
+      - name: Upload digest
+        if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: digests-femiwiki-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  push-manifest:
+    needs: [test, build]
+    if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+      - id: version
+        run: echo "version=$(date +%Y-%m-%dT%H-%M)-$(echo "$GITHUB_SHA" | cut -c1-8)" >> "$GITHUB_OUTPUT"
+      - name: Download digests
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-femiwiki-*
+          merge-multiple: true
+      - name: Log in to ghcr.io
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create and push manifest
+        working-directory: ${{ runner.temp }}/digests
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          image=ghcr.io/femiwiki/femiwiki
+          args=()
+          for digest in *; do
+            args+=("${image}@sha256:${digest}")
+          done
+          docker buildx imagetools create \
+            -t "${image}:latest" \
+            -t "${image}:${VERSION}" \
+            "${args[@]}"
