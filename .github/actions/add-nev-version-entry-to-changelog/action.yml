@@ -12,21 +12,25 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: |
-        OLD_VER=$(grep '## v' dockers/${{ inputs.upstream }}/README.md | tail -n +2  | head -n 1 | cut -dv -f2)
+    - env:
+        INPUTS_UPSTREAM: ${{ inputs.upstream }}
+        INPUTS_VERSION: ${{ inputs.version }}
+        INPUTS_DOWNSTREAM: ${{ inputs.downstream }}
+      shell: bash
+      run: |
+        OLD_VER=$(grep '## v' dockers/${INPUTS_UPSTREAM}/README.md | tail -n +2  | head -n 1 | cut -dv -f2)
 
         # Update Dockerfile
-        sed -i "s/$OLD_VER/${{ inputs.version }}/" dockers/${{ inputs.downstream }}/Dockerfile
+        sed -i "s/$OLD_VER/${INPUTS_VERSION}/" dockers/${INPUTS_DOWNSTREAM}/Dockerfile
         if [ ! -z "$(git status --porcelain)" ]; then
           # Add an entry to README.md
-          head -n 2 dockers/${{ inputs.downstream }}/README.md > temp.md
-          grep -m 1 '## v' dockers/${{ inputs.downstream }}/README.md | cut -d. -f1-2 | tr -d '\n' >> temp.md
+          head -n 2 dockers/${INPUTS_DOWNSTREAM}/README.md > temp.md
+          grep -m 1 '## v' dockers/${INPUTS_DOWNSTREAM}/README.md | cut -d. -f1-2 | tr -d '\n' >> temp.md
           echo -n . >> temp.md
-          grep -m 1 '## v' dockers/${{ inputs.downstream }}/README.md | cut -d. -f3 | awk '{print $1 + 1}' >> temp.md
+          grep -m 1 '## v' dockers/${INPUTS_DOWNSTREAM}/README.md | cut -d. -f3 | awk '{print $1 + 1}' >> temp.md
           echo >> temp.md
-          echo '- Bump femiwiki/${{ inputs.upstream }} to v${{ inputs.version }}' >> temp.md
+          echo '- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}' >> temp.md
           echo >> temp.md
-          tail -n +3 dockers/${{ inputs.downstream }}/README.md >> temp.md
-          mv -f temp.md dockers/${{ inputs.downstream }}/README.md
+          tail -n +3 dockers/${INPUTS_DOWNSTREAM}/README.md >> temp.md
+          mv -f temp.md dockers/${INPUTS_DOWNSTREAM}/README.md
         fi
-      shell: bash
