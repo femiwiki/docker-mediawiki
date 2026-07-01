@@ -2,13 +2,12 @@ name: 'Docker: caddy'
 
 on:
   push:
-    paths:
+    branches: [main]
+    paths: &paths
       - 'dockers/caddy/**'
       - .github/workflows/docker-caddy.yml
   pull_request:
-    paths:
-      - 'dockers/caddy/**'
-      - .github/workflows/docker-caddy.yml
+    paths: *paths
   workflow_dispatch:
 
 permissions: {}

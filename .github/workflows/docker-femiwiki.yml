@@ -2,13 +2,12 @@ name: 'Docker: femiwiki'
 
 on:
   push:
-    paths:
+    branches: [main]
+    paths: &paths
       - 'dockers/femiwiki/**'
       - .github/workflows/docker-femiwiki.yml
   pull_request:
-    paths:
-      - 'dockers/femiwiki/**'
-      - .github/workflows/docker-femiwiki.yml
+    paths: *paths
   workflow_dispatch:
 
 concurrency:
