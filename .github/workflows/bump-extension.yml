@@ -17,24 +17,37 @@ on:
 jobs:
   bump-extension:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@0dafeac902942906541bc140009cdbf32665b601 # v1.315.0
         with:
           ruby-version: '3.1'
 
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
         id: vars
+        env:
+          CLIENT_PAYLOAD_EXTENSION: ${{ github.event.client_payload.extension }}
+          CLIENT_PAYLOAD_VERSION: ${{ github.event.client_payload.version }}
+          INPUT_EXT: ${{ github.event.inputs.ext }}
+          INPUT_VER: ${{ github.event.inputs.ver }}
         with:
           script: |
             return {
-              ext: '${{github.event.client_payload.extension}}' || '${{github.event.inputs.ext}}',
-              ver: '${{github.event.client_payload.version}}' || '${{github.event.inputs.ver}}',
+              ext: process.env.CLIENT_PAYLOAD_EXTENSION || process.env.INPUT_EXT,
+              ver: process.env.CLIENT_PAYLOAD_VERSION || process.env.INPUT_VER,
             }
 
       - name: Update extensions.json
-        run: ruby .github/bump_extension.rb '${{fromJSON(steps.vars.outputs.result).ext}}' '${{fromJSON(steps.vars.outputs.result).ver}}'
+        env:
+          EXT: ${{ fromJSON(steps.vars.outputs.result).ext }}
+          VER: ${{ fromJSON(steps.vars.outputs.result).ver }}
+        run: ruby .github/bump_extension.rb "$EXT" "$VER"
 
       - name: Update README
         uses: ./.github/actions/add-changelog-entry
@@ -42,7 +55,7 @@ jobs:
           image: femiwiki-extensions
           message: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
 
-      - uses: peter-murray/workflow-application-token-action@v4
+      - uses: peter-murray/workflow-application-token-action@d17e3a9a36850ea89f35db16c1067dd2b68ee343 # v4.0.1
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         id: get_workflow_token
         with:
@@ -50,7 +63,7 @@ jobs:
           application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7.0.11
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
