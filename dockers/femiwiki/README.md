@@ -2,7 +2,7 @@
 
 ## v1.4.5
 
-- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}
+- Bump femiwiki/caddy to v1.4.0
 
 ## v1.4.4
 
