@@ -1,5 +1,9 @@
 # femiwiki
 
+## v1.4.6
+
+- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}
+
 ## v1.4.5
 
 - Bump femiwiki/caddy to v1.4.0
