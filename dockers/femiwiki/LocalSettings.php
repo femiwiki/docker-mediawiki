@@ -551,9 +551,6 @@ $wgEchoPerUserBlacklist = true;
 // EmbedVideo
 wfLoadExtension( 'EmbedVideo' );
 
-// EventLogging
-wfLoadExtension( 'EventLogging' );
-
 // FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
