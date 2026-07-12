@@ -2,6 +2,11 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.4.3
+
+- Remove EventLogging. It was installed only as a dependency of DiscussionTools,
+  which no longer requires it.
+
 ## v2.4.2
 
 - Bump AWS to v0.14.0
