@@ -55,7 +55,7 @@ jobs:
           image: femiwiki-extensions
           message: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
 
-      - uses: peter-murray/workflow-application-token-action@d17e3a9a36850ea89f35db16c1067dd2b68ee343 # v4.0.1
+      - uses: peter-murray/workflow-application-token-action@cb731e00cb6754f584507134ff389dfb3dc42bbc # v5.1.0
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         id: get_workflow_token
         with:
