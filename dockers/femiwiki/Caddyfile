@@ -19,6 +19,7 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		ristretto {
 			num_counters 10000
 			max_cost 1000
+			ignore_internal_cost true
 			buffer_items 64
 		}
 		purge_acl {
