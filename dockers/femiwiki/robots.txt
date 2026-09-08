@@ -17,8 +17,15 @@ Allow: /*&action=raw
 User-agent: *
 Allow: /api.php?action=mobileview&
 Allow: /femiwiki.com/v1/?doc
+Disallow: /*&action=
+Disallow: /*?action=edit
+Disallow: /*?action=history
+Disallow: /*?action=info
+Disallow: /*?action=raw
 Disallow: /*&diff=
+Disallow: /*?diff=
 Disallow: /*&oldid=
+Disallow: /*?oldid=
 Disallow: /*&direction=
 Disallow: /*&redlink=
 Disallow: /api.php
