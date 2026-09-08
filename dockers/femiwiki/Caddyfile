@@ -5,6 +5,7 @@
 	order mwcache before rewrite
 	# NOTE: See @filter for the further details
 	order respond before mwcache
+	order encode before mwcache
 }
 femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	tls {
