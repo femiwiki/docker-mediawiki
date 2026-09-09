@@ -22,6 +22,7 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		}
 		purge_acl {
 			172.31.0.0/16
+			10.20.0.0/16
 			127.0.0.1
 		}
 	}
