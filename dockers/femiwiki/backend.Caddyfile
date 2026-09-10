@@ -1,0 +1,20 @@
+# Backend role for the ASG app tier (femiwiki/femiwiki#476).
+#
+# Plain HTTP, no TLS, no mwcache, no crawler blocking - the edge owns all of
+# that. Reachable only from the edge security group. Run with:
+#   caddy run --config /srv/femiwiki.com/backend.Caddyfile
+#
+# Static assets are served here, next to the PHP that expects them, so a
+# rolling deploy never pairs one version's assets with another's code.
+#
+# The single-box setup does not use this file, so shipping it changes nothing
+# until the app tier exists.
+:8080 {
+	root * /srv/femiwiki.com
+	php_fastcgi {$FASTCGI_ADDR}
+	file_server
+
+	log {
+		format json
+	}
+}
