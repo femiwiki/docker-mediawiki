@@ -11,6 +11,11 @@
 # until the app tier exists.
 :8080 {
 	root * /srv/femiwiki.com
+
+	# Liveness: proves php-fpm executes PHP, and nothing more. Used by Caddy's
+	# active health checks and the container watchdog.
+	rewrite /healthz-live /healthz-live.php
+
 	php_fastcgi {$FASTCGI_ADDR}
 	file_server
 
