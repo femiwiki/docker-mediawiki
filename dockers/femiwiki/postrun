@@ -1,2 +1,10 @@
 #!/bin/bash
 set -euxo pipefail; IFS=$'\n\t'
+
+# Build the localisation cache before php-fpm accepts traffic, so the first
+# request does not pay for merging every i18n/*.json in core and every
+# extension. Runs here rather than at image-build time because LocalSettings.php
+# reaches the database during bootstrap - an $wgExtensionFunctions entry calls
+# SpecialPage::getTitleFor - so no MediaWiki bootstrap works without a server.
+# See femiwiki/femiwiki#472.
+php /srv/femiwiki.com/maintenance/rebuildLocalisationCache.php --quiet
