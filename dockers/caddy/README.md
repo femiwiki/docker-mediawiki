@@ -2,6 +2,10 @@
 
 Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 
+## v1.5.1
+
+- Bump caddy-mwcache to [v0.1.1](https://github.com/femiwiki/caddy-mwcache/releases/tag/v0.1.1)
+
 ## v1.5.0
 
 - Install [caddy-ratelimit](https://github.com/mholt/caddy-ratelimit) 5625512f24f6f59d6f64fb3aafe5eecff0b286db
