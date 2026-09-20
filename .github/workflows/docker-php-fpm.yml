@@ -3,11 +3,12 @@ name: 'Docker: php-fpm'
 on:
   push:
     branches: [main]
-    paths: &paths
+    paths:
+      - 'dockers/php-fpm/**'
+  pull_request:
+    paths:
       - 'dockers/php-fpm/**'
       - .github/workflows/docker-php-fpm.yml
-  pull_request:
-    paths: *paths
   workflow_dispatch:
 
 permissions: {}
