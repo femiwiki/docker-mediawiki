@@ -1,20 +1,26 @@
 #!/bin/bash
 # Starts Caddy in two steps so a replacement container never answers a TLS
 # handshake before its certificates are loaded: Caddy opens the listeners
-# first and loads managed certificates afterwards, and with SO_REUSEPORT the
-# kernel hands the new socket connections the moment it is bound.
+# first and loads managed certificates in the background, and with
+# SO_REUSEPORT the kernel hands the new socket connections the moment it is
+# bound. The warm-up config serves HTTPS on loopback only; once a handshake
+# with the site's name succeeds there, the certificate is cached and the
+# full config can open the real listeners.
 #
 # The full config is sent as Caddyfile text so the server adapts it itself:
 # mwcache only takes its options from the adapter (femiwiki/caddy-mwcache#119),
 # and `caddy reload` would adapt in the client process instead.
 set -euo pipefail
 cd /srv/femiwiki.com
+WARMUP_PORT=8443
 
 caddy adapt --config Caddyfile --adapter caddyfile > /tmp/caddy.json
-php /a/caddy-warmup.php /tmp/caddy.json > /tmp/caddy-warmup.json
+php /a/caddy-warmup.php /tmp/caddy.json "$WARMUP_PORT" > /tmp/caddy-warmup.json
+NAME="$(cat /tmp/caddy-warmup-name)"
 
 caddy run --config /tmp/caddy-warmup.json &
-until curl -sf --unix-socket /run/caddy-warmup.sock -H 'Content-Type: text/caddyfile' --data-binary @Caddyfile http://caddy/load; do
+until curl -sfk -o /dev/null --resolve "$NAME:$WARMUP_PORT:127.0.0.1" "https://$NAME:$WARMUP_PORT/"; do
   sleep 0.2
 done
+curl -sf --unix-socket /run/caddy-warmup.sock -H 'Content-Type: text/caddyfile' --data-binary @Caddyfile http://caddy/load
 wait
