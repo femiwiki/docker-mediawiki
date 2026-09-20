@@ -2,6 +2,9 @@ version: 2
 updates:
   - package-ecosystem: 'docker'
     directory: '/'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
@@ -11,6 +14,9 @@ updates:
 
   - package-ecosystem: 'composer'
     directory: '/'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
@@ -20,6 +26,9 @@ updates:
 
   - package-ecosystem: 'npm'
     directory: '/'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
@@ -29,6 +38,9 @@ updates:
 
   - package-ecosystem: 'bundler'
     directory: '/dockers/femiwiki-extensions/extension-installer'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
@@ -38,6 +50,9 @@ updates:
 
   - package-ecosystem: 'github-actions'
     directory: '/'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
