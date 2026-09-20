@@ -1,46 +1,67 @@
 <?php
 /**
- * Writes the page Caddy serves with a 429. The text is MediaWiki's own
- * "actionthrottled" messages, so translations come from translatewiki with
- * every MediaWiki release. The languages are those of 미디어위키:Loginlanguagelinks.
+ * Writes the page Caddy serves with a 429, and the translations beside it.
+ * The text is MediaWiki's own "actionthrottled" messages, so every language
+ * translatewiki has comes with each MediaWiki release. The page itself is
+ * small (it is what crawlers get); 429.json holds all languages and only a
+ * browser running the script fetches it.
  *
- * Usage: php 429.php <mediawiki root> > 429.html
+ * Usage: php 429.php <mediawiki root> <output dir>
  */
 
-$langs = [ 'ko', 'en', 'ja', 'fr', 'de', 'es', 'ru' ];
 $root = $argv[1] ?? '/srv/femiwiki.com';
+$out = $argv[2] ?? '/srv/femiwiki.com';
 
-$titles = [];
-$paras = [];
-$selectors = [];
-foreach ( $langs as $lang ) {
-	$messages = json_decode( file_get_contents( "$root/languages/i18n/$lang.json" ), true );
-	$title = htmlspecialchars( $messages['actionthrottled'] );
-	$text = nl2br( htmlspecialchars( $messages['actionthrottledtext'] ), false );
-	$titles[$lang] = $messages['actionthrottled'];
-	$paras[] = "<p lang=\"$lang\">$text</p>";
-	$selectors[] = "html:lang($lang) p:lang($lang)";
+$all = [];
+foreach ( glob( "$root/languages/i18n/*.json" ) as $file ) {
+	$lang = basename( $file, '.json' );
+	if ( $lang === 'qqq' ) {
+		continue;
+	}
+	$messages = json_decode( file_get_contents( $file ), true );
+	if ( isset( $messages['actionthrottled'], $messages['actionthrottledtext'] ) ) {
+		$all[$lang] = [ 't' => $messages['actionthrottled'], 'b' => $messages['actionthrottledtext'] ];
+	}
 }
-$titlesJson = json_encode( $titles, JSON_UNESCAPED_UNICODE );
-$titleKo = htmlspecialchars( $titles['ko'] );
-$paraHtml = implode( "\n", $paras );
-$selectorCss = implode( ',', $selectors );
+ksort( $all );
+file_put_contents( "$out/429.json", json_encode( $all, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) );
 
-echo <<<HTML
+$en = htmlspecialchars( $all['en']['t'] );
+$enText = nl2br( htmlspecialchars( $all['en']['b'] ), false );
+$koText = nl2br( htmlspecialchars( $all['ko']['b'] ), false );
+
+file_put_contents( "$out/429.html", <<<HTML
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
-<title>$titleKo</title>
-<style>
-body{font:16px/1.6 sans-serif;max-width:36em;margin:4em auto;padding:0 1em}
-p{display:none}
-$selectorCss{display:block}
-</style>
-$paraHtml
+<title>$en</title>
+<style>body{font:16px/1.6 sans-serif;max-width:36em;margin:4em auto;padding:0 1em}</style>
+<p lang="en" id="first">$enText</p>
+<p lang="ko" id="second">$koText</p>
 <script>
-var titles=$titlesJson;
-for(var i=0,l=navigator.languages||[navigator.language];i<l.length;i++){var c=(l[i]||"").slice(0,2).toLowerCase();if(titles[c]){document.documentElement.lang=c;document.title=titles[c];break}}
+(function () {
+	var want = [];
+	(navigator.languages || [navigator.language]).forEach(function (l) {
+		l = (l || "").toLowerCase();
+		want.push(l);
+		if (l.indexOf("-") > 0) want.push(l.split("-")[0]);
+	});
+	fetch("/429.json").then(function (r) { return r.json(); }).then(function (all) {
+		for (var i = 0; i < want.length; i++) {
+			var m = all[want[i]];
+			if (!m) continue;
+			var p = document.getElementById("first");
+			p.lang = want[i];
+			p.textContent = m.b;
+			document.getElementById("second").remove();
+			document.documentElement.lang = want[i];
+			document.title = m.t;
+			return;
+		}
+	}).catch(function () {});
+})();
 </script>
 
-HTML;
+HTML
+);
