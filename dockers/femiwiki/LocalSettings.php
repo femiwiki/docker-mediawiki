@@ -129,8 +129,8 @@ $wgMWLoggerDefaultSpi = [
 		],
 		'handlers' => [
 			'stream' => [
-				'class' => '\\Monolog\\Handler\\StreamHandler',
-				'args' => [ 'php://stdout', 'info' ],
+				'class' => '\\Monolog\\Handler\\ErrorLogHandler',
+				'args' => [ \Monolog\Handler\ErrorLogHandler::OPERATING_SYSTEM, 'info' ],
 				'formatter' => 'json'
 			],
 		],
