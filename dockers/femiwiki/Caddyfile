@@ -16,6 +16,22 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		dns route53
 	}
 	root * /srv/femiwiki.com
+	# Requests that reach php-fpm without a session, per /24. Cache hits never
+	# get here. Readers peak at a few a minute; crawlers at 30 and more.
+	rate_limit {
+		zone dynamic {
+			match {
+				path /index.php* /api.php*
+				not header Cookie *femiwiki*
+			}
+			key {client_ip}
+			ipv4_prefix 24
+			ipv6_prefix 64
+			events 30
+			window 1m
+		}
+		log_key
+	}
 	# Two ports so a new fastcgi container can start beside the old one
 	php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
 		lb_policy round_robin
