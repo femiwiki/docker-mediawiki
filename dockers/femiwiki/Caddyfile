@@ -17,7 +17,9 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	}
 	root * /srv/femiwiki.com
 	# Requests that reach php-fpm without a session, per /24. Cache hits never
-	# get here. Readers peak at a few a minute; crawlers at 30 and more.
+	# get here, and the login and signup pages set a session cookie on first
+	# view, so a room full of people joining an edit-a-thon counts once each.
+	# Readers peak at a few a minute; crawlers at 30 and more, all day.
 	rate_limit {
 		zone dynamic {
 			match {
@@ -27,10 +29,18 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			key {client_ip}
 			ipv4_prefix 24
 			ipv6_prefix 64
-			events 30
-			window 1m
+			events 300
+			window 10m
 		}
 		log_key
+	}
+	handle_errors 429 {
+		header Content-Type "text/html; charset=utf-8"
+		respond <<HTML
+			<!doctype html>
+			<html lang="ko"><meta charset="utf-8"><title>잠시 후 다시 시도해 주세요</title>
+			<p>같은 네트워크에서 짧은 시간에 요청이 많아 잠시 제한되었습니다. 잠시 뒤에 다시 시도해 주세요. 로그인한 상태에서는 제한이 없습니다.</p>
+			HTML 429
 	}
 	# Two ports so a new fastcgi container can start beside the old one
 	php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
