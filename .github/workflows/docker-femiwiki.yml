@@ -144,6 +144,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: write
+      pull-requests: read
     steps:
       - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
       - id: version
@@ -185,6 +186,29 @@ jobs:
           token: ${{ steps.get_workflow_token.outputs.token }}
           path: infra
           persist-credentials: false
+      - name: List the pull requests since the tag infra currently uses
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          OLD="$(grep -oE 'ghcr\.io/femiwiki/femiwiki:[^"]+' infra/docker/container.tf | head -1 | grep -oE '[0-9a-f]{8}$' || true)"
+          COMMITS=""
+          if [ -n "$OLD" ]; then
+            COMMITS="$(gh api "repos/${REPO}/compare/${OLD}...${SHA}" --jq '.commits[].sha' 2>/dev/null || true)"
+          fi
+          [ -n "$COMMITS" ] || COMMITS="$SHA"
+          REFS=""
+          for c in $COMMITS; do
+            n="$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0].number // empty')"
+            if [ -n "$n" ]; then REFS="${REFS}- ${REPO}#${n}"$'\n'; else REFS="${REFS}- ${REPO}@${c}"$'\n'; fi
+          done
+          {
+            echo "refs<<EOF"
+            printf '%s' "$REFS" | awk '!seen[$0]++'
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
       - name: Bump the image tag
         working-directory: infra
         env:
@@ -202,6 +226,7 @@ jobs:
           title: 'docker: Bump femiwiki image to ${{ steps.version.outputs.version }}'
           branch: bump-femiwiki-image
           body: |
-            Built from femiwiki/docker-mediawiki@${{ github.sha }}.
+            Built from:
+            ${{ steps.source.outputs.refs }}
 
             Opened as a draft: nothing deploys until zero-downtime work lands.
