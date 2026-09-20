@@ -65,6 +65,16 @@ RUN mkdir -p /srv/fcgi-check &&\
     curl -fSL "$BASE/AdoyFastCgiClient.php" -o /srv/fcgi-check/AdoyFastCgiClient.php &&\
     curl -fSL "$BASE/fcgi-probe.php" -o /srv/fcgi-check/fcgi-probe.php
 
+# Reads secrets from SSM Parameter Store at start when SSM_SECRETS is set; see run.
+ARG TARGETARCH
+ARG CHAMBER_VERSION=v3.1.5
+RUN BASE="https://github.com/segmentio/chamber/releases/download/${CHAMBER_VERSION}" &&\
+    curl -fSL "$BASE/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" -o "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" &&\
+    curl -fSL "$BASE/chamber-${CHAMBER_VERSION}.sha256sums" -o /tmp/chamber.sha256sums &&\
+    grep "linux-${TARGETARCH}" /tmp/chamber.sha256sums | sed 's|  chamber-|  /tmp/chamber-|' | sha256sum -c - &&\
+    install -m 0755 "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" /usr/local/bin/chamber &&\
+    rm "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" /tmp/chamber.sha256sums
+
 EXPOSE 80
 EXPOSE 443
 EXPOSE 9000
