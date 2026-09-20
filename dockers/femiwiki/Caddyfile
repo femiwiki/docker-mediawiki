@@ -20,7 +20,6 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
 		lb_policy round_robin
 		lb_try_duration 5s
-		fail_duration 10s
 		health_uri /healthz.php
 		health_interval 1s
 		health_timeout 10s
