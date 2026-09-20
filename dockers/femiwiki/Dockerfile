@@ -52,6 +52,19 @@ COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/a/"]
 
 COPY --chown=www-data LocalSettings.php /a/
 
+# php-fpm liveness probe, from Wikimedia's production images. Pinned to the
+# same commit the deploy already uses, so baking it in changes no behaviour -
+# bumping it upstream is a separate, visible change.
+#
+# It is baked rather than fetched at runtime because the container healthcheck
+# currently curls these from raw.githubusercontent.com with retries=0, so a
+# fresh container restart-loops whenever that fetch fails.
+ARG WMF_PRODUCTION_IMAGES=ad68c7cb62e4e01436ab3a34fb961fe8034c2cce
+RUN mkdir -p /srv/fcgi-check &&\
+    BASE="https://github.com/wikimedia/operations-docker-images-production-images/raw/${WMF_PRODUCTION_IMAGES}/images/php/common/fpm/live-test" &&\
+    curl -fSL "$BASE/AdoyFastCgiClient.php" -o /srv/fcgi-check/AdoyFastCgiClient.php &&\
+    curl -fSL "$BASE/fcgi-probe.php" -o /srv/fcgi-check/fcgi-probe.php
+
 EXPOSE 80
 EXPOSE 443
 EXPOSE 9000
