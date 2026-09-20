@@ -34,12 +34,32 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		}
 		log_key
 	}
+	# Static page in the languages of 미디어위키:Loginlanguagelinks; the browser
+	# picks one, so nothing here depends on Accept-Language server-side
 	handle_errors 429 {
 		header Content-Type "text/html; charset=utf-8"
 		respond <<HTML
 			<!doctype html>
-			<html lang="ko"><meta charset="utf-8"><title>잠시 후 다시 시도해 주세요</title>
-			<p>같은 네트워크에서 짧은 시간에 요청이 많아 잠시 제한되었습니다. 잠시 뒤에 다시 시도해 주세요. 로그인한 상태에서는 제한이 없습니다.</p>
+			<html lang="ko">
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width">
+			<title>잠시 후 다시 시도해 주세요</title>
+			<style>
+			body{font:16px/1.6 sans-serif;max-width:36em;margin:4em auto;padding:0 1em}
+			p{display:none}
+			html:lang(ko) p:lang(ko),html:lang(en) p:lang(en),html:lang(ja) p:lang(ja),html:lang(fr) p:lang(fr),html:lang(de) p:lang(de),html:lang(es) p:lang(es),html:lang(ru) p:lang(ru){display:block}
+			</style>
+			<p lang="ko">같은 네트워크에서 짧은 시간에 요청이 많아 잠시 제한되었습니다. 잠시 뒤에 다시 시도해 주세요. 로그인한 상태에서는 제한이 없습니다.</p>
+			<p lang="en">Too many requests came from your network in a short time, so access is paused briefly. Please try again in a moment. Logged-in users are not limited.</p>
+			<p lang="ja">同じネットワークから短時間に多くのリクエストがあったため、一時的に制限しています。しばらくしてからもう一度お試しください。ログインしていれば制限はありません。</p>
+			<p lang="fr">Trop de requêtes sont venues de votre réseau en peu de temps, l'accès est donc suspendu brièvement. Réessayez dans un instant. Les utilisateurs connectés ne sont pas limités.</p>
+			<p lang="de">Aus Ihrem Netzwerk kamen in kurzer Zeit zu viele Anfragen, daher ist der Zugriff kurz pausiert. Bitte versuchen Sie es gleich noch einmal. Angemeldete Benutzer sind nicht betroffen.</p>
+			<p lang="es">Llegaron demasiadas solicitudes desde su red en poco tiempo, así que el acceso se ha pausado brevemente. Inténtelo de nuevo en un momento. Los usuarios con sesión iniciada no tienen límite.</p>
+			<p lang="ru">Из вашей сети за короткое время пришло слишком много запросов, поэтому доступ ненадолго приостановлен. Попробуйте ещё раз через минуту. Для вошедших пользователей ограничений нет.</p>
+			<script>
+			var titles={ko:"잠시 후 다시 시도해 주세요",en:"Please try again shortly",ja:"しばらくしてからもう一度お試しください",fr:"Réessayez dans un instant",de:"Bitte gleich noch einmal versuchen",es:"Inténtelo de nuevo en un momento",ru:"Попробуйте ещё раз через минуту"};
+			for(var i=0,l=navigator.languages||[navigator.language];i<l.length;i++){var c=(l[i]||"").slice(0,2).toLowerCase();if(titles[c]){document.documentElement.lang=c;document.title=titles[c];break}}
+			</script>
 			HTML 429
 	}
 	# Two ports so a new fastcgi container can start beside the old one
