@@ -124,7 +124,7 @@ jobs:
           version: ${{ needs.get-version.outputs.ver }}
           upstream: php-fpm
           downstream: mediawiki
-      - uses: peter-murray/workflow-application-token-action@d17e3a9a36850ea89f35db16c1067dd2b68ee343 # v4.0.1
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
         id: get_workflow_token
         with:
           application_id: ${{ vars.PAT_APPLICATION_ID }}
