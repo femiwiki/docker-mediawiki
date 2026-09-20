@@ -200,7 +200,7 @@ jobs:
           draft: true
           commit-message: Bump femiwiki docker image
           title: 'docker: Bump femiwiki image to ${{ steps.version.outputs.version }}'
-          branch: bump-femiwiki-${{ steps.version.outputs.version }}
+          branch: bump-femiwiki-image
           body: |
             Built from femiwiki/docker-mediawiki@${{ github.sha }}.
 
