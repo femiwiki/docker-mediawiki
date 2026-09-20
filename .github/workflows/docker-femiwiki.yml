@@ -174,3 +174,34 @@ jobs:
             -t "${image}:latest" \
             -t "${image}:${VERSION}" \
             "${args[@]}"
+      - uses: peter-murray/workflow-application-token-action@d17e3a9a36850ea89f35db16c1067dd2b68ee343 # v4.0.1
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: femiwiki/infra
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          path: infra
+          persist-credentials: false
+      - name: Bump the image tag
+        working-directory: infra
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          sed -i -E "s|(ghcr\.io/femiwiki/femiwiki:)[^\"]+|\1${VERSION}|g" docker/container.tf
+          git diff --stat
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          path: infra
+          draft: true
+          commit-message: Bump femiwiki docker image
+          title: 'docker: Bump femiwiki image to ${{ steps.version.outputs.version }}'
+          branch: bump-femiwiki-${{ steps.version.outputs.version }}
+          body: |
+            Built from femiwiki/docker-mediawiki@${{ github.sha }}.
+
+            Opened as a draft: nothing deploys until zero-downtime work lands.
