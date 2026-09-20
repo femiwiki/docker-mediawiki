@@ -43,6 +43,28 @@ jobs:
               ver: process.env.CLIENT_PAYLOAD_VERSION || process.env.INPUT_VER,
             }
 
+      - name: Collect the upstream changes for the pull request body
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXT: ${{ fromJSON(steps.vars.outputs.result).ext }}
+          VER: ${{ fromJSON(steps.vars.outputs.result).ver }}
+          BODY: ${{ runner.temp }}/body.md
+        run: |
+          json=dockers/femiwiki-extensions/extension-installer/extensions.json
+          old=$(jq -r --arg ext "$EXT" '.["non-WMF"][$ext].version' "$json")
+          repo=$(jq -r --arg ext "$EXT" '.["non-WMF"][$ext].template' "$json" | grep -oE 'github\.com/[^/]+/[^/]+' | cut -d/ -f2-)
+          {
+            echo "[$old → $VER](https://github.com/$repo/compare/$old...$VER)"
+            echo
+            if notes=$(gh release view "$VER" --repo "$repo" --json body --jq .body) && [ -n "$notes" ]; then
+              echo "$notes"
+            else
+              gh api "repos/$repo/compare/$old...$VER" --jq '.commits[] | "- " + (.commit.message | split("\n")[0])' \
+                | { grep -vE '^- (Localisation updates|build:)' || true; }
+            fi
+          } > "$BODY"
+          cat "$BODY"
+
       - name: Update extensions.json
         env:
           EXT: ${{ fromJSON(steps.vars.outputs.result).ext }}
@@ -69,3 +91,4 @@ jobs:
           commit-message: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
           title: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
           branch: bump-${{fromJSON(steps.vars.outputs.result).ext}}
+          body-path: ${{ runner.temp }}/body.md
