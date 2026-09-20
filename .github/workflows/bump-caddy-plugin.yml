@@ -1,0 +1,74 @@
+name: Submit a PR for bumping a Caddy plugin
+
+on:
+  repository_dispatch:
+    types: [bump-caddy-plugin]
+
+  workflow_dispatch:
+    inputs:
+      plugin:
+        description: The plugin repository under femiwiki (also the ARG name, upper-cased)
+        type: string
+
+      ver:
+        description: The version released
+        type: string
+
+permissions: {}
+
+jobs:
+  bump-caddy-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Update the Dockerfile and collect the upstream changes
+        id: bump
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLUGIN: ${{ github.event.client_payload.plugin || inputs.plugin }}
+          VER: ${{ github.event.client_payload.version || inputs.ver }}
+          BODY: ${{ runner.temp }}/body.md
+        run: |
+          arg="$(echo "$PLUGIN" | tr 'a-z-' 'A-Z_')_VERSION"
+          old=$(grep -oE "^ARG ${arg}=\S+" dockers/caddy/Dockerfile | cut -d= -f2)
+          [ -n "$old" ] || { echo "::error::no ARG $arg in dockers/caddy/Dockerfile"; exit 1; }
+          sed -i -E "s|^(ARG ${arg}=).*|\1${VER}|" dockers/caddy/Dockerfile
+          repo="femiwiki/$PLUGIN"
+          {
+            echo "[$old → $VER](https://github.com/$repo/compare/$old...$VER)"
+            echo
+            if notes=$(gh release view "$VER" --repo "$repo" --json body --jq .body) && [ -n "$notes" ]; then
+              echo "$notes"
+            else
+              gh api "repos/$repo/compare/$old...$VER" --jq '.commits[] | "- " + (.commit.message | split("\n")[0])' \
+                | { grep -vE '^- (Localisation updates|build:)' || true; }
+            fi
+          } > "$BODY"
+          cat "$BODY"
+          echo "plugin=$PLUGIN" >> "$GITHUB_OUTPUT"
+          echo "ver=$VER" >> "$GITHUB_OUTPUT"
+
+      - name: Update README
+        uses: ./.github/actions/add-changelog-entry
+        with:
+          image: caddy
+          message: Bump ${{ steps.bump.outputs.plugin }} to [${{ steps.bump.outputs.ver }}](https://github.com/femiwiki/${{ steps.bump.outputs.plugin }}/releases/tag/${{ steps.bump.outputs.ver }})
+
+      - uses: peter-murray/workflow-application-token-action@d17e3a9a36850ea89f35db16c1067dd2b68ee343 # v4.0.1
+        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          commit-message: 'caddy: Bump ${{ steps.bump.outputs.plugin }} to ${{ steps.bump.outputs.ver }}'
+          title: 'caddy: Bump ${{ steps.bump.outputs.plugin }} to ${{ steps.bump.outputs.ver }}'
+          branch: bump-${{ steps.bump.outputs.plugin }}
+          body-path: ${{ runner.temp }}/body.md
