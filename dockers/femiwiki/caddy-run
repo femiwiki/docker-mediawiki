@@ -1,0 +1,16 @@
+#!/bin/bash
+# Starts Caddy in two steps so a replacement container never answers a TLS
+# handshake before its certificates are loaded: Caddy opens the listeners
+# first and loads managed certificates afterwards, and with SO_REUSEPORT the
+# kernel hands the new socket connections the moment it is bound.
+set -euo pipefail
+cd /srv/femiwiki.com
+
+caddy adapt --config Caddyfile --adapter caddyfile > /tmp/caddy.json
+php /a/caddy-warmup.php /tmp/caddy.json > /tmp/caddy-warmup.json
+
+caddy run --config /tmp/caddy-warmup.json &
+until caddy reload --address unix//run/caddy-warmup.sock --config /tmp/caddy.json 2>/dev/null; do
+  sleep 0.2
+done
+wait

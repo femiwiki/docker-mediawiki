@@ -86,5 +86,6 @@ EXPOSE 80
 EXPOSE 443
 EXPOSE 9000
 
-COPY ["run", "prerun", "postrun", "/usr/local/bin/"]
+COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
+COPY caddy-warmup.php /a/
 CMD ["/usr/local/bin/run"]
