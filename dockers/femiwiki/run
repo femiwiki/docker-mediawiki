@@ -4,6 +4,22 @@ set -euxo pipefail; IFS=$'\n\t'
 chmod +x /usr/local/bin/prerun
 /usr/local/bin/prerun
 
+# Secrets come from SSM Parameter Store in production. Local and CI runs pass
+# them as plain env instead and leave SSM_SECRETS unset. Tracing is off for this
+# block so the values never reach the container log.
+# shellcheck disable=SC2034  # exported by set -a, read by LocalSettings.php
+if [ -n "${SSM_SECRETS:-}" ]; then
+  set +x -a
+  WG_DB_PASSWORD="$(chamber read -q mysql/users/mediawiki password)"
+  WG_O_AUTH_2_PRIVATE_KEY="$(chamber read -q mediawiki o_auth_2_private_key)"
+  WG_RC_FEEDS_DISCORD_URL="$(chamber read -q mediawiki rc_feeds_discord_url)"
+  WG_RE_CAPTCHA_SECRET_KEY="$(chamber read -q mediawiki/re_captcha secret_key)"
+  WG_SECRET_KEY="$(chamber read -q mediawiki site_key)"
+  WG_SMTP_PASSWORD="$(chamber read -q mediawiki/smtp password)"
+  WG_SMTP_USERNAME="$(chamber read -q mediawiki/smtp username)"
+  set +a -x
+fi
+
 echo 'Starting Femiwiki ...'
 
 # Run Install.php
