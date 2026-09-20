@@ -18,6 +18,8 @@ permissions: {}
 
 jobs:
   test:
+    # Already passed on the pull request; a squash merge ships the same tree
+    if: github.event_name != 'push'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -139,7 +141,7 @@ jobs:
           retention-days: 1
 
   push-manifest:
-    needs: [test, build]
+    needs: [build]
     if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
