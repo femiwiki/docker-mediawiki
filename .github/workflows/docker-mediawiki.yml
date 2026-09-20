@@ -3,11 +3,12 @@ name: 'Docker: mediawiki'
 on:
   push:
     branches: [main]
-    paths: &paths
+    paths:
+      - 'dockers/mediawiki/**'
+  pull_request:
+    paths:
       - 'dockers/mediawiki/**'
       - .github/workflows/docker-mediawiki.yml
-  pull_request:
-    paths: *paths
   workflow_dispatch:
 
 permissions: {}
