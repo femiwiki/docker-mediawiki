@@ -77,6 +77,12 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	@filter2 {
 		header User-Agent *ClaudeBot*
 	}
+	# Actions Extension:Lockdown denies to anonymous users still cost a full
+	# render for the error page; answer them here when there is no session
+	@filter3 {
+		not header Cookie *femiwiki*
+		query action=history action=info action=raw action=watch action=unwatch
+	}
 
 	respond @filter0 403 {
 		close
@@ -85,6 +91,9 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		close
 	}
 	respond @filter2 403 {
+		close
+	}
+	respond @filter3 403 {
 		close
 	}
 }
