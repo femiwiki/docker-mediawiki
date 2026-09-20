@@ -34,8 +34,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		}
 		log_key
 	}
-	# resources/429.html carries the languages of 미디어위키:Loginlanguagelinks and
-	# lets the browser pick one, so nothing depends on Accept-Language server-side
+	# 429.html is built from MediaWiki's own messages (see 429.php) in the
+	# languages of 미디어위키:Loginlanguagelinks; the browser picks one
 	handle_errors 429 {
 		rewrite * /429.html
 		file_server {
