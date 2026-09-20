@@ -20,6 +20,8 @@ Allow: /femiwiki.com/v1/?doc
 Disallow: /*&diff=
 Disallow: /*&oldid=
 Disallow: /*&direction=
+Disallow: /*&action=
+Disallow: /*?action=
 Disallow: /*&redlink=
 Disallow: /api.php
 Disallow: /w/api.php
