@@ -75,6 +75,11 @@ RUN BASE="https://github.com/segmentio/chamber/releases/download/${CHAMBER_VERSI
     install -m 0755 "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" /usr/local/bin/chamber &&\
     rm "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" /tmp/chamber.sha256sums
 
+# Overrides the official image's zz-docker.conf so a replacement container can
+# listen on the other port while the old one drains; see run.
+COPY zzz-listen.conf /usr/local/etc/php-fpm.d/
+ENV PHP_FPM_LISTEN=9000
+
 EXPOSE 80
 EXPOSE 443
 EXPOSE 9000

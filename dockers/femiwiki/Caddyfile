@@ -5,13 +5,26 @@
 	order mwcache before rewrite
 	# NOTE: See @filter for the further details
 	order respond before rewrite
+
+	# The idle fastcgi port fails its check every second; keep that out of the log
+	log default {
+		exclude http.handlers.reverse_proxy.health_checker.active
+	}
 }
 femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	tls {
 		dns route53
 	}
 	root * /srv/femiwiki.com
-	php_fastcgi {$FASTCGI_ADDR}
+	# Two ports so a new fastcgi container can start beside the old one
+	php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
+		lb_policy round_robin
+		lb_try_duration 5s
+		fail_duration 10s
+		health_uri /healthz.php
+		health_interval 1s
+		health_timeout 2s
+	}
 	file_server
 	encode gzip
 	mwcache {
