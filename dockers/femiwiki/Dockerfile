@@ -48,6 +48,8 @@ RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 
 # Ship femiwiki resources
 COPY --chown=www-data:www-data ["resources", "Caddyfile", "robots.txt", "/srv/femiwiki.com/"]
+COPY 429.php /a/
+RUN php /a/429.php /srv/femiwiki.com /srv/femiwiki.com
 COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/a/"]
 
 COPY --chown=www-data LocalSettings.php /a/
