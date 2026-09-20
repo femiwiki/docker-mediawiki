@@ -139,6 +139,7 @@ jobs:
           branch: bump-php-fpm-v${{ needs.get-version.outputs.ver }}-femiwiki
           body-path: ${{ runner.temp }}/body.md
       - name: Enable Pull Request Automerge
+        if: steps.create-pull-request.outputs.pull-request-number != ''
         env:
           GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
           PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
