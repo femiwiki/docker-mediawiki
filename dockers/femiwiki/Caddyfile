@@ -114,3 +114,11 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		close
 	}
 }
+
+# A port of this container's own, so the healthcheck cannot be answered by the
+# previous Caddy sharing :80 on the host network; infra alternates it per
+# generation like php-fpm's
+http://127.0.0.1:{$CADDY_PROBE_PORT} {
+	bind 127.0.0.1
+	respond /health-check 200
+}
