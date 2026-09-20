@@ -134,8 +134,8 @@ jobs:
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
-          commit-message: Bump php-fpm docker image
-          title: 'mediawiki: Bump php-fpm docker image to v${{ needs.get-version.outputs.ver }}'
+          commit-message: 'build(mediawiki): bump php-fpm image to v${{ needs.get-version.outputs.ver }}'
+          title: 'build(mediawiki): bump php-fpm image to v${{ needs.get-version.outputs.ver }}'
           branch: bump-php-fpm-v${{ needs.get-version.outputs.ver }}-femiwiki
           body-path: ${{ runner.temp }}/body.md
       - name: Enable Pull Request Automerge

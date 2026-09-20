@@ -226,8 +226,8 @@ jobs:
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           path: infra
-          commit-message: Bump femiwiki docker image
-          title: 'docker: Bump femiwiki image to ${{ steps.version.outputs.version }}'
+          commit-message: 'build(docker): bump femiwiki image to ${{ steps.version.outputs.version }}'
+          title: 'build(docker): bump femiwiki image to ${{ steps.version.outputs.version }}'
           branch: bump-femiwiki-image
           body: |
             Built from:
