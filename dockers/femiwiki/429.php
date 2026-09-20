@@ -19,7 +19,7 @@ foreach ( glob( "$root/languages/i18n/*.json" ) as $file ) {
 		continue;
 	}
 	$messages = json_decode( file_get_contents( $file ), true );
-	if ( isset( $messages['actionthrottled'], $messages['actionthrottledtext'] ) ) {
+	if ( isset( $messages['actionthrottled'] ) && isset( $messages['actionthrottledtext'] ) ) {
 		$all[$lang] = [ 't' => $messages['actionthrottled'], 'b' => $messages['actionthrottledtext'] ];
 	}
 }
