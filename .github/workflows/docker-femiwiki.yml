@@ -225,12 +225,9 @@ jobs:
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           path: infra
-          draft: true
           commit-message: Bump femiwiki docker image
           title: 'docker: Bump femiwiki image to ${{ steps.version.outputs.version }}'
           branch: bump-femiwiki-image
           body: |
             Built from:
             ${{ steps.source.outputs.refs }}
-
-            Opened as a draft: nothing deploys until zero-downtime work lands.
