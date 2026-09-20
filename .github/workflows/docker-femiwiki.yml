@@ -211,12 +211,14 @@ jobs:
             printf '%s' "$REFS" | awk '!seen[$0]++'
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
-      - name: Bump the image tag
+      - name: Bump the image tag and the fastcgi generation
         working-directory: infra
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           sed -i -E "s|(ghcr\.io/femiwiki/femiwiki:)[^\"]+|\1${VERSION}|g" docker/container.tf
+          GEN="$(grep -oE 'fastcgi_generation = [0-9]+' docker/locals.tf | grep -oE '[0-9]+$')"
+          sed -i -E "s|(fastcgi_generation = )[0-9]+|\1$((GEN + 1))|" docker/locals.tf
           git diff --stat
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
