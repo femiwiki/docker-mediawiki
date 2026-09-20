@@ -23,7 +23,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		fail_duration 10s
 		health_uri /healthz.php
 		health_interval 1s
-		health_timeout 2s
+		health_timeout 10s
+		health_fails 3
 	}
 	file_server
 	encode gzip
