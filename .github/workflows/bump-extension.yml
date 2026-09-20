@@ -53,15 +53,20 @@ jobs:
           json=dockers/femiwiki-extensions/extension-installer/extensions.json
           old=$(jq -r --arg ext "$EXT" '.["non-WMF"][$ext].version' "$json")
           repo=$(jq -r --arg ext "$EXT" '.["non-WMF"][$ext].template' "$json" | grep -oE 'github\.com/[^/]+/[^/]+' | cut -d/ -f2-)
+          # Notes of another organisation go in a code fence so their links create no back-references
+          fence=''
+          [ "${repo%%/*}" = femiwiki ] || fence='````'
           {
             echo "[$old → $VER](https://github.com/$repo/compare/$old...$VER)"
             echo
+            echo "$fence"
             if notes=$(gh release view "$VER" --repo "$repo" --json body --jq .body) && [ -n "$notes" ]; then
               echo "$notes"
             else
               gh api "repos/$repo/compare/$old...$VER" --jq '.commits[] | "- " + (.commit.message | split("\n")[0])' \
                 | { grep -vE '^- (Localisation updates|build:)' || true; }
             fi
+            echo "$fence"
           } > "$BODY"
           cat "$BODY"
 
