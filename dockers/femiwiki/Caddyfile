@@ -10,6 +10,10 @@
 	log default {
 		exclude http.handlers.reverse_proxy.health_checker.active
 	}
+
+	servers {
+		metrics
+	}
 }
 femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	tls {
@@ -33,6 +37,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			window 10m
 		}
 		log_key
+		# The module keeps a histogram per key, one series set per /24 seen
+		disable_metrics
 	}
 	# 429.html and 429.json are built from MediaWiki's own messages by 429.php;
 	# the page is English, the browser fetches its own language from the json
