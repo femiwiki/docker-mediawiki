@@ -80,7 +80,8 @@ RUN BASE="https://github.com/segmentio/chamber/releases/download/${CHAMBER_VERSI
 # Overrides the official image's zz-docker.conf so a replacement container can
 # listen on the other port while the old one drains; see run.
 COPY zzz-listen.conf /usr/local/etc/php-fpm.d/
-ENV PHP_FPM_LISTEN=9000
+ENV PHP_FPM_LISTEN=9000 \
+    CADDY_PROBE_PORT=8080
 
 EXPOSE 80
 EXPOSE 443
