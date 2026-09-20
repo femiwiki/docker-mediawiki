@@ -135,3 +135,4 @@ jobs:
           commit-message: Bump mediawiki docker image
           title: 'femiwiki: Bump mediawiki docker image to v${{ needs.get-version.outputs.ver }}'
           branch: bump-mediawiki-v${{ needs.get-version.outputs.ver }}-femiwiki
+          body-path: ${{ runner.temp }}/body.md

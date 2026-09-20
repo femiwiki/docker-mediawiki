@@ -68,3 +68,4 @@ jobs:
           commit-message: Bump femiwiki-extensions docker image
           title: 'femiwiki: Bump femiwiki-extensions docker image to v${{ steps.version.outputs.ver }}'
           branch: bump-femiwiki-extensions-v${{ steps.version.outputs.ver }}-femiwiki
+          body-path: ${{ runner.temp }}/body.md

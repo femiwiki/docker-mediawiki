@@ -18,7 +18,14 @@ runs:
         INPUTS_DOWNSTREAM: ${{ inputs.downstream }}
       shell: bash
       run: |
-        OLD_VER=$(grep '## v' dockers/${INPUTS_UPSTREAM}/README.md | tail -n +2  | head -n 1 | cut -dv -f2)
+        OLD_VER=$(grep -oE "ghcr\.io/femiwiki/${INPUTS_UPSTREAM}:[0-9.]+" dockers/${INPUTS_DOWNSTREAM}/Dockerfile | head -n 1 | cut -d: -f2)
+
+        # The pull request body: the upstream README entries after the version the downstream uses
+        {
+          echo "[dockers/${INPUTS_UPSTREAM}/README.md](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/dockers/${INPUTS_UPSTREAM}/README.md) v${OLD_VER} → v${INPUTS_VERSION}"
+          echo
+          awk -v new="## v${INPUTS_VERSION}" -v old="## v${OLD_VER}" '$0 == new { on = 1 } $0 == old { exit } on' dockers/${INPUTS_UPSTREAM}/README.md
+        } > "${RUNNER_TEMP}/body.md"
 
         # Update Dockerfile
         sed -i "s/$OLD_VER/${INPUTS_VERSION}/" dockers/${INPUTS_DOWNSTREAM}/Dockerfile
