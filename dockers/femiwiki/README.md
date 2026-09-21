@@ -1,5 +1,9 @@
 # femiwiki
 
+## v1.4.9
+
+- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}
+
 ## v1.4.8
 
 - Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}
