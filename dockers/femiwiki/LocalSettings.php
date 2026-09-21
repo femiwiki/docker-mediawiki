@@ -130,7 +130,10 @@ $wgMWLoggerDefaultSpi = [
 		'handlers' => [
 			'stream' => [
 				'class' => '\\Monolog\\Handler\\ErrorLogHandler',
-				'args' => [ \Monolog\Handler\ErrorLogHandler::OPERATING_SYSTEM, 'info' ],
+				'args' => [
+					\Monolog\Handler\ErrorLogHandler::OPERATING_SYSTEM,
+					getenv( 'MEDIAWIKI_LOG_LEVEL' ) ?: \Monolog\Logger::WARNING
+				],
 				'formatter' => 'json'
 			],
 		],
