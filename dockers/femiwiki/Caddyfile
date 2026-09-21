@@ -6,9 +6,11 @@
 	# NOTE: See @filter for the further details
 	order respond before rewrite
 
-	# The idle fastcgi port fails its check every second; keep that out of the log
+	# The idle fastcgi port fails its check every second; keep that out of the
+	# log. CADDY_LOG_EXCLUDE adds to the list, so a logger that turns out to be
+	# too chatty can be silenced from infra without building an image.
 	log default {
-		exclude http.handlers.reverse_proxy.health_checker.active
+		exclude http.handlers.reverse_proxy.health_checker.active {$CADDY_LOG_EXCLUDE}
 	}
 
 	servers {
@@ -81,7 +83,28 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		X-Frame-Options "DENY"
 	}
 	log {
-		format json
+		# Two thirds of a line used to be headers that are the same on every
+		# request: the security headers this block sets, Caddy's Via and Alt-Svc,
+		# PHP's X-Powered-By, a Date that ts already carries, and a TLS handshake
+		# that never varies. Only the fields that tell one request from another
+		# are left.
+		format filter {
+			wrap json
+			fields {
+				request>tls delete
+				request>headers>Accept delete
+				request>headers>Accept-Encoding delete
+				resp_headers>Accept-Ch delete
+				resp_headers>Alt-Svc delete
+				resp_headers>Date delete
+				resp_headers>Strict-Transport-Security delete
+				resp_headers>Via delete
+				resp_headers>X-Content-Type-Options delete
+				resp_headers>X-Frame-Options delete
+				resp_headers>X-Powered-By delete
+				resp_headers>X-Xss-Protection delete
+			}
+		}
 	}
 
 	rewrite /w/api.php /api.php
