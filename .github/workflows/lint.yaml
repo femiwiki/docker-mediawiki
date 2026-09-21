@@ -41,9 +41,9 @@ jobs:
           persist-credentials: false
       - name: Format caddyfile
         run: |
-          for CADDYFILE_PATH in **/Caddyfile; do
-            docker run -v $(dirname $(realpath $CADDYFILE_PATH)):/srv caddy \
-              caddy fmt --diff
+          find . -name Caddyfile -o -name '*.Caddyfile' | while read -r CADDYFILE_PATH; do
+            docker run -v "$(dirname "$(realpath "$CADDYFILE_PATH")")":/srv caddy \
+              caddy fmt --diff "/srv/$(basename "$CADDYFILE_PATH")"
           done
 
   etc-lint:
