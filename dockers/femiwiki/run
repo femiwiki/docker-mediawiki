@@ -64,6 +64,12 @@ cron
 chmod +x /usr/local/bin/postrun
 /usr/local/bin/postrun
 
+# A restart reuses the container's writable layer, so a drain file left behind
+# by an earlier SIGTERM survives into the new process. Starting up means this
+# container is not draining, and leaving the file would make /healthz.php fail
+# forever with nothing to clear it.
+rm -f /tmp/draining
+
 # Run php-fpm. On SIGTERM, fail /healthz.php first so Caddy's active health
 # check drops this upstream, then let php-fpm finish in-flight requests.
 php-fpm &
