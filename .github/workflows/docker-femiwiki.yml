@@ -212,12 +212,31 @@ jobs:
             printf '%s' "$REFS" | awk '!seen[$0]++'
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
+      - name: Carry over what is already on the bump branch
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+        run: |
+          n="$(gh pr list --repo femiwiki/infra --head bump-femiwiki-image \
+                 --state open --json number --jq '.[0].number // empty')"
+          if [ -z "$n" ]; then
+            echo 'No open bump pull request, so main is the base.'
+            exit 0
+          fi
+          echo "Rebuilding femiwiki/infra#${n} on top of its own contents."
+          gh api -H 'Accept: application/vnd.github.diff' \
+            repos/femiwiki/infra/compare/main...bump-femiwiki-image \
+            > "${RUNNER_TEMP}/bump-branch.patch"
+          if [ -s "${RUNNER_TEMP}/bump-branch.patch" ]; then
+            git -C infra apply "${RUNNER_TEMP}/bump-branch.patch"
+          fi
       - name: Bump the image tag and the fastcgi generation
         working-directory: infra
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           sed -i -E "s|(ghcr\.io/femiwiki/femiwiki:)[^\"]+|\1${VERSION}|g" docker/container.tf
+          # Read the generation from the tree, not from main: a bump is applied
+          # before it merges, so main still holds the one before the running container.
           GEN="$(grep -oE 'fastcgi_generation = [0-9]+' docker/locals.tf | grep -oE '[0-9]+$')"
           sed -i -E "s|(fastcgi_generation = )[0-9]+|\1$((GEN + 1))|" docker/locals.tf
           git diff --stat
