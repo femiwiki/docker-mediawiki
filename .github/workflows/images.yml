@@ -1,0 +1,110 @@
+name: 'Docker: images'
+
+on:
+  pull_request:
+
+concurrency:
+  group: images-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      changed: ${{ steps.scope.outputs.changed }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/image-scope
+        id: scope
+        with:
+          images: caddy femiwiki femiwiki-extensions mediawiki php-fpm
+
+  caddy:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'caddy')
+    # The union the called workflow declares. Its publishing jobs are skipped
+    # off main, so the write halves are never exercised here, and the app key
+    # it would need is not passed.
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/docker-caddy.yml
+
+  femiwiki:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'femiwiki')
+    # The union the called workflow declares. Its publishing jobs are skipped
+    # off main, so the write halves are never exercised here, and the app key
+    # it would need is not passed.
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: read
+    uses: ./.github/workflows/docker-femiwiki.yml
+
+  femiwiki-extensions:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'femiwiki-extensions')
+    # The union the called workflow declares. Its publishing jobs are skipped
+    # off main, so the write halves are never exercised here, and the app key
+    # it would need is not passed.
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/docker-femiwiki-extensions.yml
+
+  mediawiki:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'mediawiki')
+    # The union the called workflow declares. Its publishing jobs are skipped
+    # off main, so the write halves are never exercised here, and the app key
+    # it would need is not passed.
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/docker-mediawiki.yml
+
+  php-fpm:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'php-fpm')
+    # The union the called workflow declares. Its publishing jobs are skipped
+    # off main, so the write halves are never exercised here, and the app key
+    # it would need is not passed.
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/docker-php-fpm.yml
+
+  images:
+    name: image builds
+    needs: [scope, caddy, femiwiki, femiwiki-extensions, mediawiki, php-fpm]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/image-gate
+        with:
+          scope: ${{ needs.scope.result }}
+          images: >-
+            caddy=${{ needs.caddy.result }}
+            femiwiki=${{ needs.femiwiki.result }}
+            femiwiki-extensions=${{ needs.femiwiki-extensions.result }}
+            mediawiki=${{ needs.mediawiki.result }}
+            php-fpm=${{ needs.php-fpm.result }}

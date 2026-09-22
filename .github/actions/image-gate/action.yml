@@ -1,40 +1,33 @@
 name: image-gate
-description: Report whether a pull request left an image sound
+description: Report whether a pull request left every image sound
 inputs:
-  image:
-    description: The image's directory name under dockers/
-    required: true
   scope:
     description: The result of the scope job
     required: true
-  changed:
-    description: The scope job's build output
-    required: true
-  jobs:
-    description: The jobs that had to succeed, as name=result pairs
+  images:
+    description: The image jobs, as name=result pairs
     required: true
 runs:
   using: composite
   steps:
     - env:
-        IMAGE: ${{ inputs.image }}
         SCOPE: ${{ inputs.scope }}
-        CHANGED: ${{ inputs.changed }}
-        JOBS: ${{ inputs.jobs }}
+        IMAGES: ${{ inputs.images }}
       shell: bash
       run: |
         if [ "$SCOPE" != success ]; then
-          echo "::error::could not tell whether this pull request changes the $IMAGE image"
+          echo "::error::could not tell which images this pull request changes"
           exit 1
         fi
-        if [ "$CHANGED" != true ]; then
-          echo "This pull request does not change the $IMAGE image."
-          exit 0
-        fi
-        for job in $JOBS; do
-          if [ "${job#*=}" != success ]; then
-            echo "::error::the $IMAGE image failed at ${job%%=*}: ${job#*=}"
-            exit 1
-          fi
+        broken=0
+        for image in $IMAGES; do
+          case "${image#*=}" in
+            success) echo "The ${image%%=*} image is sound." ;;
+            skipped) echo "This pull request does not change the ${image%%=*} image." ;;
+            *)
+              echo "::error::the ${image%%=*} image did not build: ${image#*=}"
+              broken=1
+              ;;
+          esac
         done
-        echo "The $IMAGE image is sound."
+        exit "$broken"
