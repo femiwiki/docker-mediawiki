@@ -12,6 +12,10 @@ on:
         required: false
   workflow_dispatch:
 
+concurrency:
+  group: docker-caddy-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions: {}
 
 jobs:

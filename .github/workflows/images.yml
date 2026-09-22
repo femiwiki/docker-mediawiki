@@ -3,10 +3,10 @@ name: 'Docker: images'
 on:
   pull_request:
 
-concurrency:
-  group: images-${{ github.ref }}
-  cancel-in-progress: true
-
+# No concurrency group here on purpose: cancelling this run would take the
+# gate below with it, and a cancelled check satisfies a required check no
+# better than a failed one does. Each image workflow cancels its own stale
+# builds instead, which leaves this run free to report what it found.
 permissions: {}
 
 jobs:
