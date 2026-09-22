@@ -12,8 +12,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: docker-femiwiki-extensions
-  cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
+  group: docker-femiwiki-extensions-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions: {}
 
