@@ -5,7 +5,11 @@ on:
     branches: [main]
     paths:
       - 'dockers/femiwiki/**'
-  pull_request:
+  workflow_call:
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY:
+        description: Opens the downstream bump pull request; only used from main
+        required: false
   workflow_dispatch:
 
 concurrency:
@@ -15,27 +19,9 @@ concurrency:
 permissions: {}
 
 jobs:
-  scope:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-      pull-requests: read
-    outputs:
-      build: ${{ steps.scope.outputs.build }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/image-scope
-        id: scope
-        with:
-          image: femiwiki
-
   test:
-    needs: scope
     # Already passed on the pull request; a squash merge ships the same tree
-    if: github.event_name != 'push' && needs.scope.outputs.build == 'true'
+    if: github.event_name != 'push'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -105,8 +91,6 @@ jobs:
         run: curl -sSLvo /dev/null 127.0.0.1:8080 || docker service logs mediawiki_fastcgi
 
   build:
-    needs: scope
-    if: needs.scope.outputs.build == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -268,22 +252,3 @@ jobs:
           body: |
             Built from:
             ${{ steps.source.outputs.refs }}
-
-  image:
-    name: femiwiki image builds
-    needs: [scope, test, build]
-    if: always() && github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/image-gate
-        with:
-          image: femiwiki
-          scope: ${{ needs.scope.result }}
-          changed: ${{ needs.scope.outputs.build }}
-          jobs: test=${{ needs.test.result }} build=${{ needs.build.result }}

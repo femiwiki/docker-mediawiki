@@ -5,32 +5,17 @@ on:
     branches: [main]
     paths:
       - 'dockers/caddy/**'
-  pull_request:
+  workflow_call:
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY:
+        description: Opens the downstream bump pull request; only used from main
+        required: false
   workflow_dispatch:
 
 permissions: {}
 
 jobs:
-  scope:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-      pull-requests: read
-    outputs:
-      build: ${{ steps.scope.outputs.build }}
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/image-scope
-        id: scope
-        with:
-          image: caddy
-
   get-version:
-    needs: scope
-    if: needs.scope.outputs.build == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -153,22 +138,3 @@ jobs:
           title: 'build(femiwiki): bump caddy image to v${{ needs.get-version.outputs.ver }}'
           branch: bump-caddy-v${{ needs.get-version.outputs.ver }}-femiwiki
           body-path: ${{ runner.temp }}/body.md
-
-  image:
-    name: caddy image builds
-    needs: [scope, build]
-    if: always() && github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/image-gate
-        with:
-          image: caddy
-          scope: ${{ needs.scope.result }}
-          changed: ${{ needs.scope.outputs.build }}
-          jobs: build=${{ needs.build.result }}

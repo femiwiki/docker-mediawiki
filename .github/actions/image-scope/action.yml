@@ -1,33 +1,36 @@
 name: image-scope
-description: Decide whether a pull request changes an image
+description: List the images a pull request changes
 inputs:
-  image:
-    description: The image's directory name under dockers/
+  images:
+    description: The image directory names under dockers/, space separated
     required: true
 outputs:
-  build:
-    description: true when this image must be built
-    value: ${{ steps.files.outputs.build }}
+  changed:
+    description: A JSON array of the images that must be built
+    value: ${{ steps.scope.outputs.changed }}
 runs:
   using: composite
   steps:
-    - id: files
+    - id: scope
       env:
         GH_TOKEN: ${{ github.token }}
-        IMAGE: ${{ inputs.image }}
+        IMAGES: ${{ inputs.images }}
         PR: ${{ github.event.number }}
       shell: bash
       run: |
-        # Only a pull request can leave an image alone; anything else builds.
-        if [ "$GITHUB_EVENT_NAME" != pull_request ]; then
-          echo "build=true" >> "$GITHUB_OUTPUT"
-          exit 0
-        fi
         files=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename')
-        build=false
-        while IFS= read -r file; do
-          case "$file" in
-            "dockers/$IMAGE/"* | ".github/workflows/docker-$IMAGE.yml") build=true ;;
-          esac
-        done <<< "$files"
-        echo "build=$build" >> "$GITHUB_OUTPUT"
+        touched() {
+          while IFS= read -r file; do
+            case "$file" in
+              "dockers/$1/"* | ".github/workflows/docker-$1.yml") return 0 ;;
+            esac
+          done <<< "$files"
+          return 1
+        }
+        changed=$(
+          for image in $IMAGES; do
+            if touched "$image"; then echo "$image"; fi
+          done | jq -Rsc 'split("\n") | map(select(length > 0))'
+        )
+        echo "Images to build: $changed"
+        echo "changed=$changed" >> "$GITHUB_OUTPUT"
