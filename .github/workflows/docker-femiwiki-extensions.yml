@@ -6,9 +6,6 @@ on:
     paths:
       - 'dockers/femiwiki-extensions/**'
   pull_request:
-    paths:
-      - 'dockers/femiwiki-extensions/**'
-      - .github/workflows/docker-femiwiki-extensions.yml
   workflow_dispatch:
 
 concurrency:
@@ -18,8 +15,27 @@ concurrency:
 permissions: {}
 
 jobs:
+  scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      build: ${{ steps.scope.outputs.build }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/image-scope
+        id: scope
+        with:
+          image: femiwiki-extensions
+
   docker-image:
     # femiwiki-extensions is an amd64-only image, so no arm64/QEMU is needed.
+    needs: scope
+    if: needs.scope.outputs.build == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -70,3 +86,22 @@ jobs:
           title: 'build(femiwiki): bump femiwiki-extensions image to v${{ steps.version.outputs.ver }}'
           branch: bump-femiwiki-extensions-v${{ steps.version.outputs.ver }}-femiwiki
           body-path: ${{ runner.temp }}/body.md
+
+  image:
+    name: femiwiki-extensions image builds
+    needs: [scope, docker-image]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/image-gate
+        with:
+          image: femiwiki-extensions
+          scope: ${{ needs.scope.result }}
+          changed: ${{ needs.scope.outputs.build }}
+          jobs: docker-image=${{ needs.docker-image.result }}

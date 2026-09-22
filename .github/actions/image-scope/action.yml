@@ -1,0 +1,33 @@
+name: image-scope
+description: Decide whether a pull request changes an image
+inputs:
+  image:
+    description: The image's directory name under dockers/
+    required: true
+outputs:
+  build:
+    description: true when this image must be built
+    value: ${{ steps.files.outputs.build }}
+runs:
+  using: composite
+  steps:
+    - id: files
+      env:
+        GH_TOKEN: ${{ github.token }}
+        IMAGE: ${{ inputs.image }}
+        PR: ${{ github.event.number }}
+      shell: bash
+      run: |
+        # Only a pull request can leave an image alone; anything else builds.
+        if [ "$GITHUB_EVENT_NAME" != pull_request ]; then
+          echo "build=true" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        files=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename')
+        build=false
+        while IFS= read -r file; do
+          case "$file" in
+            "dockers/$IMAGE/"* | ".github/workflows/docker-$IMAGE.yml") build=true ;;
+          esac
+        done <<< "$files"
+        echo "build=$build" >> "$GITHUB_OUTPUT"
