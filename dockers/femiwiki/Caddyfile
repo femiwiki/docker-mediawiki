@@ -38,6 +38,22 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			events 300
 			window 10m
 		}
+		# Search, diffs, old revisions and page history from anyone not logged
+		# in, counted across the whole site. A crawler spread over enough /24s
+		# stays under the zone above in every one of them while together taking
+		# every php-fpm worker, and a session cookie is no exemption here since
+		# any client gets one from the login page.
+		zone expensive {
+			match {
+				# api.php is left out: the search box asks it on every keystroke
+				path /index.php*
+				vars_regexp {query} (^|&)(search|diff|oldid)=|(^|&)action=(history|info)(&|$)
+				not header Cookie *femiwikiUserID=*
+			}
+			key expensive
+			events 600
+			window 10m
+		}
 		log_key
 		# The module keeps a histogram per key, one series set per /24 seen
 		disable_metrics
