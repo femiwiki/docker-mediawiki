@@ -53,11 +53,40 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	# Two ports so a new fastcgi container can start beside the old one
 	php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
 		lb_policy round_robin
-		lb_try_duration 5s
+		# One immediate retry reaches the other port; waiting longer only
+		# delays the fallback below
+		lb_retries 1
 		health_uri /healthz.php
 		health_interval 1s
 		health_timeout 10s
 		health_fails 3
+	}
+	# When no port passes /healthz.php, send reads to any php-fpm that answers
+	# instead of a 503. A deploy drains one port only once the other is
+	# healthy, so it never gets here; a drain file left behind, as on
+	# 2026-09-21, does. Anything with a body still gets the 503, because the
+	# proxy above has already read it. Caddy hands this route the original
+	# URI, so the rewrites below are repeated. The fallback field keeps these
+	# out of the Site down alert's count of good responses.
+	handle_errors 503 {
+		@read method GET HEAD
+		handle @read {
+			log_append fallback true
+			rewrite /w/api.php /api.php
+			rewrite /w/* /index.php
+			php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
+				lb_policy round_robin
+				lb_retries 1
+				# Try the other port when one refuses; left alone, only GET is retried
+				lb_retry_match {
+					method GET HEAD
+				}
+			}
+			encode gzip
+		}
+		handle {
+			respond 503
+		}
 	}
 	file_server
 	encode gzip
