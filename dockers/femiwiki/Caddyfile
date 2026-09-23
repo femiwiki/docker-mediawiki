@@ -35,14 +35,19 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			key {client_ip}
 			ipv4_prefix 24
 			ipv6_prefix 64
-			events 300
-			window 10m
+			events {$CADDY_DYNAMIC_EVENTS:300}
+			window {$CADDY_DYNAMIC_WINDOW:10m}
 		}
 		# Search, diffs, old revisions and page history from anyone not logged
 		# in, counted across the whole site. A crawler spread over enough /24s
 		# stays under the zone above in every one of them while together taking
 		# every php-fpm worker, and a session cookie is no exemption here since
-		# any client gets one from the login page.
+		# any client gets one from the login page. One bucket for everybody
+		# means a reader who is not logged in is refused as soon as crawlers
+		# have spent it, so the cap sits above what those readers ask for on an
+		# ordinary day and only bites when the site is being hammered. Both
+		# zones read their count and window from the environment so infra can
+		# retune them without waiting for an image.
 		zone expensive {
 			match {
 				# api.php is left out: the search box asks it on every keystroke
@@ -51,8 +56,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 				not header Cookie *femiwikiUserID=*
 			}
 			key expensive
-			events 600
-			window 10m
+			events {$CADDY_EXPENSIVE_EVENTS:1500}
+			window {$CADDY_EXPENSIVE_WINDOW:10m}
 		}
 		log_key
 		# The module keeps a histogram per key, one series set per /24 seen
