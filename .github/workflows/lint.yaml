@@ -67,3 +67,17 @@ jobs:
         run: |
           yarn --dev
           yarn run lint
+
+  hadolint:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Lint Dockerfiles
+        run: |
+          docker run --rm -v "$PWD":/w -w /w \
+            hadolint/hadolint:v2.15.1@sha256:32dac94127fd60b7b7e3fbfc65e1383b9b5e25c9bfd7b8536de7a539fe68a12d \
+            hadolint dockers/*/Dockerfile
