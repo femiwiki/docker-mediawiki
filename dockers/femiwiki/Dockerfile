@@ -80,7 +80,12 @@ RUN BASE="https://github.com/segmentio/chamber/releases/download/${CHAMBER_VERSI
 # Overrides the official image's zz-docker.conf so a replacement container can
 # listen on the other port while the old one drains; see run.
 COPY zzz-listen.conf /usr/local/etc/php-fpm.d/
+
+# A pool of its own for the container health check, so a www pool with every
+# worker busy reads as slow rather than as dead; see femiwiki/femiwiki#561.
+COPY zzz-probe.conf /usr/local/etc/php-fpm.d/
 ENV PHP_FPM_LISTEN=9000 \
+    PHP_FPM_PROBE_LISTEN=9100 \
     CADDY_PROBE_PORT=8080
 
 EXPOSE 80
