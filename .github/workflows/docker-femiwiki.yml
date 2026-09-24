@@ -211,16 +211,35 @@ jobs:
             COMMITS="$(gh api "repos/${REPO}/compare/${OLD}...${SHA}" --jq '.commits[].sha' 2>/dev/null || true)"
           fi
           [ -n "$COMMITS" ] || COMMITS="$SHA"
+          IMAGES="$(gh api "repos/${REPO}/contents/dockers?ref=${SHA}" --jq '.[] | select(.type == "dir") | .name' | paste -sd '|')"
           REFS=""
+          FEAT=""
+          FIX=""
           for c in $COMMITS; do
-            n="$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0].number // empty')"
-            if [ -n "$n" ]; then REFS="${REFS}- ${REPO}#${n}"$'\n'; else REFS="${REFS}- ${REPO}@${c}"$'\n'; fi
+            read -r n title <<< "$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0] // empty | "\(.number) \(.title)"')"
+            if [ -z "$n" ]; then
+              REFS="${REFS}- ${REPO}@${c}"$'\n'
+              continue
+            fi
+            REFS="${REFS}- ${REPO}#${n}"$'\n'
+            # feat and fix scoped to an image are the wiki's release notes, in English until translated there
+            line="*${title#*: } [https://github.com/${REPO}/pull/${n}]"$'\n'
+            if [[ "$title" =~ ^feat\((${IMAGES})\)!?: ]]; then FEAT="${FEAT}${line}"; fi
+            if [[ "$title" =~ ^fix\((${IMAGES})\)!?: ]]; then FIX="${FIX}${line}"; fi
           done
           {
             echo "refs<<EOF"
             printf '%s' "$REFS" | awk '!seen[$0]++'
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
+          if [ -n "${FEAT}${FIX}" ]; then
+            {
+              echo '```wikitext'
+              [ -z "$FEAT" ] || printf '===feat===\n\n%s\n\n' "$(printf '%s' "$FEAT" | awk '!seen[$0]++')"
+              [ -z "$FIX" ] || printf '===fix===\n\n%s\n\n' "$(printf '%s' "$FIX" | awk '!seen[$0]++')"
+              echo '```'
+            } > "${RUNNER_TEMP}/wikitext.md"
+          fi
       - name: Carry over what is already on the bump branch
         id: carry
         env:
@@ -277,6 +296,19 @@ jobs:
           GEN="$(printf '%s' "$LOCALS" | grep -oE 'fastcgi_generation = [0-9]+' | grep -oE '[0-9]+$')"
           sed -i -E "s|(fastcgi_generation = )[0-9]+|\1$((GEN + 1))|" docker/locals.tf
           git diff --stat
+      - name: Write the pull request body
+        env:
+          REFS: ${{ steps.source.outputs.refs }}
+        run: |
+          {
+            echo 'Built from:'
+            printf '%s\n' "$REFS"
+            if [ -s "${RUNNER_TEMP}/wikitext.md" ]; then
+              echo
+              cat "${RUNNER_TEMP}/wikitext.md"
+            fi
+          } > "${RUNNER_TEMP}/body.md"
+          cat "${RUNNER_TEMP}/body.md"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
@@ -285,6 +317,4 @@ jobs:
           commit-message: 'build(docker): bump femiwiki image to ${{ steps.version.outputs.version }}'
           title: 'build(docker): bump femiwiki image to ${{ steps.version.outputs.version }}'
           branch: bump-femiwiki-image
-          body: |
-            Built from:
-            ${{ steps.source.outputs.refs }}
+          body-path: ${{ runner.temp }}/body.md
