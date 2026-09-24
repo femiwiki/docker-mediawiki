@@ -168,6 +168,7 @@ $wgCacheDirectory = '/tmp/cache';
 
 // Site language code, should be one of the list in ./languages/data/Names.php
 $wgLanguageCode = 'ko';
+$wgLoginLanguageSelector = true;
 $wgLocaltimezone = 'Asia/Seoul';
 date_default_timezone_set( $wgLocaltimezone );
 $wgDefaultUserOptions['timecorrection'] = 9;
@@ -895,6 +896,8 @@ wfLoadExtension( 'UniversalLanguageSelector' );
 $wgULSPosition = 'interlanguage';
 $wgULSIMEEnabled = false;
 $wgULSCompactLinksEnableAnon = true;
+$wgULSLanguageDetection = false;
+$wgULSAnonCanChangeLanguage = false;
 // Enable ULS compact links beta feature to opt-out
 $wgDefaultUserOptions['uls-compact-links'] = 1;
 
