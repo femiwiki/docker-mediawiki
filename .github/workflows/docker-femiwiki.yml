@@ -235,8 +235,8 @@ jobs:
           if [ -n "${ADDED}${FIXED}" ]; then
             {
               echo '```wikitext'
-              [ -z "$ADDED" ] || printf '===추가===\n\n%s\n\n' "$(printf '%s' "$ADDED" | awk '!seen[$0]++')"
-              [ -z "$FIXED" ] || printf '===수정===\n\n%s\n\n' "$(printf '%s' "$FIXED" | awk '!seen[$0]++')"
+              [ -z "$ADDED" ] || printf '===feat===\n\n%s\n\n' "$(printf '%s' "$ADDED" | awk '!seen[$0]++')"
+              [ -z "$FIXED" ] || printf '===fix===\n\n%s\n\n' "$(printf '%s' "$FIXED" | awk '!seen[$0]++')"
               echo '```'
             } > "${RUNNER_TEMP}/wikitext.md"
           fi
