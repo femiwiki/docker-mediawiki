@@ -17,6 +17,15 @@
 		metrics
 	}
 }
+(expensive_requests) {
+	match {
+		# api.php is left out: the search box asks it on every keystroke
+		path /index.php*
+		vars_regexp {query} (^|&)(search|diff|oldid)=|(^|&)action=(history|info)(&|$)
+		not header Cookie *femiwikiUserID=*
+	}
+}
+
 femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	tls {
 		dns route53
@@ -49,15 +58,21 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		# zones read their count and window from the environment so infra can
 		# retune them without waiting for an image.
 		zone expensive {
-			match {
-				# api.php is left out: the search box asks it on every keystroke
-				path /index.php*
-				vars_regexp {query} (^|&)(search|diff|oldid)=|(^|&)action=(history|info)(&|$)
-				not header Cookie *femiwikiUserID=*
-			}
+			import expensive_requests
 			key expensive
 			events {$CADDY_EXPENSIVE_EVENTS:1500}
 			window {$CADDY_EXPENSIVE_WINDOW:10m}
+		}
+		# The same requests counted per /24 as well, so one heavy client spends
+		# its own budget before the shared one. The busiest /24 asks for about
+		# fifty in ten minutes, so this only bites a single hard scraper.
+		zone expensive_per_ip {
+			import expensive_requests
+			key {client_ip}
+			ipv4_prefix 24
+			ipv6_prefix 64
+			events {$CADDY_EXPENSIVE_IP_EVENTS:100}
+			window {$CADDY_EXPENSIVE_IP_WINDOW:10m}
 		}
 		log_key
 		# The module keeps a histogram per key, one series set per /24 seen
