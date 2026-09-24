@@ -233,6 +233,9 @@ jobs:
             exit 0
           fi
           echo "Rebuilding femiwiki/infra#${n} on top of its own contents."
+          # The release notes infra copied into its body, and whatever was edited there
+          gh pr view "$n" --repo femiwiki/infra --json body --jq .body | tr -d '\r' \
+            | sed -n '/^<!-- sync-updates -->$/,/^<!-- \/sync-updates -->$/p' > "${RUNNER_TEMP}/sync-updates.md"
           # Its generation is running only if it was applied, and an apply
           # re-runs the plan, so the gate on its head is then green.
           head="$(gh pr view "$n" --repo femiwiki/infra --json headRefOid --jq .headRefOid)"
@@ -277,6 +280,19 @@ jobs:
           GEN="$(printf '%s' "$LOCALS" | grep -oE 'fastcgi_generation = [0-9]+' | grep -oE '[0-9]+$')"
           sed -i -E "s|(fastcgi_generation = )[0-9]+|\1$((GEN + 1))|" docker/locals.tf
           git diff --stat
+      - name: Write the pull request body, keeping its release notes
+        env:
+          REFS: ${{ steps.source.outputs.refs }}
+        run: |
+          {
+            echo 'Built from:'
+            printf '%s\n' "$REFS"
+            if [ -s "${RUNNER_TEMP}/sync-updates.md" ]; then
+              echo
+              cat "${RUNNER_TEMP}/sync-updates.md"
+            fi
+          } > "${RUNNER_TEMP}/body.md"
+          cat "${RUNNER_TEMP}/body.md"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
@@ -285,6 +301,4 @@ jobs:
           commit-message: 'build(docker): bump femiwiki image to ${{ steps.version.outputs.version }}'
           title: 'build(docker): bump femiwiki image to ${{ steps.version.outputs.version }}'
           branch: bump-femiwiki-image
-          body: |
-            Built from:
-            ${{ steps.source.outputs.refs }}
+          body-path: ${{ runner.temp }}/body.md
