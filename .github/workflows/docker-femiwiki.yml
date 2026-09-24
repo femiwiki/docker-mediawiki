@@ -213,8 +213,8 @@ jobs:
           [ -n "$COMMITS" ] || COMMITS="$SHA"
           IMAGES="$(gh api "repos/${REPO}/contents/dockers?ref=${SHA}" --jq '.[] | select(.type == "dir") | .name' | paste -sd '|')"
           REFS=""
-          ADDED=""
-          FIXED=""
+          FEAT=""
+          FIX=""
           for c in $COMMITS; do
             read -r n title <<< "$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0] // empty | "\(.number) \(.title)"')"
             if [ -z "$n" ]; then
@@ -224,19 +224,19 @@ jobs:
             REFS="${REFS}- ${REPO}#${n}"$'\n'
             # feat and fix scoped to an image are the wiki's release notes, in English until translated there
             line="*${title#*: } [https://github.com/${REPO}/pull/${n}]"$'\n'
-            if [[ "$title" =~ ^feat\((${IMAGES})\)!?: ]]; then ADDED="${ADDED}${line}"; fi
-            if [[ "$title" =~ ^fix\((${IMAGES})\)!?: ]]; then FIXED="${FIXED}${line}"; fi
+            if [[ "$title" =~ ^feat\((${IMAGES})\)!?: ]]; then FEAT="${FEAT}${line}"; fi
+            if [[ "$title" =~ ^fix\((${IMAGES})\)!?: ]]; then FIX="${FIX}${line}"; fi
           done
           {
             echo "refs<<EOF"
             printf '%s' "$REFS" | awk '!seen[$0]++'
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
-          if [ -n "${ADDED}${FIXED}" ]; then
+          if [ -n "${FEAT}${FIX}" ]; then
             {
               echo '```wikitext'
-              [ -z "$ADDED" ] || printf '===feat===\n\n%s\n\n' "$(printf '%s' "$ADDED" | awk '!seen[$0]++')"
-              [ -z "$FIXED" ] || printf '===fix===\n\n%s\n\n' "$(printf '%s' "$FIXED" | awk '!seen[$0]++')"
+              [ -z "$FEAT" ] || printf '===feat===\n\n%s\n\n' "$(printf '%s' "$FEAT" | awk '!seen[$0]++')"
+              [ -z "$FIX" ] || printf '===fix===\n\n%s\n\n' "$(printf '%s' "$FIX" | awk '!seen[$0]++')"
               echo '```'
             } > "${RUNNER_TEMP}/wikitext.md"
           fi
