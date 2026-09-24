@@ -70,6 +70,11 @@ chmod +x /usr/local/bin/postrun
 # forever with nothing to clear it.
 rm -f /tmp/draining
 
+# The status page's port follows PHP_FPM_LISTEN, which infra alternates per
+# generation, so the two containers of a deploy never want the same one. The
+# http container is told the same number, since Caddy proxies to it.
+export PHP_FPM_STATUS_LISTEN=$((PHP_FPM_LISTEN + 200))
+
 # Run php-fpm. On SIGTERM, fail /healthz.php first so Caddy's active health
 # check drops this upstream, then let php-fpm finish in-flight requests.
 php-fpm &
