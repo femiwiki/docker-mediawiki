@@ -194,6 +194,34 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	}
 }
 
+# php-fpm's status page and opcache for Alloy on the host. infra alternates
+# every port here per generation, the way it does the probe port, so the
+# previous container cannot answer for the new one. The status page has a port
+# of its own, so it answers while www is saturated; the opcache report is a
+# script and needs a www worker. /srv/metrics is outside the public site's root.
+http://127.0.0.1:{$CADDY_METRICS_PORT} {
+	bind 127.0.0.1
+
+	handle /fpm-status {
+		reverse_proxy 127.0.0.1:{$PHP_FPM_STATUS_LISTEN} {
+			transport fastcgi {
+				root /srv/metrics
+				# Leaves /fpm-status whole as SCRIPT_NAME, which is what php-fpm matches
+				split .php
+			}
+		}
+	}
+
+	handle /opcache.php {
+		reverse_proxy 127.0.0.1:{$PHP_FPM_LISTEN} {
+			transport fastcgi {
+				root /srv/metrics
+				split .php
+			}
+		}
+	}
+}
+
 # A port of this container's own, so the healthcheck cannot be answered by the
 # previous Caddy sharing :80 on the host network; infra alternates it per
 # generation like php-fpm's
