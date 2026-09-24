@@ -211,16 +211,35 @@ jobs:
             COMMITS="$(gh api "repos/${REPO}/compare/${OLD}...${SHA}" --jq '.commits[].sha' 2>/dev/null || true)"
           fi
           [ -n "$COMMITS" ] || COMMITS="$SHA"
+          IMAGES="$(gh api "repos/${REPO}/contents/dockers?ref=${SHA}" --jq '.[] | select(.type == "dir") | .name' | paste -sd '|')"
           REFS=""
+          ADDED=""
+          FIXED=""
           for c in $COMMITS; do
-            n="$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0].number // empty')"
-            if [ -n "$n" ]; then REFS="${REFS}- ${REPO}#${n}"$'\n'; else REFS="${REFS}- ${REPO}@${c}"$'\n'; fi
+            read -r n title <<< "$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0] // empty | "\(.number) \(.title)"')"
+            if [ -z "$n" ]; then
+              REFS="${REFS}- ${REPO}@${c}"$'\n'
+              continue
+            fi
+            REFS="${REFS}- ${REPO}#${n}"$'\n'
+            # feat and fix scoped to an image are the wiki's release notes, in English until translated there
+            line="*${title#*: } [https://github.com/${REPO}/pull/${n}]"$'\n'
+            if [[ "$title" =~ ^feat\((${IMAGES})\)!?: ]]; then ADDED="${ADDED}${line}"; fi
+            if [[ "$title" =~ ^fix\((${IMAGES})\)!?: ]]; then FIXED="${FIXED}${line}"; fi
           done
           {
             echo "refs<<EOF"
             printf '%s' "$REFS" | awk '!seen[$0]++'
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
+          if [ -n "${ADDED}${FIXED}" ]; then
+            {
+              echo '```wikitext'
+              [ -z "$ADDED" ] || printf '===추가===\n\n%s\n\n' "$(printf '%s' "$ADDED" | awk '!seen[$0]++')"
+              [ -z "$FIXED" ] || printf '===수정===\n\n%s\n\n' "$(printf '%s' "$FIXED" | awk '!seen[$0]++')"
+              echo '```'
+            } > "${RUNNER_TEMP}/wikitext.md"
+          fi
       - name: Carry over what is already on the bump branch
         id: carry
         env:
@@ -233,9 +252,6 @@ jobs:
             exit 0
           fi
           echo "Rebuilding femiwiki/infra#${n} on top of its own contents."
-          # The release notes written in its body, to be posted when it is applied
-          gh pr view "$n" --repo femiwiki/infra --json body --jq .body | tr -d '\r' \
-            | sed -n '/^```wikitext/,/^```$/p' > "${RUNNER_TEMP}/wikitext.md"
           # Its generation is running only if it was applied, and an apply
           # re-runs the plan, so the gate on its head is then green.
           head="$(gh pr view "$n" --repo femiwiki/infra --json headRefOid --jq .headRefOid)"
@@ -280,7 +296,7 @@ jobs:
           GEN="$(printf '%s' "$LOCALS" | grep -oE 'fastcgi_generation = [0-9]+' | grep -oE '[0-9]+$')"
           sed -i -E "s|(fastcgi_generation = )[0-9]+|\1$((GEN + 1))|" docker/locals.tf
           git diff --stat
-      - name: Write the pull request body, keeping its release notes
+      - name: Write the pull request body
         env:
           REFS: ${{ steps.source.outputs.refs }}
         run: |
