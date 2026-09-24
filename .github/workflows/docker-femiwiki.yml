@@ -233,9 +233,9 @@ jobs:
             exit 0
           fi
           echo "Rebuilding femiwiki/infra#${n} on top of its own contents."
-          # The release notes infra copied into its body, and whatever was edited there
+          # The release notes written in its body, to be posted when it is applied
           gh pr view "$n" --repo femiwiki/infra --json body --jq .body | tr -d '\r' \
-            | sed -n '/^<!-- sync-updates -->$/,/^<!-- \/sync-updates -->$/p' > "${RUNNER_TEMP}/sync-updates.md"
+            | sed -n '/^```wikitext/,/^```$/p' > "${RUNNER_TEMP}/wikitext.md"
           # Its generation is running only if it was applied, and an apply
           # re-runs the plan, so the gate on its head is then green.
           head="$(gh pr view "$n" --repo femiwiki/infra --json headRefOid --jq .headRefOid)"
@@ -287,9 +287,9 @@ jobs:
           {
             echo 'Built from:'
             printf '%s\n' "$REFS"
-            if [ -s "${RUNNER_TEMP}/sync-updates.md" ]; then
+            if [ -s "${RUNNER_TEMP}/wikitext.md" ]; then
               echo
-              cat "${RUNNER_TEMP}/sync-updates.md"
+              cat "${RUNNER_TEMP}/wikitext.md"
             fi
           } > "${RUNNER_TEMP}/body.md"
           cat "${RUNNER_TEMP}/body.md"
