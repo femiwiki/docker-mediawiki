@@ -3,7 +3,7 @@
 	storage s3
 
 	order mwcache before rewrite
-	# NOTE: See @filter for the further details
+	# NOTE: See @block_cidr and @claudebot for the further details
 	order respond before mwcache
 	order encode before mwcache
 
@@ -187,26 +187,11 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		close
 	}
 
-	# Ignore malformed requests
-	@filter0 {
-		path /w/특수:내언어/페미위키:대문
-		vars_regexp {query} ^=[0-9]{1,5}$
-	}
-	@filter1 {
-		path /
-		vars_regexp {query} ^[A-Z]{5}=[A-Z]{3}$
-	}
-	@filter2 {
+	@claudebot {
 		header User-Agent *ClaudeBot*
 	}
 
-	respond @filter0 403 {
-		close
-	}
-	respond @filter1 403 {
-		close
-	}
-	respond @filter2 403 {
+	respond @claudebot 403 {
 		close
 	}
 }
