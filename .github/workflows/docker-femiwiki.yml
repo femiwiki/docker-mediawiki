@@ -222,6 +222,7 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
       - name: Carry over what is already on the bump branch
+        id: carry
         env:
           GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
         run: |
@@ -232,6 +233,26 @@ jobs:
             exit 0
           fi
           echo "Rebuilding femiwiki/infra#${n} on top of its own contents."
+          # Its generation is running only if it was applied, and an apply
+          # re-runs the plan, so the gate on its head is then green.
+          head="$(gh pr view "$n" --repo femiwiki/infra --json headRefOid --jq .headRefOid)"
+          # A plan running right now is the apply's own re-plan or a plan on a
+          # fresh push, and reading it too early would call an applied pull
+          # request unapplied and hand the running container's number out again.
+          for _ in $(seq 12); do
+            read -r status gate <<< "$(gh api "repos/femiwiki/infra/commits/${head}/check-runs" \
+                    -f check_name='docker plan is empty' -X GET \
+                    --jq '.check_runs[0] | "\(.status // "none") \(.conclusion // "none")"')"
+            case "$status" in completed | none) break ;; esac
+            echo "The plan on #${n} is ${status}, waiting."
+            sleep 15
+          done
+          if [ "$gate" = success ]; then
+            echo "#${n} was applied, so the next generation comes after its own."
+            echo "gen_from=tree" >> "$GITHUB_OUTPUT"
+          else
+            echo "#${n} was not applied, so the next generation comes after main's."
+          fi
           gh api -H 'Accept: application/vnd.github.diff' \
             repos/femiwiki/infra/compare/main...bump-femiwiki-image \
             > "${RUNNER_TEMP}/bump-branch.patch"
@@ -242,11 +263,18 @@ jobs:
         working-directory: infra
         env:
           VERSION: ${{ steps.version.outputs.version }}
+          GEN_FROM: ${{ steps.carry.outputs.gen_from }}
         run: |
           sed -i -E "s|(ghcr\.io/femiwiki/femiwiki:)[^\"]+|\1${VERSION}|g" docker/container.tf
-          # Read the generation from the tree, not from main: a bump is applied
-          # before it merges, so main still holds the one before the running container.
-          GEN="$(grep -oE 'fastcgi_generation = [0-9]+' docker/locals.tf | grep -oE '[0-9]+$')"
+          # The running generation is main's, unless the open bump pull request
+          # was applied: a bump is applied before it merges, so main then still
+          # holds the one before the running container.
+          if [ "$GEN_FROM" = tree ]; then
+            LOCALS="$(cat docker/locals.tf)"
+          else
+            LOCALS="$(git show HEAD:docker/locals.tf)"
+          fi
+          GEN="$(printf '%s' "$LOCALS" | grep -oE 'fastcgi_generation = [0-9]+' | grep -oE '[0-9]+$')"
           sed -i -E "s|(fastcgi_generation = )[0-9]+|\1$((GEN + 1))|" docker/locals.tf
           git diff --stat
       - name: Create Pull Request
