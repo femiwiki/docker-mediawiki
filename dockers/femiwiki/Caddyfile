@@ -129,8 +129,9 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	encode gzip
 	mwcache {
 		ristretto {
-			num_counters 10000
-			max_cost 1000
+			num_counters {$CADDY_MWCACHE_NUM_COUNTERS:10000}
+			max_cost {$CADDY_MWCACHE_MAX_COST:1000}
+			ignore_internal_cost {$CADDY_MWCACHE_IGNORE_INTERNAL_COST:true}
 			buffer_items 64
 		}
 		purge_acl {
