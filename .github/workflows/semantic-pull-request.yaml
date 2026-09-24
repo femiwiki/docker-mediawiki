@@ -39,3 +39,40 @@ jobs:
         with:
           header: pr-title-lint-error
           delete: true
+
+  title-scope:
+    name: title scope
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        with:
+          script: |
+            // The release notes pick feat and fix by image scope, so the scope has to name what changed
+            const [ , type, scope ] = process.env.TITLE.match( /^(\w+)(?:\(([^)]+)\))?!?:/ ) ?? [];
+            if ( !type ) {
+              return;
+            }
+            const files = await github.paginate( github.rest.pulls.listFiles, {
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+            } );
+            const changed = new Set( files.flatMap( ( f ) => [ f.filename, f.previous_filename ] )
+              .map( ( path ) => path?.match( /^dockers\/([^/]+)\// )?.[ 1 ] )
+              .filter( Boolean ) );
+            const { data: dockers } = await github.rest.repos.getContent( {
+              ...context.repo,
+              path: 'dockers',
+              ref: context.payload.pull_request.base.sha,
+            } );
+            const images = new Set( dockers.filter( ( d ) => d.type === 'dir' ).map( ( d ) => d.name ) );
+            const expected = [ ...changed ].join( ', ' );
+            if ( [ 'feat', 'fix', 'perf' ].includes( type ) && changed.size && !changed.has( scope ) ) {
+              core.setFailed( `${ type } changes ${ expected }, so its scope should be one of them, not "${ scope ?? '' }".` );
+            } else if ( images.has( scope ) && !changed.has( scope ) ) {
+              core.setFailed( `The scope "${ scope }" names an image this pull request does not change${ expected ? ` (it changes ${ expected })` : '' }.` );
+            }
