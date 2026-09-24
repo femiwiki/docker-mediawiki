@@ -12,25 +12,15 @@ runs:
   using: composite
   steps:
     - id: scope
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       env:
-        GH_TOKEN: ${{ github.token }}
         IMAGES: ${{ inputs.images }}
-        PR: ${{ github.event.number }}
-      shell: bash
-      run: |
-        files=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename')
-        touched() {
-          while IFS= read -r file; do
-            case "$file" in
-              "dockers/$1/"* | ".github/workflows/docker-$1.yml") return 0 ;;
-            esac
-          done <<< "$files"
-          return 1
-        }
-        changed=$(
-          for image in $IMAGES; do
-            if touched "$image"; then echo "$image"; fi
-          done | jq -Rsc 'split("\n") | map(select(length > 0))'
-        )
-        echo "Images to build: $changed"
-        echo "changed=$changed" >> "$GITHUB_OUTPUT"
+      with:
+        script: |
+          const files = await github.paginate(github.rest.pulls.listFiles,
+            { ...context.repo, pull_number: context.issue.number, per_page: 100 },
+            response => response.data.map(file => file.filename));
+          const changed = process.env.IMAGES.split(/\s+/).filter(image => image && files.some(file =>
+            file.startsWith(`dockers/${image}/`) || file === `.github/workflows/docker-${image}.yml`));
+          core.info(`Images to build: ${JSON.stringify(changed)}`);
+          core.setOutput('changed', JSON.stringify(changed));
