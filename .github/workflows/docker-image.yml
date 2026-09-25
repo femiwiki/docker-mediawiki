@@ -49,6 +49,31 @@ jobs:
         env:
           IMAGE: ${{ inputs.image }}
         run: echo "ver=$(grep -m 1 '## v' "dockers/${IMAGE}/README.md" | cut -d'v' -f2)" >> "$GITHUB_OUTPUT"
+      # Main publishes under the README's version, so an image change that keeps
+      # it overwrites the published tag and never reaches the image downstream
+      - name: Require a new version for a change to the image
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          IMAGE: ${{ inputs.image }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          VER: ${{ steps.version.outputs.ver }}
+        run: |
+          changed="$(gh api "repos/${REPO}/compare/${BASE}...${HEAD}" --jq '.files[].filename' \
+            | grep "^dockers/${IMAGE}/" | grep -vx "dockers/${IMAGE}/README.md" || true)"
+          if [ -z "$changed" ]; then
+            echo "Nothing under dockers/${IMAGE}/ but its README changes, so no new version is needed."
+            exit 0
+          fi
+          old="$(gh api "repos/${REPO}/contents/dockers/${IMAGE}/README.md?ref=${BASE}" -H 'Accept: application/vnd.github.raw' \
+            | grep -m 1 '## v' | cut -d'v' -f2)"
+          if [ "$VER" = "$old" ]; then
+            echo "::error file=dockers/${IMAGE}/README.md::dockers/${IMAGE}/ changes but its version is still v${VER}; add a '## v…' entry above it"
+            exit 1
+          fi
+          echo "v${old} → v${VER}"
 
   build:
     needs: get-version
