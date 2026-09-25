@@ -26,11 +26,14 @@ const REQUEST = [
 
 // What an anonymous reader reaches, asked the way Caddy passes it on: the
 // address bar shape /w/제목, which is what sends MediaWiki through its path
-// router. A page the wiki locks to logged-in users, `history` among them,
-// answers a permission page with a 200 and would warm that instead.
+// router. Every page here has to be one an anonymous reader may see: the
+// specials this wiki locks, Special:RecentChanges and Special:Search among
+// them, answer 302 to the login page and compile nothing past the redirect.
+// Titles are written as they read; the loop below percent encodes each path
+// segment, which is also what keeps the log lines legible.
 const PAGES = [
-	[ 'index.php', '/w/%ED%8E%98%EB%AF%B8%EC%9C%84%ED%82%A4:%EB%8C%80%EB%AC%B8', '' ],
-	[ 'index.php', '/w/%ED%8A%B9%EC%88%98:%EC%B5%9C%EA%B7%BC%EB%B0%94%EB%80%9C', '' ],
+	[ 'index.php', '/w/페미위키:대문', '' ],
+	[ 'index.php', '/w/특수:로그인', '' ],
 	[ 'api.php', '/api.php', 'action=query&meta=siteinfo&format=json' ],
 ];
 
@@ -97,10 +100,11 @@ if ( $sibling ) {
 
 $first = true;
 foreach ( PAGES as [ $script, $uri, $query ] ) {
+	$encoded = implode( '/', array_map( 'rawurlencode', explode( '/', $uri ) ) );
 	$deadline = time() + intdiv( $budget, count( PAGES ) );
 	for ( $attempt = 0; $attempt < ATTEMPTS && time() < $deadline; $attempt++ ) {
 		$started = microtime( true );
-		$response = $ask( $host, (int)$port, $script, $uri, $query, $first ? FIRST_TIMEOUT_MS : TIMEOUT_MS );
+		$response = $ask( $host, (int)$port, $script, $encoded, $query, $first ? FIRST_TIMEOUT_MS : TIMEOUT_MS );
 		$report( $uri, $response, microtime( true ) - $started );
 		$first = false;
 		if ( $served( $response ) ) {
