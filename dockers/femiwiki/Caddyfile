@@ -205,6 +205,29 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	# 404 rather than 403: there is no reason to confirm the installer is there
 	respond /mw-config* 404
 
+	# Searches, diffs, old revisions and page history from a client whose headers
+	# contradict the browser its User-Agent claims. robots.txt disallows all of
+	# these, and article text is not among them: a plain read arrives here
+	# rewritten to /index.php with no query and never matches. femiwiki#523 has
+	# the measurements, including why no term stands on its own.
+	#
+	# Every term is conditioned on a Chromium claim, so Safari and Firefox are
+	# never tested. One variable holds the lot so a term can change by an apply.
+	# CEL placeholders cannot go in it: {$VAR:default} eats the first } of a
+	# {http.request...} placeholder and truncates the default, which caddy adapt
+	# accepts and then silently mismatches. Hence header_regexp(), and
+	# !header_regexp(name, '.') for a header that was not sent at all.
+	@botlike_expensive {
+		path /index.php*
+		vars_regexp {query} {$FW_EXPENSIVE_QUERY:(^|&)(search|diff|direction|oldid)=|(^|&)action=(history|info)(&|$)}
+		not header Cookie *femiwikiUserID=*
+		expression {$FW_BOTLIKE:(header_regexp('User-Agent', '(Chrome|Chromium|Edg|CriOS)/') && (!header_regexp('Sec-Ch-Ua', '.') || !header_regexp('Priority', '.') || header_regexp('Accept-Language', 'q=0\\.5'))) || !header_regexp('User-Agent', '(Mozilla/5\\.0|Opera)')}
+	}
+
+	respond @botlike_expensive 403 {
+		close
+	}
+
 	@block_cidr {
 		remote_ip {$BLOCKED_CIDR}
 	}

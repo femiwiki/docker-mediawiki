@@ -1,5 +1,13 @@
 # femiwiki
 
+## v1.5.0
+
+- Refuse searches, diffs, old revisions and page history from a client whose
+  headers contradict the browser its User-Agent claims to be. Plain article
+  reads, api.php and `action=raw` are not in the set, and a request carrying a
+  session cookie is never tested. `FW_BOTLIKE` holds the whole test and
+  `FW_EXPENSIVE_QUERY` the paths it covers, so either can change by an apply.
+
 ## v1.4.12
 
 - Bump femiwiki/mediawiki to v3.4.5
