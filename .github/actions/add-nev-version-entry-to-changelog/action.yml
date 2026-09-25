@@ -29,6 +29,7 @@ runs:
         } > "${RUNNER_TEMP}/body.md"
 
         # And the release notes of the pull requests into the upstream image since the commit that wrote that version
+        NOTES=''
         SINCE=$(git log --format=%H -G "^## v${OLD_VER//./\\.}\$" -- "dockers/${INPUTS_UPSTREAM}/README.md" | tail -n 1)
         if [ -n "$SINCE" ]; then
           PRS=()
@@ -52,6 +53,10 @@ runs:
           grep -m 1 '## v' dockers/${INPUTS_DOWNSTREAM}/README.md | cut -d. -f3 | awk '{print $1 + 1}' >> temp.md
           echo >> temp.md
           echo "- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}" >> temp.md
+          # The release notes it carries, one line each, the pull request as OWNER/REPO#N
+          grep '^\*' <<< "$NOTES" \
+            | sed -E 's/^\*(.*) \[([^] ]+)\]$/  - \1 (\2)/; s#\(https://github\.com/([^/]+/[^/]+)/pull/([0-9]+)\)$#(\1\#\2)#' \
+            >> temp.md || true
           echo >> temp.md
           tail -n +3 dockers/${INPUTS_DOWNSTREAM}/README.md >> temp.md
           mv -f temp.md dockers/${INPUTS_DOWNSTREAM}/README.md
