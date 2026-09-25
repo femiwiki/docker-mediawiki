@@ -128,10 +128,16 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	file_server
 	encode gzip
 	mwcache {
+		# A budget in bytes rather than a count of entries. 64 MiB holds about
+		# 1,400 responses of the size this wiki serves, well above the 595
+		# distinct addresses an ordinary twenty minutes asks for, and leaves
+		# room under this container's limit. num_counters wants to be about ten
+		# times the entries the budget holds. ignore_internal_cost is gone with
+		# the count: ristretto's per entry overhead is memory really used, so a
+		# budget in bytes wants it counted.
 		ristretto {
-			num_counters {$CADDY_MWCACHE_NUM_COUNTERS:10000}
-			max_cost {$CADDY_MWCACHE_MAX_COST:1000}
-			ignore_internal_cost {$CADDY_MWCACHE_IGNORE_INTERNAL_COST:true}
+			num_counters {$CADDY_MWCACHE_NUM_COUNTERS:14000}
+			max_cost_bytes {$CADDY_MWCACHE_MAX_COST_BYTES:67108864}
 			buffer_items 64
 		}
 		purge_acl {

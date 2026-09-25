@@ -1,5 +1,9 @@
 # femiwiki
 
+## v1.4.11
+
+- Bump femiwiki/caddy to v1.6.0
+
 ## v1.4.10
 
 - Bump femiwiki/caddy to v1.5.3
