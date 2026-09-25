@@ -13,6 +13,7 @@ runs:
   using: composite
   steps:
     - env:
+        GH_TOKEN: ${{ github.token }}
         INPUTS_UPSTREAM: ${{ inputs.upstream }}
         INPUTS_VERSION: ${{ inputs.version }}
         INPUTS_DOWNSTREAM: ${{ inputs.downstream }}
@@ -26,6 +27,20 @@ runs:
           echo
           awk -v new="## v${INPUTS_VERSION}" -v old="## v${OLD_VER}" '$0 == new { on = 1 } $0 == old { exit } on' dockers/${INPUTS_UPSTREAM}/README.md
         } > "${RUNNER_TEMP}/body.md"
+
+        # And the release notes of the pull requests into the upstream image since the commit that wrote that version
+        SINCE=$(git log --format=%H -G "^## v${OLD_VER//./\\.}\$" -- "dockers/${INPUTS_UPSTREAM}/README.md" | tail -n 1)
+        if [ -n "$SINCE" ]; then
+          PRS=()
+          for c in $(git log --format=%H "${SINCE}..HEAD" -- "dockers/${INPUTS_UPSTREAM}"); do
+            N=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${c}/pulls" --jq '.[0].number // empty')
+            [ -z "$N" ] || PRS+=("$N")
+          done
+          if [ ${#PRS[@]} -gt 0 ]; then
+            NOTES="$(.github/release-notes.sh "$GITHUB_REPOSITORY" "${PRS[@]}")"
+            [ -z "$NOTES" ] || printf '\n%s\n' "$NOTES" >> "${RUNNER_TEMP}/body.md"
+          fi
+        fi
 
         # Update Dockerfile
         sed -i "s/$OLD_VER/${INPUTS_VERSION}/" dockers/${INPUTS_DOWNSTREAM}/Dockerfile

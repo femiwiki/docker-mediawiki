@@ -81,6 +81,7 @@ jobs:
           ver: ${{ fromJSON(steps.vars.outputs.result).ver }}
           scope: femiwiki-extensions
           name: ${{ fromJSON(steps.vars.outputs.result).ext }}
+          body: ${{ runner.temp }}/body.md
 
       - name: Update extensions.json
         env:

@@ -61,6 +61,7 @@ jobs:
           ver: ${{ steps.bump.outputs.ver }}
           scope: caddy
           name: ${{ steps.bump.outputs.plugin }}
+          body: ${{ runner.temp }}/body.md
 
       - name: Update README
         uses: ./.github/actions/add-changelog-entry

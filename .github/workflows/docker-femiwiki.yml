@@ -198,6 +198,12 @@ jobs:
           token: ${{ steps.get_workflow_token.outputs.token }}
           path: infra
           persist-credentials: false
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          sparse-checkout: .github/release-notes.sh
+          sparse-checkout-cone-mode: false
+          path: self
+          persist-credentials: false
       - name: List the pull requests since the tag infra currently uses
         id: source
         env:
@@ -211,7 +217,6 @@ jobs:
             COMMITS="$(gh api "repos/${REPO}/compare/${OLD}...${SHA}" --jq '.commits[].sha' 2>/dev/null || true)"
           fi
           [ -n "$COMMITS" ] || COMMITS="$SHA"
-          IMAGES="$(gh api "repos/${REPO}/contents/dockers?ref=${SHA}" --jq '.[] | select(.type == "dir") | .name' | paste -sd '|')"
           # The sections and their order are release-please's
           TYPES=(feat fix perf revert docs style refactor test build ci chore other)
           declare -A HEADING=(
@@ -220,9 +225,7 @@ jobs:
             [build]='Build System' [ci]='Continuous Integration' [chore]='Miscellaneous Chores' [other]=Other
           )
           declare -A SECTION=()
-          FEAT=""
-          FIX=""
-          PERF=""
+          PRS=()
           for c in $COMMITS; do
             read -r n title <<< "$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0] // empty | "\(.number) \(.title)"')"
             if [ -z "$n" ]; then
@@ -235,11 +238,7 @@ jobs:
             else
               SECTION[other]+="* ${title} (${REPO}#${n})"$'\n'
             fi
-            # feat, fix and perf scoped to an image are the wiki's release notes, in English until translated there
-            line="*${title#*: } [https://github.com/${REPO}/pull/${n}]"$'\n'
-            if [[ "$title" =~ ^feat\((${IMAGES})\)!?: ]]; then FEAT="${FEAT}${line}"; fi
-            if [[ "$title" =~ ^fix\((${IMAGES})\)!?: ]]; then FIX="${FIX}${line}"; fi
-            if [[ "$title" =~ ^perf\((${IMAGES})\)!?: ]]; then PERF="${PERF}${line}"; fi
+            PRS+=("$n")
           done
           {
             echo "refs<<EOF"
@@ -249,14 +248,9 @@ jobs:
             done
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
-          if [ -n "${FEAT}${FIX}${PERF}" ]; then
-            {
-              echo '```wikitext'
-              [ -z "$FEAT" ] || printf '===feat===\n\n%s\n\n' "$(printf '%s' "$FEAT" | awk '!seen[$0]++')"
-              [ -z "$FIX" ] || printf '===fix===\n\n%s\n\n' "$(printf '%s' "$FIX" | awk '!seen[$0]++')"
-              [ -z "$PERF" ] || printf '===perf===\n\n%s\n\n' "$(printf '%s' "$PERF" | awk '!seen[$0]++')"
-              echo '```'
-            } > "${RUNNER_TEMP}/wikitext.md"
+          # The wiki's release notes, in English until translated there
+          if [ ${#PRS[@]} -gt 0 ]; then
+            self/.github/release-notes.sh "$REPO" "${PRS[@]}" > "${RUNNER_TEMP}/wikitext.md"
           fi
       - name: Carry over what is already on the bump branch
         id: carry
