@@ -75,6 +75,23 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			events {$CADDY_EXPENSIVE_IP_EVENTS:100}
 			window {$CADDY_EXPENSIVE_IP_WINDOW:10m}
 		}
+		# Anything that calls itself a crawler, counted per agent string. These
+		# are a quarter of the time php-fpm spends, and nearly all of it is
+		# article reads that robots.txt allows, so a budget is the only thing
+		# that reaches them. A bucket each rather than a shared one, so a
+		# crawler that spends its own does not refuse Googlebot; and a pattern
+		# rather than a list of names, so one nobody has heard of yet is
+		# covered on the day it arrives. A reader never writes any of these
+		# three words in a User-Agent.
+		zone crawlers {
+			match {
+				path /index.php* /api.php* /w/*
+				header_regexp User-Agent (?i)(bot|spider|crawl)
+			}
+			key {http.request.header.User-Agent}
+			events {$CADDY_CRAWLER_EVENTS:100}
+			window {$CADDY_CRAWLER_WINDOW:10m}
+		}
 		log_key
 		# The module keeps a histogram per key, one series set per /24 seen
 		disable_metrics
