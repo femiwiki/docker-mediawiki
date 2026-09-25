@@ -1,5 +1,12 @@
 # femiwiki
 
+## v1.7.0
+
+- Give cron's jobs the environment they run under. Cron passes on nothing it
+  inherits, so every maintenance script was failing to reach the database and
+  the sitemap volume has been empty since 2025-08-31. `run` now writes the
+  environment to a root-only file and names it in the crontab's `BASH_ENV`.
+
 ## v1.6.0
 
 - Refuse the three api.php calls the skin makes on every article view, the talk
