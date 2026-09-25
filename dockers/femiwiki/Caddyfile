@@ -86,11 +86,11 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		zone crawlers {
 			match {
 				path /index.php* /api.php* /w/*
-				header_regexp User-Agent {$CADDY_CRAWLER_AGENTS:(?i)(bot|spider|crawl)}
+				header_regexp User-Agent {$FW_CRAWLER_AGENTS:(?i)(bot|spider|crawl)}
 			}
 			key {http.request.header.User-Agent}
-			events {$CADDY_CRAWLER_EVENTS:100}
-			window {$CADDY_CRAWLER_WINDOW:10m}
+			events {$FW_CRAWLER_EVENTS:100}
+			window {$FW_CRAWLER_WINDOW:10m}
 		}
 		log_key
 		# The module keeps a histogram per key, one series set per /24 seen
