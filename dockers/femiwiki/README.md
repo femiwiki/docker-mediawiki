@@ -2,23 +2,23 @@
 
 ## v1.4.10
 
-- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}
+- Bump femiwiki/caddy to v1.5.3
 
 ## v1.4.9
 
-- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}
+- Bump femiwiki/caddy to v1.5.2
 
 ## v1.4.8
 
-- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}
+- Bump femiwiki/caddy to v1.5.1
 
 ## v1.4.7
 
-- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}
+- Bump femiwiki/caddy to v1.5.0
 
 ## v1.4.6
 
-- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}
+- Bump femiwiki/femiwiki-extensions to v2.4.3
 
 ## v1.4.5
 
