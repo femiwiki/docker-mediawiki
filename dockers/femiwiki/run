@@ -58,6 +58,31 @@ if [ -z "${MEDIAWIKI_SKIP_IMPORT_SITES:-}" ]; then
   php /srv/femiwiki.com/maintenance/importSites.php /a/site-list.xml
 fi
 
+# Cron builds a fresh environment for every job and passes on nothing it
+# inherited, so a maintenance script got neither the secrets read above nor the
+# plain variables docker set, and could not reach the database at all: the
+# sitemap volume has been empty since 2025-08-31. Cron does honour NAME=value
+# lines in a crontab, and bash reads whatever BASH_ENV names before running a
+# non-interactive script, which all three of them are. SHELL too, because cron
+# runs the command field under /bin/sh by default and dash ignores BASH_ENV.
+# See femiwiki/femiwiki#588.
+umask 077
+export -p > /etc/femiwiki-cron.env
+{
+  echo 'SHELL=/bin/bash'
+  echo 'BASH_ENV=/etc/femiwiki-cron.env'
+  crontab -l
+  # The types LocalSettings keeps off the every-minute runner still have to run,
+  # just not at its pace. A few every few minutes clears a backlog over days
+  # without the wiki or whatever it calls out to noticing.
+  if [ -n "${FW_JOB_SLOW_TYPES:-UnlinkedWikibaseFetch}" ]; then
+    for t in $(echo "${FW_JOB_SLOW_TYPES:-UnlinkedWikibaseFetch}" | tr ',' ' '); do
+      echo "${FW_JOB_SLOW_SCHEDULE:-*/5 * * * *} /usr/local/bin/php /srv/femiwiki.com/maintenance/run.php runJobs --type=$t --maxjobs=${FW_JOB_SLOW_MAXJOBS:-20}"
+    done
+  fi
+} | crontab -
+umask 022
+
 # Start cron daemon
 cron
 

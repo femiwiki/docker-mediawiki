@@ -1,5 +1,18 @@
 # femiwiki
 
+## v1.7.0
+
+- Give cron's jobs the environment they run under. Cron passes on nothing it
+  inherits, so every maintenance script was failing to reach the database and
+  the sitemap volume has been empty since 2025-08-31. `run` now writes the
+  environment to a root-only file and names it in the crontab's `BASH_ENV`.
+- Keep `UnlinkedWikibaseFetch` off the every-minute job runner and give it a
+  slower entry of its own, 20 jobs every 5 minutes, so that fetches queued while
+  the rest of the backlog drains cannot all leave for Wikidata at once. Meant for
+  the transition rather than for good: femiwiki#589 puts it back. Both the types
+  and the rate come from the environment: `FW_JOB_TYPES_OFF_DEFAULT_QUEUE`,
+  `FW_JOB_SLOW_TYPES`, `FW_JOB_SLOW_MAXJOBS` and `FW_JOB_SLOW_SCHEDULE`.
+
 ## v1.6.0
 
 - Refuse the three api.php calls the skin makes on every article view, the talk
