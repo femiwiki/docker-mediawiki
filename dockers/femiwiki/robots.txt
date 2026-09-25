@@ -1,3 +1,7 @@
+# The copy that serves comes from femiwiki/infra, docker/res/robots.txt, by way
+# of FW_ROBOTS_TXT. This one is what a container without that variable falls
+# back to, so edit the infra copy unless that is what you mean to change.
+#
 # Visit https://github.com/wikimedia/operations-mediawiki-config/blob/master/robots.txt for Wikimedia's robots.txt.
 
 User-agent: ClaudeBot
