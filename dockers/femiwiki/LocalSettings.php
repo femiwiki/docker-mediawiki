@@ -109,7 +109,7 @@ $wgJobRunRate = 0;
 
 // Shared memory settings
 $wgMainCacheType = CACHE_MEMCACHED;
-$wgSessionCacheType = CACHE_MEMCACHED;
+$wgSessionCacheType = CACHE_DB;
 $wgParserCacheType = CACHE_MEMCACHED;
 $wgMessageCacheType = CACHE_MEMCACHED;
 $wgMemCachedServers = explode( ',', getenv( 'WG_MEMCACHED_SERVERS' ) );
