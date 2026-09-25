@@ -44,6 +44,7 @@ jobs:
             }
 
       - name: Collect the upstream changes for the pull request body
+        id: upstream
         env:
           GH_TOKEN: ${{ github.token }}
           EXT: ${{ fromJSON(steps.vars.outputs.result).ext }}
@@ -69,6 +70,17 @@ jobs:
             echo "$fence"
           } > "$BODY"
           cat "$BODY"
+          echo "repo=$repo" >> "$GITHUB_OUTPUT"
+          echo "old=$old" >> "$GITHUB_OUTPUT"
+
+      - uses: ./.github/actions/release-title
+        id: title
+        with:
+          repo: ${{ steps.upstream.outputs.repo }}
+          old: ${{ steps.upstream.outputs.old }}
+          ver: ${{ fromJSON(steps.vars.outputs.result).ver }}
+          scope: femiwiki-extensions
+          name: ${{ fromJSON(steps.vars.outputs.result).ext }}
 
       - name: Update extensions.json
         env:
@@ -80,6 +92,7 @@ jobs:
         uses: ./.github/actions/add-changelog-entry
         with:
           image: femiwiki-extensions
+          level: ${{ steps.title.outputs.level }}
           message: Bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}
 
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
@@ -93,7 +106,7 @@ jobs:
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
-          commit-message: 'build(femiwiki-extensions): bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}'
-          title: 'build(femiwiki-extensions): bump ${{fromJSON(steps.vars.outputs.result).ext}} to ${{fromJSON(steps.vars.outputs.result).ver}}'
+          commit-message: ${{ steps.title.outputs.title }}
+          title: ${{ steps.title.outputs.title }}
           branch: bump-${{fromJSON(steps.vars.outputs.result).ext}}
           body-path: ${{ runner.temp }}/body.md

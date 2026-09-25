@@ -1,0 +1,71 @@
+name: Release title
+description: >
+  Title a bump pull request after the upstream release: feat with its features,
+  fix with its fixes, otherwise build. The wiki's release notes quote feat and
+  fix titles. Reads release-please notes, or conventional commit subjects when
+  the release has none.
+
+inputs:
+  repo:
+    description: The upstream repository, OWNER/NAME.
+    required: true
+  old:
+    description: The version bumped from.
+    required: true
+  ver:
+    description: The version bumped to.
+    required: true
+  scope:
+    description: The image directory under dockers/ the bump changes.
+    required: true
+  name:
+    description: What is bumped, as the title names it.
+    required: true
+
+outputs:
+  title:
+    description: The pull request title.
+    value: ${{ steps.title.outputs.title }}
+  level:
+    description: The part of the image version to raise, minor for features, patch otherwise.
+    value: ${{ steps.title.outputs.level }}
+
+runs:
+  using: composite
+  steps:
+    - id: title
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        REPO: ${{ inputs.repo }}
+        OLD: ${{ inputs.old }}
+        VER: ${{ inputs.ver }}
+        SCOPE: ${{ inputs.scope }}
+        NAME: ${{ inputs.name }}
+      run: |
+        set -euo pipefail
+        notes=$(gh release view "$VER" --repo "$REPO" --json body --jq .body || true)
+        subjects=$(gh api "repos/$REPO/compare/$OLD...$VER" --jq '.commits[].commit.message | split("\n")[0]' || true)
+        changes() {
+          if [ -n "$notes" ]; then
+            awk -v h="### $1" '/^#+ /{on=($0 == h)} on && /^\* /' <<< "$notes" \
+              | sed -E 's/^\* (\*\*[^*]+:\*\* )?//; s/ \(\[[^]]*\]\([^)]*\)\)//g; s/,? closes \[[^]]*\]\([^)]*\)//g'
+          else
+            sed -nE "/^$2(\([^)]*\))?!?: /{s///; s/ \(#[0-9]+\)$//; p}" <<< "$subjects"
+          fi
+        }
+        feats=$(changes Features feat)
+        fixes=$(changes 'Bug Fixes' fix)
+        if [ -n "$feats" ]; then
+          title="feat(${SCOPE}): $(paste -sd ';' <<< "$feats" | sed 's/;/; /g') ($NAME $VER)"
+          level=minor
+        elif [ -n "$fixes" ]; then
+          title="fix(${SCOPE}): $(paste -sd ';' <<< "$fixes" | sed 's/;/; /g') ($NAME $VER)"
+          level=patch
+        else
+          title="build(${SCOPE}): bump $NAME to $VER"
+          level=patch
+        fi
+        echo "$title"
+        echo "title=$title" >> "$GITHUB_OUTPUT"
+        echo "level=$level" >> "$GITHUB_OUTPUT"

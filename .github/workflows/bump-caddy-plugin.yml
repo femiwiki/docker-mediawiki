@@ -49,38 +49,24 @@ jobs:
             fi
           } > "$BODY"
           cat "$BODY"
-          # The plugin's features and fixes are the image's, and the title is what the wiki's release notes quote
-          changes() {
-            if [ -n "$notes" ]; then
-              awk -v h="### $1" '/^#+ /{on=($0 == h)} on && /^\* /' <<< "$notes" \
-                | sed -E 's/^\* (\*\*[^*]+:\*\* )?//; s/ \(\[[^]]*\]\([^)]*\)\)//g; s/,? closes \[[^]]*\]\([^)]*\)//g'
-            else
-              sed -nE "/^$2(\([^)]*\))?!?: /{s///; s/ \(#[0-9]+\)$//; p}" <<< "$subjects"
-            fi
-          }
-          feats=$(changes Features feat)
-          fixes=$(changes 'Bug Fixes' fix)
-          if [ -n "$feats" ]; then
-            title="feat(caddy): $(paste -sd ';' <<< "$feats" | sed 's/;/; /g') ($PLUGIN $VER)"
-            level=minor
-          elif [ -n "$fixes" ]; then
-            title="fix(caddy): $(paste -sd ';' <<< "$fixes" | sed 's/;/; /g') ($PLUGIN $VER)"
-            level=patch
-          else
-            title="build(caddy): bump $PLUGIN to $VER"
-            level=patch
-          fi
-          echo "$title"
           echo "plugin=$PLUGIN" >> "$GITHUB_OUTPUT"
           echo "ver=$VER" >> "$GITHUB_OUTPUT"
-          echo "title=$title" >> "$GITHUB_OUTPUT"
-          echo "level=$level" >> "$GITHUB_OUTPUT"
+          echo "old=$old" >> "$GITHUB_OUTPUT"
+
+      - uses: ./.github/actions/release-title
+        id: title
+        with:
+          repo: femiwiki/${{ steps.bump.outputs.plugin }}
+          old: ${{ steps.bump.outputs.old }}
+          ver: ${{ steps.bump.outputs.ver }}
+          scope: caddy
+          name: ${{ steps.bump.outputs.plugin }}
 
       - name: Update README
         uses: ./.github/actions/add-changelog-entry
         with:
           image: caddy
-          level: ${{ steps.bump.outputs.level }}
+          level: ${{ steps.title.outputs.level }}
           message: Bump ${{ steps.bump.outputs.plugin }} to [${{ steps.bump.outputs.ver }}](https://github.com/femiwiki/${{ steps.bump.outputs.plugin }}/releases/tag/${{ steps.bump.outputs.ver }})
 
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
@@ -94,7 +80,7 @@ jobs:
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
-          commit-message: ${{ steps.bump.outputs.title }}
-          title: ${{ steps.bump.outputs.title }}
+          commit-message: ${{ steps.title.outputs.title }}
+          title: ${{ steps.title.outputs.title }}
           branch: bump-${{ steps.bump.outputs.plugin }}
           body-path: ${{ runner.temp }}/body.md
