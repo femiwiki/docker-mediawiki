@@ -1,8 +1,8 @@
 name: Release title
 description: >
   Title a bump pull request after the upstream release: feat with its features,
-  fix with its fixes, otherwise build. The wiki's release notes quote feat and
-  fix titles. Reads release-please notes, or conventional commit subjects when
+  fix with its fixes, perf with its performance improvements, otherwise build.
+  The wiki's release notes quote feat, fix and perf titles. Reads release-please notes, or conventional commit subjects when
   the release has none.
 
 inputs:
@@ -56,11 +56,15 @@ runs:
         }
         feats=$(changes Features feat)
         fixes=$(changes 'Bug Fixes' fix)
+        perfs=$(changes 'Performance Improvements' perf)
         if [ -n "$feats" ]; then
           title="feat(${SCOPE}): $(paste -sd ';' <<< "$feats" | sed 's/;/; /g') ($NAME $VER)"
           level=minor
         elif [ -n "$fixes" ]; then
           title="fix(${SCOPE}): $(paste -sd ';' <<< "$fixes" | sed 's/;/; /g') ($NAME $VER)"
+          level=patch
+        elif [ -n "$perfs" ]; then
+          title="perf(${SCOPE}): $(paste -sd ';' <<< "$perfs" | sed 's/;/; /g') ($NAME $VER)"
           level=patch
         else
           title="build(${SCOPE}): bump $NAME to $VER"

@@ -222,6 +222,7 @@ jobs:
           declare -A SECTION=()
           FEAT=""
           FIX=""
+          PERF=""
           for c in $COMMITS; do
             read -r n title <<< "$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0] // empty | "\(.number) \(.title)"')"
             if [ -z "$n" ]; then
@@ -234,10 +235,11 @@ jobs:
             else
               SECTION[other]+="* ${title} (${REPO}#${n})"$'\n'
             fi
-            # feat and fix scoped to an image are the wiki's release notes, in English until translated there
+            # feat, fix and perf scoped to an image are the wiki's release notes, in English until translated there
             line="*${title#*: } [https://github.com/${REPO}/pull/${n}]"$'\n'
             if [[ "$title" =~ ^feat\((${IMAGES})\)!?: ]]; then FEAT="${FEAT}${line}"; fi
             if [[ "$title" =~ ^fix\((${IMAGES})\)!?: ]]; then FIX="${FIX}${line}"; fi
+            if [[ "$title" =~ ^perf\((${IMAGES})\)!?: ]]; then PERF="${PERF}${line}"; fi
           done
           {
             echo "refs<<EOF"
@@ -247,11 +249,12 @@ jobs:
             done
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
-          if [ -n "${FEAT}${FIX}" ]; then
+          if [ -n "${FEAT}${FIX}${PERF}" ]; then
             {
               echo '```wikitext'
               [ -z "$FEAT" ] || printf '===feat===\n\n%s\n\n' "$(printf '%s' "$FEAT" | awk '!seen[$0]++')"
               [ -z "$FIX" ] || printf '===fix===\n\n%s\n\n' "$(printf '%s' "$FIX" | awk '!seen[$0]++')"
+              [ -z "$PERF" ] || printf '===perf===\n\n%s\n\n' "$(printf '%s' "$PERF" | awk '!seen[$0]++')"
               echo '```'
             } > "${RUNNER_TEMP}/wikitext.md"
           fi
