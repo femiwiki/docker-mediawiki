@@ -53,6 +53,13 @@ RUN pecl channel-update pecl.php.net
 RUN pecl install apcu
 RUN docker-php-ext-enable apcu
 
+# A sampling profiler, so where CPU goes stops being inferred from Caddy's
+# wall-clock durations. It costs nothing until MediaWiki is told to use it, and
+# it samples on a timer rather than instrumenting calls, which is why it can be
+# left in a production image at all. See femiwiki/femiwiki#532.
+RUN pecl install excimer
+RUN docker-php-ext-enable excimer
+
 COPY ./php.ini                 /usr/local/etc/php/php.ini
 COPY ./opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 COPY ./php-fpm.conf            /usr/local/etc/php-fpm.conf

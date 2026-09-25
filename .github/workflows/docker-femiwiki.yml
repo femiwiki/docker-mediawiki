@@ -1,16 +1,12 @@
 name: 'Docker: femiwiki'
 
+# Called by images.yml, for pull requests, pushes to main and by hand
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'dockers/femiwiki/**'
   workflow_call:
     secrets:
       PAT_APPLICATION_PRIVATE_KEY:
         description: Opens the downstream bump pull request; only used from main
         required: false
-  workflow_dispatch:
 
 concurrency:
   group: docker-femiwiki-${{ github.ref }}
@@ -198,6 +194,12 @@ jobs:
           token: ${{ steps.get_workflow_token.outputs.token }}
           path: infra
           persist-credentials: false
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          sparse-checkout: .github/release-notes.sh
+          sparse-checkout-cone-mode: false
+          path: self
+          persist-credentials: false
       - name: List the pull requests since the tag infra currently uses
         id: source
         env:
@@ -211,34 +213,40 @@ jobs:
             COMMITS="$(gh api "repos/${REPO}/compare/${OLD}...${SHA}" --jq '.commits[].sha' 2>/dev/null || true)"
           fi
           [ -n "$COMMITS" ] || COMMITS="$SHA"
-          IMAGES="$(gh api "repos/${REPO}/contents/dockers?ref=${SHA}" --jq '.[] | select(.type == "dir") | .name' | paste -sd '|')"
-          REFS=""
-          FEAT=""
-          FIX=""
+          # The sections and their order are release-please's
+          TYPES=(feat fix perf revert docs style refactor test build ci chore other)
+          declare -A HEADING=(
+            [feat]=Features [fix]='Bug Fixes' [perf]='Performance Improvements' [revert]=Reverts
+            [docs]=Documentation [style]=Styles [refactor]='Code Refactoring' [test]=Tests
+            [build]='Build System' [ci]='Continuous Integration' [chore]='Miscellaneous Chores' [other]=Other
+          )
+          declare -A SECTION=()
+          PRS=()
           for c in $COMMITS; do
             read -r n title <<< "$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0] // empty | "\(.number) \(.title)"')"
             if [ -z "$n" ]; then
-              REFS="${REFS}- ${REPO}@${c}"$'\n'
+              SECTION[other]+="* ${REPO}@${c}"$'\n'
               continue
             fi
-            REFS="${REFS}- ${REPO}#${n}"$'\n'
-            # feat and fix scoped to an image are the wiki's release notes, in English until translated there
-            line="*${title#*: } [https://github.com/${REPO}/pull/${n}]"$'\n'
-            if [[ "$title" =~ ^feat\((${IMAGES})\)!?: ]]; then FEAT="${FEAT}${line}"; fi
-            if [[ "$title" =~ ^fix\((${IMAGES})\)!?: ]]; then FIX="${FIX}${line}"; fi
+            if [[ "$title" =~ ^([a-z]+)(\(([^\)]+)\))?!?:\ (.*)$ ]] && [ -n "${HEADING[${BASH_REMATCH[1]}]:-}" ]; then
+              type="${BASH_REMATCH[1]}"
+              SECTION[$type]+="* ${BASH_REMATCH[3]:+**${BASH_REMATCH[3]}:** }${BASH_REMATCH[4]} (${REPO}#${n})"$'\n'
+            else
+              SECTION[other]+="* ${title} (${REPO}#${n})"$'\n'
+            fi
+            PRS+=("$n")
           done
           {
             echo "refs<<EOF"
-            printf '%s' "$REFS" | awk '!seen[$0]++'
+            for type in "${TYPES[@]}"; do
+              [ -n "${SECTION[$type]:-}" ] || continue
+              printf '### %s\n\n%s\n\n' "${HEADING[$type]}" "$(printf '%s' "${SECTION[$type]}" | awk '!seen[$0]++')"
+            done
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
-          if [ -n "${FEAT}${FIX}" ]; then
-            {
-              echo '```wikitext'
-              [ -z "$FEAT" ] || printf '===feat===\n\n%s\n\n' "$(printf '%s' "$FEAT" | awk '!seen[$0]++')"
-              [ -z "$FIX" ] || printf '===fix===\n\n%s\n\n' "$(printf '%s' "$FIX" | awk '!seen[$0]++')"
-              echo '```'
-            } > "${RUNNER_TEMP}/wikitext.md"
+          # The wiki's release notes, in English until translated there
+          if [ ${#PRS[@]} -gt 0 ]; then
+            self/.github/release-notes.sh "$REPO" "${PRS[@]}" > "${RUNNER_TEMP}/wikitext.md"
           fi
       - name: Carry over what is already on the bump branch
         id: carry
@@ -302,6 +310,7 @@ jobs:
         run: |
           {
             echo 'Built from:'
+            echo
             printf '%s\n' "$REFS"
             if [ -s "${RUNNER_TEMP}/wikitext.md" ]; then
               echo

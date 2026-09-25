@@ -6,11 +6,11 @@
 #   /var/log/cron.log      크론 로그
 #   /tini                  tini
 #
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.5.2 AS caddy
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.6.0 AS caddy
 
 FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2.4.3 AS extensions
 
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:3.4.4
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:3.4.5
 
 # Set timezone
 ENV TZ=Asia/Seoul
@@ -91,13 +91,13 @@ COPY zzz-probe.conf /usr/local/etc/php-fpm.d/
 ENV PHP_FPM_LISTEN=9000 \
     PHP_FPM_PROBE_LISTEN=9100 \
     PHP_FPM_STATUS_LISTEN=9200 \
-    CADDY_PROBE_PORT=8080 \
-    CADDY_METRICS_PORT=9180
+    FW_PROBE_PORT=8080 \
+    FW_METRICS_PORT=9180
 
 EXPOSE 80
 EXPOSE 443
 EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
-COPY caddy-warmup.php /a/
+COPY caddy-warmup.php warm-up.php /a/
 CMD ["/usr/local/bin/run"]

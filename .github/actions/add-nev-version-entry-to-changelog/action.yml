@@ -13,6 +13,7 @@ runs:
   using: composite
   steps:
     - env:
+        GH_TOKEN: ${{ github.token }}
         INPUTS_UPSTREAM: ${{ inputs.upstream }}
         INPUTS_VERSION: ${{ inputs.version }}
         INPUTS_DOWNSTREAM: ${{ inputs.downstream }}
@@ -27,6 +28,21 @@ runs:
           awk -v new="## v${INPUTS_VERSION}" -v old="## v${OLD_VER}" '$0 == new { on = 1 } $0 == old { exit } on' dockers/${INPUTS_UPSTREAM}/README.md
         } > "${RUNNER_TEMP}/body.md"
 
+        # And the release notes of the pull requests into the upstream image since the commit that wrote that version
+        NOTES=''
+        SINCE=$(git log --format=%H -G "^## v${OLD_VER//./\\.}\$" -- "dockers/${INPUTS_UPSTREAM}/README.md" | tail -n 1)
+        if [ -n "$SINCE" ]; then
+          PRS=()
+          for c in $(git log --format=%H "${SINCE}..HEAD" -- "dockers/${INPUTS_UPSTREAM}"); do
+            N=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${c}/pulls" --jq '.[0].number // empty')
+            [ -z "$N" ] || PRS+=("$N")
+          done
+          if [ ${#PRS[@]} -gt 0 ]; then
+            NOTES="$(.github/release-notes.sh "$GITHUB_REPOSITORY" "${PRS[@]}")"
+            [ -z "$NOTES" ] || printf '\n%s\n' "$NOTES" >> "${RUNNER_TEMP}/body.md"
+          fi
+        fi
+
         # Update Dockerfile
         sed -i "s/$OLD_VER/${INPUTS_VERSION}/" dockers/${INPUTS_DOWNSTREAM}/Dockerfile
         if [ ! -z "$(git status --porcelain)" ]; then
@@ -36,7 +52,11 @@ runs:
           echo -n . >> temp.md
           grep -m 1 '## v' dockers/${INPUTS_DOWNSTREAM}/README.md | cut -d. -f3 | awk '{print $1 + 1}' >> temp.md
           echo >> temp.md
-          echo '- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}' >> temp.md
+          echo "- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}" >> temp.md
+          # The release notes it carries, one line each, the pull request as OWNER/REPO#N
+          grep '^\*' <<< "$NOTES" \
+            | sed -E 's/^\*(.*) \[([^] ]+)\]$/  - \1 (\2)/; s#\(https://github\.com/([^/]+/[^/]+)/pull/([0-9]+)\)$#(\1\#\2)#' \
+            >> temp.md || true
           echo >> temp.md
           tail -n +3 dockers/${INPUTS_DOWNSTREAM}/README.md >> temp.md
           mv -f temp.md dockers/${INPUTS_DOWNSTREAM}/README.md

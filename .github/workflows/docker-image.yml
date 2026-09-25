@@ -1,0 +1,250 @@
+name: 'Docker: image'
+
+# Builds one versioned image and, on main, publishes it and opens the pull
+# request that bumps it in the image built on top of it. Called by images.yml.
+on:
+  workflow_call:
+    inputs:
+      image:
+        description: The directory under dockers/, also the ghcr.io/femiwiki name
+        required: true
+        type: string
+      downstream:
+        description: The image under dockers/ whose Dockerfile is bumped to the new version
+        required: true
+        type: string
+      arches:
+        description: The architectures to build, as a JSON array
+        required: false
+        type: string
+        default: '["amd64", "arm64"]'
+      automerge:
+        description: Merge the downstream bump pull request once its checks pass
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY:
+        description: Opens the downstream bump pull request; only used from main
+        required: false
+
+concurrency:
+  group: docker-${{ inputs.image }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      ver: ${{ steps.version.outputs.ver }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - id: version
+        env:
+          IMAGE: ${{ inputs.image }}
+        run: echo "ver=$(grep -m 1 '## v' "dockers/${IMAGE}/README.md" | cut -d'v' -f2)" >> "$GITHUB_OUTPUT"
+      # Main publishes under the README's version, so an image change that keeps
+      # it overwrites the published tag and never reaches the image downstream
+      - name: Check the image's version moves with its files
+        id: guard
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          IMAGE: ${{ inputs.image }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          VER: ${{ steps.version.outputs.ver }}
+        run: |
+          changed="$(gh api "repos/${REPO}/compare/${BASE}...${HEAD}" --jq '.files[].filename' \
+            | grep "^dockers/${IMAGE}/" | grep -vx "dockers/${IMAGE}/README.md" || true)"
+          if [ -z "$changed" ]; then
+            echo "Nothing under dockers/${IMAGE}/ changes but its README, so no new version is needed."
+            exit 0
+          fi
+          old="$(gh api "repos/${REPO}/contents/dockers/${IMAGE}/README.md?ref=${BASE}" -H 'Accept: application/vnd.github.raw' \
+            | grep -m 1 '## v' | cut -d'v' -f2)"
+          if [ "$VER" = "$old" ]; then
+            echo "dockers/${IMAGE}/ changes but its version is still v${VER}."
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "v${old} → v${VER}"
+          fi
+      - name: Tell a fork to add the version itself
+        if: steps.guard.outputs.missing == 'true' && github.event.pull_request.head.repo.full_name != github.repository
+        env:
+          IMAGE: ${{ inputs.image }}
+        run: |
+          echo "::error file=dockers/${IMAGE}/README.md::dockers/${IMAGE}/ changes but its version does not; add a '## v…' entry above the first one"
+          exit 1
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        if: steps.guard.outputs.missing == 'true' && github.event.pull_request.head.repo.full_name == github.repository
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        if: steps.get_workflow_token.outcome == 'success'
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          persist-credentials: false
+      - name: Title the entry after the pull request
+        id: entry
+        if: steps.get_workflow_token.outcome == 'success'
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          level='patch'
+          [[ "$TITLE" =~ ^feat(\(|!|:) ]] && level='minor'
+          {
+            echo "level=${level}"
+            echo "message=${TITLE#*: }"
+          } >> "$GITHUB_OUTPUT"
+      - uses: ./.github/actions/add-changelog-entry
+        if: steps.get_workflow_token.outcome == 'success'
+        with:
+          image: ${{ inputs.image }}
+          level: ${{ steps.entry.outputs.level }}
+          message: ${{ steps.entry.outputs.message }}
+      # Pushed with the app's token, not GITHUB_TOKEN, so the new head gets its
+      # checks; this run is for a head that no longer merges as it stands
+      - name: Push the version onto the pull request
+        if: steps.get_workflow_token.outcome == 'success'
+        env:
+          TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          IMAGE: ${{ inputs.image }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -qam "build(${IMAGE}): add the version this change publishes as"
+          remote="https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+          # Another image of the same pull request may push its version first
+          for _ in 1 2 3; do
+            git push -q "$remote" "HEAD:${BRANCH}" && break
+            git pull -q --rebase "$remote" "$BRANCH"
+          done
+          echo "::notice file=dockers/${IMAGE}/README.md::added $(grep -m 1 '^## v' "dockers/${IMAGE}/README.md"); the checks run again on that commit"
+          exit 1
+
+  build:
+    needs: get-version
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ${{ fromJSON(inputs.arches) }}
+    runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+      - name: Log in to ghcr.io
+        if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build linux/${{ matrix.arch }}
+        id: build
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
+        with:
+          context: '{{ defaultContext }}:dockers/${{ inputs.image }}'
+          platforms: linux/${{ matrix.arch }}
+          cache-from: type=gha,scope=${{ inputs.image }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ inputs.image }}-${{ matrix.arch }}
+          outputs: ${{ (github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main') && format('type=image,name=ghcr.io/femiwiki/{0},push-by-digest=true,name-canonical=true,push=true', inputs.image) || 'type=cacheonly' }}
+      - name: Export digest
+        if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          mkdir -p "${RUNNER_TEMP}/digests"
+          touch "${RUNNER_TEMP}/digests/${DIGEST#sha256:}"
+      - name: Upload digest
+        if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: digests-${{ inputs.image }}-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  push-manifest:
+    needs: [get-version, build]
+    if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          # The release notes read back to the version downstream uses
+          fetch-depth: 0
+      - uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+      - name: Download digests
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-${{ inputs.image }}-*
+          merge-multiple: true
+      - name: Log in to ghcr.io
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create and push manifest
+        working-directory: ${{ runner.temp }}/digests
+        env:
+          IMAGE: ${{ inputs.image }}
+          VER: ${{ needs.get-version.outputs.ver }}
+        run: |
+          image="ghcr.io/femiwiki/${IMAGE}"
+          args=()
+          for digest in *; do
+            args+=("${image}@sha256:${digest}")
+          done
+          docker buildx imagetools create \
+            -t "${image}:latest" \
+            -t "${image}:${VER}" \
+            "${args[@]}"
+      - uses: ./.github/actions/add-nev-version-entry-to-changelog
+        with:
+          version: ${{ needs.get-version.outputs.ver }}
+          upstream: ${{ inputs.image }}
+          downstream: ${{ inputs.downstream }}
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+      - name: Create Pull Request
+        id: create-pull-request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          commit-message: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to v${{ needs.get-version.outputs.ver }}'
+          title: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to v${{ needs.get-version.outputs.ver }}'
+          branch: bump-${{ inputs.image }}-v${{ needs.get-version.outputs.ver }}-femiwiki
+          body-path: ${{ runner.temp }}/body.md
+      - name: Enable Pull Request Automerge
+        if: inputs.automerge && steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: gh pr merge --squash --auto "$PR_NUMBER"

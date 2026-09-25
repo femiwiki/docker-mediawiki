@@ -1,0 +1,113 @@
+name: Release title
+description: >
+  Title a bump pull request after the upstream release: feat with its features,
+  fix with its fixes, perf with its performance improvements, otherwise build.
+  Appends the same changes to the body as a ```wikitext block, each linked to
+  the pull request that made it, for the bumps downstream to copy line for line.
+  Reads release-please notes, or conventional commit subjects when the release
+  has none.
+
+inputs:
+  repo:
+    description: The upstream repository, OWNER/NAME.
+    required: true
+  old:
+    description: The version bumped from.
+    required: true
+  ver:
+    description: The version bumped to.
+    required: true
+  scope:
+    description: The image directory under dockers/ the bump changes.
+    required: true
+  name:
+    description: What is bumped, as the title names it.
+    required: true
+  body:
+    description: The pull request body file to append the ```wikitext block to.
+    required: true
+
+outputs:
+  title:
+    description: The pull request title.
+    value: ${{ steps.title.outputs.title }}
+  level:
+    description: The part of the image version to raise, minor for features, patch otherwise.
+    value: ${{ steps.title.outputs.level }}
+
+runs:
+  using: composite
+  steps:
+    - id: title
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        REPO: ${{ inputs.repo }}
+        OLD: ${{ inputs.old }}
+        VER: ${{ inputs.ver }}
+        SCOPE: ${{ inputs.scope }}
+        NAME: ${{ inputs.name }}
+        BODY: ${{ inputs.body }}
+      run: |
+        set -euo pipefail
+        notes=$(gh release view "$VER" --repo "$REPO" --json body --jq .body || true)
+        subjects=$(gh api "repos/$REPO/compare/$OLD...$VER" --jq '.commits[].commit.message | split("\n")[0]' || true)
+        compare="https://github.com/$REPO/compare/$OLD...$VER"
+        # One change a line: its text, a tab, and a link to the pull request
+        # that made it, else to its commit, else to the whole compare
+        changes() {
+          if [ -n "$notes" ]; then
+            awk -v h="### $1" '/^#+ /{on=($0 == h)} on && /^\* /' <<< "$notes" | while IFS= read -r line; do
+              url=$(grep -oE '\(\[#[0-9]+\]\([^)]*/(issues|pull)/[0-9]+\)\)' <<< "$line" | head -n 1 \
+                | sed -E 's#^.*\]\((.*)/(issues|pull)/([0-9]+)\)\)$#\1/pull/\3#' || true)
+              [ -n "$url" ] || url=$(grep -oE '\(\[[0-9a-f]{7,}\]\([^)]*/commit/[0-9a-f]+\)\)' <<< "$line" | head -n 1 \
+                | sed -E 's#^.*\]\((.*)\)\)$#\1#' || true)
+              text=$(sed -E 's/^\* (\*\*[^*]+:\*\* )?//; s/ \(\[[^]]*\]\([^)]*\)\)//g; s/,? closes \[[^]]*\]\([^)]*\)//g' <<< "$line")
+              printf '%s\t%s\n' "$text" "${url:-$compare}"
+            done
+          else
+            sed -nE "/^$2(\([^)]*\))?!?: /{s///; p}" <<< "$subjects" | while IFS= read -r subject; do
+              if [[ "$subject" =~ ^(.*)\ \(#([0-9]+)\)$ ]]; then
+                printf '%s\t%s\n' "${BASH_REMATCH[1]}" "https://github.com/$REPO/pull/${BASH_REMATCH[2]}"
+              else
+                printf '%s\t%s\n' "$subject" "$compare"
+              fi
+            done
+          fi
+        }
+        feats=$(changes Features feat)
+        fixes=$(changes 'Bug Fixes' fix)
+        perfs=$(changes 'Performance Improvements' perf)
+        joined() { cut -f1 <<< "$1" | paste -sd ';' | sed 's/;/; /g'; }
+        if [ -n "$feats" ]; then
+          title="feat(${SCOPE}): $(joined "$feats") ($NAME $VER)"
+          level=minor
+        elif [ -n "$fixes" ]; then
+          title="fix(${SCOPE}): $(joined "$fixes") ($NAME $VER)"
+          level=patch
+        elif [ -n "$perfs" ]; then
+          title="perf(${SCOPE}): $(joined "$perfs") ($NAME $VER)"
+          level=patch
+        else
+          title="build(${SCOPE}): bump $NAME to $VER"
+          level=patch
+        fi
+        echo "$title"
+        echo "title=$title" >> "$GITHUB_OUTPUT"
+        echo "level=$level" >> "$GITHUB_OUTPUT"
+        if [ -n "${feats}${fixes}${perfs}" ]; then
+          {
+            echo
+            echo '```wikitext'
+            for type in feat fix perf; do
+              case "$type" in feat) c=$feats ;; fix) c=$fixes ;; perf) c=$perfs ;; esac
+              [ -n "$c" ] || continue
+              printf '===%s===\n\n' "$type"
+              while IFS=$'\t' read -r text url; do
+                printf '*%s (%s %s) [%s]\n' "$text" "$NAME" "$VER" "$url"
+              done <<< "$c"
+              echo
+            done
+            echo '```'
+          } >> "$BODY"
+        fi

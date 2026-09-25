@@ -3,15 +3,15 @@
 	storage s3
 
 	order mwcache before rewrite
-	# NOTE: See @filter for the further details
+	# NOTE: See @block_cidr and @claudebot for the further details
 	order respond before mwcache
 	order encode before mwcache
 
 	# The idle fastcgi port fails its check every second; keep that out of the
-	# log. CADDY_LOG_EXCLUDE adds to the list, so a logger that turns out to be
+	# log. FW_LOG_EXCLUDE adds to the list, so a logger that turns out to be
 	# too chatty can be silenced from infra without building an image.
 	log default {
-		exclude http.handlers.reverse_proxy.health_checker.active {$CADDY_LOG_EXCLUDE}
+		exclude http.handlers.reverse_proxy.health_checker.active {$FW_LOG_EXCLUDE}
 	}
 
 	servers {
@@ -45,8 +45,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			key {client_ip}
 			ipv4_prefix 24
 			ipv6_prefix 64
-			events {$CADDY_DYNAMIC_EVENTS:300}
-			window {$CADDY_DYNAMIC_WINDOW:10m}
+			events {$FW_DYNAMIC_EVENTS:300}
+			window {$FW_DYNAMIC_WINDOW:10m}
 		}
 		# Search, diffs, old revisions and page history from anyone not logged
 		# in, counted across the whole site. A crawler spread over enough /24s
@@ -61,8 +61,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		zone expensive {
 			import expensive_requests
 			key expensive
-			events {$CADDY_EXPENSIVE_EVENTS:1500}
-			window {$CADDY_EXPENSIVE_WINDOW:10m}
+			events {$FW_EXPENSIVE_EVENTS:1500}
+			window {$FW_EXPENSIVE_WINDOW:10m}
 		}
 		# The same requests counted per /24 as well, so one heavy client spends
 		# its own budget before the shared one. The busiest /24 asks for about
@@ -72,8 +72,25 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			key {client_ip}
 			ipv4_prefix 24
 			ipv6_prefix 64
-			events {$CADDY_EXPENSIVE_IP_EVENTS:100}
-			window {$CADDY_EXPENSIVE_IP_WINDOW:10m}
+			events {$FW_EXPENSIVE_IP_EVENTS:100}
+			window {$FW_EXPENSIVE_IP_WINDOW:10m}
+		}
+		# Anything that calls itself a crawler, counted per agent string. These
+		# are a quarter of the time php-fpm spends, and nearly all of it is
+		# article reads that robots.txt allows, so a budget is the only thing
+		# that reaches them. A bucket each rather than a shared one, so a
+		# crawler that spends its own does not refuse Googlebot; and a pattern
+		# rather than a list of names, so one nobody has heard of yet is
+		# covered on the day it arrives. A reader never writes any of these
+		# three words in a User-Agent.
+		zone crawlers {
+			match {
+				path /index.php* /api.php* /w/*
+				header_regexp User-Agent {$FW_CRAWLER_AGENTS:(?i)(bot|spider|crawl)}
+			}
+			key {http.request.header.User-Agent}
+			events {$FW_CRAWLER_EVENTS:100}
+			window {$FW_CRAWLER_WINDOW:10m}
 		}
 		log_key
 		# The module keeps a histogram per key, one series set per /24 seen
@@ -128,10 +145,16 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	file_server
 	encode gzip
 	mwcache {
+		# A budget in bytes rather than a count of entries. 64 MiB holds about
+		# 1,400 responses of the size this wiki serves, well above the 595
+		# distinct addresses an ordinary twenty minutes asks for, and leaves
+		# room under this container's limit. num_counters wants to be about ten
+		# times the entries the budget holds. ignore_internal_cost is gone with
+		# the count: ristretto's per entry overhead is memory really used, so a
+		# budget in bytes wants it counted.
 		ristretto {
-			num_counters {$CADDY_MWCACHE_NUM_COUNTERS:10000}
-			max_cost {$CADDY_MWCACHE_MAX_COST:1000}
-			ignore_internal_cost {$CADDY_MWCACHE_IGNORE_INTERNAL_COST:true}
+			num_counters {$FW_MWCACHE_NUM_COUNTERS:14000}
+			max_cost_bytes {$FW_MWCACHE_MAX_COST_BYTES:67108864}
 			buffer_items 64
 		}
 		purge_acl {
@@ -179,6 +202,32 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 
 	respond /health-check 200
 
+	# 404 rather than 403: there is no reason to confirm the installer is there
+	respond /mw-config* 404
+
+	# Searches, diffs, old revisions and page history from a client whose headers
+	# contradict the browser its User-Agent claims. robots.txt disallows all of
+	# these, and article text is not among them: a plain read arrives here
+	# rewritten to /index.php with no query and never matches. femiwiki#523 has
+	# the measurements, including why no term stands on its own.
+	#
+	# Every term is conditioned on a Chromium claim, so Safari and Firefox are
+	# never tested. One variable holds the lot so a term can change by an apply.
+	# CEL placeholders cannot go in it: {$VAR:default} eats the first } of a
+	# {http.request...} placeholder and truncates the default, which caddy adapt
+	# accepts and then silently mismatches. Hence header_regexp(), and
+	# !header_regexp(name, '.') for a header that was not sent at all.
+	@botlike_expensive {
+		path /index.php*
+		vars_regexp {query} {$FW_EXPENSIVE_QUERY:(^|&)(search|diff|direction|oldid)=|(^|&)action=(history|info)(&|$)}
+		not header Cookie *femiwikiUserID=*
+		expression {$FW_BOTLIKE:(header_regexp('User-Agent', '(Chrome|Chromium|Edg|CriOS)/') && (!header_regexp('Sec-Ch-Ua', '.') || !header_regexp('Priority', '.') || header_regexp('Accept-Language', 'q=0\\.5'))) || !header_regexp('User-Agent', '(Mozilla/5\\.0|Opera)')}
+	}
+
+	respond @botlike_expensive 403 {
+		close
+	}
+
 	@block_cidr {
 		remote_ip {$BLOCKED_CIDR}
 	}
@@ -187,26 +236,11 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		close
 	}
 
-	# Ignore malformed requests
-	@filter0 {
-		path /w/특수:내언어/페미위키:대문
-		vars_regexp {query} ^=[0-9]{1,5}$
-	}
-	@filter1 {
-		path /
-		vars_regexp {query} ^[A-Z]{5}=[A-Z]{3}$
-	}
-	@filter2 {
+	@claudebot {
 		header User-Agent *ClaudeBot*
 	}
 
-	respond @filter0 403 {
-		close
-	}
-	respond @filter1 403 {
-		close
-	}
-	respond @filter2 403 {
+	respond @claudebot 403 {
 		close
 	}
 }
@@ -216,7 +250,7 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 # previous container cannot answer for the new one. The status page has a port
 # of its own, so it answers while www is saturated; the opcache report is a
 # script and needs a www worker. /srv/metrics is outside the public site's root.
-http://127.0.0.1:{$CADDY_METRICS_PORT} {
+http://127.0.0.1:{$FW_METRICS_PORT} {
 	bind 127.0.0.1
 
 	handle /fpm-status {
@@ -242,7 +276,7 @@ http://127.0.0.1:{$CADDY_METRICS_PORT} {
 # A port of this container's own, so the healthcheck cannot be answered by the
 # previous Caddy sharing :80 on the host network; infra alternates it per
 # generation like php-fpm's
-http://127.0.0.1:{$CADDY_PROBE_PORT} {
+http://127.0.0.1:{$FW_PROBE_PORT} {
 	bind 127.0.0.1
 	respond /health-check 200
 }

@@ -68,19 +68,63 @@ chmod +x /usr/local/bin/postrun
 # by an earlier SIGTERM survives into the new process. Starting up means this
 # container is not draining, and leaving the file would make /healthz.php fail
 # forever with nothing to clear it.
-rm -f /tmp/draining
+rm -f /tmp/draining /tmp/warming
 
 # The status page's port follows PHP_FPM_LISTEN, which infra alternates per
 # generation, so the two containers of a deploy never want the same one. The
 # http container is told the same number, since Caddy proxies to it.
 export PHP_FPM_STATUS_LISTEN=$((PHP_FPM_LISTEN + 200))
 
+# opcache reserves its shared memory when the module starts, so these cannot be
+# a pool's php_admin_value the way pm.max_children is: they have to be an ini
+# file read before PHP comes up. Writing it here means infra can retune the
+# cache from the environment, without a php-fpm image and the three bumps that
+# follow it. The metrics added by #1110 are what say whether a value is right:
+# interned_strings free reaching 0 asks for a larger buffer, and cache_full or
+# an oom restart asks for more memory_consumption. zz- sorts after
+# opcache-recommended.ini, so these win.
+cat > /usr/local/etc/php/conf.d/zz-opcache-env.ini <<EOF
+opcache.memory_consumption=${PHP_OPCACHE_MEMORY_CONSUMPTION:-128}
+opcache.interned_strings_buffer=${PHP_OPCACHE_INTERNED_STRINGS_BUFFER:-32}
+opcache.max_accelerated_files=${PHP_OPCACHE_MAX_ACCELERATED_FILES:-4000}
+opcache.revalidate_freq=${PHP_OPCACHE_REVALIDATE_FREQ:-60}
+EOF
+
+# An empty opcache costs the first requests a recompile of everything shipped,
+# so this container asks itself for a few pages before serving. Refusing helps
+# only while the generation before this one still answers, so the file goes
+# down before php-fpm binds, and warm-up.php lifts it at once when it finds
+# nobody there. See femiwiki/femiwiki#567.
+case "$PHP_FPM_LISTEN" in
+  9000) SIBLING_PORT=9001 ;;
+  9001) SIBLING_PORT=9000 ;;
+  *) SIBLING_PORT= ;;
+esac
+if [ -n "$SIBLING_PORT" ]; then
+  touch /tmp/warming
+fi
+
 # Run php-fpm. On SIGTERM, fail /healthz.php first so Caddy's active health
 # check drops this upstream, then let php-fpm finish in-flight requests.
 php-fpm &
 PHP_FPM_PID=$!
 trap 'touch /tmp/draining; sleep 5; kill -QUIT "$PHP_FPM_PID"' TERM
+
+FCGI_WARMUP_URL="127.0.0.1:${PHP_FPM_LISTEN}" \
+  FCGI_SIBLING_URL="${SIBLING_PORT:+127.0.0.1:$SIBLING_PORT}" \
+  timeout "$(( ${FCGI_WARMUP_SECONDS:-120} + 60 ))" php /a/warm-up.php &
+WARM_PID=$!
+# Polling rather than waiting: a foreground wait would hold the TERM trap, and
+# reaping the warm-up leaves php-fpm's own death invisible to kill -0 below.
+while kill -0 "$WARM_PID" 2>/dev/null && kill -0 "$PHP_FPM_PID" 2>/dev/null; do
+  sleep 1
+done
+rm -f /tmp/warming
+
+# php-fpm may have died while the warm-up ran, and a reaped child answers no to
+# kill -0 while wait still remembers its status, so ask wait first.
 STATUS=0
+wait "$PHP_FPM_PID" || STATUS=$?
 while kill -0 "$PHP_FPM_PID" 2>/dev/null; do
   wait "$PHP_FPM_PID" && STATUS=0 || STATUS=$?
 done

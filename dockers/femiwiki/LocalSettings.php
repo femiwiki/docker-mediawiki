@@ -104,14 +104,65 @@ $wgPasswordPolicy['policies']['default']['MinimalPasswordLength'] = [
 // Enable database-intensive features
 $wgMiserMode = true;
 
+// Off unless FW_PROFILER names a profiler. ProfilerOutputText is deliberately
+// not an option: it writes into the response body rather than to a log, so it
+// would reach readers and be stored by the cache. Dumps land in a directory
+// that goes away with the container, so there is nothing to prune, and they
+// have to be collected before a deploy replaces it.
+if ( getenv( 'FW_PROFILER' ) === 'excimer' ) {
+	$fwProfilerDir = getenv( 'FW_PROFILER_DIR' ) ?: '/tmp/profiler';
+	if ( !is_dir( $fwProfilerDir ) ) {
+		mkdir( $fwProfilerDir, 0750, true );
+	}
+	$wgProfiler = [
+		'class' => ProfilerExcimer::class,
+		// One request in this many is profiled at all
+		'sampling' => (int)( getenv( 'FW_PROFILER_SAMPLING' ) ?: 1000 ),
+		// Of those, only the ones slower than this many seconds are written out
+		'threshold' => (float)( getenv( 'FW_PROFILER_THRESHOLD' ) ?: 3 ),
+		'period' => (float)( getenv( 'FW_PROFILER_PERIOD' ) ?: 0.01 ),
+		'maxDepth' => (int)( getenv( 'FW_PROFILER_MAX_DEPTH' ) ?: 100 ),
+		// Profiler::getOutputs() takes class names, and hands each of them the
+		// whole of $wgProfiler, so outputDir belongs here rather than nested
+		'output' => [ 'ProfilerOutputDump' ],
+		'outputDir' => $fwProfilerDir,
+	];
+}
+
 // Make no jobs will be performed during ordinary requests
 $wgJobRunRate = 0;
 
-// Shared memory settings
-$wgMainCacheType = CACHE_MEMCACHED;
-$wgSessionCacheType = CACHE_MEMCACHED;
-$wgParserCacheType = CACHE_MEMCACHED;
-$wgMessageCacheType = CACHE_MEMCACHED;
+// Shared memory settings. Which store each kind of cache goes to is a question
+// the measurements keep reopening, so it comes from the environment and a
+// change is an apply rather than an image. An unknown name throws: LocalSettings
+// failing means the replacement container never reaches healthy and the
+// generation it was replacing keeps serving.
+$fwCacheTypes = [
+	'none' => CACHE_NONE,
+	'db' => CACHE_DB,
+	'memcached' => CACHE_MEMCACHED,
+	'apcu' => CACHE_ACCEL,
+	'anything' => CACHE_ANYTHING,
+];
+// $default is not typed: CACHE_MEMCACHED is the string 'memcached-php' and
+// CACHE_DB is the integer 1, so these constants have no one type.
+$fwCacheType = static function ( string $name, $default ) use ( $fwCacheTypes ) {
+	$value = getenv( $name );
+	if ( $value === false || $value === '' ) {
+		return $default;
+	}
+	if ( !array_key_exists( $value, $fwCacheTypes ) ) {
+		throw new RuntimeException(
+			"$name is \"$value\", which is not one of: " . implode( ', ', array_keys( $fwCacheTypes ) )
+		);
+	}
+	return $fwCacheTypes[$value];
+};
+
+$wgMainCacheType = $fwCacheType( 'FW_MAIN_CACHE', CACHE_MEMCACHED );
+$wgSessionCacheType = $fwCacheType( 'FW_SESSION_CACHE', CACHE_DB );
+$wgParserCacheType = $fwCacheType( 'FW_PARSER_CACHE', CACHE_MEMCACHED );
+$wgMessageCacheType = $fwCacheType( 'FW_MESSAGE_CACHE', CACHE_MEMCACHED );
 $wgMemCachedServers = explode( ',', getenv( 'WG_MEMCACHED_SERVERS' ) );
 
 $wgMWLoggerDefaultSpi = [

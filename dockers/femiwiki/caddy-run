@@ -14,6 +14,13 @@ set -euo pipefail
 cd /srv/femiwiki.com
 WARMUP_PORT=8443
 
+# robots.txt names crawlers and the paths they may not take, which changes
+# on their schedule rather than ours. Passing it in makes that change an
+# apply; the copy in the image is what serves when nothing is passed.
+if [[ -n "${FW_ROBOTS_TXT:-}" ]]; then
+  printf '%s\n' "$FW_ROBOTS_TXT" > robots.txt
+fi
+
 caddy adapt --config Caddyfile --adapter caddyfile > /tmp/caddy.json
 php /a/caddy-warmup.php /tmp/caddy.json "$WARMUP_PORT" > /tmp/caddy-warmup.json
 NAME="$(cat /tmp/caddy-warmup-name)"

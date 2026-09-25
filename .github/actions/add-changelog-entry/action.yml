@@ -1,6 +1,6 @@
 name: Add changelog entry
 description: >
-  Prepend a new "## vX.Y.(Z+1)" entry to a docker image's README.md, which is
+  Prepend a new "## vX.Y.(Z+1)" (or, with level minor, "## vX.(Y+1).0") entry to a docker image's README.md, which is
   the source of truth for that image's tag. Records one bullet per non-empty
   line of `message`. Idempotent (skips if the first bullet is already present)
   and header-length agnostic, so any image workflow can reuse it.
@@ -12,6 +12,9 @@ inputs:
   message:
     description: One changelog bullet per non-empty line (the leading "- " is added).
     required: true
+  level:
+    description: Which part of the version to raise, patch or minor.
+    default: patch
 
 runs:
   using: composite
@@ -20,6 +23,7 @@ runs:
       env:
         IMAGE: ${{ inputs.image }}
         MESSAGE: ${{ inputs.message }}
+        LEVEL: ${{ inputs.level }}
       run: |
         set -euo pipefail
         README="dockers/${IMAGE}/README.md"
@@ -42,7 +46,11 @@ runs:
 
         cur=$(grep -m1 '^## v' "$README" | sed 's/^## v//')
         IFS=. read -r ma mi pa <<< "$cur"
-        next="${ma}.${mi}.$((pa + 1))"
+        case "$LEVEL" in
+          minor) next="${ma}.$((mi + 1)).0" ;;
+          patch) next="${ma}.${mi}.$((pa + 1))" ;;
+          *) echo "add-changelog-entry: level is patch or minor, not '${LEVEL}'"; exit 1 ;;
+        esac
 
         line_no=$(grep -n -m1 '^## v' "$README" | cut -d: -f1)
         {

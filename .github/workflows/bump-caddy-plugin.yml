@@ -37,24 +37,37 @@ jobs:
           [ -n "$old" ] || { echo "::error::no ARG $arg in dockers/caddy/Dockerfile"; exit 1; }
           sed -i -E "s|^(ARG ${arg}=).*|\1${VER}|" dockers/caddy/Dockerfile
           repo="femiwiki/$PLUGIN"
+          notes=$(gh release view "$VER" --repo "$repo" --json body --jq .body || true)
+          subjects=$(gh api "repos/$repo/compare/$old...$VER" --jq '.commits[].commit.message | split("\n")[0]')
           {
             echo "[$old → $VER](https://github.com/$repo/compare/$old...$VER)"
             echo
-            if notes=$(gh release view "$VER" --repo "$repo" --json body --jq .body) && [ -n "$notes" ]; then
+            if [ -n "$notes" ]; then
               echo "$notes"
             else
-              gh api "repos/$repo/compare/$old...$VER" --jq '.commits[] | "- " + (.commit.message | split("\n")[0])' \
-                | { grep -vE '^- (Localisation updates|build:)' || true; }
+              sed 's/^/- /' <<< "$subjects" | { grep -vE '^- (Localisation updates|build:)' || true; }
             fi
           } > "$BODY"
           cat "$BODY"
           echo "plugin=$PLUGIN" >> "$GITHUB_OUTPUT"
           echo "ver=$VER" >> "$GITHUB_OUTPUT"
+          echo "old=$old" >> "$GITHUB_OUTPUT"
+
+      - uses: ./.github/actions/release-title
+        id: title
+        with:
+          repo: femiwiki/${{ steps.bump.outputs.plugin }}
+          old: ${{ steps.bump.outputs.old }}
+          ver: ${{ steps.bump.outputs.ver }}
+          scope: caddy
+          name: ${{ steps.bump.outputs.plugin }}
+          body: ${{ runner.temp }}/body.md
 
       - name: Update README
         uses: ./.github/actions/add-changelog-entry
         with:
           image: caddy
+          level: ${{ steps.title.outputs.level }}
           message: Bump ${{ steps.bump.outputs.plugin }} to [${{ steps.bump.outputs.ver }}](https://github.com/femiwiki/${{ steps.bump.outputs.plugin }}/releases/tag/${{ steps.bump.outputs.ver }})
 
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
@@ -68,7 +81,7 @@ jobs:
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
-          commit-message: 'build(caddy): bump ${{ steps.bump.outputs.plugin }} to ${{ steps.bump.outputs.ver }}'
-          title: 'build(caddy): bump ${{ steps.bump.outputs.plugin }} to ${{ steps.bump.outputs.ver }}'
+          commit-message: ${{ steps.title.outputs.title }}
+          title: ${{ steps.title.outputs.title }}
           branch: bump-${{ steps.bump.outputs.plugin }}
           body-path: ${{ runner.temp }}/body.md

@@ -1,9 +1,13 @@
 name: image-scope
-description: List the images a pull request changes
+description: List the images a pull request, a push to main or a dispatch builds
 inputs:
   images:
     description: The image directory names under dockers/, space separated
     required: true
+  dispatched:
+    description: The image a workflow_dispatch asked for
+    required: false
+    default: ''
 outputs:
   changed:
     description: A JSON array of the images that must be built
@@ -15,12 +19,29 @@ runs:
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       env:
         IMAGES: ${{ inputs.images }}
+        DISPATCHED: ${{ inputs.dispatched }}
       with:
         script: |
-          const files = await github.paginate(github.rest.pulls.listFiles,
-            { ...context.repo, pull_number: context.issue.number, per_page: 100 },
-            response => response.data.map(file => file.filename));
-          const changed = process.env.IMAGES.split(/\s+/).filter(image => image && files.some(file =>
-            file.startsWith(`dockers/${image}/`) || file === `.github/workflows/docker-${image}.yml`));
+          const fs = require('fs');
+          const images = process.env.IMAGES.split(/\s+/).filter(Boolean);
+          let changed;
+          if (context.eventName === 'workflow_dispatch') {
+            changed = images.filter(image => image === process.env.DISPATCHED);
+          } else if (context.eventName === 'push') {
+            // Only an image's own files publish it: a workflow edit on main builds nothing
+            const { data } = await github.rest.repos.compareCommitsWithBasehead(
+              { ...context.repo, basehead: `${context.payload.before}...${context.payload.after}` });
+            const files = data.files.map(file => file.filename);
+            changed = images.filter(image => files.some(file => file.startsWith(`dockers/${image}/`)));
+          } else {
+            const files = await github.paginate(github.rest.pulls.listFiles,
+              { ...context.repo, pull_number: context.issue.number, per_page: 100 },
+              response => response.data.map(file => file.filename));
+            // The workflow that builds an image: its own, else the shared one
+            const workflow = image => fs.existsSync(`.github/workflows/docker-${image}.yml`)
+              ? `.github/workflows/docker-${image}.yml` : '.github/workflows/docker-image.yml';
+            changed = images.filter(image => files.some(file =>
+              file.startsWith(`dockers/${image}/`) || file === workflow(image)));
+          }
           core.info(`Images to build: ${JSON.stringify(changed)}`);
           core.setOutput('changed', JSON.stringify(changed));
