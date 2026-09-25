@@ -1,16 +1,12 @@
 name: 'Docker: femiwiki'
 
+# Called by images.yml, for pull requests, pushes to main and by hand
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'dockers/femiwiki/**'
   workflow_call:
     secrets:
       PAT_APPLICATION_PRIVATE_KEY:
         description: Opens the downstream bump pull request; only used from main
         required: false
-  workflow_dispatch:
 
 concurrency:
   group: docker-femiwiki-${{ github.ref }}
