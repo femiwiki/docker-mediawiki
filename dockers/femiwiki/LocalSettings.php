@@ -104,6 +104,31 @@ $wgPasswordPolicy['policies']['default']['MinimalPasswordLength'] = [
 // Enable database-intensive features
 $wgMiserMode = true;
 
+// Off unless FW_PROFILER names a profiler. ProfilerOutputText is deliberately
+// not an option: it writes into the response body rather than to a log, so it
+// would reach readers and be stored by the cache. Dumps land in a directory
+// that goes away with the container, so there is nothing to prune, and they
+// have to be collected before a deploy replaces it.
+if ( getenv( 'FW_PROFILER' ) === 'excimer' ) {
+	$fwProfilerDir = getenv( 'FW_PROFILER_DIR' ) ?: '/tmp/profiler';
+	if ( !is_dir( $fwProfilerDir ) ) {
+		mkdir( $fwProfilerDir, 0750, true );
+	}
+	$wgProfiler = [
+		'class' => ProfilerExcimer::class,
+		// One request in this many is profiled at all
+		'sampling' => (int)( getenv( 'FW_PROFILER_SAMPLING' ) ?: 1000 ),
+		// Of those, only the ones slower than this many seconds are written out
+		'threshold' => (float)( getenv( 'FW_PROFILER_THRESHOLD' ) ?: 3 ),
+		'period' => (float)( getenv( 'FW_PROFILER_PERIOD' ) ?: 0.01 ),
+		'maxDepth' => (int)( getenv( 'FW_PROFILER_MAX_DEPTH' ) ?: 100 ),
+		// Profiler::getOutputs() takes class names, and hands each of them the
+		// whole of $wgProfiler, so outputDir belongs here rather than nested
+		'output' => [ 'ProfilerOutputDump' ],
+		'outputDir' => $fwProfilerDir,
+	];
+}
+
 // Make no jobs will be performed during ordinary requests
 $wgJobRunRate = 0;
 
