@@ -8,10 +8,10 @@
 	order encode before mwcache
 
 	# The idle fastcgi port fails its check every second; keep that out of the
-	# log. CADDY_LOG_EXCLUDE adds to the list, so a logger that turns out to be
+	# log. FW_LOG_EXCLUDE adds to the list, so a logger that turns out to be
 	# too chatty can be silenced from infra without building an image.
 	log default {
-		exclude http.handlers.reverse_proxy.health_checker.active {$CADDY_LOG_EXCLUDE}
+		exclude http.handlers.reverse_proxy.health_checker.active {$FW_LOG_EXCLUDE}
 	}
 
 	servers {
@@ -45,8 +45,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			key {client_ip}
 			ipv4_prefix 24
 			ipv6_prefix 64
-			events {$CADDY_DYNAMIC_EVENTS:300}
-			window {$CADDY_DYNAMIC_WINDOW:10m}
+			events {$FW_DYNAMIC_EVENTS:300}
+			window {$FW_DYNAMIC_WINDOW:10m}
 		}
 		# Search, diffs, old revisions and page history from anyone not logged
 		# in, counted across the whole site. A crawler spread over enough /24s
@@ -61,8 +61,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		zone expensive {
 			import expensive_requests
 			key expensive
-			events {$CADDY_EXPENSIVE_EVENTS:1500}
-			window {$CADDY_EXPENSIVE_WINDOW:10m}
+			events {$FW_EXPENSIVE_EVENTS:1500}
+			window {$FW_EXPENSIVE_WINDOW:10m}
 		}
 		# The same requests counted per /24 as well, so one heavy client spends
 		# its own budget before the shared one. The busiest /24 asks for about
@@ -72,8 +72,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			key {client_ip}
 			ipv4_prefix 24
 			ipv6_prefix 64
-			events {$CADDY_EXPENSIVE_IP_EVENTS:100}
-			window {$CADDY_EXPENSIVE_IP_WINDOW:10m}
+			events {$FW_EXPENSIVE_IP_EVENTS:100}
+			window {$FW_EXPENSIVE_IP_WINDOW:10m}
 		}
 		log_key
 		# The module keeps a histogram per key, one series set per /24 seen
@@ -136,8 +136,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		# the count: ristretto's per entry overhead is memory really used, so a
 		# budget in bytes wants it counted.
 		ristretto {
-			num_counters {$CADDY_MWCACHE_NUM_COUNTERS:14000}
-			max_cost_bytes {$CADDY_MWCACHE_MAX_COST_BYTES:67108864}
+			num_counters {$FW_MWCACHE_NUM_COUNTERS:14000}
+			max_cost_bytes {$FW_MWCACHE_MAX_COST_BYTES:67108864}
 			buffer_items 64
 		}
 		purge_acl {
@@ -207,7 +207,7 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 # previous container cannot answer for the new one. The status page has a port
 # of its own, so it answers while www is saturated; the opcache report is a
 # script and needs a www worker. /srv/metrics is outside the public site's root.
-http://127.0.0.1:{$CADDY_METRICS_PORT} {
+http://127.0.0.1:{$FW_METRICS_PORT} {
 	bind 127.0.0.1
 
 	handle /fpm-status {
@@ -233,7 +233,7 @@ http://127.0.0.1:{$CADDY_METRICS_PORT} {
 # A port of this container's own, so the healthcheck cannot be answered by the
 # previous Caddy sharing :80 on the host network; infra alternates it per
 # generation like php-fpm's
-http://127.0.0.1:{$CADDY_PROBE_PORT} {
+http://127.0.0.1:{$FW_PROBE_PORT} {
 	bind 127.0.0.1
 	respond /health-check 200
 }
