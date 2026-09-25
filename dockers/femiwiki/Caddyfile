@@ -18,6 +18,10 @@
 		metrics
 	}
 }
+(botlike) {
+	expression {$FW_BOTLIKE:(header_regexp('User-Agent', '(Chrome|Chromium|Edg|CriOS)/') && (!header_regexp('Sec-Ch-Ua', '.') || !header_regexp('Priority', '.') || header_regexp('Accept-Language', 'q=0\\.5'))) || !header_regexp('User-Agent', '(Mozilla/5\\.0|Opera)')}
+}
+
 (expensive_requests) {
 	match {
 		# api.php is left out: the search box asks it on every keystroke
@@ -221,10 +225,28 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		path /index.php*
 		vars_regexp {query} {$FW_EXPENSIVE_QUERY:(^|&)(search|diff|direction|oldid)=|(^|&)action=(history|info)(&|$)}
 		not header Cookie *femiwikiUserID=*
-		expression {$FW_BOTLIKE:(header_regexp('User-Agent', '(Chrome|Chromium|Edg|CriOS)/') && (!header_regexp('Sec-Ch-Ua', '.') || !header_regexp('Priority', '.') || header_regexp('Accept-Language', 'q=0\\.5'))) || !header_regexp('User-Agent', '(Mozilla/5\\.0|Opera)')}
+		import botlike
 	}
 
 	respond @botlike_expensive 403 {
+		close
+	}
+
+	# The three api.php calls the skin makes on every article view: the talk
+	# page's topic list, the watcher count and the related-articles links. They
+	# are 94% of api.php's time and 79% of them come from the clients above, so
+	# a crawler's one page read costs a render plus three of these. None of it
+	# is article text, so refusing them takes nothing from a reader of content.
+	# opensearch, which the search box asks on every keystroke, is not in the
+	# pattern. See femiwiki#523.
+	@botlike_api {
+		path /api.php*
+		vars_regexp {query} {$FW_API_QUERY:(^|&)action=flow(&|$)|(^|&)inprop=watchers|(^|&)prop=linkshere}
+		not header Cookie *femiwikiUserID=*
+		import botlike
+	}
+
+	respond @botlike_api 403 {
 		close
 	}
 
