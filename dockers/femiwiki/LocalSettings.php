@@ -107,11 +107,37 @@ $wgMiserMode = true;
 // Make no jobs will be performed during ordinary requests
 $wgJobRunRate = 0;
 
-// Shared memory settings
-$wgMainCacheType = CACHE_MEMCACHED;
-$wgSessionCacheType = CACHE_DB;
-$wgParserCacheType = CACHE_MEMCACHED;
-$wgMessageCacheType = CACHE_MEMCACHED;
+// Shared memory settings. Which store each kind of cache goes to is a question
+// the measurements keep reopening, so it comes from the environment and a
+// change is an apply rather than an image. An unknown name throws: LocalSettings
+// failing means the replacement container never reaches healthy and the
+// generation it was replacing keeps serving.
+$fwCacheTypes = [
+	'none' => CACHE_NONE,
+	'db' => CACHE_DB,
+	'memcached' => CACHE_MEMCACHED,
+	'apcu' => CACHE_ACCEL,
+	'anything' => CACHE_ANYTHING,
+];
+// $default is not typed: CACHE_MEMCACHED is the string 'memcached-php' and
+// CACHE_DB is the integer 1, so these constants have no one type.
+$fwCacheType = static function ( string $name, $default ) use ( $fwCacheTypes ) {
+	$value = getenv( $name );
+	if ( $value === false || $value === '' ) {
+		return $default;
+	}
+	if ( !array_key_exists( $value, $fwCacheTypes ) ) {
+		throw new RuntimeException(
+			"$name is \"$value\", which is not one of: " . implode( ', ', array_keys( $fwCacheTypes ) )
+		);
+	}
+	return $fwCacheTypes[$value];
+};
+
+$wgMainCacheType = $fwCacheType( 'FW_MAIN_CACHE', CACHE_MEMCACHED );
+$wgSessionCacheType = $fwCacheType( 'FW_SESSION_CACHE', CACHE_DB );
+$wgParserCacheType = $fwCacheType( 'FW_PARSER_CACHE', CACHE_MEMCACHED );
+$wgMessageCacheType = $fwCacheType( 'FW_MESSAGE_CACHE', CACHE_MEMCACHED );
 $wgMemCachedServers = explode( ',', getenv( 'WG_MEMCACHED_SERVERS' ) );
 
 $wgMWLoggerDefaultSpi = [
