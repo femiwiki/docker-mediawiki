@@ -1,5 +1,12 @@
 # femiwiki
 
+## v1.6.0
+
+- Refuse the three api.php calls the skin makes on every article view, the talk
+  topic list, the watcher count and the related-articles links, from the same
+  clients `FW_BOTLIKE` already covers. `FW_API_QUERY` holds the pattern.
+  opensearch is not in it, so the search box is untouched.
+
 ## v1.5.0
 
 - Refuse searches, diffs, old revisions and page history from a client whose
