@@ -75,6 +75,21 @@ rm -f /tmp/draining /tmp/warming
 # http container is told the same number, since Caddy proxies to it.
 export PHP_FPM_STATUS_LISTEN=$((PHP_FPM_LISTEN + 200))
 
+# opcache reserves its shared memory when the module starts, so these cannot be
+# a pool's php_admin_value the way pm.max_children is: they have to be an ini
+# file read before PHP comes up. Writing it here means infra can retune the
+# cache from the environment, without a php-fpm image and the three bumps that
+# follow it. The metrics added by #1110 are what say whether a value is right:
+# interned_strings free reaching 0 asks for a larger buffer, and cache_full or
+# an oom restart asks for more memory_consumption. zz- sorts after
+# opcache-recommended.ini, so these win.
+cat > /usr/local/etc/php/conf.d/zz-opcache-env.ini <<EOF
+opcache.memory_consumption=${PHP_OPCACHE_MEMORY_CONSUMPTION:-128}
+opcache.interned_strings_buffer=${PHP_OPCACHE_INTERNED_STRINGS_BUFFER:-32}
+opcache.max_accelerated_files=${PHP_OPCACHE_MAX_ACCELERATED_FILES:-4000}
+opcache.revalidate_freq=${PHP_OPCACHE_REVALIDATE_FREQ:-60}
+EOF
+
 # An empty opcache costs the first requests a recompile of everything shipped,
 # so this container asks itself for a few pages before serving. Refusing helps
 # only while the generation before this one still answers, so the file goes
