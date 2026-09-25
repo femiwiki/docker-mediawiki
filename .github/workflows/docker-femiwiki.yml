@@ -212,16 +212,28 @@ jobs:
           fi
           [ -n "$COMMITS" ] || COMMITS="$SHA"
           IMAGES="$(gh api "repos/${REPO}/contents/dockers?ref=${SHA}" --jq '.[] | select(.type == "dir") | .name' | paste -sd '|')"
-          REFS=""
+          # The sections and their order are release-please's
+          TYPES=(feat fix perf revert docs style refactor test build ci chore other)
+          declare -A HEADING=(
+            [feat]=Features [fix]='Bug Fixes' [perf]='Performance Improvements' [revert]=Reverts
+            [docs]=Documentation [style]=Styles [refactor]='Code Refactoring' [test]=Tests
+            [build]='Build System' [ci]='Continuous Integration' [chore]='Miscellaneous Chores' [other]=Other
+          )
+          declare -A SECTION=()
           FEAT=""
           FIX=""
           for c in $COMMITS; do
             read -r n title <<< "$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0] // empty | "\(.number) \(.title)"')"
             if [ -z "$n" ]; then
-              REFS="${REFS}- ${REPO}@${c}"$'\n'
+              SECTION[other]+="* ${REPO}@${c}"$'\n'
               continue
             fi
-            REFS="${REFS}- ${REPO}#${n}"$'\n'
+            if [[ "$title" =~ ^([a-z]+)(\(([^\)]+)\))?!?:\ (.*)$ ]] && [ -n "${HEADING[${BASH_REMATCH[1]}]:-}" ]; then
+              type="${BASH_REMATCH[1]}"
+              SECTION[$type]+="* ${BASH_REMATCH[3]:+**${BASH_REMATCH[3]}:** }${BASH_REMATCH[4]} (${REPO}#${n})"$'\n'
+            else
+              SECTION[other]+="* ${title} (${REPO}#${n})"$'\n'
+            fi
             # feat and fix scoped to an image are the wiki's release notes, in English until translated there
             line="*${title#*: } [https://github.com/${REPO}/pull/${n}]"$'\n'
             if [[ "$title" =~ ^feat\((${IMAGES})\)!?: ]]; then FEAT="${FEAT}${line}"; fi
@@ -229,7 +241,10 @@ jobs:
           done
           {
             echo "refs<<EOF"
-            printf '%s' "$REFS" | awk '!seen[$0]++'
+            for type in "${TYPES[@]}"; do
+              [ -n "${SECTION[$type]:-}" ] || continue
+              printf '### %s\n\n%s\n\n' "${HEADING[$type]}" "$(printf '%s' "${SECTION[$type]}" | awk '!seen[$0]++')"
+            done
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
           if [ -n "${FEAT}${FIX}" ]; then
@@ -302,6 +317,7 @@ jobs:
         run: |
           {
             echo 'Built from:'
+            echo
             printf '%s\n' "$REFS"
             if [ -s "${RUNNER_TEMP}/wikitext.md" ]; then
               echo
