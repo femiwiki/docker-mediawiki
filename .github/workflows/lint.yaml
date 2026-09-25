@@ -79,3 +79,19 @@ jobs:
       - uses: hadolint/hadolint-action@06be81baf89a55ffd0e24b8f04a4185738dd3387 # v3.5.0
         with:
           recursive: true
+
+  shellcheck:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: reviewdog/action-shellcheck@0a90156c6e0553996a217f0a9e09be6b0f6bee4c # v1.34.0
+        with:
+          reporter: github-check
+          filter_mode: nofilter
+          fail_level: any
+          check_all_files_with_shebangs: true
