@@ -36,7 +36,7 @@ runs:
           echo -n . >> temp.md
           grep -m 1 '## v' dockers/${INPUTS_DOWNSTREAM}/README.md | cut -d. -f3 | awk '{print $1 + 1}' >> temp.md
           echo >> temp.md
-          echo '- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}' >> temp.md
+          echo "- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}" >> temp.md
           echo >> temp.md
           tail -n +3 dockers/${INPUTS_DOWNSTREAM}/README.md >> temp.md
           mv -f temp.md dockers/${INPUTS_DOWNSTREAM}/README.md
