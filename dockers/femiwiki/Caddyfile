@@ -1,3 +1,6 @@
+# The copy that serves comes from femiwiki/infra, docker/res/Caddyfile, by way
+# of FW_CADDYFILE. This one is what a container without that variable falls back
+# to, so edit the infra copy unless that is what you mean to change.
 {
 	# Global options
 	storage s3
@@ -18,118 +21,11 @@
 		metrics
 	}
 }
-# Headers that contradict the browser the User-Agent claims. Every term is
-# conditioned on a Chromium claim, so Safari and Firefox are never tested, and
-# one variable holds the lot so a term can change by an apply. CEL placeholders
-# cannot go in it: {$VAR:default} eats the first } of a {http.request...}
-# placeholder, which caddy adapt accepts and then silently mismatches. Hence
-# header_regexp(), and !header_regexp(name, '.') for a header not sent at all.
-(botlike) {
-	expression {$FW_BOTLIKE:(header_regexp('User-Agent', '(Chrome|Chromium|Edg|CriOS)/') && (!header_regexp('Sec-Ch-Ua', '.') || !header_regexp('Priority', '.') || header_regexp('Accept-Language', 'q=0\\.5'))) || !header_regexp('User-Agent', '(Mozilla/5\\.0|Opera)')}
-}
-
-(expensive_requests) {
-	match {
-		# api.php is left out: the search box asks it on every keystroke
-		path /index.php*
-		vars_regexp {query} (^|&)(search|diff|oldid)=|(^|&)action=(history|info)(&|$)
-		not header Cookie *femiwikiUserID=*
-	}
-}
-
 femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	tls {
 		dns route53
 	}
 	root * /srv/femiwiki.com
-	# Requests that reach php-fpm without a session, per /24. Cache hits never
-	# get here, and the login and signup pages set a session cookie on first
-	# view, so a room full of people joining an edit-a-thon counts once each.
-	# Readers peak at a few a minute; crawlers at 30 and more, all day.
-	rate_limit {
-		zone dynamic {
-			match {
-				path /index.php* /api.php*
-				not header Cookie *femiwiki*
-			}
-			key {client_ip}
-			ipv4_prefix 24
-			ipv6_prefix 64
-			events {$FW_DYNAMIC_EVENTS:300}
-			window {$FW_DYNAMIC_WINDOW:10m}
-		}
-		# Search, diffs, old revisions and page history from anyone not logged
-		# in, counted across the whole site. A crawler spread over enough /24s
-		# stays under the zone above in every one of them while together taking
-		# every php-fpm worker, and a session cookie is no exemption here since
-		# any client gets one from the login page. One bucket for everybody
-		# means a reader who is not logged in is refused as soon as crawlers
-		# have spent it, so the cap sits above what those readers ask for on an
-		# ordinary day and only bites when the site is being hammered. Both
-		# zones read their count and window from the environment so infra can
-		# retune them without waiting for an image.
-		zone expensive {
-			import expensive_requests
-			key expensive
-			events {$FW_EXPENSIVE_EVENTS:1500}
-			window {$FW_EXPENSIVE_WINDOW:10m}
-		}
-		# The same requests counted per /24 as well, so one heavy client spends
-		# its own budget before the shared one. The busiest /24 asks for about
-		# fifty in ten minutes, so this only bites a single hard scraper.
-		zone expensive_per_ip {
-			import expensive_requests
-			key {client_ip}
-			ipv4_prefix 24
-			ipv6_prefix 64
-			events {$FW_EXPENSIVE_IP_EVENTS:100}
-			window {$FW_EXPENSIVE_IP_WINDOW:10m}
-		}
-		# Anything that calls itself a crawler, counted per agent string. These
-		# are a quarter of the time php-fpm spends, and nearly all of it is
-		# article reads that robots.txt allows, so a budget is the only thing
-		# that reaches them. A bucket each rather than a shared one, so a
-		# crawler that spends its own does not refuse Googlebot; and a pattern
-		# rather than a list of names, so one nobody has heard of yet is
-		# covered on the day it arrives. A reader never writes any of these
-		# three words in a User-Agent.
-		zone crawlers {
-			match {
-				path /index.php* /api.php* /w/*
-				header_regexp User-Agent {$FW_CRAWLER_AGENTS:(?i)(bot|spider|crawl)}
-			}
-			key {http.request.header.User-Agent}
-			events {$FW_CRAWLER_EVENTS:100}
-			window {$FW_CRAWLER_WINDOW:10m}
-		}
-		# Searches, diffs, old revisions and page history from a faked browser.
-		# One bucket for all of them, so a reader the signature misreads is
-		# refused only while crawlers are spending it, where a 403 refused them
-		# always. A plain article read arrives here rewritten to /index.php
-		# with no query and never counts. See femiwiki#523 and #586.
-		zone botlike_expensive {
-			match {
-				path /index.php*
-				vars_regexp {query} {$FW_EXPENSIVE_QUERY:(^|&)(search|diff|direction|oldid)=|(^|&)action=(history|info)(&|$)}
-				not header Cookie *femiwikiUserID=*
-				import botlike
-			}
-			key botlike_expensive
-			events {$FW_BOTLIKE_EVENTS:150}
-			window {$FW_BOTLIKE_WINDOW:10m}
-		}
-		log_key
-		# The module keeps a histogram per key, one series set per /24 seen
-		disable_metrics
-	}
-	# 429.html and 429.json are built from MediaWiki's own messages by 429.php;
-	# the page is English, the browser fetches its own language from the json
-	handle_errors 429 {
-		rewrite * /429.html
-		file_server {
-			status 429
-		}
-	}
 	# Two ports so a new fastcgi container can start beside the old one
 	php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
 		# Take the response off php-fpm at memory speed so a slow reader holds
@@ -235,40 +131,6 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 
 	# 404 rather than 403: there is no reason to confirm the installer is there
 	respond /mw-config* 404
-
-	# The three api.php calls the skin makes on every article view: the talk
-	# page's topic list, the watcher count and the related-articles links. They
-	# are 94% of api.php's time and 79% of them come from the clients above, so
-	# a crawler's one page read costs a render plus three of these. None of it
-	# is article text, so refusing them takes nothing from a reader of content.
-	# opensearch, which the search box asks on every keystroke, is not in the
-	# pattern. See femiwiki#523.
-	@botlike_api {
-		path /api.php*
-		vars_regexp {query} {$FW_API_QUERY:(^|&)action=flow(&|$)|(^|&)inprop=watchers|(^|&)prop=linkshere}
-		not header Cookie *femiwikiUserID=*
-		import botlike
-	}
-
-	respond @botlike_api 403 {
-		close
-	}
-
-	@block_cidr {
-		remote_ip {$BLOCKED_CIDR}
-	}
-
-	respond @block_cidr 403 {
-		close
-	}
-
-	@claudebot {
-		header User-Agent *ClaudeBot*
-	}
-
-	respond @claudebot 403 {
-		close
-	}
 }
 
 # php-fpm's status page and opcache for Alloy on the host. infra alternates

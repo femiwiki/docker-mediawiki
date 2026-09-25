@@ -21,6 +21,15 @@ if [[ -n "${FW_ROBOTS_TXT:-}" ]]; then
   printf '%s\n' "$FW_ROBOTS_TXT" > robots.txt
 fi
 
+# The same for the Caddyfile. Matchers and rate limit zones are retuned against
+# traffic that changes by the day, and baking each edit into an image costs a
+# build and a bump before it can be applied. A broken file fails `caddy adapt`
+# below, which exits this script, so the container never becomes healthy and the
+# apply fails with the old one still serving.
+if [[ -n "${FW_CADDYFILE:-}" ]]; then
+  printf '%s\n' "$FW_CADDYFILE" > Caddyfile
+fi
+
 caddy adapt --config Caddyfile --adapter caddyfile > /tmp/caddy.json
 php /a/caddy-warmup.php /tmp/caddy.json "$WARMUP_PORT" > /tmp/caddy-warmup.json
 NAME="$(cat /tmp/caddy-warmup-name)"
