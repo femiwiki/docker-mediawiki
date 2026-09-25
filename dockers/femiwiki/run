@@ -68,7 +68,19 @@ fi
 # See femiwiki/femiwiki#588.
 umask 077
 export -p > /etc/femiwiki-cron.env
-{ echo 'SHELL=/bin/bash'; echo 'BASH_ENV=/etc/femiwiki-cron.env'; crontab -l; } | crontab -
+{
+  echo 'SHELL=/bin/bash'
+  echo 'BASH_ENV=/etc/femiwiki-cron.env'
+  crontab -l
+  # The types LocalSettings keeps off the every-minute runner still have to run,
+  # just not at its pace. A few every few minutes clears a backlog over days
+  # without the wiki or whatever it calls out to noticing.
+  if [ -n "${FW_JOB_SLOW_TYPES:-UnlinkedWikibaseFetch}" ]; then
+    for t in $(echo "${FW_JOB_SLOW_TYPES:-UnlinkedWikibaseFetch}" | tr ',' ' '); do
+      echo "${FW_JOB_SLOW_SCHEDULE:-*/5 * * * *} /usr/local/bin/php /srv/femiwiki.com/maintenance/run.php runJobs --type=$t --maxjobs=${FW_JOB_SLOW_MAXJOBS:-20}"
+    done
+  fi
+} | crontab -
 umask 022
 
 # Start cron daemon

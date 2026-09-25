@@ -132,6 +132,19 @@ if ( getenv( 'FW_PROFILER' ) === 'excimer' ) {
 // Make no jobs will be performed during ordinary requests
 $wgJobRunRate = 0;
 
+// Types the every-minute runner leaves alone, so that a queue nobody has
+// drained does not go out at full speed the moment the runner starts working.
+// UnlinkedWikibaseFetch is the default because each one is an outbound request
+// to Wikidata, so its rate is their concern rather than this box's, and the
+// backlog was 63,468 of them. The crontab gets a slower entry for these.
+$fwExcludedJobs = getenv( 'FW_JOB_TYPES_OFF_DEFAULT_QUEUE' );
+if ( $fwExcludedJobs === false ) {
+	$fwExcludedJobs = 'UnlinkedWikibaseFetch';
+}
+$wgJobTypesExcludedFromDefaultQueue = array_values( array_filter(
+	array_map( 'trim', explode( ',', $fwExcludedJobs ) )
+) );
+
 // Shared memory settings. Which store each kind of cache goes to is a question
 // the measurements keep reopening, so it comes from the environment and a
 // change is an apply rather than an image. An unknown name throws: LocalSettings
