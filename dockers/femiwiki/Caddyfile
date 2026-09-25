@@ -132,6 +132,10 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	}
 	# Two ports so a new fastcgi container can start beside the old one
 	php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
+		# Take the response off php-fpm at memory speed so a slow reader holds
+		# Caddy rather than a worker. Responses here are 8 KB to 150 KB, and a
+		# larger one streams as before instead of failing. See femiwiki#583.
+		response_buffers {$FW_RESPONSE_BUFFERS:1MB}
 		lb_policy round_robin
 		# One immediate retry reaches the other port; waiting longer only
 		# delays the fallback below
@@ -155,6 +159,7 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			rewrite /w/api.php /api.php
 			rewrite /w/* /index.php
 			php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
+				response_buffers {$FW_RESPONSE_BUFFERS:1MB}
 				lb_policy round_robin
 				lb_retries 1
 				# Try the other port when one refuses; left alone, only GET is retried
