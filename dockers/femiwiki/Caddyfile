@@ -202,6 +202,9 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 
 	respond /health-check 200
 
+	# 404 rather than 403: there is no reason to confirm the installer is there
+	respond /mw-config* 404
+
 	@block_cidr {
 		remote_ip {$BLOCKED_CIDR}
 	}
