@@ -119,7 +119,9 @@ $fwCacheTypes = [
 	'apcu' => CACHE_ACCEL,
 	'anything' => CACHE_ANYTHING,
 ];
-$fwCacheType = static function ( string $name, int $default ) use ( $fwCacheTypes ) {
+// $default is not typed: CACHE_MEMCACHED is the string 'memcached-php' and
+// CACHE_DB is the integer 1, so these constants have no one type.
+$fwCacheType = static function ( string $name, $default ) use ( $fwCacheTypes ) {
 	$value = getenv( $name );
 	if ( $value === false || $value === '' ) {
 		return $default;
