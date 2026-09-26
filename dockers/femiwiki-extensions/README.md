@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.5.0
+
+- drop Extension:Lockdown
+
 ## v2.4.3
 
 - Remove EventLogging. It was installed only as a dependency of DiscussionTools,
