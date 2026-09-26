@@ -598,7 +598,6 @@ $wgRCFeeds['discord'] = [
 
 // DiscussionTools
 wfLoadExtension( 'DiscussionTools' );
-$wgDiscussionToolsEnableVisual = true;
 
 // DismissableSiteNotice
 wfLoadExtension( 'DismissableSiteNotice' );
@@ -645,7 +644,6 @@ $wgFlowDefaultLimit = 2;
 
 // Gadgets
 wfLoadExtension( 'Gadgets' );
-$wgGadgetsRepoClass = '\MediaWiki\Extension\Gadgets\MultiGadgetRepo';
 $wgGadgetsRepo = 'json+definition';
 $wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
 $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
@@ -678,7 +676,6 @@ $wgWelcomeSurveyEnabled = false;
 $wgGEConfirmEmailEnabled = false;
 
 // We don't collect data via Extension:EventStream
-$wgGEHelpPanelLoggingEnabled = false;
 $wgGEHomepageLoggingEnabled = false;
 
 // GuidedTour
@@ -711,8 +708,6 @@ $wgMathUseInternalRestbasePath = false;
 
 // MobileFrontend
 wfLoadExtension( 'MobileFrontend' );
-$wgMFMwApiContentProviderBaseUri = $wgCanonicalServer . '/api.php';
-$wgMFMcsContentProviderBaseUri = $wgCanonicalServer . '/femiwiki.com/v1';
 // Disable automatically showing mobile view, as FemiwikiSkin is little responsive and
 // MobileFrontend is not tested enough.
 $wgMFAutodetectMobileView = false;
@@ -763,8 +758,6 @@ $wgMFMobileFormatterOptions = [
 	],
 ];
 $wgDefaultUserOptions['mobile-specialpages'] = false;
-// Use the user's preferred editor (i.e. visual editor or source editor)
-$wgMFUsePreferredEditor = true;
 // Advanced mode is available for users
 $wgMFAdvancedMobileContributions = true;
 // Enable the use Wikibase and associated features
@@ -811,13 +804,6 @@ $wgPageImagesOpenGraphFallbackImage = "/fw-resources/favicons/favicon-512.png";
 
 // PageViewInfo
 wfLoadExtension( 'PageViewInfo' );
-
-// PageViewInfoGA
-// wfLoadExtension( 'PageViewInfoGA' );
-$wgPageViewInfoGACredentialsFile = '/a/analytics-credentials-file.json';
-$wgPageViewInfoGATrackingID = 'UA-82072330-1';
-$wgPageViewInfoGAProfileId = '127138848';
-$wgPageViewInfoGAReadCustomDimensions = true;
 
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
@@ -928,7 +914,6 @@ $wgGroupPermissions['translationadmin']['pagelang'] = true;
 $wgTranslatePageTranslationULS = true;
 $wgPageTranslationLanguageList = 'sidebar-always';
 $wgTranslatePermissionUrl = 'Project:번역';
-$wgTranslateSecondaryPermissionUrl = 'Project:번역';
 
 // TwoColConflict
 wfLoadExtension( 'TwoColConflict' );
@@ -938,17 +923,11 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgUnifiedExtensionForFemiwikiPreAuth = true;
-$wgUnifiedExtensionForFemiwikiRelatedArticlesTargetNamespaces = [
-	NS_MAIN,
-	NS_PROJECT,
-	NS_CATEGORY,
-];
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
 $wgULSPosition = 'interlanguage';
 $wgULSIMEEnabled = false;
-$wgULSCompactLinksEnableAnon = true;
 $wgULSLanguageDetection = false;
 $wgULSAnonCanChangeLanguage = false;
 // Enable ULS compact links beta feature to opt-out
@@ -1085,7 +1064,6 @@ $wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 
 // WikiSEO
 wfLoadExtension( 'WikiSEO' );
-$wgFacebookAppID = '1937597133150935';
 $wgTwitterSiteHandle = '@femiwikidotcome';
 
 //
@@ -1112,7 +1090,6 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	$wgCacheDirectory = '/tmp/cache';
 
 	$wgDebugToolbar = true;
-	$wgShowDBErrorBacktrace = true;
 
 	// 다음이 비활성화되어있어야 디버그 툴을 쓸 수 있음
 	$wgUseFileCache = false;
@@ -1135,12 +1112,6 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 
 	// 위키베이스 속성 초기화
 	$wgWBRepoSettings['formatterUrlProperty'] = null;
-
-	// Google Analytics 기록 비활성화
-	$wgPageViewInfoGATrackingID = false;
-
-	// Google Analytics 읽어오기 비활성화
-	$wgPageViewInfoGAProfileId = false;
 }
 
 require_once '/a/Hotfix.php';
