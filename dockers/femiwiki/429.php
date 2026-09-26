@@ -37,15 +37,17 @@ $login = '/w/' . rawurlencode( '특수:로그인' );
 $signup = '/w/' . rawurlencode( '특수:계정만들기' );
 $body = [
 	'en' => [
-		'This limit is shared between everyone who is not logged in, so you may be seeing it '
-			. 'without having done anything yourself. It applies to page histories, differences, '
-			. 'old revisions and searches, never to reading an article.',
+		'Too many of these requests have arrived just now, so this one was turned away. The limit '
+			. 'is shared between everyone who is not logged in, so you may be seeing this without '
+			. 'having done anything yourself. It applies to page histories, differences, old '
+			. 'revisions and searches, never to reading an article.',
 		'Log in',
 		'Create an account',
 	],
 	'ko' => [
-		'이 제한은 로그인하지 않은 모든 방문자가 함께 나눠 쓰기 때문에, 직접 아무것도 하지 않았는데도 '
-			. '보일 수 있습니다. 문서 역사, 차이, 옛 판, 검색에만 걸리고 문서를 읽는 데에는 걸리지 않습니다.',
+		'지금 이런 요청이 너무 많이 들어와서 이 요청은 받지 못했습니다. 이 한도는 로그인하지 않은 '
+			. '방문자가 함께 나눠 쓰기 때문에, 직접 아무것도 하지 않았는데도 이 화면이 보일 수 '
+			. '있습니다. 문서 역사, 차이, 옛 판, 검색에만 걸리고 문서를 읽는 데에는 걸리지 않습니다.',
 		'로그인',
 		'계정 만들기',
 	],
@@ -70,7 +72,8 @@ file_put_contents( "$out/429.html", <<<HTML
 <meta name="viewport" content="width=device-width">
 <meta name="robots" content="noindex,nofollow">
 <title>$en</title>
-<style>body{font:16px/1.6 sans-serif;max-width:36em;margin:4em auto;padding:0 1em}</style>
+<style>body{font:16px/1.6 sans-serif;max-width:36em;margin:4em auto;padding:0 1em}h1{font-size:1.4em;margin:0 0 .6em}</style>
+<h1 id="title">$en</h1>
 <p id="text">$enText</p>
 <p><a id="login" href="$login" rel="nofollow">$enCall</a> &middot;
 <a href="$signup" id="signup" rel="nofollow">$enJoin</a></p>
@@ -86,6 +89,7 @@ file_put_contents( "$out/429.html", <<<HTML
 		for (var i = 0; i < want.length; i++) {
 			var m = all[want[i]];
 			if (!m) continue;
+			document.getElementById("title").textContent = m.t;
 			document.getElementById("text").textContent = m.b;
 			document.getElementById("login").textContent = m.c;
 			document.getElementById("signup").textContent = m.d;
