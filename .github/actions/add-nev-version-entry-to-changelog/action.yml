@@ -1,4 +1,5 @@
 name: docker-caddy
+description: Bump an upstream image in a downstream Dockerfile and add a README entry for it
 inputs:
   version:
     required: true
