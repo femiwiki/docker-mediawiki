@@ -499,8 +499,13 @@ wfLoadExtension( 'AntiSpoof' );
 
 // AWS
 wfLoadExtension( 'AWS' );
-$wgAWSRegion = 'ap-northeast-1';
-$wgAWSBucketPrefix = 'femiwiki-uploaded-files';
+$wgAWSRegion = 'ap-northeast-2';
+// One bucket with a path per zone. $wgAWSBucketPrefix, which spread the zones
+// over four buckets, is deprecated by the extension.
+$wgAWSBucketName = 'uploads-302617221463-ap-northeast-2-an';
+// The default is the global endpoint, which answers 307 for a young bucket
+// until its name propagates. The regional one answers straight away.
+$wgAWSBucketDomain = '$1.s3.ap-northeast-2.amazonaws.com';
 $wgAWSRepoHashLevels = 2;
 $wgAWSRepoDeletedHashLevels = 2;
 
@@ -1100,7 +1105,6 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 
 	// AWS 플러그인 비활성화
 	$wgAWSBucketName = null;
-	$wgAWSBucketPrefix = null;
 
 	// 구글 리캡차 비활성화
 	$wgCaptchaTriggers['edit'] = false;
