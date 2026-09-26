@@ -37,12 +37,15 @@ $login = '/w/' . rawurlencode( '특수:로그인' );
 $signup = '/w/' . rawurlencode( '특수:계정만들기' );
 $body = [
 	'en' => [
-		'This limit is shared between everyone who is not logged in, so you may be seeing it without having done anything yourself. It applies to page histories, differences, old revisions and searches, never to reading an article.',
+		'This limit is shared between everyone who is not logged in, so you may be seeing it '
+			. 'without having done anything yourself. It applies to page histories, differences, '
+			. 'old revisions and searches, never to reading an article.',
 		'Log in',
 		'Create an account',
 	],
 	'ko' => [
-		'이 제한은 로그인하지 않은 모든 방문자가 함께 나눠 쓰기 때문에, 직접 아무것도 하지 않았는데도 보일 수 있습니다. 문서 역사, 차이, 옛 판, 검색에만 걸리고 문서를 읽는 데에는 걸리지 않습니다.',
+		'이 제한은 로그인하지 않은 모든 방문자가 함께 나눠 쓰기 때문에, 직접 아무것도 하지 않았는데도 '
+			. '보일 수 있습니다. 문서 역사, 차이, 옛 판, 검색에만 걸리고 문서를 읽는 데에는 걸리지 않습니다.',
 		'로그인',
 		'계정 만들기',
 	],
