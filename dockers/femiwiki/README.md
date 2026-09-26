@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.7.1
+
+- Bump femiwiki/mediawiki to v3.5.0
+  - say on stdout when the sitemap has been rebuilt (femiwiki/docker-mediawiki#1169)
+
 ## v1.7.0
 
 - Give cron's jobs the environment they run under. Cron passes on nothing it
