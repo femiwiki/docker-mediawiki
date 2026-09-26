@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.7.2
+
+- Bump femiwiki/femiwiki-extensions to v2.5.0
+  - drop Extension:Lockdown (femiwiki/docker-mediawiki#1171)
+
 ## v1.7.1
 
 - Bump femiwiki/mediawiki to v3.5.0
