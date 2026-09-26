@@ -60,6 +60,12 @@ jobs:
           URL="127.0.0.1:8080/w/Special:MathStatus"
           until curl -sLfo /dev/null "$URL"; do
             sleep 1; done
+      - name: Check that every setting LocalSettings.php assigns is declared
+        run: |
+          c="$(docker ps -qf name=mediawiki_fastcgi | head -1)"
+          docker cp .github/scripts/CheckConfigKeys.php "$c:/tmp/CheckConfigKeys.php"
+          docker cp development/LocalSettings.php "$c:/tmp/LocalSettings.php"
+          docker exec "$c" php /tmp/CheckConfigKeys.php /tmp/LocalSettings.php
       - name: backup of failure
         if: ${{ failure() }}
         timeout-minutes: 1
