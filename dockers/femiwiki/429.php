@@ -68,10 +68,12 @@ file_put_contents( "$out/429.html", <<<HTML
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
+<meta name="robots" content="noindex,nofollow">
 <title>$en</title>
 <style>body{font:16px/1.6 sans-serif;max-width:36em;margin:4em auto;padding:0 1em}</style>
 <p id="text">$enText</p>
-<p><a id="login" href="$login">$enCall</a> &middot; <a href="$signup" id="signup">$enJoin</a></p>
+<p><a id="login" href="$login" rel="nofollow">$enCall</a> &middot;
+<a href="$signup" id="signup" rel="nofollow">$enJoin</a></p>
 <script>
 (function () {
 	var want = [];
