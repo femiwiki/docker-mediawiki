@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v3.5.0
+
+- say on stdout when the sitemap has been rebuilt
+
 ## v3.4.5
 
 - Bump femiwiki/php-fpm to v1.5.0
