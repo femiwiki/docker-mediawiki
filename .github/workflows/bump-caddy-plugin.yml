@@ -38,20 +38,22 @@ jobs:
           sed -i -E "s|^(ARG ${arg}=).*|\1${VER}|" dockers/caddy/Dockerfile
           repo="femiwiki/$PLUGIN"
           notes=$(gh release view "$VER" --repo "$repo" --json body --jq .body || true)
-          subjects=$(gh api "repos/$repo/compare/$old...$VER" --jq '.commits[].commit.message | split("\n")[0]')
+          subjects=$(gh api "repos/$repo/compare/$old...$VER" --jq '.commits[] | "- " + (.commit.message | split("\n")[0])')
           {
             echo "[$old → $VER](https://github.com/$repo/compare/$old...$VER)"
             echo
             if [ -n "$notes" ]; then
               echo "$notes"
             else
-              sed 's/^/- /' <<< "$subjects" | { grep -vE '^- (Localisation updates|build:)' || true; }
+              grep -vE '^- (Localisation updates|build:)' <<< "$subjects" || true
             fi
           } > "$BODY"
           cat "$BODY"
-          echo "plugin=$PLUGIN" >> "$GITHUB_OUTPUT"
-          echo "ver=$VER" >> "$GITHUB_OUTPUT"
-          echo "old=$old" >> "$GITHUB_OUTPUT"
+          {
+            echo "plugin=$PLUGIN"
+            echo "ver=$VER"
+            echo "old=$old"
+          } >> "$GITHUB_OUTPUT"
 
       - uses: ./.github/actions/release-title
         id: title
