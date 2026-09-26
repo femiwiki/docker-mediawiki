@@ -72,7 +72,8 @@ file_put_contents( "$out/429.html", <<<HTML
 <meta name="viewport" content="width=device-width">
 <meta name="robots" content="noindex,nofollow">
 <title>$en</title>
-<style>body{font:16px/1.6 sans-serif;max-width:36em;margin:4em auto;padding:0 1em}h1{font-size:1.4em;margin:0 0 .6em}</style>
+<style>body{font:16px/1.6 sans-serif;max-width:36em;margin:4em auto;padding:0 1em}
+h1{font-size:1.4em;margin:0 0 .6em}</style>
 <h1 id="title">$en</h1>
 <p id="text">$enText</p>
 <p><a id="login" href="$login" rel="nofollow">$enCall</a> &middot;
