@@ -1,5 +1,11 @@
 # femiwiki
 
+## v1.7.2
+
+- Bump femiwiki/femiwiki-extensions to v2.6.0
+  - drop Extension:Lockdown (femiwiki/docker-mediawiki#1171)
+  - (내부 작업) 미디어위키 확장 기능을 빌드 시점의 브랜치 최신판 대신 커밋 단위로 고정해 설치하도록 변경 (femiwiki/docker-mediawiki#1179)
+
 ## v1.7.1
 
 - Bump femiwiki/mediawiki to v3.5.0
