@@ -24,7 +24,19 @@ function wfMust( array $command ): string {
 	return trim( ( new Process( $command, timeout: null ) )->mustRun()->getOutput() );
 }
 
-/** One WMF extension or skin at its pinned commit */
+/**
+ * One WMF extension or skin at its pinned commit
+ *
+ * @param array $data extensions.json: the WMF branch, commit hashes by name,
+ *   tarball URL templates by name, and submodule URL replacements
+ * @phan-param array{
+ *   WMF-branch: string,
+ *   WMF-extensions: array<string, string>,
+ *   WMF-skins: array<string, string>,
+ *   non-WMF: array<string, array{template: string, version?: string, type?: string}>,
+ *   submodule-mirrors?: array<string, string>,
+ * } $data
+ */
 function wfInstallWmf( array $data, string $type, string $name ): void {
 	$sha = $data["WMF-{$type}s"][$name];
 	$dir = DESTINATION . "/{$type}s/$name";
@@ -82,7 +94,19 @@ function wfInstallWmf( array $data, string $type, string $name ): void {
 	wfMust( [ 'find', $dir, '-name', '.git', '-prune', '-exec', 'rm', '-rf', '{}', '+' ] );
 }
 
-/** One release tarball, its top directory stripped */
+/**
+ * One release tarball, its top directory stripped
+ *
+ * @param array $data extensions.json: the WMF branch, commit hashes by name,
+ *   tarball URL templates by name, and submodule URL replacements
+ * @phan-param array{
+ *   WMF-branch: string,
+ *   WMF-extensions: array<string, string>,
+ *   WMF-skins: array<string, string>,
+ *   non-WMF: array<string, array{template: string, version?: string, type?: string}>,
+ *   submodule-mirrors?: array<string, string>,
+ * } $data
+ */
 function wfInstallTarball( array $data, string $type, string $name ): void {
 	$entry = $data['non-WMF'][$name];
 	$dir = DESTINATION . "/{$type}s/$name";
@@ -136,7 +160,9 @@ while ( $items || $running ) {
 	while ( $items && count( $running ) < $jobs ) {
 		$item = array_shift( $items );
 		$process = new Process( [ PHP_BINARY, __FILE__, 'one', ...$item ], timeout: null );
-		$process->start( static fn ( $type, $out ) => fwrite( $type === Process::ERR ? STDERR : STDOUT, $out ) );
+		$process->start( static function ( string $type, string $out ): void {
+			fwrite( $type === Process::ERR ? STDERR : STDOUT, $out );
+		} );
 		$running[] = [ $item, $process ];
 	}
 	foreach ( $running as $i => [ $item, $process ] ) {
