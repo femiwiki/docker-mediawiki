@@ -36,7 +36,19 @@ updates:
     cooldown:
       default-days: 7
 
-  - package-ecosystem: 'bundler'
+  - package-ecosystem: 'docker'
+    directory: '/dockers/femiwiki-extensions'
+    commit-message:
+      prefix: build
+      include: scope
+    schedule:
+      interval: monthly
+    reviewers:
+      - 'femiwiki/reviewer'
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: 'composer'
     directory: '/dockers/femiwiki-extensions/extension-installer'
     commit-message:
       prefix: build

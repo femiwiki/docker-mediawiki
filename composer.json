@@ -8,7 +8,7 @@
   "scripts": {
     "fix": "phpcbf",
     "test": [
-      "parallel-lint . --exclude vendor",
+      "parallel-lint . --exclude vendor --exclude dockers/femiwiki-extensions/extension-installer/vendor",
       "phpcs"
     ]
   },

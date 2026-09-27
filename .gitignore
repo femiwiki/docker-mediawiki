@@ -7,9 +7,7 @@
 
 # Composer
 /vendor
+/dockers/femiwiki-extensions/extension-installer/vendor
 
 # npm dependencies
 /node_modules/
-
-# Ruby
-/extension-installer/vendor

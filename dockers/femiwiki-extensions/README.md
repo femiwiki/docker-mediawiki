@@ -2,6 +2,16 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.6.1
+
+- Install with a PHP script using symfony/process on `composer:2.10.3`, instead
+  of a Ruby one, so the image no longer needs Ruby, Bundler or aria2. The
+  extensions are the same; only composer's generated files differ, as composer
+  moves from 2.7.7 to 2.10.3.
+- Fetch as many extensions at once as twice the building machine's CPU count,
+  read with nproc on every build, rather than always 4. The `INSTALL_JOBS`
+  build argument overrides it.
+
 ## v2.6.0
 
 - Pin every WMF extension and skin to a commit of `WMF-branch` in
