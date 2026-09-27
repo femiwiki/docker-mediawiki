@@ -2,6 +2,17 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.7.0
+
+- Install the Femiwiki skin from a commit of FemiwikiSkin `main`, listed under
+  `in-house` in `extensions.json`, instead of the v5.1.2 release asset. npm
+  installs the two packages it loads at runtime, the OOUI theme and XEIcon,
+  from its lockfile. The asset also carried the skin's development packages,
+  so the skin's `node_modules` shrinks from 159 MB to 15 MB.
+- The skin gains what `main` has over v5.1.2: the notification flyout fix for
+  MediaWiki 1.45 and later (FemiwikiSkin#936), the namespaced GlobalVarConfig
+  (FemiwikiSkin#910) and translatewiki.net updates.
+
 ## v2.6.1
 
 - Install with a PHP script using symfony/process on `composer:2.10.3`, instead
