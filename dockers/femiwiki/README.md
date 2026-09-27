@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.7.3
+
+- Bump femiwiki/femiwiki-extensions to v2.7.0
+  - install the Femiwiki skin from a commit (femiwiki/docker-mediawiki#1185)
+
 ## v1.7.2
 
 - Bump femiwiki/femiwiki-extensions to v2.6.0
