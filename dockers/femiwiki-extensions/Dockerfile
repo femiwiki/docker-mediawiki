@@ -4,7 +4,10 @@
 #
 # The composer image carries PHP for the installer, composer for the
 # dependencies extdist would have bundled, and git and curl for the downloads.
+# npm installs the packages our skin loads at runtime.
 FROM composer:2.10.3
+
+RUN apk add --no-cache npm
 
 # How many extensions to fetch at once. Left empty, the installer reads the
 # building machine's CPU count with nproc on every build and uses twice that.

@@ -5,8 +5,9 @@
 //
 // The WMF ones are fetched at their pinned commit from the GitHub mirror, or
 // from Gerrit when the mirror lacks it, with their submodules, and given what
-// extdist would have added: composer's vendor/, gitinfo.json and version. The
-// rest are release tarballs. Each is one child process, a few at a time.
+// extdist would have added: composer's vendor/, gitinfo.json and version. Our
+// own are fetched at their pinned commit and given their runtime npm packages.
+// The rest are release tarballs. Each is one child process, a few at a time.
 
 use Symfony\Component\Process\Process;
 
@@ -25,25 +26,14 @@ function wfMust( array $command ): string {
 }
 
 /**
- * One WMF extension or skin at its pinned commit
+ * Fetch a commit into $dir with its submodules; returns the source it came from
  *
- * @param array $data extensions.json: the WMF branch, commit hashes by name,
- *   tarball URL templates by name, and submodule URL replacements
- * @phan-param array{
- *   WMF-branch: string,
- *   WMF-extensions: array<string, string>,
- *   WMF-skins: array<string, string>,
- *   non-WMF: array<string, array{template: string, version?: string, type?: string}>,
- *   submodule-mirrors?: array<string, string>,
- * } $data
+ * @param string $dir
+ * @param string[] $sources Repository URLs, tried in order
+ * @param string $sha
+ * @param array<string,string> $mirrors Submodule URLs to replace, by the URL to replace
  */
-function wfInstallWmf( array $data, string $type, string $name ): void {
-	$sha = $data["WMF-{$type}s"][$name];
-	$dir = DESTINATION . "/{$type}s/$name";
-	$sources = [
-		"https://github.com/wikimedia/mediawiki-{$type}s-$name",
-		"https://gerrit.wikimedia.org/r/mediawiki/{$type}s/$name",
-	];
+function wfFetch( string $dir, array $sources, string $sha, array $mirrors ): string {
 	wfMust( [ 'git', 'init', '-q', $dir ] );
 	$source = null;
 	foreach ( $sources as $url ) {
@@ -52,8 +42,9 @@ function wfInstallWmf( array $data, string $type, string $name ): void {
 			break;
 		}
 	}
-	$source ?? throw new RuntimeException( "{$type}s/$name: $sha is on neither " . implode( ' nor ', $sources ) );
-	echo "{$type}s/$name $sha from $source\n";
+	if ( $source === null ) {
+		throw new RuntimeException( "$dir: $sha is on neither " . implode( ' nor ', $sources ) );
+	}
 
 	// A relative submodule URL resolves against origin
 	wfMust( [ 'git', '-C', $dir, 'remote', 'add', 'origin', $source ] );
@@ -61,12 +52,31 @@ function wfInstallWmf( array $data, string $type, string $name ): void {
 	// Phabricator refuses to serve a commit by its hash, so its submodules come
 	// from the GitHub repositories they mirror; other hosts may still refuse a
 	// shallow fetch of a commit no ref points at
-	$mirrors = [];
-	foreach ( $data['submodule-mirrors'] ?? [] as $from => $to ) {
-		array_push( $mirrors, '-c', "url.$to.insteadOf=$from" );
+	$config = [];
+	foreach ( $mirrors as $from => $to ) {
+		array_push( $config, '-c', "url.$to.insteadOf=$from" );
 	}
-	$submodules = [ 'git', ...$mirrors, '-C', $dir, 'submodule', 'update', '-q', '--init', '--recursive' ];
+	$submodules = [ 'git', ...$config, '-C', $dir, 'submodule', 'update', '-q', '--init', '--recursive' ];
 	wfTries( [ ...$submodules, '--depth', '1' ] ) || wfMust( $submodules );
+	return $source;
+}
+
+/**
+ * One WMF extension or skin at its pinned commit
+ *
+ * @param string $type 'extension' or 'skin'
+ * @param string $name
+ * @param string $sha
+ * @param string $branch The WMF branch the commit is on
+ * @param array<string,string> $mirrors Submodule URLs to replace, by the URL to replace
+ */
+function wfInstallWmf( string $type, string $name, string $sha, string $branch, array $mirrors ): void {
+	$dir = DESTINATION . "/{$type}s/$name";
+	$source = wfFetch( $dir, [
+		"https://github.com/wikimedia/mediawiki-{$type}s-$name",
+		"https://gerrit.wikimedia.org/r/mediawiki/{$type}s/$name",
+	], $sha, $mirrors );
+	echo "{$type}s/$name $sha from $source\n";
 
 	// The two files extdist adds, which Special:Version reads in place of .git
 	$time = wfMust( [ 'git', '-C', $dir, 'log', '-1', '--format=%ct', $sha ] );
@@ -79,7 +89,7 @@ function wfInstallWmf( array $data, string $type, string $name ): void {
 	], JSON_UNESCAPED_SLASHES ) );
 	file_put_contents( "$dir/version", sprintf(
 		"%s: %s\n%s\n\n%s\n",
-		$name, $data['WMF-branch'], gmdate( 'Y-m-d\TH:i:s', (int)$time ), substr( $sha, 0, 7 )
+		$name, $branch, gmdate( 'Y-m-d\TH:i:s', (int)$time ), substr( $sha, 0, 7 )
 	) );
 
 	// extdist runs composer for any extension whose composer.json requires
@@ -95,22 +105,37 @@ function wfInstallWmf( array $data, string $type, string $name ): void {
 }
 
 /**
+ * One of our own extensions or skins at its pinned commit, with the npm
+ * packages it loads at runtime
+ *
+ * @param string $type 'extension' or 'skin'
+ * @param string $name
+ * @param string $repository
+ * @param string $sha
+ */
+function wfInstallInHouse( string $type, string $name, string $repository, string $sha ): void {
+	$dir = DESTINATION . "/{$type}s/$name";
+	wfFetch( $dir, [ $repository ], $sha, [] );
+	echo "{$type}s/$name $sha from $repository\n";
+
+	// Scripts are skipped: the only one is the husky hook for development
+	$package = "$dir/package.json";
+	if ( is_file( $package ) && ( json_decode( file_get_contents( $package ), true )['dependencies'] ?? [] ) ) {
+		wfMust( [ 'npm', 'ci', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund', '--prefix', $dir ] );
+	}
+
+	wfMust( [ 'find', $dir, '-name', '.git', '-prune', '-exec', 'rm', '-rf', '{}', '+' ] );
+}
+
+/**
  * One release tarball, its top directory stripped
  *
- * @param array $data extensions.json: the WMF branch, commit hashes by name,
- *   tarball URL templates by name, and submodule URL replacements
- * @phan-param array{
- *   WMF-branch: string,
- *   WMF-extensions: array<string, string>,
- *   WMF-skins: array<string, string>,
- *   non-WMF: array<string, array{template: string, version?: string, type?: string}>,
- *   submodule-mirrors?: array<string, string>,
- * } $data
+ * @param string $type 'extension' or 'skin'
+ * @param string $name
+ * @param string $url
  */
-function wfInstallTarball( array $data, string $type, string $name ): void {
-	$entry = $data['non-WMF'][$name];
+function wfInstallTarball( string $type, string $name, string $url ): void {
 	$dir = DESTINATION . "/{$type}s/$name";
-	$url = str_replace( '$1', $entry['version'] ?? '', $entry['template'] );
 	$file = sys_get_temp_dir() . "/$name.tar.gz";
 	echo "{$type}s/$name from $url\n";
 	wfMust( [ 'curl', '-fsSL', '--retry', '3', '-o', $file, $url ] );
@@ -119,21 +144,48 @@ function wfInstallTarball( array $data, string $type, string $name ): void {
 	unlink( $file );
 }
 
-$data = json_decode( file_get_contents( __DIR__ . '/extensions.json' ), true, flags: JSON_THROW_ON_ERROR );
+/**
+ * extensions.json: the WMF branch, commit hashes by name, our own repositories
+ * and commits, tarball URL templates, and submodule URL replacements
+ *
+ * @return array
+ * @phan-return array{
+ *   WMF-branch: string,
+ *   WMF-extensions: array<string, string>,
+ *   WMF-skins: array<string, string>,
+ *   in-house: array<string, array{repository: string, commit: string, type?: string}>,
+ *   non-WMF: array<string, array{template: string, version?: string, type?: string}>,
+ *   submodule-mirrors?: array<string, string>,
+ * }
+ */
+function wfReadExtensions(): array {
+	return json_decode( file_get_contents( __DIR__ . '/extensions.json' ), true, flags: JSON_THROW_ON_ERROR );
+}
+
+$data = wfReadExtensions();
 
 // A child process installs one item
 if ( ( $argv[1] ?? '' ) === 'one' ) {
 	[ , , $kind, $type, $name ] = $argv;
 	if ( $kind === 'wmf' ) {
-		wfInstallWmf( $data, $type, $name );
+		wfInstallWmf( $type, $name, $data["WMF-{$type}s"][$name], $data['WMF-branch'],
+			$data['submodule-mirrors'] ?? [] );
+	} elseif ( $kind === 'in-house' ) {
+		$entry = $data['in-house'][$name];
+		wfInstallInHouse( $type, $name, $entry['repository'], $entry['commit'] );
 	} else {
-		wfInstallTarball( $data, $type, $name );
+		$entry = $data['non-WMF'][$name];
+		wfInstallTarball( $type, $name, str_replace( '$1', $entry['version'] ?? '', $entry['template'] ) );
 	}
 	exit( 0 );
 }
 
 // A source that lacks a repository must fail, not wait for a password
 putenv( 'GIT_TERMINAL_PROMPT=0' );
+// npm records a GitHub dependency as git+ssh, and the build has no SSH key
+putenv( 'GIT_CONFIG_COUNT=1' );
+putenv( 'GIT_CONFIG_KEY_0=url.https://github.com/.insteadOf' );
+putenv( 'GIT_CONFIG_VALUE_0=ssh://git@github.com/' );
 // Composer 2.9 and later refuses to resolve a package with a security
 // advisory, dev requirements included although --no-dev never installs them,
 // and MediaWiki's pinned codesniffer has one. extdist's composer predates this.
@@ -148,6 +200,9 @@ foreach ( [ 'extension', 'skin' ] as $type ) {
 	foreach ( array_keys( $data["WMF-{$type}s"] ) as $name ) {
 		$items[] = [ 'wmf', $type, $name ];
 	}
+}
+foreach ( $data['in-house'] as $name => $entry ) {
+	$items[] = [ 'in-house', $entry['type'] ?? 'extension', $name ];
 }
 foreach ( $data['non-WMF'] as $name => $entry ) {
 	$items[] = [ 'tarball', $entry['type'] ?? 'extension', $name ];

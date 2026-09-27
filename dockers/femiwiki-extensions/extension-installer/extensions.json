@@ -83,6 +83,13 @@
   "WMF-skins": {
     "Vector": "80281984afdaa51622d59fb730659877948b1d0c"
   },
+  "in-house": {
+    "Femiwiki": {
+      "type": "skin",
+      "repository": "https://github.com/femiwiki/FemiwikiSkin",
+      "commit": "93b66fb389cfdeecb3d26fb2b04e3c22ee512113"
+    }
+  },
   "non-WMF": {
     "UnlinkedWikibase": {
       "template": "https://github.com/wikimedia/mediawiki-extensions-UnlinkedWikibase/archive/refs/tags/$1.tar.gz",
@@ -91,11 +98,6 @@
     "UnifiedExtensionForFemiwiki": {
       "template": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki/archive/$1.tar.gz",
       "version": "v5.0.0"
-    },
-    "Femiwiki": {
-      "type": "skin",
-      "template": "https://github.com/femiwiki/FemiwikiSkin/releases/download/$1/$1.tar.gz",
-      "version": "v5.1.2"
     },
     "AWS": {
       "template": "https://github.com/edwardspec/mediawiki-aws-s3/archive/refs/tags/$1.tar.gz",
