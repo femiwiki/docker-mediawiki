@@ -53,6 +53,7 @@ jobs:
     with:
       image: caddy
       downstream: femiwiki
+      automerge: true
     secrets:
       PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
@@ -80,6 +81,7 @@ jobs:
       downstream: femiwiki
       # femiwiki-extensions is an amd64-only image, so no arm64 is needed
       arches: '["amd64"]'
+      automerge: true
     secrets:
       PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
