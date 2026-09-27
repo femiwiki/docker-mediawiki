@@ -1,9 +1,9 @@
 {
-	"name": "femiwiki/extension-installer",
-	"description": "Installs the extensions and skins of the femiwiki-extensions image",
-	"license": "AGPL-3.0-or-later",
-	"require": {
-		"php": ">=8.4",
-		"symfony/process": "^8.0"
-	}
+  "name": "femiwiki/extension-installer",
+  "description": "Installs the extensions and skins of the femiwiki-extensions image",
+  "license": "AGPL-3.0-or-later",
+  "require": {
+    "php": ">=8.4",
+    "symfony/process": "^8.0"
+  }
 }

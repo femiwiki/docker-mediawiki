@@ -15,28 +15,27 @@ require __DIR__ . '/vendor/autoload.php';
 const DESTINATION = '/mediawiki';
 
 /** Whether a command succeeded */
-function tries( array $command ): bool {
+function wfTries( array $command ): bool {
 	return ( new Process( $command, timeout: null ) )->run() === 0;
 }
 
 /** A command's output; a failure throws with the command, its exit code and its output */
-function must( array $command ): string {
+function wfMust( array $command ): string {
 	return trim( ( new Process( $command, timeout: null ) )->mustRun()->getOutput() );
 }
 
-$data = json_decode( file_get_contents( __DIR__ . '/extensions.json' ), true, flags: JSON_THROW_ON_ERROR );
-
 /** One WMF extension or skin at its pinned commit */
-function installWmf( array $data, string $type, string $name, string $sha ): void {
+function wfInstallWmf( array $data, string $type, string $name ): void {
+	$sha = $data["WMF-{$type}s"][$name];
 	$dir = DESTINATION . "/{$type}s/$name";
 	$sources = [
 		"https://github.com/wikimedia/mediawiki-{$type}s-$name",
 		"https://gerrit.wikimedia.org/r/mediawiki/{$type}s/$name",
 	];
-	must( [ 'git', 'init', '-q', $dir ] );
+	wfMust( [ 'git', 'init', '-q', $dir ] );
 	$source = null;
 	foreach ( $sources as $url ) {
-		if ( tries( [ 'git', '-C', $dir, 'fetch', '-q', '--depth', '1', $url, $sha ] ) ) {
+		if ( wfTries( [ 'git', '-C', $dir, 'fetch', '-q', '--depth', '1', $url, $sha ] ) ) {
 			$source = $url;
 			break;
 		}
@@ -45,8 +44,8 @@ function installWmf( array $data, string $type, string $name, string $sha ): voi
 	echo "{$type}s/$name $sha from $source\n";
 
 	// A relative submodule URL resolves against origin
-	must( [ 'git', '-C', $dir, 'remote', 'add', 'origin', $source ] );
-	must( [ 'git', '-C', $dir, '-c', 'advice.detachedHead=false', 'checkout', '-q', $sha ] );
+	wfMust( [ 'git', '-C', $dir, 'remote', 'add', 'origin', $source ] );
+	wfMust( [ 'git', '-C', $dir, '-c', 'advice.detachedHead=false', 'checkout', '-q', $sha ] );
 	// Phabricator refuses to serve a commit by its hash, so its submodules come
 	// from the GitHub repositories they mirror; other hosts may still refuse a
 	// shallow fetch of a commit no ref points at
@@ -55,10 +54,10 @@ function installWmf( array $data, string $type, string $name, string $sha ): voi
 		array_push( $mirrors, '-c', "url.$to.insteadOf=$from" );
 	}
 	$submodules = [ 'git', ...$mirrors, '-C', $dir, 'submodule', 'update', '-q', '--init', '--recursive' ];
-	tries( [ ...$submodules, '--depth', '1' ] ) || must( $submodules );
+	wfTries( [ ...$submodules, '--depth', '1' ] ) || wfMust( $submodules );
 
 	// The two files extdist adds, which Special:Version reads in place of .git
-	$time = must( [ 'git', '-C', $dir, 'log', '-1', '--format=%ct', $sha ] );
+	$time = wfMust( [ 'git', '-C', $dir, 'log', '-1', '--format=%ct', $sha ] );
 	file_put_contents( "$dir/gitinfo.json", json_encode( [
 		'head' => "$sha\n",
 		'headSHA1' => "$sha\n",
@@ -67,40 +66,44 @@ function installWmf( array $data, string $type, string $name, string $sha ): voi
 		'remoteURL' => "https://gerrit.wikimedia.org/r/mediawiki/{$type}s/$name",
 	], JSON_UNESCAPED_SLASHES ) );
 	file_put_contents( "$dir/version", sprintf(
-		"%s: %s\n%s\n\n%s\n", $name, $data['WMF-branch'], gmdate( 'Y-m-d\TH:i:s', (int)$time ), substr( $sha, 0, 7 )
+		"%s: %s\n%s\n\n%s\n",
+		$name, $data['WMF-branch'], gmdate( 'Y-m-d\TH:i:s', (int)$time ), substr( $sha, 0, 7 )
 	) );
 
 	// extdist runs composer for any extension whose composer.json requires
 	// something, a PHP extension alone included
 	$composer = "$dir/composer.json";
 	if ( is_file( $composer ) && ( json_decode( file_get_contents( $composer ), true )['require'] ?? [] ) ) {
-		must( [ 'composer', 'install', '--no-dev', '--ignore-platform-reqs', '--no-interaction', '--no-progress',
-			'--working-dir', $dir ] );
+		wfMust( [ 'composer', 'install', '--no-dev', '--ignore-platform-reqs', '--no-interaction',
+			'--no-progress', '--working-dir', $dir ] );
 	}
 
 	// Composer installs a package from source when it has no dist, .git included
-	must( [ 'find', $dir, '-name', '.git', '-prune', '-exec', 'rm', '-rf', '{}', '+' ] );
+	wfMust( [ 'find', $dir, '-name', '.git', '-prune', '-exec', 'rm', '-rf', '{}', '+' ] );
 }
 
 /** One release tarball, its top directory stripped */
-function installTarball( string $type, string $name, array $entry ): void {
+function wfInstallTarball( array $data, string $type, string $name ): void {
+	$entry = $data['non-WMF'][$name];
 	$dir = DESTINATION . "/{$type}s/$name";
 	$url = str_replace( '$1', $entry['version'] ?? '', $entry['template'] );
 	$file = sys_get_temp_dir() . "/$name.tar.gz";
 	echo "{$type}s/$name from $url\n";
-	must( [ 'curl', '-fsSL', '--retry', '3', '-o', $file, $url ] );
+	wfMust( [ 'curl', '-fsSL', '--retry', '3', '-o', $file, $url ] );
 	mkdir( $dir, 0755, true );
-	must( [ 'tar', '-xzf', $file, '--strip-components=1', '--directory', $dir ] );
+	wfMust( [ 'tar', '-xzf', $file, '--strip-components=1', '--directory', $dir ] );
 	unlink( $file );
 }
+
+$data = json_decode( file_get_contents( __DIR__ . '/extensions.json' ), true, flags: JSON_THROW_ON_ERROR );
 
 // A child process installs one item
 if ( ( $argv[1] ?? '' ) === 'one' ) {
 	[ , , $kind, $type, $name ] = $argv;
 	if ( $kind === 'wmf' ) {
-		installWmf( $data, $type, $name, $data["WMF-{$type}s"][$name] );
+		wfInstallWmf( $data, $type, $name );
 	} else {
-		installTarball( $type, $name, $data['non-WMF'][$name] );
+		wfInstallTarball( $data, $type, $name );
 	}
 	exit( 0 );
 }
@@ -114,7 +117,7 @@ putenv( 'COMPOSER_NO_SECURITY_BLOCKING=1' );
 // Mostly waiting on the network, so twice this machine's CPU count, read on
 // every run, unless INSTALL_JOBS says otherwise. On a 4-CPU runner the install
 // took 37 s at 4, 22.5 s at 8 and 20.8 s at 16.
-$jobs = (int)( getenv( 'INSTALL_JOBS' ) ?: 2 * (int)must( [ 'nproc' ] ) );
+$jobs = (int)( getenv( 'INSTALL_JOBS' ) ?: 2 * (int)wfMust( [ 'nproc' ] ) );
 
 $items = [];
 foreach ( [ 'extension', 'skin' ] as $type ) {
