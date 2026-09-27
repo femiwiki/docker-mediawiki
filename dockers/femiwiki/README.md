@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.7.4
+
+- Bump femiwiki/femiwiki-extensions to v2.7.1
+  - install UnifiedExtensionForFemiwiki from a commit (femiwiki/docker-mediawiki#1191)
+
 ## v1.7.3
 
 - Bump femiwiki/femiwiki-extensions to v2.7.0
