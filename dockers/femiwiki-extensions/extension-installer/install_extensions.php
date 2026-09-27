@@ -120,8 +120,9 @@ putenv( 'GIT_TERMINAL_PROMPT=0' );
 // advisory, dev requirements included although --no-dev never installs them,
 // and MediaWiki's pinned codesniffer has one. extdist's composer predates this.
 putenv( 'COMPOSER_NO_SECURITY_BLOCKING=1' );
-// Mostly waiting on the network, so two per CPU unless told otherwise. On a
-// 4-CPU runner the install took 37 s at 4, 22.5 s at 8 and 20.8 s at 16.
+// Mostly waiting on the network, so twice this machine's CPU count, read on
+// every run, unless INSTALL_JOBS says otherwise. On a 4-CPU runner the install
+// took 37 s at 4, 22.5 s at 8 and 20.8 s at 16.
 $jobs = (int)( getenv( 'INSTALL_JOBS' ) ?: 2 * (int)output( [ 'nproc' ] ) );
 
 $items = [];
