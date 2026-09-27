@@ -8,8 +8,8 @@ This docker image contains MediaWiki extensions Femiwiki uses.
   image no longer needs Ruby, Bundler or aria2. The extensions are the same;
   only composer's generated files differ, as composer moves from 2.7.7 to
   2.10.3.
-- Fetch as many extensions at once as the machine has CPUs, or
-  `INSTALL_JOBS` when that build argument is set, rather than always 4.
+- Fetch two extensions per CPU at once, or `INSTALL_JOBS` when that build
+  argument is set, rather than always 4.
 
 ## v2.6.0
 
