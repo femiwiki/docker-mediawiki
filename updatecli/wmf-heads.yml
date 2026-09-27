@@ -1,0 +1,33 @@
+# Moves every WMF extension and skin in extensions.json to the head of the
+# WMF branch. The workflow passes the names and the branch as values, read from
+# extensions.json itself, so a new entry needs no change here.
+name: Bump the WMF extensions and skins to the heads of their branch
+
+sources:
+{{- range $type, $names := .names }}
+{{- range $names }}
+  {{ $type }}-{{ . }}:
+    kind: shell
+    spec:
+      command: git ls-remote --exit-code https://gerrit.wikimedia.org/r/mediawiki/{{ $type }}s/{{ . }} refs/heads/{{ $.branch }}
+    transformers:
+      - findsubmatch:
+          pattern: '^([0-9a-f]{40})\t'
+          captureindex: 1
+{{- end }}
+{{- end }}
+
+targets:
+{{- range $type, $names := .names }}
+{{- range $names }}
+  {{ $type }}-{{ . }}:
+    kind: file
+    sourceid: {{ $type }}-{{ . }}
+    spec:
+      file: dockers/femiwiki-extensions/extension-installer/extensions.json
+      matchpattern: '"{{ . }}": "[0-9a-f]{40}"'
+      # source is filled in after the sources run, so it is written out
+      # literally here for updatecli's second pass
+      replacepattern: '"{{ . }}": "{{ `{{ source "` }}{{ $type }}-{{ . }}{{ `" }}` }}"'
+{{- end }}
+{{- end }}

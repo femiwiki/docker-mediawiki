@@ -1,0 +1,93 @@
+name: Submit a PR for bumping the WMF extensions
+
+# Monthly, as dependabot runs; dispatch it by hand for a security fix between runs
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  bump-wmf-extensions:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Read the names and the branch from extensions.json
+        id: values
+        env:
+          VALUES: ${{ runner.temp }}/values.yml
+        run: |
+          json=dockers/femiwiki-extensions/extension-installer/extensions.json
+          jq '{branch: .["WMF-branch"], names: {extension: (.["WMF-extensions"] | keys), skin: (.["WMF-skins"] | keys)}}' \
+            "$json" > "$VALUES"
+          echo "branch=$(jq -r '.["WMF-branch"]' "$json")" >> "$GITHUB_OUTPUT"
+
+      - uses: updatecli/updatecli-action@ca8c01bf875e2520512c344a71dd02f3dc3326a7 # v3.7.0
+        with:
+          version: v0.122.0
+
+      - name: Move each to the head of its branch
+        env:
+          VALUES: ${{ runner.temp }}/values.yml
+        run: updatecli pipeline apply --config updatecli/wmf-heads.yml --values "$VALUES"
+
+      - name: List the moved ones for the pull request body
+        id: body
+        env:
+          BRANCH: ${{ steps.values.outputs.branch }}
+          BODY: ${{ runner.temp }}/body.md
+        run: |
+          json=dockers/femiwiki-extensions/extension-installer/extensions.json
+          git show "HEAD:$json" > "${RUNNER_TEMP}/old.json"
+          jq -r --slurpfile old "${RUNNER_TEMP}/old.json" '
+            [["extension", "WMF-extensions"], ["skin", "WMF-skins"]][] as [$type, $key]
+            | .[$key] | to_entries[]
+            | select($old[0][$key][.key] != .value)
+            | "- [\(.key)](https://github.com/wikimedia/mediawiki-\($type)s-\(.key)/compare/\($old[0][$key][.key][0:7])...\(.value[0:7]))"
+          ' "$json" > "${RUNNER_TEMP}/moved.md"
+          count=$(wc -l < "${RUNNER_TEMP}/moved.md")
+          {
+            echo "Moves $count WMF extensions and skins to the heads of \`$BRANCH\`:"
+            echo
+            cat "${RUNNER_TEMP}/moved.md"
+          } > "$BODY"
+          cat "$BODY"
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+
+      - name: Update README
+        if: steps.body.outputs.count != '0'
+        uses: ./.github/actions/add-changelog-entry
+        with:
+          image: femiwiki-extensions
+          message: Move ${{ steps.body.outputs.count }} WMF extensions and skins to the heads of `${{ steps.values.outputs.branch }}`
+
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        if: ${{ steps.body.outputs.count != '0' && github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+      - name: Create Pull Request
+        if: steps.body.outputs.count != '0'
+        id: create-pull-request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          commit-message: 'build(femiwiki-extensions): move the WMF extensions to the heads of ${{ steps.values.outputs.branch }}'
+          title: 'build(femiwiki-extensions): move the WMF extensions to the heads of ${{ steps.values.outputs.branch }}'
+          branch: bump-wmf-extensions
+          body-path: ${{ runner.temp }}/body.md
+
+      - name: Enable Pull Request Automerge
+        if: steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: gh pr merge --squash --auto "$PR_NUMBER"
