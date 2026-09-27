@@ -99,5 +99,5 @@ EXPOSE 443
 EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
-COPY caddy-warmup.php warm-up.php /a/
+COPY caddy-warmup.php warm-up.php db-probe.php /a/
 CMD ["/usr/local/bin/run"]
