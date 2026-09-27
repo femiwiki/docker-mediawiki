@@ -6,7 +6,8 @@
 # dependencies extdist would have bundled, and git and curl for the downloads.
 FROM composer:2.10.3
 
-# How many extensions to fetch at once; empty means two per CPU
+# How many extensions to fetch at once. Left empty, the installer reads the
+# building machine's CPU count with nproc on every build and uses twice that.
 ARG INSTALL_JOBS=
 
 COPY extension-installer/install_extensions.php extension-installer/extensions.json /
