@@ -25,10 +25,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: ruby/setup-ruby@0dafeac902942906541bc140009cdbf32665b601 # v1.315.0
-        with:
-          ruby-version: '3.1'
-
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         id: vars
         env:
@@ -87,7 +83,12 @@ jobs:
         env:
           EXT: ${{ fromJSON(steps.vars.outputs.result).ext }}
           VER: ${{ fromJSON(steps.vars.outputs.result).ver }}
-        run: ruby .github/bump_extension.rb "$EXT" "$VER"
+        run: |
+          json=dockers/femiwiki-extensions/extension-installer/extensions.json
+          jq -e --arg ext "$EXT" '.["non-WMF"] | has($ext)' "$json" > /dev/null \
+            || { echo "::error::no extension named $EXT under non-WMF in extensions.json"; exit 1; }
+          jq --arg ext "$EXT" --arg ver "$VER" '.["non-WMF"][$ext].version = $ver' "$json" > "${RUNNER_TEMP}/extensions.json"
+          mv "${RUNNER_TEMP}/extensions.json" "$json"
 
       - name: Update README
         uses: ./.github/actions/add-changelog-entry
