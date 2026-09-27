@@ -84,7 +84,7 @@ flowchart TD
     composer --> femiwiki/php-fpm
     php-fpm --> femiwiki/php-fpm --> femiwiki/mediawiki --> femiwiki/femiwiki
     caddy --> femiwiki/caddy --> femiwiki/femiwiki
-    ruby --> femiwiki/femiwiki-extensions --> femiwiki/femiwiki
+    composer --> femiwiki/femiwiki-extensions --> femiwiki/femiwiki
 ```
 
 &nbsp;

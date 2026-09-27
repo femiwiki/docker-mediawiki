@@ -10,6 +10,3 @@
 
 # npm dependencies
 /node_modules/
-
-# Ruby
-/extension-installer/vendor
