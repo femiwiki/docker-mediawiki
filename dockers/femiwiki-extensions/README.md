@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.7.2
+
+- Bump Femiwiki to [c880abf](https://github.com/femiwiki/FemiwikiSkin/commit/c880abf9879b1f7d7c44c674907bba57d5700221)
+
 ## v2.7.1
 
 - Install UnifiedExtensionForFemiwiki from a commit of its `main`, listed under
