@@ -279,6 +279,7 @@ jobs:
         env:
           FIRST_ROOT: ${{ steps.roots.outputs.first }}
           GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          ROOTS: ${{ steps.roots.outputs.roots }}
         run: |
           n="$(gh pr list --repo femiwiki/infra --head bump-femiwiki-image \
                  --state open --json number --jq '.[0].number // empty')"
@@ -301,23 +302,42 @@ jobs:
             echo "The plan on #${n} is ${status}, waiting."
             sleep 15
           done
+          # Read the running numbers off the branch rather than out of the
+          # patch below, so a generation changed on main by any other pull
+          # request cannot make this step hand a running number out again.
           if [ "$gate" = success ]; then
             echo "#${n} was applied, so the next generation comes after its own."
-            echo "gen_from=tree" >> "$GITHUB_OUTPUT"
+            gens=""
+            for root in $ROOTS; do
+              g="$(gh api "repos/femiwiki/infra/contents/${root}/locals.tf?ref=bump-femiwiki-image" \
+                     --jq .content | base64 -d \
+                     | grep -oE 'fastcgi_generation = [0-9]+' | grep -oE '[0-9]+$')"
+              gens="$gens ${root}:${g}"
+            done
+            echo "Running generations: ${gens# }"
+            echo "gens=${gens# }" >> "$GITHUB_OUTPUT"
           else
             echo "#${n} was not applied, so the next generation comes after main's."
           fi
           gh api -H 'Accept: application/vnd.github.diff' \
             repos/femiwiki/infra/compare/main...bump-femiwiki-image \
             > "${RUNNER_TEMP}/bump-branch.patch"
+          # Only hand-written commits matter here now; the image tag is
+          # overwritten below and the generations come from the branch itself.
+          # A branch that no longer applies onto main is dropped rather than
+          # failing the build, which is what left #894 conflicting all morning.
           if [ -s "${RUNNER_TEMP}/bump-branch.patch" ]; then
-            git -C infra apply "${RUNNER_TEMP}/bump-branch.patch"
+            if ! git -C infra apply --3way "${RUNNER_TEMP}/bump-branch.patch"; then
+              git -C infra checkout -- .
+              git -C infra clean -fd
+              echo "::warning::femiwiki/infra#${n} does not apply onto main, so it is rebuilt from main and anything hand-written on it is dropped."
+            fi
           fi
       - name: Bump the image tag and the fastcgi generation
         working-directory: infra
         env:
           VERSION: ${{ steps.version.outputs.version }}
-          GEN_FROM: ${{ steps.carry.outputs.gen_from }}
+          GENS: ${{ steps.carry.outputs.gens }}
           ROOTS: ${{ steps.roots.outputs.roots }}
         run: |
           # Every root, each with its own generation: they diverged while only
@@ -326,13 +346,18 @@ jobs:
             sed -i -E "s|(ghcr\.io/femiwiki/femiwiki:)[^\"]+|\1${VERSION}|g" "$root/container.tf"
             # The running generation is main's, unless the open bump pull
             # request was applied: a bump is applied before it merges, so main
-            # then still holds the one before the running container.
-            if [ "$GEN_FROM" = tree ]; then
-              LOCALS="$(cat "$root/locals.tf")"
-            else
-              LOCALS="$(git show "HEAD:$root/locals.tf")"
+            # then still holds the one before the running container, and the
+            # carry step read the running number off the branch.
+            GEN=""
+            for pair in $GENS; do
+              if [ "${pair%%:*}" = "$root" ]; then
+                GEN="${pair##*:}"
+              fi
+            done
+            if [ -z "$GEN" ]; then
+              GEN="$(git show "HEAD:$root/locals.tf" \
+                     | grep -oE 'fastcgi_generation = [0-9]+' | grep -oE '[0-9]+$')"
             fi
-            GEN="$(printf '%s' "$LOCALS" | grep -oE 'fastcgi_generation = [0-9]+' | grep -oE '[0-9]+$')"
             sed -i -E "s|(fastcgi_generation = )[0-9]+|\1$((GEN + 1))|" "$root/locals.tf"
           done
           git diff --stat
