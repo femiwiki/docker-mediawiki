@@ -178,6 +178,12 @@ $wgParserCacheType = $fwCacheType( 'FW_PARSER_CACHE', CACHE_MEMCACHED );
 $wgMessageCacheType = $fwCacheType( 'FW_MESSAGE_CACHE', CACHE_MEMCACHED );
 $wgMemCachedServers = explode( ',', getenv( 'WG_MEMCACHED_SERVERS' ) );
 
+// Rendered HTML names the uploads bucket, which moved to Seoul at
+// 2026-09-26T18:19Z, so anything cached before then still points at the Tokyo
+// buckets femiwiki/femiwiki#489 wants to delete. purgeParserCache.php cannot
+// do this: it wants SqlBagOStuff and this cache is memcached.
+$wgCacheEpoch = '20260926190000';
+
 $wgMWLoggerDefaultSpi = [
 	'class' => '\\MediaWiki\\Logger\\MonologSpi',
 	'args' => [ [
