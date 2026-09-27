@@ -67,6 +67,10 @@ RUN mkdir -p /srv/fcgi-check &&\
     curl -fSL "$BASE/AdoyFastCgiClient.php" -o /srv/fcgi-check/AdoyFastCgiClient.php &&\
     curl -fSL "$BASE/fcgi-probe.php" -o /srv/fcgi-check/fcgi-probe.php
 
+# Beside fcgi-probe.php and so outside /srv/femiwiki.com: Caddy resolves paths
+# under the site root, which leaves the probe pool as the only caller.
+COPY databasez.php /srv/fcgi-check/
+
 # Reads secrets from SSM Parameter Store at start when SSM_SECRETS is set; see run.
 ARG TARGETARCH
 ARG CHAMBER_VERSION=v3.1.5
@@ -99,5 +103,5 @@ EXPOSE 443
 EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
-COPY caddy-warmup.php warm-up.php db-probe.php /a/
+COPY caddy-warmup.php warm-up.php databasez-probe.php /a/
 CMD ["/usr/local/bin/run"]
