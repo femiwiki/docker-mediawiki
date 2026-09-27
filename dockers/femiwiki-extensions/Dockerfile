@@ -7,7 +7,7 @@
 FROM composer:2.10.3
 
 # How many extensions to fetch at once; empty means one per CPU
-ARG INSTALL_JOBS=
+ARG INSTALL_JOBS=8
 
 COPY extension-installer/install_extensions.php extension-installer/extensions.json /
 RUN INSTALL_JOBS="${INSTALL_JOBS}" php /install_extensions.php
