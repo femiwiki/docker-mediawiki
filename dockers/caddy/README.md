@@ -2,6 +2,10 @@
 
 Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 
+## v1.6.2
+
+- Ship only the binary. The image carried the Go toolchain it was built with, 2.84 GB for a 95 MB `caddy`; a final stage brings it to about 140 MB. The binary and its plugins are unchanged.
+
 ## v1.6.1
 
 - Pin caddy-mwcache to a commit of its `main`, [376c535](https://github.com/femiwiki/caddy-mwcache/commit/376c5358d670eb817bdd4d31086d14f8dddfad2c), instead of the v0.3.0 tag. Its Go code is the same as v0.3.0.
