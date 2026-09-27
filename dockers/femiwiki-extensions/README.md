@@ -2,6 +2,12 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.7.1
+
+- Install UnifiedExtensionForFemiwiki from a commit of its `main`, listed under
+  `in-house` in `extensions.json`, instead of the v5.0.0 source archive. It
+  gains translations for Magahi and Slovak.
+
 ## v2.7.0
 
 - Install the Femiwiki skin from a commit of FemiwikiSkin `main`, listed under
