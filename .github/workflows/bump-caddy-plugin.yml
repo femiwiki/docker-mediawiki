@@ -94,6 +94,7 @@ jobs:
           application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
       - name: Create Pull Request
+        id: create-pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
@@ -101,3 +102,10 @@ jobs:
           title: ${{ steps.title.outputs.title }}
           branch: bump-${{ steps.bump.outputs.plugin }}
           body-path: ${{ runner.temp }}/body.md
+
+      - name: Enable Pull Request Automerge
+        if: steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: gh pr merge --squash --auto "$PR_NUMBER"
