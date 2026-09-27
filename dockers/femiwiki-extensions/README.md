@@ -2,6 +2,18 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.6.0
+
+- Pin every WMF extension and skin to a commit of `WMF-branch` in
+  `extensions.json`, instead of taking whatever the branch head is when the
+  image builds. Each is fetched at that commit from its GitHub mirror, or from
+  Gerrit when the mirror lacks it, with its submodules; Phabricator submodules
+  come from the GitHub repositories listed in `submodule-mirrors`. Composer
+  runs where extdist would have run it, and `gitinfo.json` and `version` are
+  written as extdist writes them.
+- Stop installing Graph. extdist no longer serves it, so the image already held
+  an empty directory, and LocalSettings.php does not load it.
+
 ## v2.5.0
 
 - drop Extension:Lockdown
