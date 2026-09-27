@@ -25,7 +25,8 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      - name: Resolve the bump and collect the upstream changes for the pull request body
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         id: vars
         env:
           CLIENT_PAYLOAD_EXTENSION: ${{ github.event.client_payload.extension }}
@@ -33,81 +34,89 @@ jobs:
           CLIENT_PAYLOAD_SHA: ${{ github.event.client_payload.sha }}
           INPUT_EXT: ${{ github.event.inputs.ext }}
           INPUT_VER: ${{ github.event.inputs.ver }}
+          BODY: ${{ runner.temp }}/body.md
         with:
           script: |
-            return {
-              ext: process.env.CLIENT_PAYLOAD_EXTENSION || process.env.INPUT_EXT,
-              ver: process.env.CLIENT_PAYLOAD_SHA || process.env.CLIENT_PAYLOAD_VERSION || process.env.INPUT_VER,
+            const fs = require('fs');
+            const env = process.env;
+            const ext = env.CLIENT_PAYLOAD_EXTENSION || env.INPUT_EXT;
+            const ver = env.CLIENT_PAYLOAD_SHA || env.CLIENT_PAYLOAD_VERSION || env.INPUT_VER;
+            const json = JSON.parse(fs.readFileSync('dockers/femiwiki-extensions/extension-installer/extensions.json', 'utf8'));
+
+            let section, field, repo, old, now, message;
+            if (Object.hasOwn(json['in-house'], ext)) {
+              if (!/^[0-9a-f]{40}$/.test(ver)) {
+                core.setFailed(`${ext} is pinned by commit, so it takes a full commit hash, not ${ver}`);
+                return;
+              }
+              section = 'in-house';
+              field = 'commit';
+              repo = json['in-house'][ext].repository.replace(/^https:\/\/github\.com\//, '');
+              old = json['in-house'][ext].commit.slice(0, 7);
+              now = ver.slice(0, 7);
+              message = `Bump ${ext} to [${now}](https://github.com/${repo}/commit/${ver})`;
+            } else if (Object.hasOwn(json['non-WMF'], ext)) {
+              section = 'non-WMF';
+              field = 'version';
+              old = json['non-WMF'][ext].version;
+              repo = json['non-WMF'][ext].template.match(/github\.com\/([^/]+\/[^/]+)/)?.[1];
+              if (!repo) {
+                core.setFailed(`the template of ${ext} is not on GitHub, so there is nothing to compare`);
+                return;
+              }
+              now = ver;
+              message = `Bump ${ext} to ${ver}`;
+            } else {
+              core.setFailed(`no extension named ${ext} under in-house or non-WMF in extensions.json`);
+              return;
             }
 
-      - name: Collect the upstream changes for the pull request body
-        id: upstream
-        env:
-          GH_TOKEN: ${{ github.token }}
-          EXT: ${{ fromJSON(steps.vars.outputs.result).ext }}
-          VER: ${{ fromJSON(steps.vars.outputs.result).ver }}
-          BODY: ${{ runner.temp }}/body.md
-        run: |
-          json=dockers/femiwiki-extensions/extension-installer/extensions.json
-          if jq -e --arg ext "$EXT" '.["in-house"] | has($ext)' "$json" > /dev/null; then
-            [[ "$VER" =~ ^[0-9a-f]{40}$ ]] \
-              || { echo "::error::$EXT is pinned by commit, so it takes a full commit hash, not $VER"; exit 1; }
-            section=in-house
-            field=commit
-            repo=$(jq -r --arg ext "$EXT" '.["in-house"][$ext].repository' "$json" | sed 's#^https://github.com/##')
-            full_old=$(jq -r --arg ext "$EXT" '.["in-house"][$ext].commit' "$json")
-            old=${full_old:0:7}
-            new=${VER:0:7}
-            message="Bump $EXT to [$new](https://github.com/$repo/commit/$VER)"
-          else
-            section=non-WMF
-            field=version
-            old=$(jq -r --arg ext "$EXT" '.["non-WMF"][$ext].version' "$json")
-            repo=$(jq -r --arg ext "$EXT" '.["non-WMF"][$ext].template' "$json" | grep -oE 'github\.com/[^/]+/[^/]+' | cut -d/ -f2-)
-            new=$VER
-            message="Bump $EXT to $VER"
-          fi
-          # Notes of another organisation go in a code fence so their links create no back-references
-          fence=''
-          [ "${repo%%/*}" = femiwiki ] || fence='````'
-          {
-            echo "[$old → $new](https://github.com/$repo/compare/$old...$new)"
-            echo
-            echo "$fence"
-            if notes=$(gh release view "$VER" --repo "$repo" --json body --jq .body) && [ -n "$notes" ]; then
-              echo "$notes"
-            else
-              gh api "repos/$repo/compare/$old...$new" --jq '.commits[] | "- " + (.commit.message | split("\n")[0])' \
-                | { grep -vE '^- (Localisation updates|build:)' || true; }
-            fi
-            echo "$fence"
-          } > "$BODY"
-          cat "$BODY"
-          {
-            echo "repo=$repo"
-            echo "old=$old"
-            echo "new=$new"
-            echo "section=$section"
-            echo "field=$field"
-            echo "message=$message"
-          } >> "$GITHUB_OUTPUT"
+            // The release notes if the new version has a release, else the commit subjects
+            const [owner, name] = repo.split('/');
+            let notes = '';
+            try {
+              notes = (await github.rest.repos.getReleaseByTag({ owner, repo: name, tag: ver })).data.body ?? '';
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+            if (!notes) {
+              const { data } = await github.rest.repos.compareCommitsWithBasehead({ owner, repo: name, basehead: `${old}...${now}` });
+              notes = data.commits
+                .map(c => `- ${c.commit.message.split('\n')[0]}`)
+                .filter(line => !/^- (Localisation updates|build:)/.test(line))
+                .join('\n');
+            }
+            // Notes of another organisation go in a code fence so their links create no back-references
+            const fence = owner === 'femiwiki' ? '' : '````';
+            const body = `[${old} → ${now}](https://github.com/${repo}/compare/${old}...${now})\n\n${fence}\n${notes}\n${fence}\n`;
+            fs.writeFileSync(env.BODY, body);
+            core.info(body);
+
+            core.setOutput('ext', ext);
+            core.setOutput('ver', ver);
+            core.setOutput('repo', repo);
+            core.setOutput('old', old);
+            core.setOutput('new', now);
+            core.setOutput('section', section);
+            core.setOutput('field', field);
+            core.setOutput('message', message);
 
       - uses: ./.github/actions/release-title
         id: title
         with:
-          repo: ${{ steps.upstream.outputs.repo }}
-          old: ${{ steps.upstream.outputs.old }}
-          ver: ${{ steps.upstream.outputs.new }}
+          repo: ${{ steps.vars.outputs.repo }}
+          old: ${{ steps.vars.outputs.old }}
+          ver: ${{ steps.vars.outputs.new }}
           scope: femiwiki-extensions
-          name: ${{ fromJSON(steps.vars.outputs.result).ext }}
+          name: ${{ steps.vars.outputs.ext }}
           body: ${{ runner.temp }}/body.md
 
       - name: Update extensions.json
         env:
-          EXT: ${{ fromJSON(steps.vars.outputs.result).ext }}
-          VER: ${{ fromJSON(steps.vars.outputs.result).ver }}
-          SECTION: ${{ steps.upstream.outputs.section }}
-          FIELD: ${{ steps.upstream.outputs.field }}
+          EXT: ${{ steps.vars.outputs.ext }}
+          VER: ${{ steps.vars.outputs.ver }}
+          SECTION: ${{ steps.vars.outputs.section }}
+          FIELD: ${{ steps.vars.outputs.field }}
         run: |
           json=dockers/femiwiki-extensions/extension-installer/extensions.json
           jq -e --arg ext "$EXT" --arg section "$SECTION" '.[$section] | has($ext)' "$json" > /dev/null \
@@ -121,7 +130,7 @@ jobs:
         with:
           image: femiwiki-extensions
           level: ${{ steps.title.outputs.level }}
-          message: ${{ steps.upstream.outputs.message }}
+          message: ${{ steps.vars.outputs.message }}
 
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
@@ -137,7 +146,7 @@ jobs:
           token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: ${{ steps.title.outputs.title }}
           title: ${{ steps.title.outputs.title }}
-          branch: bump-${{fromJSON(steps.vars.outputs.result).ext}}
+          branch: bump-${{steps.vars.outputs.ext}}
           body-path: ${{ runner.temp }}/body.md
 
       - name: Enable Pull Request Automerge
