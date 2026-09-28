@@ -1,13 +1,7 @@
 <?php
-// Install the extensions and skins listed in extensions.json under /mediawiki.
-//
-// Usage: php install_extensions.php
-//
-// The WMF ones are fetched at their pinned commit from the GitHub mirror, or
-// from Gerrit when the mirror lacks it, with their submodules, and given what
-// extdist would have added: composer's vendor/, gitinfo.json and version. Our
-// own are fetched at their pinned commit and given their runtime npm packages.
-// The rest are release tarballs. Each is one child process, a few at a time.
+// Installs what extensions.json lists under /mediawiki, a few child processes
+// at a time: WMF ones at their pinned commit with what extdist would add, ours
+// at their pinned commit with their npm packages, the rest from tarballs.
 
 use Symfony\Component\Process\Process;
 

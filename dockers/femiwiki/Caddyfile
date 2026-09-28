@@ -41,13 +41,10 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		health_timeout 10s
 		health_fails 3
 	}
-	# When no port passes /healthz.php, send reads to any php-fpm that answers
-	# instead of a 503. A deploy drains one port only once the other is
-	# healthy, so it never gets here; a drain file left behind, as on
-	# 2026-09-21, does. Anything with a body still gets the 503, because the
-	# proxy above has already read it. Caddy hands this route the original
-	# URI, so the rewrites below are repeated. The fallback field keeps these
-	# out of the Site down alert's count of good responses.
+	# When no port passes /healthz.php (a drain file left behind, as on
+	# 2026-09-21), send reads to any php-fpm that answers instead of a 503.
+	# This route gets the original URI, so the rewrites are repeated; the
+	# fallback field keeps these out of the Site down alert's good responses.
 	handle_errors 503 {
 		@read method GET HEAD
 		handle @read {
@@ -72,13 +69,10 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	file_server
 	encode gzip
 	mwcache {
-		# A budget in bytes rather than a count of entries. 64 MiB holds about
-		# 1,400 responses of the size this wiki serves, well above the 595
-		# distinct addresses an ordinary twenty minutes asks for, and leaves
-		# room under this container's limit. num_counters wants to be about ten
-		# times the entries the budget holds. ignore_internal_cost is gone with
-		# the count: ristretto's per entry overhead is memory really used, so a
-		# budget in bytes wants it counted.
+		# A budget in bytes: 64 MiB holds about 1,400 responses, well above the
+		# 595 addresses an ordinary twenty minutes asks for. num_counters is
+		# about ten times that, and ristretto's per-entry overhead is counted
+		# because it is memory really used.
 		ristretto {
 			num_counters {$FW_MWCACHE_NUM_COUNTERS:14000}
 			max_cost_bytes {$FW_MWCACHE_MAX_COST_BYTES:67108864}
@@ -100,11 +94,9 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		X-Frame-Options "DENY"
 	}
 	log {
-		# Two thirds of a line used to be headers that are the same on every
-		# request: the security headers this block sets, Caddy's Via and Alt-Svc,
-		# PHP's X-Powered-By, a Date that ts already carries, and a TLS handshake
-		# that never varies. Only the fields that tell one request from another
-		# are left.
+		# Drop the fields that are the same on every request (the headers set
+		# above, Via, Alt-Svc, X-Powered-By, Date and the TLS handshake), which
+		# were two thirds of each line.
 		format filter {
 			wrap json
 			fields {
@@ -133,11 +125,9 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	respond /mw-config* 404
 }
 
-# php-fpm's status page and opcache for Alloy on the host. infra alternates
-# every port here per generation, the way it does the probe port, so the
-# previous container cannot answer for the new one. The status page has a port
-# of its own, so it answers while www is saturated; the opcache report is a
-# script and needs a www worker. /srv/metrics is outside the public site's root.
+# php-fpm's status page and opcache report for Alloy on the host, on ports
+# infra alternates per generation like the probe port. The status page has a
+# port of its own so it answers while www is saturated.
 http://127.0.0.1:{$FW_METRICS_PORT} {
 	bind 127.0.0.1
 

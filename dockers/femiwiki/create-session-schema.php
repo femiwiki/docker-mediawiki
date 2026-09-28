@@ -1,12 +1,7 @@
 <?php
-// Creates the schema the session store uses and its objectcache table, taking
-// the DDL from MediaWiki's own generated file rather than a copy of it, so it
-// follows the version in the image. Idempotent.
-//
+// Creates the session store's schema and objectcache table from MediaWiki's
+// own DDL, idempotently. Run by hand; see femiwiki/femiwiki#645.
 //   php create-session-schema.php <schema> <host[:port]> <user> <password>
-//
-// Nothing runs this automatically: the store is inert until WG_SESSION_DB_NAME
-// is set, and setting it is a deploy decision. See femiwiki/femiwiki#645.
 [ , $name, $server, $user, $password ] = $argv + [ '', '', '', '', '' ];
 if ( $name === '' || $server === '' ) {
 	fwrite( STDERR, "usage: create-session-schema.php <schema> <host[:port]> <user> <password>\n" );

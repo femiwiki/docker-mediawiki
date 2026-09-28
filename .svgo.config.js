@@ -15,11 +15,8 @@ module.exports = {
           removeDesc: false,
           removeTitle: false,
           removeViewBox: false,
-          // If the SVG doesn't start with an XML declaration, then its MIME type will
-          // be detected as "text/plain" rather than "image/svg+xml" by libmagic and,
-          // consequently, MediaWiki's CSSMin CSS minifier. libmagic's default database
-          // currently requires that SVGs contain an XML declaration:
-          // https://github.com/threatstack/libmagic/blob/master/magic/Magdir/sgml#L5
+          // Keep the XML declaration: without it libmagic, and so MediaWiki's CSSMin,
+          // reads an SVG as text/plain rather than image/svg+xml.
           removeXMLProcInst: false,
           sortAttrs: true,
         },
@@ -27,12 +24,8 @@ module.exports = {
     },
     'removeRasterImages',
   ],
-  // Configure the indent (default 4 spaces) used by `--pretty` here:
-  // @see https://github.com/svg/svgo/blob/master/lib/svgo/js2svg.js#L6 for more config options
-  //
-  // Unfortunately EOL cannot be configured, SVGO uses the platform's EOL marker.
-  // On non-unix systems the linebreaks will be normalized to LF (unix) only at git commit,
-  // assuming `core.autocrlf` is 'true' (default) or 'input'.
+  // The indent `--pretty` uses. SVGO takes the platform's EOL; git normalises it
+  // to LF on commit when core.autocrlf is true or input.
   js2svg: {
     indent: '\t',
     pretty: true,

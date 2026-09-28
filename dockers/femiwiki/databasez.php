@@ -1,14 +1,7 @@
 <?php
-// Fails while this container cannot reach the database, so a container whose
-// WG_DB_SERVER is wrong stops reporting healthy: it used to satisfy the docker
-// provider's wait = true, which then destroyed the generation that worked. See
-// femiwiki/infra#880.
-//
-// Not part of /healthz.php, which Caddy serves to the public and no rate-limit
-// zone matches, and not under /srv/femiwiki.com at all, so the only caller is
-// the probe pool on 127.0.0.1. Run inside php-fpm because WG_DB_PASSWORD is
-// exported by run after it starts and so is absent from the healthcheck's own
-// environment; the probe pool carries it because of clear_env = no.
+// Fails while the database is unreachable, so a container with a wrong
+// WG_DB_SERVER never reports healthy (femiwiki/infra#880). Served only to the
+// probe pool on 127.0.0.1, which has WG_DB_PASSWORD through clear_env = no.
 
 // Returns null when the database answered, the reason otherwise.
 $reach = static function (): ?string {
@@ -68,11 +61,9 @@ if ( $reason === null ) {
 // The log, not the body: mysqli names the account and the host that was refused.
 error_log( 'databasez: database unreachable: ' . $reason );
 
-// Bounded, because a container that first starts while the database is away
-// would otherwise never pass and autoheal would restart it every few minutes,
-// where with no check at all it would have served the moment the database came
-// back. 900s outlasts the docker provider's wait_timeout of 600s, so an apply
-// against a wrong address still fails rather than draining the good generation.
+// Bounded, so a container started while the database is away is not restarted
+// by autoheal forever. 900s outlasts the provider's wait_timeout of 600s, so an
+// apply against a wrong address still fails.
 if ( file_exists( $failing ) ) {
 	$first = filemtime( $failing );
 } else {
