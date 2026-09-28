@@ -1,0 +1,45 @@
+<?php
+// Creates the schema the session store uses and its objectcache table, taking
+// the DDL from MediaWiki's own generated file rather than a copy of it, so it
+// follows the version in the image. Idempotent.
+//
+//   php create-session-schema.php <schema> <host[:port]> <user> <password>
+//
+// Nothing runs this automatically: the store is inert until WG_SESSION_DB_NAME
+// is set, and setting it is a deploy decision. See femiwiki/femiwiki#645.
+[ , $name, $server, $user, $password ] = $argv + [ '', '', '', '', '' ];
+if ( $name === '' || $server === '' ) {
+	fwrite( STDERR, "usage: create-session-schema.php <schema> <host[:port]> <user> <password>\n" );
+	exit( 1 );
+}
+$port = 3306;
+$colon = strrpos( $server, ':' );
+if ( $colon !== false && ctype_digit( substr( $server, $colon + 1 ) ) ) {
+	$port = (int)substr( $server, $colon + 1 );
+	$server = substr( $server, 0, $colon );
+}
+
+$sql = file_get_contents( '/srv/femiwiki.com/maintenance/tables-generated.sql' );
+if ( !preg_match( '/CREATE TABLE [^\n]*objectcache \(.*?\n\)[^\n]*;/s', $sql, $m ) ) {
+	fwrite( STDERR, "objectcache is not in tables-generated.sql\n" );
+	exit( 1 );
+}
+$ddl = strtr( $m[0], [
+	'/*_*/' => '',
+	'CREATE TABLE ' => 'CREATE TABLE IF NOT EXISTS ',
+	'/*$wgDBTableOptions*/' => 'ENGINE=InnoDB, DEFAULT CHARSET=binary, ROW_FORMAT=COMPRESSED',
+] );
+
+mysqli_report( MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT );
+$c = mysqli_init();
+$c->options( MYSQLI_SET_CHARSET_NAME, 'binary' );
+$c->real_connect( $server, $user, $password, '', $port );
+$c->query( sprintf( 'CREATE DATABASE IF NOT EXISTS `%s`', str_replace( '`', '``', $name ) ) );
+$c->select_db( $name );
+$c->query( rtrim( $ddl, ';' ) );
+$r = $c->query( 'SHOW TABLES' );
+$tables = [];
+foreach ( $r as $row ) {
+	$tables[] = reset( $row );
+}
+printf( "%s holds: %s\n", $name, implode( ', ', $tables ) );

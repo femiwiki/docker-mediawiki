@@ -186,6 +186,35 @@ $wgMemCachedServers = explode( ',', getenv( 'WG_MEMCACHED_SERVERS' ) );
 // is shown to readers, so it is text rather than a flag.
 $wgReadOnly = getenv( 'WG_READ_ONLY' ) ?: false;
 
+// The session store on a connection of its own, when WG_SESSION_DB_NAME names a
+// schema. $wgReadOnly puts its reason on the main load balancer, so a write
+// through it throws DBReadOnlyError, and the session store swallows that: a
+// log-in during the read-only window would look like it worked and be gone on
+// the next page. A servers entry opens a plain connection instead, which
+// carries no read-only reason, and both versions can share the schema across
+// the swap. See femiwiki/femiwiki#645.
+$fwSessionDb = getenv( 'WG_SESSION_DB_NAME' );
+if ( $fwSessionDb ) {
+	// 1.46 moves this class into a namespace, and both versions read this file
+	// during the window, so the name is resolved rather than written out.
+	$fwSqlBagOStuff = class_exists( 'MediaWiki\\ObjectCache\\SqlBagOStuff' )
+		? 'MediaWiki\\ObjectCache\\SqlBagOStuff'
+		: 'SqlBagOStuff';
+	$wgObjectCaches['femiwiki-sessions'] = [
+		'class' => $fwSqlBagOStuff,
+		// host carries the port; MediaWiki splits it off with IPUtils.
+		'servers' => [ [
+			'type' => 'mysql',
+			'host' => $wgDBserver,
+			'user' => $wgDBuser,
+			'password' => $wgDBpassword,
+			'dbname' => $fwSessionDb,
+			'flags' => 0,
+		] ],
+	];
+	$wgSessionCacheType = 'femiwiki-sessions';
+}
+
 // Rendered HTML names the uploads bucket, which moved to Seoul at
 // 2026-09-26T18:19Z, so anything cached before then still points at the Tokyo
 // buckets femiwiki/femiwiki#489 wants to delete. purgeParserCache.php cannot
