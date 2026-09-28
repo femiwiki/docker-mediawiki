@@ -121,3 +121,29 @@ jobs:
         with:
           reporter: github-check
           fail_level: error
+
+  long-comments:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Install Opengrep
+        env:
+          VERSION: v1.30.0
+          SHA256: 35779bdd72e92129c8df2a77f0c55e8c08356801ea92591ef32108d6b28d564c
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/opengrep" \
+            "https://github.com/opengrep/opengrep/releases/download/$VERSION/opengrep_manylinux_x86"
+          echo "$SHA256  $RUNNER_TEMP/opengrep" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/opengrep"
+      # Only blocks this pull request adds fail; the ones already on the base stay
+      - env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          "$RUNNER_TEMP/opengrep" scan --config .github/long-comments.yml \
+            --baseline-commit "$BASE" --error .

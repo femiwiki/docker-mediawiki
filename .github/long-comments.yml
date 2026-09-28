@@ -1,0 +1,8 @@
+rules:
+  - id: long-comment-block
+    languages: [regex]
+    pattern-regex: '(?m)(^[ \t]*(//|#)[^\n]*\n){5,}'
+    message: >-
+      Five or more comment lines in a row. Keep the comment to what a reader of
+      this line needs, and move the rest to the issue or pull request.
+    severity: WARNING
