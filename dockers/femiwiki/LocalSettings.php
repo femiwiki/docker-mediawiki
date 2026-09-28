@@ -82,7 +82,10 @@ $wgDBserver = getenv( 'WG_DB_SERVER' ) ?: '';
 $wgDBuser = getenv( 'WG_DB_USER' ) ?: '';
 $wgDBpassword = getenv( 'WG_DB_PASSWORD' ) ?:
 	( getenv( 'DB_PASSWORD_FILE' ) ? trim( file_get_contents( getenv( 'DB_PASSWORD_FILE' ) ) ) : '' );
-$wgDBname = 'femiwiki';
+// The upgrade to 1.46 runs update.php against a copy of the schema while 1.43
+// still serves, so which schema this container uses has to be a deployment
+// decision. See femiwiki/femiwiki#645.
+$wgDBname = getenv( 'WG_DB_NAME' ) ?: 'femiwiki';
 
 // Site secret key
 $wgSecretKey = getenv( 'WG_SECRET_KEY' ) ?: '';
@@ -177,6 +180,11 @@ $wgSessionCacheType = $fwCacheType( 'FW_SESSION_CACHE', CACHE_DB );
 $wgParserCacheType = $fwCacheType( 'FW_PARSER_CACHE', CACHE_MEMCACHED );
 $wgMessageCacheType = $fwCacheType( 'FW_MESSAGE_CACHE', CACHE_MEMCACHED );
 $wgMemCachedServers = explode( ',', getenv( 'WG_MEMCACHED_SERVERS' ) );
+
+// A reason turns the wiki read-only; empty leaves it writable. The window in
+// femiwiki/femiwiki#645 needs this set without an image build, and the reason
+// is shown to readers, so it is text rather than a flag.
+$wgReadOnly = getenv( 'WG_READ_ONLY' ) ?: false;
 
 // Rendered HTML names the uploads bucket, which moved to Seoul at
 // 2026-09-26T18:19Z, so anything cached before then still points at the Tokyo

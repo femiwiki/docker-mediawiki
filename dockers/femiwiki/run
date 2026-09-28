@@ -29,7 +29,7 @@ if [ -z "${MEDIAWIKI_SKIP_INSTALL:-}" ]; then
     --lang ko \
     --scriptpath '/w' \
     --dbtype mysql \
-    --dbname femiwiki \
+    --dbname "${WG_DB_NAME:-femiwiki}" \
     --dbserver "${WG_DB_SERVER}" \
     --dbuser "${WG_DB_USER}" \
     --dbpass "${WG_DB_PASSWORD}" \
