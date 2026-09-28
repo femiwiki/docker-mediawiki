@@ -103,5 +103,5 @@ EXPOSE 443
 EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
-COPY caddy-warmup.php warm-up.php databasez-probe.php /a/
+COPY caddy-warmup.php warm-up.php databasez-probe.php create-session-schema.php /a/
 CMD ["/usr/local/bin/run"]
