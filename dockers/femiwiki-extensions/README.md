@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.7.3
+
+- shorten every comment block of five or more lines
+
 ## v2.7.2
 
 - Bump Femiwiki to [c880abf](https://github.com/femiwiki/FemiwikiSkin/commit/c880abf9879b1f7d7c44c674907bba57d5700221)

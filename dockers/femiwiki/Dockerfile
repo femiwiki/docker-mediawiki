@@ -1,11 +1,5 @@
-# 파일 목록:
-#   /usr/local/etc/php     PHP 설정
-#   /srv/femiwiki.com      미디어위키 소스코드 및 확장들
-#   /usr/local/{bin,sbin}  임의로 설치한 실행파일들
-#   /tmp/cache             캐시 디렉토리
-#   /var/log/cron.log      크론 로그
-#   /tini                  tini
-#
+# PHP 설정은 /usr/local/etc/php, 미디어위키와 확장은 /srv/femiwiki.com,
+# 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 캐시는 /tmp/cache에 있습니다.
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.6.2 AS caddy
 
 FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2.7.2 AS extensions
@@ -54,13 +48,8 @@ COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/a/"]
 
 COPY --chown=www-data LocalSettings.php /a/
 
-# php-fpm liveness probe, from Wikimedia's production images. Pinned to the
-# same commit the deploy already uses, so baking it in changes no behaviour -
-# bumping it upstream is a separate, visible change.
-#
-# It is baked rather than fetched at runtime because the container healthcheck
-# currently curls these from raw.githubusercontent.com with retries=0, so a
-# fresh container restart-loops whenever that fetch fails.
+# php-fpm liveness probe from Wikimedia's production images, baked in rather
+# than fetched by the healthcheck, whose failed fetch restart-looped containers.
 ARG WMF_PRODUCTION_IMAGES=ad68c7cb62e4e01436ab3a34fb961fe8034c2cce
 RUN mkdir -p /srv/fcgi-check &&\
     BASE="https://github.com/wikimedia/operations-docker-images-production-images/raw/${WMF_PRODUCTION_IMAGES}/images/php/common/fpm/live-test" &&\

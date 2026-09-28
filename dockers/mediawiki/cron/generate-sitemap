@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# 주기적으로 실행해야하는 스크립트. 검색엔진이 사이트를 더 잘 크롤링하도록
-# 도와준다.
-#
-# Reference:
-#   https://www.mediawiki.org/wiki/Manual:GenerateSitemap.php
+# 검색엔진이 사이트를 더 잘 크롤링하도록 사이트맵을 주기적으로 만든다.
+# https://www.mediawiki.org/wiki/Manual:GenerateSitemap.php
 
 set -euo pipefail; IFS=$'\n\t'
 
@@ -17,12 +14,8 @@ php maintenance/generateSitemap.php \
   --skip-redirects \
   --compress=no
 
-# The crontab sends everything above to a file inside the container, so none of
-# it reaches the container's stdout and nothing outside can tell a run that
-# happened from one that did not. This one line goes to PID 1's stdout instead,
-# which is the container log and therefore Loki, so an alert can ask whether it
-# has appeared in the last eight hours. Redirecting all of cron's output there
-# would do the same and cost far more: these scripts are chatty and the log
-# plan is already alerted on. See femiwiki/femiwiki#593.
+# One line to PID 1's stdout, the container log that reaches Loki, so an alert
+# can tell whether a run happened; the rest stays in the cron log file.
+# See femiwiki/femiwiki#593.
 printf 'generate-sitemap: done, %s files\n' \
   "$(find sitemap -type f | wc -l)" > /proc/1/fd/1

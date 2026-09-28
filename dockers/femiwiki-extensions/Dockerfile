@@ -1,10 +1,6 @@
-#
-# 미디어위키 확장 설치 스테이지. 수많은 미디어위키 확장들을 병렬로 빠르게
-# 미리 다운받아 놓는다.
-#
-# The composer image carries PHP for the installer, composer for the
-# dependencies extdist would have bundled, and git and curl for the downloads.
-# npm installs the packages our skin loads at runtime.
+# 미디어위키 확장을 병렬로 미리 받아 두는 스테이지. composer 이미지에 설치기용
+# PHP, 의존성용 composer, 다운로드용 git과 curl이 있고, npm은 스킨이 쓰는
+# 패키지를 설치한다.
 FROM composer:2.10.3
 
 RUN apk add --no-cache npm

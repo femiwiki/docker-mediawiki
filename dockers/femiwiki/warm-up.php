@@ -24,13 +24,9 @@ const REQUEST = [
 	'HTTP_USER_AGENT' => 'femiwiki-warm-up',
 ];
 
-// What an anonymous reader reaches, asked the way Caddy passes it on: the
-// address bar shape /w/제목, which is what sends MediaWiki through its path
-// router. Every page here has to be one an anonymous reader may see: the
-// specials this wiki locks, Special:RecentChanges and Special:Search among
-// them, answer 302 to the login page and compile nothing past the redirect.
-// Titles are written as they read; the loop below percent encodes each path
-// segment, which is also what keeps the log lines legible.
+// Pages an anonymous reader may see, asked as /w/제목 the way Caddy passes them
+// on; a page that redirects to the login compiles nothing. The loop below
+// percent-encodes each title.
 const PAGES = [
 	[ 'index.php', '/w/페미위키:대문', '' ],
 	[ 'index.php', '/w/특수:로그인', '' ],

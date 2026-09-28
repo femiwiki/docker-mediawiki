@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
-# Print one ```wikitext block merging the release notes of the given pull requests.
-# A pull request's own ```wikitext lines are copied as they are, so the link to
-# where a change was first made survives every bump after it; one without a
-# block gives a line made from a feat, fix or perf title scoped to an image.
-#
-# Usage: release-notes.sh OWNER/REPO PR_NUMBER...
-# Environment: GH_TOKEN
+# Prints one ```wikitext block merging the pull requests' own blocks, or a line
+# from each feat, fix or perf title scoped to an image when there is none.
+# Usage: GH_TOKEN=... release-notes.sh OWNER/REPO PR_NUMBER...
 set -euo pipefail
 repo=$1
 shift

@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v3.5.1
+
+- shorten every comment block of five or more lines
+
 ## v3.5.0
 
 - say on stdout when the sitemap has been rebuilt

@@ -1,9 +1,7 @@
 <?php
 // Asks the probe pool to run databasez.php and fails unless it answers 200, so
-// the container healthcheck covers the database as well as php-fpm.
-//
-// fcgi-probe.php cannot: its SCRIPT_FILENAME is fixed at /var/www/livez, which
-// answers for php-fpm alone. See femiwiki/infra#880.
+// the healthcheck covers the database too; fcgi-probe.php only reaches
+// /var/www/livez. See femiwiki/infra#880.
 require '/srv/fcgi-check/AdoyFastCgiClient.php';
 
 [ $host, $port ] = explode( ':', getenv( 'FCGI_URL' ) ?: '127.0.0.1:9100' );
