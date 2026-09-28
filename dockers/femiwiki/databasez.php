@@ -35,8 +35,9 @@ $reach = static function (): ?string {
 		$connection->options( MYSQLI_OPT_CONNECT_TIMEOUT, 3 );
 		// The charset the application pins, so this is the path it uses.
 		$connection->options( MYSQLI_SET_CHARSET_NAME, 'binary' );
-		// The name is fixed in LocalSettings.php, not configurable.
-		$connection->real_connect( $server, $user, $password, 'femiwiki', $port );
+		// The same schema LocalSettings.php uses, so the check follows a
+		// container pointed at a copy rather than at the live one.
+		$connection->real_connect( $server, $user, $password, getenv( 'WG_DB_NAME' ) ?: 'femiwiki', $port );
 		$connection->query( 'SELECT 1' );
 		$connection->close();
 	} catch ( mysqli_sql_exception $e ) {
