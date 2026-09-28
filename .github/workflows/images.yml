@@ -96,6 +96,7 @@ jobs:
     with:
       image: mediawiki
       downstream: femiwiki
+      automerge: true
     secrets:
       PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
