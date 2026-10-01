@@ -35,7 +35,7 @@ jobs:
       - name: Move each to the head of its branch
         env:
           VALUES: ${{ runner.temp }}/values.yml
-        run: updatecli pipeline apply --config updatecli/wmf-heads.yml --values "$VALUES"
+        run: updatecli pipeline apply --config updatecli/wmf-heads.yaml --values "$VALUES"
 
       - name: List the moved ones for the pull request body
         id: body

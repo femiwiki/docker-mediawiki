@@ -7,7 +7,7 @@
 
 ## Usage of Docker Image
 
-페미위키를 위한 [PHP-FPM] 서버이며 동일한 이미지로 [Caddy] 웹 서버를 실행할 수도 있습니다. 다음 예시 Compose file를 참고해 주세요. compose.yml에서 실행 가능한 개발용 전체 예시를 볼 수 있습니다.
+페미위키를 위한 [PHP-FPM] 서버이며 동일한 이미지로 [Caddy] 웹 서버를 실행할 수도 있습니다. 다음 예시 Compose file를 참고해 주세요. compose.yaml에서 실행 가능한 개발용 전체 예시를 볼 수 있습니다.
 
 ```yml
 fastcgi:
@@ -53,11 +53,11 @@ cp dockers/femiwiki/LocalSettings.php development/
 cp dockers/femiwiki/Hotfix.php development/
 
 # In case of Docker swarm
-docker stack deploy --prune -c compose.yml mediawiki
+docker stack deploy --prune -c compose.yaml mediawiki
 # If you want some tweaks
-docker stack deploy --prune -c compose.yml -c compose.override.yml mediawiki
+docker stack deploy --prune -c compose.yaml -c compose.override.yaml mediawiki
 # In case of Docker Compose
-docker compose -f compose.yml up
+docker compose -f compose.yaml up
 ```
 
 브라우저에서 [http://127.0.0.1:8080]을 방문할 수 있습니다.
