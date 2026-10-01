@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v2.7.4
+
+- Move 3 WMF extensions and skins with security fixes to the heads of `REL1_43`
+
 ## v2.7.3
 
 - shorten every comment block of five or more lines
