@@ -21,6 +21,7 @@ for n in "$@"; do
         type="${BASH_REMATCH[1]}"
         [[ " ${order[*]} " == *" ${type} "* ]] || order+=("$type")
       elif [[ "$line" == \** ]] && [ -n "$type" ]; then
+        [[ "$line" =~ \]$ ]] || line+=" [https://github.com/${repo}/pull/${n}]"
         lines[$type]+="${line}"$'\n'
       fi
     done <<< "$block"

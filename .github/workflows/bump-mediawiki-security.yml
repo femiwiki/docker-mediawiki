@@ -4,7 +4,7 @@ name: Submit PRs for MediaWiki security fixes
 # SECURITY open a pull request here
 on:
   schedule:
-    - cron: '23 0 * * 1' # any minute but :00, where GitHub delays or drops scheduled runs
+    - cron: '0 0 * * 1'
   workflow_dispatch:
 
 permissions: {}
