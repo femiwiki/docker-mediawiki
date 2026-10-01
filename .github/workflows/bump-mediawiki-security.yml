@@ -24,46 +24,65 @@ jobs:
         with:
           persist-credentials: false
 
+      - run: npm ci
+
       - name: Find a newer point release with security fixes
         id: check
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          GH_TOKEN: ${{ github.token }}
           BODY: ${{ runner.temp }}/body.md
-        run: |
-          set -euo pipefail
-          dockerfile=dockers/mediawiki/Dockerfile
-          cur=$(grep -oP '^ARG MEDIAWIKI_VERSION=\K\S+' "$dockerfile")
-          major=${cur%.*}
-          latest=$(gh api "repos/wikimedia/mediawiki/git/matching-refs/tags/${major}." --jq '.[].ref' \
-            | grep -oP 'refs/tags/\K[0-9.]+$' | sort -V | tail -n1)
-          if [ "$(printf '%s\n%s\n' "$cur" "$latest" | sort -V | tail -n1)" = "$cur" ]; then
-            echo "$cur is the latest $major release"
-            exit 0
-          fi
-          if ! curl -fsSI "https://releases.wikimedia.org/mediawiki/${major}/mediawiki-core-${latest}.tar.gz" > /dev/null; then
-            echo "$latest is tagged but its tarball is not published yet"
-            exit 0
-          fi
-          gh api -H 'Accept: application/vnd.github.raw' \
-            "repos/wikimedia/mediawiki/contents/RELEASE-NOTES-${major}?ref=${latest}" > "${RUNNER_TEMP}/notes"
-          security=$(awk -v stop="== MediaWiki ${cur} ==" '
-              $0 == stop { exit }
-              /^  / { line = line " " substr($0, 3); next }
-              { if (line) print line; line = $0 }
-              END { if (line) print line }' "${RUNNER_TEMP}/notes" \
-            | grep -E '^\* \(.*\) SECURITY:' || true)
-          if [ -z "$security" ]; then
-            echo "$latest has no security fixes since $cur"
-            exit 0
-          fi
-          sed -i -E "s/^(ARG MEDIAWIKI_VERSION=).*/\1${latest}/" "$dockerfile"
-          {
-            echo "Security fixes in [${latest}](https://github.com/wikimedia/mediawiki/blob/${latest}/RELEASE-NOTES-${major}) since ${cur}:"
-            echo
-            sed -E 's/^\* /- /' <<< "$security"
-          } > "$BODY"
-          cat "$BODY"
-          echo "ver=$latest" >> "$GITHUB_OUTPUT"
+        with:
+          script: |
+            const fs = require('fs');
+            const semver = require('semver');
+            const dockerfile = 'dockers/mediawiki/Dockerfile';
+            const text = fs.readFileSync(dockerfile, 'utf8');
+            const cur = text.match(/^ARG MEDIAWIKI_VERSION=(\S+)$/m)[1];
+            const major = cur.split('.').slice(0, 2).join('.');
+
+            const refs = await github.paginate(github.rest.git.listMatchingRefs, {
+              owner: 'wikimedia',
+              repo: 'mediawiki',
+              ref: `tags/${major}.`,
+            });
+            const tags = refs.map((r) => r.ref.replace('refs/tags/', ''));
+            const latest = semver.rsort(tags.filter((tag) => semver.valid(tag) && !semver.prerelease(tag)))[0];
+            if (!semver.gt(latest, cur)) {
+              core.info(`${cur} is the latest ${major} release`);
+              return;
+            }
+            const tarball = `https://releases.wikimedia.org/mediawiki/${major}/mediawiki-core-${latest}.tar.gz`;
+            if (!(await fetch(tarball, { method: 'HEAD' })).ok) {
+              core.info(`${latest} is tagged but its tarball is not published yet`);
+              return;
+            }
+
+            const { data: notes } = await github.rest.repos.getContent({
+              owner: 'wikimedia',
+              repo: 'mediawiki',
+              path: `RELEASE-NOTES-${major}`,
+              ref: latest,
+              mediaType: { format: 'raw' },
+            });
+            const security = notes
+              .split(`\n== MediaWiki ${cur} ==`)[0]
+              .replace(/\n  /g, ' ')
+              .split('\n')
+              .filter((line) => /^\* \(.*\) SECURITY:/.test(line));
+            if (security.length === 0) {
+              core.info(`${latest} has no security fixes since ${cur}`);
+              return;
+            }
+
+            fs.writeFileSync(dockerfile, text.replace(`ARG MEDIAWIKI_VERSION=${cur}`, `ARG MEDIAWIKI_VERSION=${latest}`));
+            const body = [
+              `Security fixes in [${latest}](https://github.com/wikimedia/mediawiki/blob/${latest}/RELEASE-NOTES-${major}) since ${cur}:`,
+              '',
+              ...security.map((line) => line.replace(/^\* /, '- ')),
+            ].join('\n');
+            fs.writeFileSync(process.env.BODY, body + '\n');
+            core.info(body);
+            core.setOutput('ver', latest);
 
       - name: Update README
         if: steps.check.outputs.ver != ''
@@ -81,6 +100,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.check.outputs.ver != ''
+        id: create-pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
@@ -88,6 +108,13 @@ jobs:
           title: 'build(mediawiki): bump MediaWiki to v${{ steps.check.outputs.ver }}'
           branch: bump-mediawiki-security
           body-path: ${{ runner.temp }}/body.md
+
+      - name: Enable Pull Request Automerge
+        if: steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: gh pr merge --squash --auto "$PR_NUMBER"
 
   wmf-extensions:
     runs-on: ubuntu-latest
@@ -101,46 +128,57 @@ jobs:
 
       - name: Move the extensions and skins that gained security fixes
         id: check
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          GH_TOKEN: ${{ github.token }}
           BODY: ${{ runner.temp }}/body.md
-        run: |
-          set -euo pipefail
-          json=dockers/femiwiki-extensions/extension-installer/extensions.json
-          branch=$(jq -r '.["WMF-branch"]' "$json")
-          moved="${RUNNER_TEMP}/moved.md"
-          : > "$moved"
-          jq -r '[["extension", "WMF-extensions"], ["skin", "WMF-skins"]][] as [$type, $key]
-            | .[$key] | to_entries[] | "\($type) \(.key) \(.value)"' "$json" \
-          | while read -r type name old; do
-            if ! compare=$(gh api "repos/wikimedia/mediawiki-${type}s-${name}/compare/${old}...${branch}"); then
-              echo "::warning::could not compare $name ${old:0:7}...${branch}"
-              continue
-            fi
-            [ "$(jq -r .ahead_by <<< "$compare")" = 0 ] && continue
-            new=$(jq -r '.commits[-1].sha' <<< "$compare")
-            subjects=$(jq -r '.commits[].commit.message | split("\n")[0]' <<< "$compare")
-            security=$(grep -E '^SECURITY:' <<< "$subjects" || true)
-            [ -z "$security" ] && continue
-            sed -i "s/\"${name}\": \"${old}\"/\"${name}\": \"${new}\"/" "$json"
-            echo "- [${name}](https://github.com/wikimedia/mediawiki-${type}s-${name}/compare/${old:0:7}...${new:0:7})" >> "$moved"
-            awk '{ print "  - " $0 }' <<< "$security" >> "$moved"
-          done
-          count=$(grep -c '^- ' "$moved" || true)
-          if [ "$count" = 0 ]; then
-            echo "No security fixes on $branch"
-            exit 0
-          fi
-          {
-            echo "Moves $count WMF extensions and skins with security fixes to the heads of \`$branch\`:"
-            echo
-            cat "$moved"
-          } > "$BODY"
-          cat "$BODY"
-          {
-            echo "count=$count"
-            echo "branch=$branch"
-          } >> "$GITHUB_OUTPUT"
+        with:
+          script: |
+            const fs = require('fs');
+            const json = 'dockers/femiwiki-extensions/extension-installer/extensions.json';
+            const config = JSON.parse(fs.readFileSync(json, 'utf8'));
+            const branch = config['WMF-branch'];
+            const moved = [];
+
+            for (const [type, key] of [['extension', 'WMF-extensions'], ['skin', 'WMF-skins']]) {
+              for (const [name, old] of Object.entries(config[key])) {
+                const repo = `mediawiki-${type}s-${name}`;
+                let data;
+                try {
+                  ({ data } = await github.rest.repos.compareCommits({ owner: 'wikimedia', repo, base: old, head: branch }));
+                } catch (error) {
+                  core.warning(`could not compare ${name} ${old.slice(0, 7)}...${branch}: ${error.message}`);
+                  continue;
+                }
+                const security = data.commits
+                  .map((c) => c.commit.message.split('\n')[0])
+                  .filter((subject) => subject.startsWith('SECURITY:'));
+                if (security.length === 0) {
+                  continue;
+                }
+                const head = data.commits.at(-1).sha;
+                config[key][name] = head;
+                moved.push(
+                  `- [${name}](https://github.com/wikimedia/${repo}/compare/${old.slice(0, 7)}...${head.slice(0, 7)})`,
+                  ...security.map((subject) => `  - ${subject}`),
+                );
+              }
+            }
+
+            const count = moved.filter((line) => line.startsWith('- ')).length;
+            if (count === 0) {
+              core.info(`No security fixes on ${branch}`);
+              return;
+            }
+            fs.writeFileSync(json, JSON.stringify(config, null, 2) + '\n');
+            const body = [
+              `Moves ${count} WMF extensions and skins with security fixes to the heads of \`${branch}\`:`,
+              '',
+              ...moved,
+            ].join('\n');
+            fs.writeFileSync(process.env.BODY, body + '\n');
+            core.info(body);
+            core.setOutput('count', count);
+            core.setOutput('branch', branch);
 
       - name: Update README
         if: steps.check.outputs.count != ''
@@ -158,6 +196,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.check.outputs.count != ''
+        id: create-pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
@@ -165,3 +204,10 @@ jobs:
           title: 'build(femiwiki-extensions): move the WMF extensions with security fixes to the heads of ${{ steps.check.outputs.branch }}'
           branch: bump-wmf-security
           body-path: ${{ runner.temp }}/body.md
+
+      - name: Enable Pull Request Automerge
+        if: steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: gh pr merge --squash --auto "$PR_NUMBER"
