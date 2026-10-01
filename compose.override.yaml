@@ -1,5 +1,5 @@
 # 스킨 등 개발할 때엔 아래 라인 중 필요한 것을 주석해제 후 다음과 같이 실행:
-#   docker stack deploy --prune -c compose.yml -c compose.override.yml mediawiki
+#   docker stack deploy --prune -c compose.yaml -c compose.override.yaml mediawiki
 # 혹은:
 #   docker compose up
 version: '3'
