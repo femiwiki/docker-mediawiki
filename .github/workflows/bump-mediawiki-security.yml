@@ -1,0 +1,167 @@
+name: Submit PRs for MediaWiki security fixes
+
+# Bug fixes wait for the monthly bumps; only releases and commits marked
+# SECURITY open a pull request here
+on:
+  schedule:
+    - cron: '23 */6 * * *' # any minute but :00, where GitHub delays or drops scheduled runs
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  mediawiki:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Find a newer point release with security fixes
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BODY: ${{ runner.temp }}/body.md
+        run: |
+          set -euo pipefail
+          dockerfile=dockers/mediawiki/Dockerfile
+          cur=$(grep -oP '^ARG MEDIAWIKI_VERSION=\K\S+' "$dockerfile")
+          major=${cur%.*}
+          latest=$(gh api "repos/wikimedia/mediawiki/git/matching-refs/tags/${major}." --jq '.[].ref' \
+            | grep -oP 'refs/tags/\K[0-9.]+$' | sort -V | tail -n1)
+          if [ "$(printf '%s\n%s\n' "$cur" "$latest" | sort -V | tail -n1)" = "$cur" ]; then
+            echo "$cur is the latest $major release"
+            exit 0
+          fi
+          if ! curl -fsSI "https://releases.wikimedia.org/mediawiki/${major}/mediawiki-core-${latest}.tar.gz" > /dev/null; then
+            echo "$latest is tagged but its tarball is not published yet"
+            exit 0
+          fi
+          gh api -H 'Accept: application/vnd.github.raw' \
+            "repos/wikimedia/mediawiki/contents/RELEASE-NOTES-${major}?ref=${latest}" > "${RUNNER_TEMP}/notes"
+          security=$(awk -v stop="== MediaWiki ${cur} ==" '
+              $0 == stop { exit }
+              /^  / { line = line " " substr($0, 3); next }
+              { if (line) print line; line = $0 }
+              END { if (line) print line }' "${RUNNER_TEMP}/notes" \
+            | grep -E '^\* \(.*\) SECURITY:' || true)
+          if [ -z "$security" ]; then
+            echo "$latest has no security fixes since $cur"
+            exit 0
+          fi
+          sed -i -E "s/^(ARG MEDIAWIKI_VERSION=).*/\1${latest}/" "$dockerfile"
+          {
+            echo "Security fixes in [${latest}](https://github.com/wikimedia/mediawiki/blob/${latest}/RELEASE-NOTES-${major}) since ${cur}:"
+            echo
+            sed -E 's/^\* /- /' <<< "$security"
+          } > "$BODY"
+          cat "$BODY"
+          echo "ver=$latest" >> "$GITHUB_OUTPUT"
+
+      - name: Update README
+        if: steps.check.outputs.ver != ''
+        uses: ./.github/actions/add-changelog-entry
+        with:
+          image: mediawiki
+          message: Bump MediaWiki to v${{ steps.check.outputs.ver }}
+
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        if: ${{ steps.check.outputs.ver != '' && github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+      - name: Create Pull Request
+        if: steps.check.outputs.ver != ''
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          commit-message: 'build(mediawiki): bump MediaWiki to v${{ steps.check.outputs.ver }}'
+          title: 'build(mediawiki): bump MediaWiki to v${{ steps.check.outputs.ver }}'
+          branch: bump-mediawiki-security
+          body-path: ${{ runner.temp }}/body.md
+
+  wmf-extensions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Move the extensions and skins that gained security fixes
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BODY: ${{ runner.temp }}/body.md
+        run: |
+          set -euo pipefail
+          json=dockers/femiwiki-extensions/extension-installer/extensions.json
+          branch=$(jq -r '.["WMF-branch"]' "$json")
+          moved="${RUNNER_TEMP}/moved.md"
+          : > "$moved"
+          jq -r '[["extension", "WMF-extensions"], ["skin", "WMF-skins"]][] as [$type, $key]
+            | .[$key] | to_entries[] | "\($type) \(.key) \(.value)"' "$json" \
+          | while read -r type name old; do
+            if ! compare=$(gh api "repos/wikimedia/mediawiki-${type}s-${name}/compare/${old}...${branch}"); then
+              echo "::warning::could not compare $name ${old:0:7}...${branch}"
+              continue
+            fi
+            [ "$(jq -r .ahead_by <<< "$compare")" = 0 ] && continue
+            new=$(jq -r '.commits[-1].sha' <<< "$compare")
+            subjects=$(jq -r '.commits[].commit.message | split("\n")[0]' <<< "$compare")
+            security=$(grep -E '^SECURITY:' <<< "$subjects" || true)
+            [ -z "$security" ] && continue
+            sed -i "s/\"${name}\": \"${old}\"/\"${name}\": \"${new}\"/" "$json"
+            echo "- [${name}](https://github.com/wikimedia/mediawiki-${type}s-${name}/compare/${old:0:7}...${new:0:7})" >> "$moved"
+            awk '{ print "  - " $0 }' <<< "$security" >> "$moved"
+          done
+          count=$(grep -c '^- ' "$moved" || true)
+          if [ "$count" = 0 ]; then
+            echo "No security fixes on $branch"
+            exit 0
+          fi
+          {
+            echo "Moves $count WMF extensions and skins with security fixes to the heads of \`$branch\`:"
+            echo
+            cat "$moved"
+          } > "$BODY"
+          cat "$BODY"
+          {
+            echo "count=$count"
+            echo "branch=$branch"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Update README
+        if: steps.check.outputs.count != ''
+        uses: ./.github/actions/add-changelog-entry
+        with:
+          image: femiwiki-extensions
+          message: Move ${{ steps.check.outputs.count }} WMF extensions and skins with security fixes to the heads of `${{ steps.check.outputs.branch }}`
+
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        if: ${{ steps.check.outputs.count != '' && github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+      - name: Create Pull Request
+        if: steps.check.outputs.count != ''
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          commit-message: 'build(femiwiki-extensions): move the WMF extensions with security fixes to the heads of ${{ steps.check.outputs.branch }}'
+          title: 'build(femiwiki-extensions): move the WMF extensions with security fixes to the heads of ${{ steps.check.outputs.branch }}'
+          branch: bump-wmf-security
+          body-path: ${{ runner.temp }}/body.md
