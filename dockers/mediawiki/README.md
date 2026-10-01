@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v3.5.2
+
+- Bump MediaWiki to v1.43.9
+
 ## v3.5.1
 
 - shorten every comment block of five or more lines
