@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.7.11
+
+- Bump femiwiki/caddy to v1.7.0
+  - add a static block that caches static files by their version hash (caddy-mwcache c38104e) (femiwiki/caddy-mwcache#160)
+
 ## v1.7.10
 
 - Bump femiwiki/mediawiki to v3.5.2
