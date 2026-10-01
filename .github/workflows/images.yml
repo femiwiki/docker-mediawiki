@@ -1,7 +1,13 @@
 name: 'Docker: images'
 
+# Pull requests reach this through required.yaml. Pushes to main and dispatches
+# run it directly, as they always have, to build and publish.
 on:
-  pull_request:
+  workflow_call:
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY:
+        description: Opens the downstream bump pull requests; only used from main
+        required: false
   push:
     branches: [main]
     paths:

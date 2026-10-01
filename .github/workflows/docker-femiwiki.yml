@@ -1,6 +1,6 @@
 name: 'Docker: femiwiki'
 
-# Called by images.yml, for pull requests, pushes to main and by hand
+# Called by images.yml, for pull requests (through required.yaml), pushes to main and by hand
 on:
   workflow_call:
     secrets:

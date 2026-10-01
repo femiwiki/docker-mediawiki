@@ -1,0 +1,41 @@
+name: Required
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# No concurrency group here: a cancelled run fails the required job below.
+permissions: {}
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint.yaml
+    permissions:
+      contents: read
+      checks: write
+
+  # Only for pull requests: on main images.yml runs by itself and publishes.
+  # The permissions are the union images.yml and the image workflows declare.
+  images:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/images.yml
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+  # The one check branch protection requires. What has to pass is the
+  # workflows called above, so adding a check does not touch femiwiki/infra.
+  required:
+    needs: [lint, images]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every workflow above passed or was skipped
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: jq -e 'all(.[]; .result == "success" or .result == "skipped")' <<< "$RESULTS"
