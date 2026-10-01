@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.7.13
+
+- Bump femiwiki/mediawiki to v3.5.3
+  - MediaWiki 1.43.9 → 1.43.10 (femiwiki/docker-mediawiki#1229)
+
 ## v1.7.12
 
 - Bump femiwiki/caddy to v1.7.1
