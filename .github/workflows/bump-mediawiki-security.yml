@@ -4,7 +4,7 @@ name: Submit PRs for MediaWiki security fixes
 # SECURITY open a pull request here
 on:
   schedule:
-    - cron: '23 */6 * * *' # any minute but :00, where GitHub delays or drops scheduled runs
+    - cron: '23 0 * * 1' # any minute but :00, where GitHub delays or drops scheduled runs
   workflow_dispatch:
 
 permissions: {}
@@ -73,10 +73,19 @@ jobs:
             }
 
             fs.writeFileSync(dockerfile, text.replace(`ARG MEDIAWIKI_VERSION=${cur}`, `ARG MEDIAWIKI_VERSION=${latest}`));
+            const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const body = [
               `Security fixes in [${latest}](${dir}) since ${cur}:`,
               '',
               ...security.map((line) => line.replace(/^\* /, '- ')),
+              '',
+              `Opened by [run ${context.runId}](${run}).`,
+              '',
+              '```wikitext',
+              '===보안 패치===',
+              '',
+              `*MediaWiki ${cur} → ${latest}`,
+              '```',
             ].join('\n');
             fs.writeFileSync(process.env.BODY, body + '\n');
             core.info(body);
@@ -136,6 +145,7 @@ jobs:
             const config = JSON.parse(fs.readFileSync(json, 'utf8'));
             const branch = config['WMF-branch'];
             const moved = [];
+            const notes = [];
 
             for (const [type, key] of [['extension', 'WMF-extensions'], ['skin', 'WMF-skins']]) {
               for (const [name, old] of Object.entries(config[key])) {
@@ -159,6 +169,7 @@ jobs:
                   `- [${name}](https://github.com/wikimedia/${repo}/compare/${old.slice(0, 7)}...${head.slice(0, 7)})`,
                   ...security.map((subject) => `  - ${subject}`),
                 );
+                notes.push(`*${name} ${old.slice(0, 7)} → ${head.slice(0, 7)}`);
               }
             }
 
@@ -168,10 +179,19 @@ jobs:
               return;
             }
             fs.writeFileSync(json, JSON.stringify(config, null, 2) + '\n');
+            const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const body = [
               `Moves ${count} WMF extensions and skins with security fixes to the heads of \`${branch}\`:`,
               '',
               ...moved,
+              '',
+              `Opened by [run ${context.runId}](${run}).`,
+              '',
+              '```wikitext',
+              '===보안 패치===',
+              '',
+              ...notes,
+              '```',
             ].join('\n');
             fs.writeFileSync(process.env.BODY, body + '\n');
             core.info(body);
