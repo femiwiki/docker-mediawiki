@@ -56,8 +56,6 @@ $wgPasswordSender = 'admin@femiwiki.com';
 
 // UPO
 $wgEmailConfirmToEdit = true;
-$wgEnableUserEmailMuteList = true;
-$wgEnableSpecialMute = true;
 $wgUnwatchedPageThreshold = 0;
 $wgWatchlistExpiry = true;
 
@@ -269,8 +267,6 @@ $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
 // Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = '/usr/bin/diff3';
-
-$wgBlockTargetMigrationStage = SCHEMA_COMPAT_WRITE_BOTH | SCHEMA_COMPAT_READ_OLD;
 
 // Default skin: you can change the default skin. Use the internal symbolic
 // names, ie 'vector', 'monobook':
@@ -685,7 +681,8 @@ $wgGoogleSiteSearchAppend = true;
 // https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/EWL4AGBEZEDMNNFTM4FRD4MHOU3CVESO/
 // wfLoadExtension( 'Graph' );
 
-// GrowthExperiments
+// GrowthExperiments, which requires CommunityConfiguration
+wfLoadExtension( 'CommunityConfiguration' );
 wfLoadExtension( 'GrowthExperiments' );
 
 // Disable SuggestedEdits which requires either CirrusSearch or ORES.
@@ -694,12 +691,6 @@ $wgGEHomepageSuggestedEditsEnabled = false;
 // Disable Welcome Survey
 // (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see an example)
 $wgWelcomeSurveyEnabled = false;
-
-// Do not override messages of ConfirmEdit and confirm mail
-$wgGEConfirmEmailEnabled = false;
-
-// We don't collect data via Extension:EventStream
-$wgGEHomepageLoggingEnabled = false;
 
 // GuidedTour
 wfLoadExtension( 'GuidedTour' );
@@ -712,9 +703,6 @@ $wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
 
 // InputBox
 wfLoadExtension( 'InputBox' );
-
-// Interwiki
-wfLoadExtension( 'Interwiki' );
 
 // Josa
 wfLoadExtension( 'Josa' );
@@ -785,7 +773,6 @@ $wgDefaultUserOptions['mobile-specialpages'] = false;
 $wgMFAdvancedMobileContributions = true;
 // Enable the use Wikibase and associated features
 $wgMFUseWikibase = true;
-$wgMFBetaFeedbackLink = true;
 $wgMFEnableWikidataDescriptions = [
 	'base' => false,
 	'beta' => false,
@@ -1032,9 +1019,6 @@ $wgVisualEditorAvailableNamespaces = [
 	NS_CATEGORY_TALK => true,
 	'_merge_strategy' => 'array_plus',
 ];
-// the Table Of Contents widget
-// Disable https://github.com/femiwiki/femiwiki/issues/356
-$wgVisualEditorEnableTocWidget = false;
 // Enable the section editing
 $wgVisualEditorEnableVisualSectionEditing = true;
 // Enable 2017 Wikitext Editor to opt-out
