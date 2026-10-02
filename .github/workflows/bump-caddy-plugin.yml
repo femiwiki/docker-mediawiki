@@ -51,7 +51,9 @@ jobs:
           fi
           sed -i -E "s|^(ARG ${arg}=).*|\1${VER}|" dockers/caddy/Dockerfile
           notes=$(gh release view "$VER" --repo "$repo" --json body --jq .body || true)
-          subjects=$(gh api "repos/$repo/compare/$old...$new" --jq '.commits[] | "- " + (.commit.message | split("\n")[0])')
+          # A bare (#N) would link to a pull request of this repository
+          subjects=$(gh api "repos/$repo/compare/$old...$new" --jq '.commits[] | "- " + (.commit.message | split("\n")[0])' \
+            | sed -E "s|\(#([0-9]+)\)|($repo#\1)|g")
           {
             echo "[$old → $new](https://github.com/$repo/compare/$old...$new)"
             echo
