@@ -1,5 +1,9 @@
 # femiwiki
 
+## v2.0.1
+
+- Set OAuth to the local user ID source explicitly, which OAuth 1.46 asks for instead of `$wgMWOAuthSharedUserIDs = false`
+
 ## v2.0.0
 
 - Bump femiwiki/mediawiki to v4.0.0 (MediaWiki 1.46.1) and femiwiki/femiwiki-extensions to v3.1.0
