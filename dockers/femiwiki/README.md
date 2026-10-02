@@ -1,5 +1,9 @@
 # femiwiki
 
+## v2.0.2
+
+- Read old CollaborationKit revisions with core's fallback handler so dumpBackup.php finishes (ported from #1249)
+
 ## v2.0.1
 
 - Set OAuth to the local user ID source explicitly, which OAuth 1.46 asks for instead of `$wgMWOAuthSharedUserIDs = false`
