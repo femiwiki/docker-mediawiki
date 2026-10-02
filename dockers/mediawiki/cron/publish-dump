@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# 공개 덤프를 Internet Archive에 올린다. 판 삭제·감춤과 비공개 기록은
+# dumpBackup.php가 걸러서 여기서 따로 고르지 않는다.
+# https://www.mediawiki.org/wiki/Manual:DumpBackup.php
+
+set -euo pipefail; IFS=$'\n\t'
+
+cd /srv/femiwiki.com
+
+if [ -n "${SSM_SECRETS:-}" ]; then
+  IA_ACCESS_KEY="$(chamber read -q mediawiki/internet_archive access_key)"
+  IA_SECRET_KEY="$(chamber read -q mediawiki/internet_archive secret_key)"
+fi
+
+DATE="$(date -u +%Y%m%d)"
+ITEM="femiwiki-dump-$DATE"
+DIR="$(mktemp -d)"
+trap 'rm -rf "$DIR"' EXIT
+
+# A header file, not an argument, keeps the keys out of the process list.
+AUTH="$DIR/auth"
+(umask 077; echo "authorization: LOW $IA_ACCESS_KEY:$IA_SECRET_KEY" > "$AUTH")
+
+log() { printf 'publish-dump: %s\n' "$1" > /proc/1/fd/1; }
+trap 'log "failed, see /var/log/cron.log"' ERR
+
+for mode in full logs; do
+  file="$DIR/femiwiki-$DATE-$mode.xml.gz"
+  nice -n 19 php maintenance/dumpBackup.php "--$mode" --quiet --output="gzip:$file"
+  # A dump cut off midway has no closing tag.
+  gzip -dc "$file" | tail -n 1 | grep -q '</mediawiki>'
+done
+
+# The first upload creates the item, the second joins it.
+for file in "$DIR"/*.xml.gz; do
+  curl -fsS --retry 5 --retry-all-errors -o /dev/null \
+    -H "@$AUTH" \
+    -H 'x-amz-auto-make-bucket: 1' \
+    -H 'x-archive-meta-mediatype: web' \
+    -H "x-archive-meta-title: Femiwiki dump $DATE" \
+    -H 'x-archive-meta-subject: wiki; MediaWiki; femiwiki' \
+    -H 'x-archive-meta-originalurl: https://femiwiki.com/' \
+    -H 'x-archive-meta-licenseurl: https://creativecommons.org/licenses/by-sa/4.0/' \
+    -H 'x-archive-meta-description: Full page history and public logs of https://femiwiki.com, made with maintenance/dumpBackup.php.' \
+    --upload-file "$file" "https://s3.us.archive.org/$ITEM/$(basename "$file")"
+done
+
+log "done, https://archive.org/details/$ITEM"

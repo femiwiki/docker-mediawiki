@@ -18,6 +18,7 @@ RUN crontab /tmp/crontab && rm /tmp/crontab
 COPY cron/generate-sitemap \
       cron/update-special-pages \
       cron/run-jobs \
+      cron/publish-dump \
       /usr/local/bin/
 
 # Install scripts

@@ -1,3 +1,4 @@
 0 1,5,9,13,17,21 * * * /usr/local/bin/generate-sitemap >> /var/log/cron.log 2>&1
 1 5 */3 * * /usr/local/bin/update-special-pages >> /var/log/cron.log 2>&1
+0 18 1 1,7 * /usr/local/bin/publish-dump >> /var/log/cron.log 2>&1
 * * * * * /usr/local/bin/run-jobs
