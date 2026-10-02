@@ -790,6 +790,9 @@ wfLoadExtension( 'OATHAuth' );
 
 // OAuth
 wfLoadExtension( 'OAuth' );
+// OAuth itself treats false as the local source and deprecates it since 1.45
+$wgMWOAuthSharedUserIDs = true;
+$wgMWOAuthSharedUserSource = 'local';
 $wgGroupPermissions['oauthadmin']['mwoauthmanageconsumer'] = true;
 $wgGroupPermissions['user']['mwoauthmanagemygrants'] = true;
 $wgGroupPermissions['user']['mwoauthupdateownconsumer'] = true;
