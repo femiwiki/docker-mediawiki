@@ -48,6 +48,36 @@ updates:
     cooldown:
       default-days: 7
 
+  - package-ecosystem: 'docker'
+    directory: '/dockers/php-fpm'
+    commit-message:
+      prefix: build
+      include: scope
+    schedule:
+      interval: monthly
+    reviewers:
+      - 'femiwiki/reviewer'
+    ignore:
+      # A new PHP minor needs MediaWiki's support for it checked first
+      - dependency-name: 'php'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: 'docker'
+    directory: '/dockers/caddy'
+    commit-message:
+      prefix: build
+      include: scope
+    schedule:
+      interval: monthly
+    reviewers:
+      - 'femiwiki/reviewer'
+    cooldown:
+      default-days: 7
+
   - package-ecosystem: 'composer'
     directory: '/dockers/femiwiki-extensions/extension-installer'
     commit-message:
