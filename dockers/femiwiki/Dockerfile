@@ -1,6 +1,6 @@
 # PHP 설정은 /usr/local/etc/php, 미디어위키와 확장은 /srv/femiwiki.com,
 # 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 캐시는 /tmp/cache에 있습니다.
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.7.1 AS caddy
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.8.0 AS caddy
 
 FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2.7.4 AS extensions
 
