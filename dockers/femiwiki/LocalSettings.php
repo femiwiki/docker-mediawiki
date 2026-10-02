@@ -1048,6 +1048,11 @@ $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 wfLoadExtension( 'Widgets' );
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
+// CollaborationKit is gone, but old revisions still carry its content
+// models, and dumpBackup.php stops at the first one without a handler.
+$wgContentHandlers['CollaborationHubContent'] = 'MediaWiki\\Content\\FallbackContentHandler';
+$wgContentHandlers['CollaborationListContent'] = 'MediaWiki\\Content\\FallbackContentHandler';
+
 // WikiBase - repo
 wfLoadExtension( 'WikibaseRepository', "$IP/extensions/Wikibase/extension-repo.json" );
 require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
