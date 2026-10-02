@@ -9,7 +9,8 @@ on:
         description: Opens the downstream bump pull requests; only used from main
         required: false
   push:
-    branches: [main]
+    # A mw-* branch builds the next MediaWiki release, e.g. mw-1.46
+    branches: [main, 'mw-*']
     paths:
       - 'dockers/**'
   workflow_dispatch:
