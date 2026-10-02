@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v3.6.0
+
+- publish a public dump to Internet Archive twice a year
+
 ## v3.5.4
 
 - Bump femiwiki/php-fpm to v1.6.0
