@@ -3,7 +3,7 @@
 # See 'PHP version & extensions' section on https://hub.docker.com/_/composer for more details.
 FROM --platform=$TARGETPLATFORM composer:2.8.6 AS composer
 
-FROM --platform=$TARGETPLATFORM php:8.1.32-fpm
+FROM --platform=$TARGETPLATFORM php:8.3.35-fpm-bookworm
 ARG TARGETPLATFORM
 ARG TINI_VERSION=0.18.0
 
@@ -67,7 +67,6 @@ COPY ./www.conf                /usr/local/etc/php-fpm.d/www.conf
 
 # As of PHP 8.3.0, a fallback value can be specified that will be used when the referenced variable
 # is not defined. (https://www.php.net/manual/en/configuration.file.php)
-# However, at the time of writing, PHP 8.3 is not yet available for MediaWiki.
 ENV PHP_POST_MAX_SIZE=10M \
     PHP_UPLOAD_MAX_FILESIZE=10M \
     PHP_FPM_EMERGENCY_RESTART_THRESHOLD=5 \
