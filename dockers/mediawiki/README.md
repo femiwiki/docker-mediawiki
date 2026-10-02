@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v4.0.0
+
+- Bump MediaWiki to v1.46.1
+
 ## v3.6.0
 
 - publish a public dump to Internet Archive twice a year
