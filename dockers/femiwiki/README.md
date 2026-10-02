@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.7.16
+
+- Bump femiwiki/caddy to v1.8.0
+  - store pages gzipped (caddy-mwcache 88764d1) (femiwiki/caddy-mwcache#164)
+
 ## v1.7.15
 
 - Bump femiwiki/mediawiki to v3.6.0
