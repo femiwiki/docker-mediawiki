@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v3.1.0
+
+- Add CommunityConfiguration, which GrowthExperiments requires on MediaWiki 1.46
+
 ## v3.0.0
 
 - Move WMF extensions and skins to the heads of `REL1_46`
