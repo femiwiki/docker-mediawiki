@@ -1,5 +1,12 @@
 # femiwiki
 
+## v2.0.0
+
+- Bump femiwiki/mediawiki to v4.0.0 (MediaWiki 1.46.1) and femiwiki/femiwiki-extensions to v3.1.0
+- Stop loading Interwiki, which MediaWiki 1.46 ships in core
+- Load CommunityConfiguration, which GrowthExperiments requires on 1.46
+- Drop settings that MediaWiki 1.46 and its extensions removed; GrowthExperiments now always adds its confirmation email notice to the account creation form
+
 ## v1.7.14
 
 - Bump femiwiki/mediawiki to v3.5.4

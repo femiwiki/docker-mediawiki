@@ -2,9 +2,9 @@
 # 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 캐시는 /tmp/cache에 있습니다.
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.7.1 AS caddy
 
-FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2.7.4 AS extensions
+FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:3.1.0 AS extensions
 
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:3.5.4
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:4.0.0
 
 # Set timezone
 ENV TZ=Asia/Seoul
