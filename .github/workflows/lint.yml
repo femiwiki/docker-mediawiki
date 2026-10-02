@@ -79,6 +79,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - run: npm run typecheck
 
   hadolint:
     runs-on: ubuntu-22.04

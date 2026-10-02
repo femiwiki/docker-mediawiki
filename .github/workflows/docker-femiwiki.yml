@@ -219,7 +219,9 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          sparse-checkout: .github/release-notes.sh
+          sparse-checkout: |
+            .github/release-notes.sh
+            .github/scripts/built-from.mts
           sparse-checkout-cone-mode: false
           path: self
           persist-credentials: false
@@ -244,53 +246,25 @@ jobs:
           echo "first=${roots%% *}" >> "$GITHUB_OUTPUT"
       - name: List the pull requests since the tag infra currently uses
         id: source
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          FIRST_ROOT: ${{ steps.roots.outputs.first }}
-          GH_TOKEN: ${{ github.token }}
+          CONTAINER_TF: infra/${{ steps.roots.outputs.first }}/container.tf
           REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
+        with:
+          script: |
+            const { default: builtFrom } = await import(`${process.env.GITHUB_WORKSPACE}/self/.github/scripts/built-from.mts`)
+            await builtFrom({ github, core, env: process.env })
+      - name: Write the release notes
+        if: steps.source.outputs.prs != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRS: ${{ steps.source.outputs.prs }}
+          REPO: ${{ github.repository }}
         run: |
-          OLD="$(grep -oE 'ghcr\.io/femiwiki/femiwiki:[^"]+' "infra/${FIRST_ROOT}/container.tf" | head -1 | grep -oE '[0-9a-f]{8}$' || true)"
-          COMMITS=""
-          if [ -n "$OLD" ]; then
-            COMMITS="$(gh api "repos/${REPO}/compare/${OLD}...${SHA}" --jq '.commits[].sha' 2>/dev/null || true)"
-          fi
-          [ -n "$COMMITS" ] || COMMITS="$SHA"
-          # The sections and their order are release-please's
-          TYPES=(feat fix perf revert docs style refactor test build ci chore other)
-          declare -A HEADING=(
-            [feat]=Features [fix]='Bug Fixes' [perf]='Performance Improvements' [revert]=Reverts
-            [docs]=Documentation [style]=Styles [refactor]='Code Refactoring' [test]=Tests
-            [build]='Build System' [ci]='Continuous Integration' [chore]='Miscellaneous Chores' [other]=Other
-          )
-          declare -A SECTION=()
-          PRS=()
-          for c in $COMMITS; do
-            read -r n title <<< "$(gh api "repos/${REPO}/commits/${c}/pulls" --jq '.[0] // empty | "\(.number) \(.title)"')"
-            if [ -z "$n" ]; then
-              SECTION[other]+="* ${REPO}@${c}"$'\n'
-              continue
-            fi
-            if [[ "$title" =~ ^([a-z]+)(\(([^\)]+)\))?!?:\ (.*)$ ]] && [ -n "${HEADING[${BASH_REMATCH[1]}]:-}" ]; then
-              type="${BASH_REMATCH[1]}"
-              SECTION[$type]+="* ${BASH_REMATCH[3]:+**${BASH_REMATCH[3]}:** }${BASH_REMATCH[4]} (${REPO}#${n})"$'\n'
-            else
-              SECTION[other]+="* ${title} (${REPO}#${n})"$'\n'
-            fi
-            PRS+=("$n")
-          done
-          {
-            echo "refs<<EOF"
-            for type in "${TYPES[@]}"; do
-              [ -n "${SECTION[$type]:-}" ] || continue
-              printf '### %s\n\n%s\n\n' "${HEADING[$type]}" "$(printf '%s' "${SECTION[$type]}" | awk '!seen[$0]++')"
-            done
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
           # The wiki's release notes, in English until translated there
-          if [ ${#PRS[@]} -gt 0 ]; then
-            self/.github/release-notes.sh "$REPO" "${PRS[@]}" > "${RUNNER_TEMP}/wikitext.md"
-          fi
+          # shellcheck disable=SC2086 # one argument per pull request
+          self/.github/release-notes.sh "$REPO" $PRS > "${RUNNER_TEMP}/wikitext.md"
       - name: Carry over what is already on the bump branch
         id: carry
         env:
