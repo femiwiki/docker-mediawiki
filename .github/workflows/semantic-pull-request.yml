@@ -76,3 +76,36 @@ jobs:
             } else if ( images.has( scope ) && !changed.has( scope ) ) {
               core.setFailed( `The scope "${ scope }" names an image this pull request does not change${ expected ? ` (it changes ${ expected })` : '' }.` );
             }
+
+  release-note:
+    name: release note
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+        with:
+          script: |
+            // release-notes.sh carries these blocks to 페미위키:업데이트; bots write their own
+            if ( context.payload.pull_request.user.type === 'Bot' ) {
+              return;
+            }
+            const files = await github.paginate( github.rest.pulls.listFiles, {
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+            } );
+            if ( !files.some( ( f ) => [ f.filename, f.previous_filename ].some( ( path ) => path?.startsWith( 'dockers/' ) ) ) ) {
+              return;
+            }
+            const blocks = [ ...( process.env.BODY ?? '' ).replace( /\r/g, '' ).matchAll( /^```wikitext[ \t]*\n([^]*?)^```[ \t]*$/gm ) ];
+            if ( !blocks.length ) {
+              core.setFailed( 'Add a ```wikitext block of "* ..." lines for readers, or an empty one if they see no change.' );
+            }
+            const bad = blocks.flatMap( ( b ) => b[ 1 ].split( '\n' ) )
+              .filter( ( line ) => line && !/^\*|^===[^=].*===$/.test( line ) );
+            if ( bad.length ) {
+              core.setFailed( `The release notes only take "* ..." and "===type===" lines, not:\n${ bad.join( '\n' ) }` );
+            }

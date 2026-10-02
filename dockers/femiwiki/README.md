@@ -1,8 +1,12 @@
 # femiwiki
 
-## v1.7.14
+## v1.7.15
 
 - Bump femiwiki/mediawiki to v3.6.0
+
+## v1.7.14
+
+- Bump femiwiki/mediawiki to v3.5.4
 
 ## v1.7.13
 
