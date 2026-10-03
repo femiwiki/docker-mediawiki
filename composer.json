@@ -9,8 +9,9 @@
     "fix": "phpcbf",
     "test": [
       "parallel-lint . --exclude vendor --exclude dockers/femiwiki-extensions/extension-installer/vendor",
-      "phpcs"
-    ]
+      "@phpcs"
+    ],
+    "phpcs": "v=\"$(sed -nE 's/^FROM .* php:([0-9]+[.][0-9]+)[.].*/\\1/p' dockers/php-fpm/Dockerfile)\" && test -n \"$v\" && phpcs --runtime-set testVersion \"$v\""
   },
   "config": {
     "allow-plugins": {
