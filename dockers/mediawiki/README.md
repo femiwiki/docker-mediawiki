@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v4.0.1
+
+- Bump MediaWiki to v1.46.2
+
 ## v4.0.0
 
 - Bump MediaWiki to v1.46.1
