@@ -3,7 +3,7 @@
 ## v2.0.5
 
 - Bump femiwiki/femiwiki-extensions to v3.2.0
-  -  쓰이지 않게 된 HTMLTags 확장 기능 제거 (femiwiki/docker-mediawiki#1276)
+  - 쓰이지 않게 된 HTMLTags 확장 기능 제거 (femiwiki/docker-mediawiki#1276)
 
 ## v2.0.4
 
