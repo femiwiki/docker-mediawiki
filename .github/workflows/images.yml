@@ -89,6 +89,8 @@ jobs:
       # femiwiki-extensions is an amd64-only image, so no arm64 is needed
       arches: '["amd64"]'
       automerge: true
+      # Its Dockerfile reads the PHP version production runs from php-fpm's
+      build-contexts: dockers-php-fpm=dockers/php-fpm
     secrets:
       PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
