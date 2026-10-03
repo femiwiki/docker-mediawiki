@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.13
+
+- Bump femiwiki/caddy to v1.8.2
+  - 컨테이너 교체 직후에도 요청 제한이 이어지도록 함 (femiwiki/docker-mediawiki#1308)
+
 ## v2.0.12
 
 - Bump femiwiki/mediawiki to v4.0.2
