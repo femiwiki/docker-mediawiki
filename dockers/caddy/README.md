@@ -2,6 +2,10 @@
 
 Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 
+## v1.8.2
+
+- let the rate limiter read the counts other generations share
+
 ## v1.8.1
 
 - Bump caddy-mwcache to [59f5bd6](https://github.com/femiwiki/caddy-mwcache/commit/59f5bd602d7269304a5277a6a2c4d72910948ac4)
