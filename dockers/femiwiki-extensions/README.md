@@ -21,6 +21,10 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 - Fetch UnlinkedWikibase from its `REL1_46` branch instead of a release tarball
 - Bump EmbedVideo to v4.2.0
 
+## v2.7.5
+
+- Bump Femiwiki to [a468700](https://github.com/femiwiki/FemiwikiSkin/commit/a4687007436cdf05c709ceaa61b2d5bf9c03abfd)
+
 ## v2.7.4
 
 - Move 3 WMF extensions and skins with security fixes to the heads of `REL1_43`

@@ -25,6 +25,20 @@
 - Load CommunityConfiguration, which GrowthExperiments requires on 1.46
 - Drop settings that MediaWiki 1.46 and its extensions removed; GrowthExperiments now always adds its confirmation email notice to the account creation form
 
+## v1.7.17
+
+- Bump femiwiki/femiwiki-extensions to v2.7.5
+  - follow the LESS files 1.46 moved (Femiwiki a468700) (femiwiki/FemiwikiSkin#1009)
+
+## v1.7.16
+
+- Bump femiwiki/caddy to v1.8.0
+  - store pages gzipped (caddy-mwcache 88764d1) (femiwiki/caddy-mwcache#164)
+
+## v1.7.15
+
+- Bump femiwiki/mediawiki to v3.6.0
+
 ## v1.7.14
 
 - Bump femiwiki/mediawiki to v3.5.4
