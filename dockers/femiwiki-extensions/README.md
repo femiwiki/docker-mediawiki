@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v3.1.1
+
+- Bump Femiwiki to [a468700](https://github.com/femiwiki/FemiwikiSkin/commit/a4687007436cdf05c709ceaa61b2d5bf9c03abfd), whose two skinStyles compile on MediaWiki 1.46 again (FemiwikiSkin#1009)
+
 ## v3.1.0
 
 - Add CommunityConfiguration, which GrowthExperiments requires on MediaWiki 1.46
