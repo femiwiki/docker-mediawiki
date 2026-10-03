@@ -1061,7 +1061,6 @@ $wgWBRepoSettings['statementSections'] = [
 	],
 ];
 $wgWBRepoSettings['formatterUrlProperty'] = 'P61';
-$wgRestAPIAdditionalRouteFiles[] = 'extensions/Wikibase/repo/rest-api/routes.json';
 
 // WikiBase - client
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
