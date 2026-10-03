@@ -71,6 +71,10 @@ $wgDBpassword = getenv( 'WG_DB_PASSWORD' ) ?:
 // still serves, so which schema this container uses has to be a deployment
 // decision. See femiwiki/femiwiki#645.
 $wgDBname = getenv( 'WG_DB_NAME' ) ?: 'femiwiki';
+// Both default to $wgDBname. Pinned so a container on another schema keeps
+// the cache keys and the log-in cookies of femiwiki.
+$wgCachePrefix = 'femiwiki';
+$wgCookiePrefix = 'femiwiki';
 
 // Site secret key
 $wgSecretKey = getenv( 'WG_SECRET_KEY' ) ?: '';
@@ -1080,6 +1084,8 @@ $wgWBClientSettings['dataBridgeEnabled'] = true;
 $wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 	str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
 $wgWBClientSettings['repoSiteName'] = 'wikibase-repo-site-name';
+// Defaults to $wgDBname, while sitelinks and subscriptions are stored as femiwiki
+$wgWBClientSettings['siteGlobalID'] = 'femiwiki';
 
 // WikiEditor
 wfLoadExtension( 'WikiEditor' );
