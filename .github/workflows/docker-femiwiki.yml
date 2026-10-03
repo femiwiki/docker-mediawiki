@@ -66,6 +66,33 @@ jobs:
           docker cp .github/scripts/CheckConfigKeys.php "$c:/tmp/CheckConfigKeys.php"
           docker cp development/LocalSettings.php "$c:/tmp/LocalSettings.php"
           docker exec "$c" php /tmp/CheckConfigKeys.php /tmp/LocalSettings.php
+      # A route file that fails to load breaks every /rest.php request, search
+      # suggestions included; the discovery document lists every module, and
+      # each module's spec reads that module's routes.
+      - name: Test every REST module
+        shell: bash
+        run: |
+          fail=0
+          curl -sSf 127.0.0.1:8080/rest.php/specs/v0/discovery -o "$RUNNER_TEMP/discovery.json"
+          for url in $(jq -r '.modules[].spec' "$RUNNER_TEMP/discovery.json") \
+            '127.0.0.1:8080/rest.php/v1/search/title?q=a&limit=1'; do
+            curl -sSfo /dev/null "$url" || { echo "::error::$url"; fail=1; }
+          done
+          exit "$fail"
+      # load.php answers a module that fails to build with 200 and the error in
+      # a comment, so ask ResourceLoader itself. Its log lines go to stderr as
+      # JSON and are left out.
+      - name: Build every ResourceLoader module for the femiwiki skin
+        shell: bash
+        run: |
+          c="$(docker ps -qf name=mediawiki_fastcgi | head -1)"
+          docker cp .github/scripts/CheckResourceLoader.php "$c:/tmp/CheckResourceLoader.php"
+          docker exec "$c" php /tmp/CheckResourceLoader.php 2>&1 | grep -v -e '^{' -e '^$'
+      - name: Fail on any exception the wiki logged
+        run: |
+          if docker service logs mediawiki_fastcgi 2>&1 | grep -E '"channel":"exception"|PHP Fatal error'; then
+            exit 1
+          fi
       - name: backup of failure
         if: ${{ failure() }}
         timeout-minutes: 1
