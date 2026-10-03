@@ -56,7 +56,7 @@ runs:
           echo "- Bump femiwiki/${INPUTS_UPSTREAM} to v${INPUTS_VERSION}" >> temp.md
           # The release notes it carries, one line each, the pull request as OWNER/REPO#N
           grep '^\*' <<< "$NOTES" \
-            | sed -E 's/^\*(.*) \[([^] ]+)\]$/  - \1 (\2)/; s#\(https://github\.com/([^/]+/[^/]+)/pull/([0-9]+)\)$#(\1\#\2)#' \
+            | sed -E 's/^\*[[:space:]]*(.*) \[([^] ]+)\]$/  - \1 (\2)/; s#\(https://github\.com/([^/]+/[^/]+)/pull/([0-9]+)\)$#(\1\#\2)#' \
             >> temp.md || true
           echo >> temp.md
           tail -n +3 dockers/${INPUTS_DOWNSTREAM}/README.md >> temp.md
