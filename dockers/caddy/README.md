@@ -2,6 +2,10 @@
 
 Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 
+## v1.8.1
+
+- Bump caddy-mwcache to [59f5bd6](https://github.com/femiwiki/caddy-mwcache/commit/59f5bd602d7269304a5277a6a2c4d72910948ac4)
+
 ## v1.8.0
 
 - Bump caddy-mwcache to [88764d1](https://github.com/femiwiki/caddy-mwcache/commit/88764d100aa9c829c001d1c4c99ee40ff0c3ff93)
