@@ -1,7 +1,7 @@
 # Composer 이미지는 PHP 버전을 따로 설정할 수 없어 스테이지를 생성해 /usr/bin/composer만 복사해
 # 사용하여야 합니다.
 # See 'PHP version & extensions' section on https://hub.docker.com/_/composer for more details.
-FROM --platform=$TARGETPLATFORM composer:2.8.6 AS composer
+FROM --platform=$TARGETPLATFORM composer:2.10.2 AS composer
 
 FROM --platform=$TARGETPLATFORM php:8.3.35-fpm-bookworm
 ARG TARGETPLATFORM
