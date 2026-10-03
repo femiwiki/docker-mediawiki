@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.7
+
+- Bump femiwiki/caddy to v1.8.1
+  - write cached responses that have an empty body (caddy-mwcache 59f5bd6) (femiwiki/caddy-mwcache#166)
+
 ## v2.0.6
 
 - Bump femiwiki/femiwiki-extensions to v3.2.1
