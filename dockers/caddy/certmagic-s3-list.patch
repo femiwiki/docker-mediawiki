@@ -1,0 +1,30 @@
+diff --git a/s3.go b/s3.go
+index 2eb8fbe..d2266c0 100644
+--- a/s3.go
++++ b/s3.go
+@@ -258,14 +258,24 @@ func (s3 *S3) Exists(ctx context.Context, key string) bool {
+ 
+ func (s3 *S3) List(ctx context.Context, prefix string, recursive bool) ([]string, error) {
+ 
++	// A trailing slash lists what is inside the directory rather than the
++	// directory itself when not recursing
++	p := s3.KeyPrefix(prefix)
++	if p != "" && !strings.HasSuffix(p, "/") {
++		p += "/"
++	}
++
+ 	objects := s3.client.ListObjects(ctx, s3.Bucket, minio.ListObjectsOptions{
+-		Prefix:    s3.KeyPrefix(prefix),
++		Prefix:    p,
+ 		Recursive: recursive,
+ 	})
+ 
+ 	keys := make([]string, len(objects))
+ 
+ 	for object := range objects {
++		if object.Err != nil {
++			return keys, object.Err
++		}
+ 		keys = append(keys, s3.CutKeyPrefix(object.Key))
+ 	}
+ 
