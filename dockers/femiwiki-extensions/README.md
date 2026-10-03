@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v3.2.5
+
+- Resolve the extensions' composer dependencies for the PHP that `dockers/php-fpm` runs, 8.3.35 now, instead of skipping the PHP check. OATHAuth's Symfony packages move from 8.1, which needs PHP 8.4 and broke adding a security key or passkey, to 7.4.
+
 ## v3.2.4
 
 - Bump UnifiedExtensionForFemiwiki to [5e4039c](https://github.com/femiwiki/UnifiedExtensionForFemiwiki/commit/5e4039cfa1981e36eafb5fb748eb043c249fef29)
