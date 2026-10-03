@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.8
+
+- Bump femiwiki/femiwiki-extensions to v3.2.2
+  - Fixes deprecation warnings in 1.46 (Femiwiki 53af529) (femiwiki/FemiwikiSkin#925)
+
 ## v2.0.7
 
 - Bump femiwiki/caddy to v1.8.1
