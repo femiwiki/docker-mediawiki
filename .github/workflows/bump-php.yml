@@ -82,6 +82,7 @@ jobs:
             fs.writeFileSync(process.env.BODY, body + '\n');
             core.info(body);
             core.setOutput('ver', latest);
+            core.setOutput('minor', prefix);
             core.setOutput('mediawiki', `1.${mediawiki}`);
 
       - name: Update README
@@ -91,6 +92,14 @@ jobs:
           image: php-fpm
           level: minor
           message: Bump php to ${{ steps.check.outputs.ver }}, which MediaWiki ${{ steps.check.outputs.mediawiki }} supports
+
+      # A new entry rebuilds the extensions, whose Dockerfile reads the new PHP
+      - name: Update the extensions README
+        if: steps.check.outputs.ver != ''
+        uses: ./.github/actions/add-changelog-entry
+        with:
+          image: femiwiki-extensions
+          message: Resolve composer dependencies for PHP ${{ steps.check.outputs.minor }}
 
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
         if: ${{ steps.check.outputs.ver != '' && github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
