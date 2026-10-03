@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.10
+
+- Bump femiwiki/femiwiki-extensions to v3.2.4
+  - Skip the external link hook when Parsoid calls it (UnifiedExtensionForFemiwiki 5e4039c) (femiwiki/UnifiedExtensionForFemiwiki#259)
+
 ## v2.0.9
 
 - Bump femiwiki/femiwiki-extensions to v3.2.3
