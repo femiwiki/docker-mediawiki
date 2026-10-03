@@ -43,7 +43,7 @@ jobs:
       - name: Initialize docker swarm and start services
         run: |
           docker swarm init
-          docker stack deploy -c compose.yaml mediawiki
+          docker stack deploy -c compose.yaml -c .github/compose-test.yml mediawiki
       - name: Access 127.0.0.1:8080 until success
         timeout-minutes: 2
         run: |
@@ -88,6 +88,10 @@ jobs:
           c="$(docker ps -qf name=mediawiki_fastcgi | head -1)"
           docker cp .github/scripts/CheckResourceLoader.php "$c:/tmp/CheckResourceLoader.php"
           docker exec "$c" php /tmp/CheckResourceLoader.php 2>&1 | grep -v -e '^{' -e '^$'
+      # A cache hit has to answer as MediaWiki did: femiwiki/caddy-mwcache#165
+      # turned every cached redirect into an empty 200, and / into a blank page
+      - name: Request redirects and an article twice through the cache
+        run: .github/scripts/check-cached-twice.sh
       - name: Fail on any exception the wiki logged
         run: |
           if docker service logs mediawiki_fastcgi 2>&1 | grep -E '"channel":"exception"|PHP Fatal error'; then
