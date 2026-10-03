@@ -58,6 +58,7 @@ $wgPasswordSender = 'admin@femiwiki.com';
 $wgEmailConfirmToEdit = true;
 $wgUnwatchedPageThreshold = 0;
 $wgWatchlistExpiry = true;
+$wgEnableWatchlistLabels = true;
 
 // Database settings
 $wgDBtype = 'mysql';
