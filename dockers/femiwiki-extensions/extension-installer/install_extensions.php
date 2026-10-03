@@ -87,11 +87,12 @@ function wfInstallWmf( string $type, string $name, string $sha, string $branch, 
 	) );
 
 	// extdist runs composer for any extension whose composer.json requires
-	// something, a PHP extension alone included
+	// something, a PHP extension alone included. This image lacks most PHP
+	// extensions, but the PHP version is pinned in the Dockerfile and holds.
 	$composer = "$dir/composer.json";
 	if ( is_file( $composer ) && ( json_decode( file_get_contents( $composer ), true )['require'] ?? [] ) ) {
-		wfMust( [ 'composer', 'install', '--no-dev', '--ignore-platform-reqs', '--no-interaction',
-			'--no-progress', '--working-dir', $dir ] );
+		wfMust( [ 'composer', 'install', '--no-dev', '--ignore-platform-req=ext-*',
+			'--ignore-platform-req=lib-*', '--no-interaction', '--no-progress', '--working-dir', $dir ] );
 	}
 
 	// Composer installs a package from source when it has no dist, .git included

@@ -17,5 +17,12 @@ ARG INSTALL_JOBS=
 WORKDIR /installer
 COPY extension-installer/composer.json extension-installer/composer.lock ./
 RUN composer install --no-dev --no-interaction --no-progress
+# This image's PHP is newer than the one that runs the extensions, so composer
+# resolves their dependencies for the PHP that dockers/php-fpm/Dockerfile names.
+# Build with --build-context dockers-php-fpm=dockers/php-fpm.
+RUN --mount=type=bind,from=dockers-php-fpm,source=Dockerfile,target=/php-fpm.Dockerfile \
+    php="$(sed -nE 's/^FROM .* php:([0-9.]+)-.*/\1/p' /php-fpm.Dockerfile)" &&\
+    test -n "$php" &&\
+    composer config --global platform.php "$php"
 COPY extension-installer/install_extensions.php extension-installer/extensions.json ./
 RUN INSTALL_JOBS="${INSTALL_JOBS}" php install_extensions.php
