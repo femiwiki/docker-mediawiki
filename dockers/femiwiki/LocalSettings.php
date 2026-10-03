@@ -139,8 +139,18 @@ $fwCacheTypes = [
 	'none' => CACHE_NONE,
 	'db' => CACHE_DB,
 	'memcached' => CACHE_MEMCACHED,
+	'memcached-pecl' => 'femiwiki-memcached-pecl',
 	'apcu' => CACHE_ACCEL,
 	'anything' => CACHE_ANYTHING,
+];
+// The same memcached through the C client. Each client reads the other's values
+// as something else (an array as 0, a compressed string as raw bytes), and old
+// and new containers share memcached during a swap, so this one keeps its keys
+// under a prefix of their own, global keys included.
+$wgObjectCaches['femiwiki-memcached-pecl'] = [
+	'class' => \Wikimedia\ObjectCache\MemcachedPeclBagOStuff::class,
+	'loggroup' => 'memcached',
+	'routingPrefix' => 'pecl/',
 ];
 // $default is not typed: CACHE_MEMCACHED is the string 'memcached-php' and
 // CACHE_DB is the integer 1, so these constants have no one type.
