@@ -24,6 +24,11 @@ on:
         required: false
         type: boolean
         default: false
+      build-contexts:
+        description: Named build contexts the Dockerfile reads, as name=path lines
+        required: false
+        type: string
+        default: ''
     secrets:
       PAT_APPLICATION_PRIVATE_KEY:
         description: Opens the downstream bump pull request; only used from main
@@ -163,6 +168,7 @@ jobs:
         with:
           context: '{{ defaultContext }}:dockers/${{ inputs.image }}'
           platforms: linux/${{ matrix.arch }}
+          build-contexts: ${{ inputs.build-contexts }}
           cache-from: type=gha,scope=${{ inputs.image }}-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=${{ inputs.image }}-${{ matrix.arch }}
           outputs: ${{ (github.repository_owner == 'femiwiki' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-'))) && format('type=image,name=ghcr.io/femiwiki/{0},push-by-digest=true,name-canonical=true,push=true', inputs.image) || 'type=cacheonly' }}
