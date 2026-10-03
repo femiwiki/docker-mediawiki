@@ -38,6 +38,17 @@ RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --optimize-autoloa
 # https://phabricator.wikimedia.org/T363063
 RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --optimize-autoloader --classmap-authoritative --working-dir /srv/femiwiki.com/extensions/TemplateStyles
 
+# The extensions and skins that ship their own vendor directory register its
+# loader in front of every other one, so each class a request loads first went
+# through their PSR-4 lookups; Nuke's alone maps all of Wikimedia\. Authoritative
+# maps make each of them an array lookup. They were installed without a platform
+# check, and OATHAuth's dependencies ask for a newer PHP than this image has, so
+# none is written now either.
+RUN for d in /srv/femiwiki.com/extensions/*/vendor/composer /srv/femiwiki.com/skins/*/vendor/composer; do \
+      COMPOSER_HOME=/composer /usr/bin/composer dump-autoload --no-dev --classmap-authoritative \
+        --ignore-platform-reqs --working-dir "${d%/vendor/composer}" || exit 1; \
+    done
+
 # The same for the classes extensions declare through AutoloadNamespaces,
 # registered by LocalSettings.php for the extensions it loads
 COPY autoload-extensions.php /tmp/
