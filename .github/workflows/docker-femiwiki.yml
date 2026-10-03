@@ -88,6 +88,11 @@ jobs:
           c="$(docker ps -qf name=mediawiki_fastcgi | head -1)"
           docker cp .github/scripts/CheckResourceLoader.php "$c:/tmp/CheckResourceLoader.php"
           docker exec "$c" php /tmp/CheckResourceLoader.php 2>&1 | grep -v -e '^{' -e '^$'
+      - name: Fail on any exception the wiki logged
+        run: |
+          if docker service logs mediawiki_fastcgi 2>&1 | grep -E '"channel":"exception"|PHP Fatal error'; then
+            exit 1
+          fi
       - name: backup of failure
         if: ${{ failure() }}
         timeout-minutes: 1
