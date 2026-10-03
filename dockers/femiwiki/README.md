@@ -1,5 +1,10 @@
 # femiwiki
 
+## v1.7.17
+
+- Bump femiwiki/femiwiki-extensions to v2.7.5
+  - follow the LESS files 1.46 moved (Femiwiki a468700) (femiwiki/FemiwikiSkin#1009)
+
 ## v1.7.16
 
 - Bump femiwiki/caddy to v1.8.0
