@@ -815,7 +815,43 @@ $wgPageImagesLeadSectionOnly = false;
 $wgPageImagesOpenGraphFallbackImage = "/fw-resources/favicons/favicon-512.png";
 
 // PageViewInfo
+// Kept loaded because GrowthExperiments registers Special:Impact only when it is.
 wfLoadExtension( 'PageViewInfo' );
+// PageViewInfo's only bundled backend is Wikimedia's pageviews API, which has no data for
+// femiwiki.com and fails every lookup (femiwiki/docker-mediawiki#1282). Our Google Analytics
+// backend, PageViewInfoGA, still reads Universal Analytics, which Google has shut down. Until
+// it is ported to GA4 (femiwiki/femiwiki#605), answer with no data instead of calling out.
+$wgHooks['MediaWikiServices'][] = static function ( $services ) {
+	$services->redefineService( 'PageViewService', static function () {
+		return new class implements \MediaWiki\Extension\PageViewInfo\PageViewService {
+
+			/** @inheritDoc */
+			public function supports( $metric, $scope ) {
+				return false;
+			}
+
+			/** @inheritDoc */
+			public function getPageData( array $titles, $days, $metric = self::METRIC_VIEW ) {
+				return StatusValue::newGood( [] );
+			}
+
+			/** @inheritDoc */
+			public function getSiteData( $days, $metric = self::METRIC_VIEW ) {
+				return StatusValue::newGood( [] );
+			}
+
+			/** @inheritDoc */
+			public function getTopPages( $metric = self::METRIC_VIEW ) {
+				return StatusValue::newGood( [] );
+			}
+
+			/** @inheritDoc */
+			public function getCacheExpiry( $metric, $scope ) {
+				return 0;
+			}
+		};
+	} );
+};
 
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
