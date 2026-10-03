@@ -5,6 +5,11 @@ FROM composer:2.10.3
 
 RUN apk add --no-cache npm
 
+# git fetch can leave maintenance running in the background, which writes into
+# .git while the installer deletes it ("Directory not empty")
+RUN git config --global maintenance.auto false &&\
+    git config --global gc.auto 0
+
 # How many extensions to fetch at once. Left empty, the installer reads the
 # building machine's CPU count with nproc on every build and uses twice that.
 ARG INSTALL_JOBS=

@@ -1,5 +1,5 @@
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/php-fpm:1.6.0
-ARG MEDIAWIKI_VERSION=1.43.10
+ARG MEDIAWIKI_VERSION=1.46.2
 
 RUN mkdir /mediawiki/
 RUN MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\

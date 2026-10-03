@@ -1,5 +1,30 @@
 # femiwiki
 
+## v2.0.4
+
+- Bump femiwiki/femiwiki-extensions to v3.1.2
+  - the Femiwiki skin's mediawiki.ui.button and mobile.init skinStyles compile on 1.46 (femiwiki/FemiwikiSkin#1009)
+- Stop loading Wikibase's REST route file, which 1.46 no longer ships (#1260)
+
+## v2.0.3
+
+- Bump femiwiki/mediawiki to v4.0.1 (MediaWiki 1.46.2)
+
+## v2.0.2
+
+- Read old CollaborationKit revisions with core's fallback handler so dumpBackup.php finishes (ported from #1249)
+
+## v2.0.1
+
+- Set OAuth to the local user ID source explicitly, which OAuth 1.46 asks for instead of `$wgMWOAuthSharedUserIDs = false`
+
+## v2.0.0
+
+- Bump femiwiki/mediawiki to v4.0.0 (MediaWiki 1.46.1) and femiwiki/femiwiki-extensions to v3.1.0
+- Stop loading Interwiki, which MediaWiki 1.46 ships in core
+- Load CommunityConfiguration, which GrowthExperiments requires on 1.46
+- Drop settings that MediaWiki 1.46 and its extensions removed; GrowthExperiments now always adds its confirmation email notice to the account creation form
+
 ## v1.7.17
 
 - Bump femiwiki/femiwiki-extensions to v2.7.5
