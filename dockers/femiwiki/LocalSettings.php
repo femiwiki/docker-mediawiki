@@ -1034,11 +1034,8 @@ $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
 // Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
-// Edit Check: the citation check only, not the paste check
+// Edit Check: the citation and paste checks
 $wgVisualEditorEditCheck = true;
-$wgVisualEditorEditCheckDefaultConfig = [
-	'paste' => [ 'showAsCheck' => false ],
-];
 
 // Widgets
 wfLoadExtension( 'Widgets' );
