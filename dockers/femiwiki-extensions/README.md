@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v3.2.0
+
+- remove the HTMLTags extension
+
 ## v3.1.2
 
 - Turn off git's automatic maintenance while installing, which raced the removal of .git and failed the v3.1.1 build twice on DiscordRCFeed

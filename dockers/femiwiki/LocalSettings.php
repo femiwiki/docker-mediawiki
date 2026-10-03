@@ -700,12 +700,6 @@ $wgWelcomeSurveyEnabled = false;
 // GuidedTour
 wfLoadExtension( 'GuidedTour' );
 
-// HTMLTags
-wfLoadExtension( 'HTMLTags' );
-$wgHTMLTagsAttributes['a'] = [ 'href', 'class', 'itemprop' ];
-$wgHTMLTagsAttributes['link'] = [ 'href', 'itemprop' ];
-$wgHTMLTagsAttributes['meta'] = [ 'content', 'itemprop' ];
-
 // InputBox
 wfLoadExtension( 'InputBox' );
 
