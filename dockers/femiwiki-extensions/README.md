@@ -2,6 +2,10 @@
 
 This docker image contains MediaWiki extensions Femiwiki uses.
 
+## v3.2.1
+
+- Move FacetedCategory to dd59145 of `REL1_46`, which reads categorylinks through linktarget now that MediaWiki 1.45 dropped `cl_to`. This fixes Special:CategoryIntersectionSearch and the links update after a category page is added to a category.
+
 ## v3.2.0
 
 - remove the HTMLTags extension
