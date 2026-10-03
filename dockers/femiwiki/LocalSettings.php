@@ -251,6 +251,16 @@ $wgNativeImageLazyLoading = true;
 // be publically accessible from the web.
 $wgCacheDirectory = '/tmp/cache';
 
+// The localisation cache as PHP arrays, which opcache keeps in shared memory,
+// as Wikimedia does. The image builds every language into /srv/l10n, outside
+// the site root; see the Dockerfile. See femiwiki/infra#1073.
+$wgLocalisationCacheConf['storeClass'] = 'LCStoreStaticArray';
+$wgLocalisationCacheConf['storeDirectory'] = '/srv/l10n';
+// Nothing changes those files after the build, so a request does not stat
+// every i18n file to check them. Setup.php already reads special page aliases,
+// so the build itself needs the automatic rebuild.
+$wgLocalisationCacheConf['manualRecache'] = getenv( 'FW_L10N_BUILD' ) === false;
+
 // Site language code, should be one of the list in ./languages/data/Names.php
 $wgLanguageCode = 'ko';
 $wgLoginLanguageSelector = true;

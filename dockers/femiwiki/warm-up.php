@@ -37,8 +37,8 @@ const PAGES = [
 // others cold.
 const ATTEMPTS = 6;
 
-// The first page also builds the localisation cache for its language, which
-// this image has no chance to build earlier, so it is given room.
+// The first page compiles the whole hot path into an empty opcache, so it is
+// given room.
 const FIRST_TIMEOUT_MS = 90000;
 const TIMEOUT_MS = 30000;
 
