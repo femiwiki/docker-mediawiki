@@ -201,7 +201,9 @@ jobs:
 
   bump-infra:
     needs: [push-manifest]
-    if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+    # INFRA_BUMP_PAUSED holds the bump while main builds a MediaWiki that is no
+    # longer the one serving, as during femiwiki/femiwiki#645.
+    if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' && vars.INFRA_BUMP_PAUSED != 'true'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
