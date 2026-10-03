@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.11
+
+- Bump femiwiki/femiwiki-extensions to v3.2.5
+  - 보안 키와 패스키를 등록할 수 없던 문제 수정 (femiwiki/docker-mediawiki#1298)
+
 ## v2.0.10
 
 - Bump femiwiki/femiwiki-extensions to v3.2.4
