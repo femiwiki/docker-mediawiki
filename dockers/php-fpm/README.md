@@ -2,6 +2,10 @@
 
 미디어위키 실행에 필요한 각종 PHP 디펜던시들을 설치한다.
 
+## v1.7.0
+
+- Add the memcached extension, MediaWiki's C memcached client
+
 ## v1.6.0
 
 - Bump php to 8.3.35, which MediaWiki 1.46 requires
