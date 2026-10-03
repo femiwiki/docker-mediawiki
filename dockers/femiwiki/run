@@ -53,6 +53,11 @@ if [ -z "${MEDIAWIKI_SKIP_UPDATE:-}" ]; then
   /srv/femiwiki.com/maintenance/update.php --quick
 fi
 
+# ResourceLoader keeps each module's messages in memcached for a week. The
+# localisation cache comes built in the image, so nothing else tells it that
+# this image's messages changed. Failing to reach memcached must not stop start.
+php /srv/femiwiki.com/maintenance/run.php purgeMessageBlobStore || true
+
 # Add Femiwiki to the sites table
 if [ -z "${MEDIAWIKI_SKIP_IMPORT_SITES:-}" ]; then
   php /srv/femiwiki.com/maintenance/importSites.php /a/site-list.xml

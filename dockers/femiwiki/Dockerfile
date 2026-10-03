@@ -1,5 +1,6 @@
 # PHP 설정은 /usr/local/etc/php, 미디어위키와 확장은 /srv/femiwiki.com,
-# 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 캐시는 /tmp/cache에 있습니다.
+# 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 캐시는 /tmp/cache, 지역화 캐시는
+# /srv/l10n에 있습니다.
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.8.1 AS caddy
 
 FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:3.2.3 AS extensions
@@ -56,6 +57,15 @@ RUN php /a/429.php /srv/femiwiki.com /srv/femiwiki.com
 COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/a/"]
 
 COPY --chown=www-data LocalSettings.php /a/
+
+# Every language's localisation cache, built once here rather than by the first
+# request for it in each container; see LocalSettings.php. Nothing at build time
+# can reach memcached or the database, and run purges the message blobs instead.
+RUN cp /a/LocalSettings.php LocalSettings.php &&\
+    FW_L10N_BUILD=1 FW_MAIN_CACHE=none FW_PARSER_CACHE=none FW_MESSAGE_CACHE=none \
+      php maintenance/run.php rebuildLocalisationCache \
+      --no-database --skip-message-purge --force --no-progress --threads "$(nproc)" &&\
+    rm LocalSettings.php
 
 # php-fpm liveness probe from Wikimedia's production images, baked in rather
 # than fetched by the healthcheck, whose failed fetch restart-looped containers.
