@@ -1,5 +1,11 @@
 # femiwiki
 
+## v2.0.4
+
+- Bump femiwiki/femiwiki-extensions to v3.1.2
+  - the Femiwiki skin's mediawiki.ui.button and mobile.init skinStyles compile on 1.46 (femiwiki/FemiwikiSkin#1009)
+- Stop loading Wikibase's REST route file, which 1.46 no longer ships (#1260)
+
 ## v2.0.3
 
 - Bump femiwiki/mediawiki to v4.0.1 (MediaWiki 1.46.2)
