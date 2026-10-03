@@ -1,5 +1,9 @@
 # femiwiki
 
+## v2.0.3
+
+- Bump femiwiki/mediawiki to v4.0.1 (MediaWiki 1.46.2)
+
 ## v2.0.2
 
 - Read old CollaborationKit revisions with core's fallback handler so dumpBackup.php finishes (ported from #1249)
