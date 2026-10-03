@@ -68,11 +68,6 @@ jobs:
             const latest = semver.rsort(versions)[0];
 
             fs.writeFileSync(dockerfile, text.replace(`php:${cur}-${variant}`, `php:${latest}-${variant}`));
-            const phpcs = '.phpcs.xml';
-            fs.writeFileSync(
-              phpcs,
-              fs.readFileSync(phpcs, 'utf8').replace(/(<config name="testVersion" value=")[^"]*"/, `$1${prefix}"`),
-            );
             const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const body = [
               `[MediaWiki 1.${mediawiki} supports PHP ${prefix}](${template}), so this bumps PHP ${cur} → ${latest}.`,
