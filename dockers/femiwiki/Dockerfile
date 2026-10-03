@@ -5,7 +5,7 @@ FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.8.1 AS caddy
 
 FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:3.2.5 AS extensions
 
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:4.0.1
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:4.0.2
 
 # Set timezone
 ENV TZ=Asia/Seoul
