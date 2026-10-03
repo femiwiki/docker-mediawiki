@@ -40,6 +40,34 @@ jobs:
           load: true
           push: false
           tags: ghcr.io/femiwiki/femiwiki:docker-test
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      # A MediaWiki: page the new code no longer reads stops working without an
+      # error, as the Cite tool definition did in femiwiki/femiwiki#645. This
+      # only warns, since a page the deployed code still reads has to wait for
+      # the cutover before it can go.
+      - name: 'List the MediaWiki: pages this image stops reading'
+        env:
+          CONTAINER_TF: https://raw.githubusercontent.com/femiwiki/infra/main/docker/container.tf
+        run: |
+          deployed="$(curl -sSf "$CONTAINER_TF" | grep -oE 'ghcr\.io/femiwiki/femiwiki:[^"]+' | head -1)"
+          for pair in "old:${deployed}" new:ghcr.io/femiwiki/femiwiki:docker-test; do
+            c="$(docker create "${pair#*:}")"
+            docker cp -q "$c:/srv/femiwiki.com" "${RUNNER_TEMP}/${pair%%:*}"
+            docker rm "$c" > /dev/null
+          done
+          node .github/scripts/stale-messages.mts "${RUNNER_TEMP}/old" "${RUNNER_TEMP}/new" \
+            https://femiwiki.com/api.php > "${RUNNER_TEMP}/stale.md"
+          {
+            echo "MediaWiki: pages on femiwiki.com, \`${deployed}\` against this image:"
+            echo
+            cat "${RUNNER_TEMP}/stale.md"
+          } >> "$GITHUB_STEP_SUMMARY"
+          n="$(grep -cE '\| (removed|unread) \|' "${RUNNER_TEMP}/stale.md" || true)"
+          if [ "$n" -gt 0 ]; then
+            echo "::warning::${n} MediaWiki: pages hold a customisation this image no longer reads. See the job summary."
+          fi
       - name: Initialize docker swarm and start services
         run: |
           docker swarm init
