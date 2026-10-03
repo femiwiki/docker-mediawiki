@@ -66,6 +66,19 @@ jobs:
           docker cp .github/scripts/CheckConfigKeys.php "$c:/tmp/CheckConfigKeys.php"
           docker cp development/LocalSettings.php "$c:/tmp/LocalSettings.php"
           docker exec "$c" php /tmp/CheckConfigKeys.php /tmp/LocalSettings.php
+      # A route file that fails to load breaks every /rest.php request, search
+      # suggestions included; the discovery document lists every module, and
+      # each module's spec reads that module's routes.
+      - name: Test every REST module
+        shell: bash
+        run: |
+          fail=0
+          curl -sSf 127.0.0.1:8080/rest.php/specs/v0/discovery -o "$RUNNER_TEMP/discovery.json"
+          for url in $(jq -r '.modules[].spec' "$RUNNER_TEMP/discovery.json") \
+            '127.0.0.1:8080/rest.php/v1/search/title?q=a&limit=1'; do
+            curl -sSfo /dev/null "$url" || { echo "::error::$url"; fail=1; }
+          done
+          exit "$fail"
       - name: backup of failure
         if: ${{ failure() }}
         timeout-minutes: 1
