@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.6
+
+- Bump femiwiki/femiwiki-extensions to v3.2.1
+  - 교집합분류검색 오류 수정 (femiwiki/docker-mediawiki#1279)
+
 ## v2.0.5
 
 - Bump femiwiki/femiwiki-extensions to v3.2.0
