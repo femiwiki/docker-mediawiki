@@ -1,5 +1,11 @@
 # femiwiki
 
+## v2.0.14
+
+- Bump femiwiki/caddy to v1.9.0
+  - serve load.php from the cache to requests with a session cookie (caddy-mwcache 485f578) (femiwiki/caddy-mwcache#167)
+  - never store a HEAD response (caddy-mwcache 485f578) (femiwiki/caddy-mwcache#169)
+
 ## v2.0.13
 
 - Bump femiwiki/caddy to v1.8.2
