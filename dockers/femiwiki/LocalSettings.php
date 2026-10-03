@@ -1034,6 +1034,13 @@ $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
 // Enable Single Edit Tab to opt-in
 $wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
+// Ask newer editors for a citation when they add a paragraph without one.
+// Edit Check also warns on pasted text by default, with a link to the
+// Wikimedia licensing policy, so that check stays off.
+$wgVisualEditorEditCheck = true;
+$wgVisualEditorEditCheckDefaultConfig = [
+	'paste' => [ 'showAsCheck' => false ],
+];
 
 // Widgets
 wfLoadExtension( 'Widgets' );
