@@ -38,6 +38,12 @@ RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --optimize-autoloa
 # https://phabricator.wikimedia.org/T363063
 RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --optimize-autoloader --classmap-authoritative --working-dir /srv/femiwiki.com/extensions/TemplateStyles
 
+# The same for the classes extensions declare through AutoloadNamespaces,
+# registered by LocalSettings.php for the extensions it loads
+COPY autoload-extensions.php /tmp/
+RUN mkdir -p /a && php /tmp/autoload-extensions.php /srv/femiwiki.com /a/autoload-extensions.php &&\
+    rm /tmp/autoload-extensions.php
+
 # Web server should be able to write 'extensions/Widgets/compiled_templates'
 # directory Required by 'Widgets' extension
 # Reference: https://www.mediawiki.org/wiki/Extension:Widgets
