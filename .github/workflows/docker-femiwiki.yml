@@ -79,6 +79,15 @@ jobs:
             curl -sSfo /dev/null "$url" || { echo "::error::$url"; fail=1; }
           done
           exit "$fail"
+      # load.php answers a module that fails to build with 200 and the error in
+      # a comment, so ask ResourceLoader itself. Its log lines go to stderr as
+      # JSON and are left out.
+      - name: Build every ResourceLoader module for the femiwiki skin
+        shell: bash
+        run: |
+          c="$(docker ps -qf name=mediawiki_fastcgi | head -1)"
+          docker cp .github/scripts/CheckResourceLoader.php "$c:/tmp/CheckResourceLoader.php"
+          docker exec "$c" php /tmp/CheckResourceLoader.php 2>&1 | grep -v -e '^{' -e '^$'
       - name: backup of failure
         if: ${{ failure() }}
         timeout-minutes: 1
