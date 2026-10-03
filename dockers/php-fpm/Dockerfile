@@ -46,6 +46,9 @@ RUN install-php-extensions \
     # Required by Scribunto
     luasandbox \
     wikidiff2 \
+    # The C memcached client. MediaWiki's pure-PHP client spends about 14% of a
+    # page's CPU reading and writing its sockets. See femiwiki/infra#1073.
+    memcached-3.4.0 \
 ;
 
 # Install the default object cache
