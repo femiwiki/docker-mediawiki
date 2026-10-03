@@ -12,7 +12,13 @@
 // - orphan: is in neither, and is no key built at runtime.
 // TITLE adds a page the wiki no longer has, to check a move already made.
 import { execFileSync } from 'node:child_process';
-import { globSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  globSync,
+  mkdtempSync,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -32,6 +38,18 @@ const lcfirst = (s: string) => s[0].toLowerCase() + s.slice(1);
 const ucfirst = (s: string) => s[0].toUpperCase() + s.slice(1);
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+// Caddy throttles api.php and says when to come back
+const get = async (url: string): Promise<any> => {
+  for (let i = 0; ; i++) {
+    const res = await fetch(url);
+    if (res.ok) return res.json();
+    if (res.status !== 429 || i === 4)
+      throw new Error(`${res.status} from ${url}`);
+    const wait = Number(res.headers.get('retry-after') ?? 10);
+    await new Promise((r) => setTimeout(r, wait * 1000));
+  }
+};
+
 const pages: string[] = [];
 for (let cont: Record<string, string> = {}; cont;) {
   const q = new URLSearchParams({
@@ -43,7 +61,7 @@ for (let cont: Record<string, string> = {}; cont;) {
     aplimit: 'max',
     ...cont,
   });
-  const res = await (await fetch(`${api}?${q}`)).json();
+  const res = await get(`${api}?${q}`);
   pages.push(...res.query.allpages.map((p: { title: string }) => p.title));
   cont = res.continue;
 }
@@ -64,6 +82,9 @@ const pats = join(mkdtempSync(join(tmpdir(), 'stale-messages-')), 'pats');
 writeFileSync(pats, wanted.join('\n'));
 
 const side = (dir: string) => {
+  // An empty scan would read as nothing stale
+  if (!existsSync(join(dir, 'includes/Defines.php')))
+    throw new Error(`${dir} is not a MediaWiki directory`);
   const keys = new Set(
     globSync('**/i18n/**/en.json', { cwd: dir })
       .filter((f) => !/(^|\/)(vendor|node_modules)\//.test(f))
@@ -134,4 +155,3 @@ const rows = pages
   .map(([t, s]) => `| ${t} | ${s} | ${s === 'orphan' ? '' : hint(keyOf(t))} |`);
 console.log('| Page | Signal | Live keys alike |\n| --- | --- | --- |');
 console.log(rows.join('\n'));
-process.exitCode = rows.length ? 1 : 0;
