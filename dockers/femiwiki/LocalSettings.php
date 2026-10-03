@@ -1130,3 +1130,15 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 }
 
 require_once '/a/Hotfix.php';
+
+// Class map of the extensions loaded above, written at build by
+// autoload-extensions.php, so the autoloader reads a path instead of testing
+// PSR-4 candidates with is_file() on every request. Last, after anything the
+// hotfix loads.
+if ( is_readable( '/a/autoload-extensions.php' ) ) {
+	$fwAutoload = require '/a/autoload-extensions.php';
+	foreach ( MediaWiki\Registration\ExtensionRegistry::getInstance()->getQueue() as $fwManifest => $fwMtime ) {
+		AutoLoader::registerClasses( $fwAutoload[$fwManifest] ?? [] );
+	}
+	unset( $fwAutoload, $fwManifest, $fwMtime );
+}

@@ -30,10 +30,19 @@ WORKDIR /srv/femiwiki.com
 
 COPY composer.local.json /srv/femiwiki.com
 
-RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --working-dir /srv/femiwiki.com
+# A class map for every package, and nothing looked up outside it, so loading a
+# library class does not stat candidate files. Wikimedia's mediawiki/vendor sets
+# the same two options; see femiwiki/infra#1073
+RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --optimize-autoloader --classmap-authoritative --working-dir /srv/femiwiki.com
 
 # https://phabricator.wikimedia.org/T363063
-RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --working-dir /srv/femiwiki.com/extensions/TemplateStyles
+RUN COMPOSER_HOME=/composer /usr/bin/composer update --no-dev --optimize-autoloader --classmap-authoritative --working-dir /srv/femiwiki.com/extensions/TemplateStyles
+
+# The same for the classes extensions declare through AutoloadNamespaces,
+# registered by LocalSettings.php for the extensions it loads
+COPY autoload-extensions.php /tmp/
+RUN mkdir -p /a && php /tmp/autoload-extensions.php /srv/femiwiki.com /a/autoload-extensions.php &&\
+    rm /tmp/autoload-extensions.php
 
 # Web server should be able to write 'extensions/Widgets/compiled_templates'
 # directory Required by 'Widgets' extension
