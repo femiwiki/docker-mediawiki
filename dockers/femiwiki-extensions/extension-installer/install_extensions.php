@@ -140,12 +140,14 @@ function wfInstallTarball( string $type, string $name, string $url ): void {
 }
 
 /**
- * extensions.json: the WMF branch, commit hashes by name, our own repositories
- * and commits, tarball URL templates, and submodule URL replacements
+ * extensions.json: the WMF branch, the branch of any WMF entry not on it,
+ * commit hashes by name, our own repositories and commits, tarball URL
+ * templates, and submodule URL replacements
  *
  * @return array
  * @phan-return array{
  *   WMF-branch: string,
+ *   WMF-branches?: array<string, string>,
  *   WMF-extensions: array<string, string>,
  *   WMF-skins: array<string, string>,
  *   in-house: array<string, array{repository: string, commit: string, type?: string}>,
@@ -163,8 +165,8 @@ $data = wfReadExtensions();
 if ( ( $argv[1] ?? '' ) === 'one' ) {
 	[ , , $kind, $type, $name ] = $argv;
 	if ( $kind === 'wmf' ) {
-		wfInstallWmf( $type, $name, $data["WMF-{$type}s"][$name], $data['WMF-branch'],
-			$data['submodule-mirrors'] ?? [] );
+		wfInstallWmf( $type, $name, $data["WMF-{$type}s"][$name],
+			$data['WMF-branches'][$name] ?? $data['WMF-branch'], $data['submodule-mirrors'] ?? [] );
 	} elseif ( $kind === 'in-house' ) {
 		$entry = $data['in-house'][$name];
 		wfInstallInHouse( $type, $name, $entry['repository'], $entry['commit'] );

@@ -1,15 +1,15 @@
-# Moves every WMF extension and skin in extensions.json to the head of the
-# WMF branch. The workflow passes the names and the branch as values, read from
+# Moves every WMF extension and skin in extensions.json to the head of its
+# branch. The workflow passes each name with its branch as values, read from
 # extensions.json itself, so a new entry needs no change here.
 name: Bump the WMF extensions and skins to the heads of their branch
 
 sources:
 {{- range $type, $names := .names }}
-{{- range $names }}
-  {{ $type }}-{{ . }}:
+{{- range $name, $branch := $names }}
+  {{ $type }}-{{ $name }}:
     kind: shell
     spec:
-      command: git ls-remote --exit-code https://gerrit.wikimedia.org/r/mediawiki/{{ $type }}s/{{ . }} refs/heads/{{ $.branch }}
+      command: git ls-remote --exit-code https://gerrit.wikimedia.org/r/mediawiki/{{ $type }}s/{{ $name }} refs/heads/{{ $branch }}
     transformers:
       - findsubmatch:
           pattern: '^([0-9a-f]{40})\t'
@@ -19,15 +19,15 @@ sources:
 
 targets:
 {{- range $type, $names := .names }}
-{{- range $names }}
-  {{ $type }}-{{ . }}:
+{{- range $name, $branch := $names }}
+  {{ $type }}-{{ $name }}:
     kind: file
-    sourceid: {{ $type }}-{{ . }}
+    sourceid: {{ $type }}-{{ $name }}
     spec:
       file: dockers/femiwiki-extensions/extension-installer/extensions.json
-      matchpattern: '"{{ . }}": "[0-9a-f]{40}"'
+      matchpattern: '"{{ $name }}": "[0-9a-f]{40}"'
       # source is filled in after the sources run, so it is written out
       # literally here for updatecli's second pass
-      replacepattern: '"{{ . }}": "{{ `{{ source "` }}{{ $type }}-{{ . }}{{ `" }}` }}"'
+      replacepattern: '"{{ $name }}": "{{ `{{ source "` }}{{ $type }}-{{ $name }}{{ `" }}` }}"'
 {{- end }}
 {{- end }}
