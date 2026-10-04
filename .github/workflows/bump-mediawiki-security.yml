@@ -150,11 +150,12 @@ jobs:
             for (const [type, key] of [['extension', 'WMF-extensions'], ['skin', 'WMF-skins']]) {
               for (const [name, old] of Object.entries(config[key])) {
                 const repo = `mediawiki-${type}s-${name}`;
+                const head = config['WMF-branches']?.[name] ?? branch;
                 let data;
                 try {
-                  ({ data } = await github.rest.repos.compareCommits({ owner: 'wikimedia', repo, base: old, head: branch }));
+                  ({ data } = await github.rest.repos.compareCommits({ owner: 'wikimedia', repo, base: old, head }));
                 } catch (error) {
-                  core.warning(`could not compare ${name} ${old.slice(0, 7)}...${branch}: ${error.message}`);
+                  core.warning(`could not compare ${name} ${old.slice(0, 7)}...${head}: ${error.message}`);
                   continue;
                 }
                 const security = data.commits
@@ -163,13 +164,13 @@ jobs:
                 if (security.length === 0) {
                   continue;
                 }
-                const head = data.commits.at(-1).sha;
-                config[key][name] = head;
+                const sha = data.commits.at(-1).sha;
+                config[key][name] = sha;
                 moved.push(
-                  `- [${name}](https://github.com/wikimedia/${repo}/compare/${old.slice(0, 7)}...${head.slice(0, 7)})`,
+                  `- [${name}](https://github.com/wikimedia/${repo}/compare/${old.slice(0, 7)}...${sha.slice(0, 7)})`,
                   ...security.map((subject) => `  - ${subject}`),
                 );
-                notes.push(`*${name} ${old.slice(0, 7)} → ${head.slice(0, 7)}`);
+                notes.push(`*${name} ${old.slice(0, 7)} → ${sha.slice(0, 7)}`);
               }
             }
 

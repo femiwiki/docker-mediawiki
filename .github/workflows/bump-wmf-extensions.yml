@@ -18,13 +18,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Read the names and the branch from extensions.json
+      - name: Read the names and their branches from extensions.json
         id: values
         env:
           VALUES: ${{ runner.temp }}/values.yml
         run: |
           json=dockers/femiwiki-extensions/extension-installer/extensions.json
-          jq '{branch: .["WMF-branch"], names: {extension: (.["WMF-extensions"] | keys), skin: (.["WMF-skins"] | keys)}}' \
+          jq '.["WMF-branch"] as $default | (.["WMF-branches"] // {}) as $branches
+            | {names: {extension: .["WMF-extensions"], skin: .["WMF-skins"]}
+              | map_values(with_entries(.value = ($branches[.key] // $default)))}' \
             "$json" > "$VALUES"
           echo "branch=$(jq -r '.["WMF-branch"]' "$json")" >> "$GITHUB_OUTPUT"
 
