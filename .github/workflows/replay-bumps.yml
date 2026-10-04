@@ -1,0 +1,81 @@
+name: Rebuild conflicting bump pull requests
+
+# Every bump pull request that changes an image's README writes the version
+# after the one on main, so once one of them merges the others open beside it
+# conflict and sit with auto-merge on, as #1316, #1320 and #1321 did. A push to
+# main rebuilds those on top of it with replay-bump.sh.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dockers/**'
+  workflow_dispatch:
+
+concurrency:
+  group: replay-bumps
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  replay:
+    if: github.repository_owner == 'femiwiki'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: main
+          persist-credentials: false
+          # replay-bump.sh finds where each pull request branched off main
+          fetch-depth: 0
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+      # Pushed with the app's token, not GITHUB_TOKEN, so the new head gets its
+      # checks. Only the app's own bump branches: a person's is theirs to rebase
+      - name: Rebuild the bump pull requests that conflict with main
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
+          failed=0
+          prs="$(gh pr list --repo "$REPO" --state open --limit 100 \
+            --json number,headRefName,headRefOid,isCrossRepository,author \
+            --jq '.[] | select(.author.login == "app/femiwiki-pat-owner" and (.isCrossRepository | not) and (.headRefName | startswith("bump-"))) | "\(.number) \(.headRefName) \(.headRefOid)"')"
+          while read -r number branch oid; do
+            [ -n "$number" ] || continue
+            # GitHub answers UNKNOWN until it has tried the merge
+            for _ in $(seq 24); do
+              state="$(gh pr view "$number" --repo "$REPO" --json mergeable --jq .mergeable)"
+              [ "$state" = UNKNOWN ] || break
+              sleep 5
+            done
+            echo "#${number} ${branch}: ${state}"
+            [ "$state" = CONFLICTING ] || continue
+            git fetch -q "$remote" "+refs/pull/${number}/head:refs/pull/${number}" '+refs/heads/main:refs/remotes/origin/main'
+            git checkout -q --detach origin/main
+            if ! .github/replay-bump.sh "$oid"; then
+              git reset -q --hard
+              echo "::error::#${number} does not apply onto main beyond its README entry; rebase ${branch} by hand"
+              failed=1
+              continue
+            fi
+            # Not over a newer head its own workflow pushed meanwhile
+            if ! git push -q --force-with-lease="refs/heads/${branch}:${oid}" "$remote" "HEAD:refs/heads/${branch}"; then
+              echo "::notice::#${number} moved on while it was rebuilt, so it is left as it is"
+              continue
+            fi
+            echo "::notice::#${number} rebuilt on main as $(git rev-parse --short HEAD)"
+            if [ "$(gh pr view "$number" --repo "$REPO" --json autoMergeRequest --jq '.autoMergeRequest == null')" = true ]; then
+              gh pr merge --squash --auto "$number" --repo "$REPO"
+            fi
+          done <<< "$prs"
+          exit "$failed"
