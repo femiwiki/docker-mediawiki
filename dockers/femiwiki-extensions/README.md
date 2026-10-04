@@ -8,6 +8,10 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 - UnlinkedWikibase follows `master` for "Keep expired data beyond the TTL if necessary" (Gerrit change 1343968), which REL1_46 lacks; without it, infobox labels from Wikidata go blank whenever their cache entry expires. Drop it from `WMF-branches` when `WMF-branch` moves to a branch that has the change, REL1_47 or later, or when the change is backported to REL1_46.
 
+## v3.2.9
+
+- Bump PageViewInfoGA to [fecb328](https://gerrit.wikimedia.org/g/mediawiki/extensions/PageViewInfoGA/+/fecb328f91f019350b923fb8b57694646d72f1e8) of `REL1_46` (1.0.0), which reads Google Analytics 4 instead of Universal Analytics and has no Composer dependencies. LocalSettings.php does not load it yet.
+
 ## v3.2.8
 
 - Move UnlinkedWikibase to [c08a318](https://github.com/wikimedia/mediawiki-extensions-UnlinkedWikibase/commit/c08a31862037ee03e84d2ea34ee553e84b12b205) of `master` (4.1.1), which keeps an entity's data past its TTL until a fetch job replaces it, so Wikidata labels in infoboxes stop going blank when the cache expires. Cached data now lives 86400 s instead of 3600 s before a refresh.
