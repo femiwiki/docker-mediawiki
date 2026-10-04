@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.15
+
+- Bump femiwiki/caddy to v1.10.0
+  - put the request's host in the cache key (caddy-mwcache 4dffb41) (femiwiki/caddy-mwcache#171)
+
 ## v2.0.14
 
 - Bump femiwiki/caddy to v1.9.0
