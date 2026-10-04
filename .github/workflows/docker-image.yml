@@ -232,29 +232,52 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      # Main as it is now, not the commit this run built: create-pull-request
+      # cuts the branch from what is checked out, and a bump merged since then
+      # edits the same lines, as #1310 did to #1311
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
+          ref: main
           persist-credentials: false
           # The release notes read back to the version downstream uses
           fetch-depth: 0
+      # A run re-run after a newer release was bumped would otherwise bump back
+      - name: Check downstream is behind this version
+        id: behind
+        env:
+          IMAGE: ${{ inputs.image }}
+          DOWNSTREAM: ${{ inputs.downstream }}
+          VER: ${{ needs.get-version.outputs.ver }}
+        run: |
+          old="$(grep -oE "ghcr\.io/femiwiki/${IMAGE}:[0-9.]+" "dockers/${DOWNSTREAM}/Dockerfile" | head -n 1 | cut -d: -f2)"
+          if [ "$(printf '%s\n' "$old" "$VER" | sort -V | tail -n 1)" = "$old" ]; then
+            echo "::notice file=dockers/${DOWNSTREAM}/Dockerfile::already on ${IMAGE} v${old}, so v${VER} is not bumped"
+          else
+            echo "behind=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: ./.github/actions/add-nev-version-entry-to-changelog
+        if: steps.behind.outputs.behind == 'true'
         with:
           version: ${{ needs.get-version.outputs.ver }}
           upstream: ${{ inputs.image }}
           downstream: ${{ inputs.downstream }}
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        if: steps.behind.outputs.behind == 'true'
         id: get_workflow_token
         with:
           application_id: ${{ vars.PAT_APPLICATION_ID }}
           application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+      # One branch per image pair, so a newer release force-updates the open
+      # bump pull request instead of opening a second one beside it
       - name: Create Pull Request
+        if: steps.behind.outputs.behind == 'true'
         id: create-pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           commit-message: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to v${{ needs.get-version.outputs.ver }}'
           title: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to v${{ needs.get-version.outputs.ver }}'
-          branch: bump-${{ inputs.image }}-v${{ needs.get-version.outputs.ver }}-femiwiki
+          branch: bump-${{ inputs.image }}-${{ inputs.downstream }}
           body-path: ${{ runner.temp }}/body.md
       - name: Enable Pull Request Automerge
         if: inputs.automerge && steps.create-pull-request.outputs.pull-request-number != ''
