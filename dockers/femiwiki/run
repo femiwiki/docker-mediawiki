@@ -18,7 +18,18 @@ if [ -n "${SSM_SECRETS:-}" ]; then
   WG_SECRET_KEY="$(chamber read -q mediawiki site_key)"
   WG_SMTP_PASSWORD="$(chamber read -q mediawiki/smtp password)"
   WG_SMTP_USERNAME="$(chamber read -q mediawiki/smtp username)"
-  set +a -x
+  set +a
+  # PageViewInfoGA reads its Google service account key from a file, so the key
+  # goes there, readable by php-fpm alone, and not into the environment.
+  if ga_credentials="$(chamber read -q mediawiki/google_analytics credentials)"; then
+    install -d -o www-data -g www-data -m 0700 /a/secrets
+    (umask 077 && printf '%s' "$ga_credentials" > /a/secrets/google-analytics.json)
+    chown www-data:www-data /a/secrets/google-analytics.json
+  else
+    echo 'No Google Analytics credentials in SSM; PageViewInfo shows no view counts' >&2
+  fi
+  unset ga_credentials
+  set -x
 fi
 
 echo 'Starting Femiwiki ...'

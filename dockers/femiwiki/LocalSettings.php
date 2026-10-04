@@ -841,6 +841,13 @@ $wgPageImagesOpenGraphFallbackImage = "/fw-resources/favicons/favicon-512.png";
 // PageViewInfo
 wfLoadExtension( 'PageViewInfo' );
 
+// PageViewInfoGA, so PageViewInfo reads page views from Google Analytics 4 instead of
+// Wikimedia's pageview API (#1282). The GA4 property's time zone is $wgLocaltimezone's.
+wfLoadExtension( 'PageViewInfoGA' );
+$wgPageViewInfoGAPropertyId = '258014701';
+// Written by the run script from SSM Parameter Store
+$wgPageViewInfoGACredentialsFile = '/a/secrets/google-analytics.json';
+
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
 $wgPFEnableStringFunctions = true;
@@ -1137,6 +1144,9 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 
 	// 이메일 인증 요구 비활성화
 	$wgEmailConfirmToEdit = false;
+
+	// Google Analytics에서 조회수 읽어오기 비활성화
+	$wgPageViewInfoGAPropertyId = false;
 
 	// AWS 플러그인 비활성화
 	$wgAWSBucketName = null;
