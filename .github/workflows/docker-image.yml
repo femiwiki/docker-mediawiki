@@ -279,6 +279,25 @@ jobs:
           title: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to v${{ needs.get-version.outputs.ver }}'
           branch: bump-${{ inputs.image }}-${{ inputs.downstream }}
           body-path: ${{ runner.temp }}/body.md
+      # A conflicting pull request reports no failing check of its own, so it
+      # fails here, e.g. when the open one merged while this run was pushing
+      - name: Check the pull request merges
+        if: steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: |
+          # GitHub answers UNKNOWN until it has tried the merge
+          for _ in $(seq 24); do
+            state="$(gh pr view "$PR_NUMBER" --repo "$REPO" --json mergeable --jq .mergeable)"
+            [ "$state" = UNKNOWN ] || break
+            sleep 5
+          done
+          if [ "$state" != MERGEABLE ]; then
+            echo "::error::#${PR_NUMBER} is ${state} against main; re-run this job to rebuild it from main"
+            exit 1
+          fi
       - name: Enable Pull Request Automerge
         if: inputs.automerge && steps.create-pull-request.outputs.pull-request-number != ''
         env:
