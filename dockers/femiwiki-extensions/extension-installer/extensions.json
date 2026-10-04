@@ -1,5 +1,8 @@
 {
   "WMF-branch": "REL1_46",
+  "WMF-branches": {
+    "UnlinkedWikibase": "master"
+  },
   "WMF-extensions": {
     "AbuseFilter": "cc538996b15bfa9ed78dccb5cf466289ecc80962",
     "AchievementBadges": "fae8b282424051acfaeb2bdabb7db2e37d54d097",
@@ -72,7 +75,7 @@
     "Translate": "a0da2515be5026d3e27df6a4e71a503212e6c8b6",
     "TwoColConflict": "2c7b2f150b38176241299593a1ec96b2cb14d71d",
     "UniversalLanguageSelector": "8b092b01f31353a2a4cedb23b3c7763f0d3659f8",
-    "UnlinkedWikibase": "6d65682e48bcf8d64c715e8237ae3f3d317302ba",
+    "UnlinkedWikibase": "c08a31862037ee03e84d2ea34ee553e84b12b205",
     "UploadWizard": "4bec7ca252a797812bd60b34c76c6ed014fca05a",
     "VisualEditor": "b7322a36801edcb3381918d882d89151b9aff8b4",
     "Widgets": "e7854bc800137cc8bba6743bcc5fde9c69bd9ab5",
