@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.19
+
+- Bump femiwiki/femiwiki-extensions to v3.2.8
+  - 인물 정보 상자 등에서 위키데이터 내용이 가끔 비어 보이던 문제 수정 (femiwiki/docker-mediawiki#1325)
+
 ## v2.0.18
 
 - Bump femiwiki/femiwiki-extensions to v3.2.7
