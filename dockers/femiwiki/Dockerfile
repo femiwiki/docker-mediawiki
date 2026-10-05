@@ -88,7 +88,7 @@ RUN mkdir -p /srv/fcgi-check &&\
 
 # Beside fcgi-probe.php and so outside /srv/femiwiki.com: Caddy resolves paths
 # under the site root, which leaves the probe pool as the only caller.
-COPY databasez.php /srv/fcgi-check/
+COPY databasez.php databasez-probe.php /srv/fcgi-check/
 
 # Reads secrets from SSM Parameter Store at start when SSM_SECRETS is set; see run.
 ARG TARGETARCH
@@ -122,8 +122,8 @@ EXPOSE 443
 EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
-COPY caddy-warmup.php warm-up.php databasez-probe.php create-session-schema.php /a/
+COPY caddy-warmup.php warm-up.php create-session-schema.php /a/
 
 # The paths femiwiki/infra still names, for one image generation; see #1332
-RUN ln -s /etc/mediawiki/LocalSettings.php /etc/mediawiki/Hotfix.php /a/
+RUN ln -s /etc/mediawiki/LocalSettings.php /etc/mediawiki/Hotfix.php /srv/fcgi-check/databasez-probe.php /a/
 CMD ["/usr/local/bin/run"]
