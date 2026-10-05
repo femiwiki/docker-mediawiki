@@ -18,18 +18,13 @@ if [ -n "${SSM_SECRETS:-}" ]; then
   WG_SECRET_KEY="$(chamber read -q mediawiki site_key)"
   WG_SMTP_PASSWORD="$(chamber read -q mediawiki/smtp password)"
   WG_SMTP_USERNAME="$(chamber read -q mediawiki/smtp username)"
-  set +a
-  # PageViewInfoGA reads its Google service account key from a file, so the key
-  # goes there, readable by php-fpm alone, and not into the environment.
-  if ga_credentials="$(chamber read -q mediawiki/google_analytics credentials)"; then
-    install -d -o www-data -g www-data -m 0700 /run/secrets
-    (umask 077 && printf '%s' "$ga_credentials" > /run/secrets/google-analytics.json)
-    chown www-data:www-data /run/secrets/google-analytics.json
-  else
-    echo 'No Google Analytics credentials in SSM; PageViewInfo shows no view counts' >&2
-  fi
-  unset ga_credentials
-  set -x
+  set +a -x
+
+  # PageViewInfoGA authenticates to Google with an OIDC token for this instance's IAM role
+  # (femiwiki/femiwiki#670). Missing only means no view counts, so start anyway; cron retries.
+  install -d -o www-data -g www-data -m 0700 /run/secrets
+  php /usr/local/lib/femiwiki/google-subject-token.php ||
+    echo 'No Google subject token; PageViewInfo shows no view counts until cron gets one' >&2
 fi
 
 echo 'Starting Femiwiki ...'
@@ -93,6 +88,10 @@ if [ -z "${MEDIAWIKI_SKIP_CRON:-}" ]; then
     echo 'SHELL=/bin/bash'
     echo 'BASH_ENV=/etc/femiwiki-cron.env'
     crontab -l
+    # A token lives an hour; PageViewInfoGA reads it at most hourly
+    if [ -n "${SSM_SECRETS:-}" ]; then
+      echo '*/15 * * * * /usr/local/bin/php /usr/local/lib/femiwiki/google-subject-token.php'
+    fi
     # The types LocalSettings keeps off the every-minute runner still have to run,
     # just not at its pace. A few every few minutes clears a backlog over days
     # without the wiki or whatever it calls out to noticing.
