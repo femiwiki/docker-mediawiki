@@ -8,6 +8,10 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 - UnlinkedWikibase follows `master` for "Keep expired data beyond the TTL if necessary" (Gerrit change 1343968), which REL1_46 lacks; without it, infobox labels from Wikidata go blank whenever their cache entry expires. Drop it from `WMF-branches` when `WMF-branch` moves to a branch that has the change, REL1_47 or later, or when the change is backported to REL1_46.
 
+## v3.2.11
+
+- Bump Femiwiki to [cda3f17](https://github.com/femiwiki/FemiwikiSkin/commit/cda3f171e839b1eacbed66fcf756bf82e23ae50c)
+
 ## v3.2.10
 
 - Bump PageViewInfoGA to [e085572](https://gerrit.wikimedia.org/g/mediawiki/extensions/PageViewInfoGA/+/e0855721f41ee2a0ccfa66488028273292d9be29) of `REL1_46` (1.1.0), which gets its tokens from google/auth and accepts Workload Identity Federation configurations as well as service account keys. google/auth has to come from MediaWiki's own vendor, through `composer.local.json`; see femiwiki/femiwiki#670.
