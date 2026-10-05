@@ -1,6 +1,7 @@
 {
   "WMF-branch": "REL1_46",
   "WMF-branches": {
+    "PageViewInfoGA": "master",
     "UnlinkedWikibase": "master"
   },
   "WMF-extensions": {
@@ -48,7 +49,7 @@
     "OAuth": "54cae417f5e1c4df51281e9415b9c5c8e6791d27",
     "PageImages": "05592fd957b730d8c3109842dcf73be4335571ea",
     "PageViewInfo": "8e5414f754783dacc1a0cd92911f8d3ae051d398",
-    "PageViewInfoGA": "e0855721f41ee2a0ccfa66488028273292d9be29",
+    "PageViewInfoGA": "c65d851ae8e8f4b93a08e4478888a2de94ec339e",
     "ParserFunctions": "261a217e242fe176d6090a1102611a1a43c1d2d9",
     "Poem": "7a05889112c8ed8ea68f203df639a4e7161be819",
     "Popups": "8009004bfc8427c6f729bd8608ed5d1867ea6bc7",
