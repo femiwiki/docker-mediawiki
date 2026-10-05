@@ -846,7 +846,7 @@ wfLoadExtension( 'PageViewInfo' );
 wfLoadExtension( 'PageViewInfoGA' );
 $wgPageViewInfoGAPropertyId = '258014701';
 // Written by the run script from SSM Parameter Store
-$wgPageViewInfoGACredentialsFile = '/a/secrets/google-analytics.json';
+$wgPageViewInfoGACredentialsFile = '/run/secrets/google-analytics.json';
 
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
