@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.24
+
+- Bump femiwiki/femiwiki-extensions to v3.4.0
+  - replace the search box with Codex TypeaheadSearch (Femiwiki 1f56536) (femiwiki/FemiwikiSkin#1026)
+
 ## v2.0.23
 
 - Bump femiwiki/femiwiki-extensions to v3.2.13
