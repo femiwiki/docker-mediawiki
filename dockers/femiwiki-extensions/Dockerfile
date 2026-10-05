@@ -27,8 +27,10 @@ RUN --mount=type=bind,from=dockers-php-fpm,source=Dockerfile,target=/php-fpm.Doc
 COPY extension-installer/install_extensions.php extension-installer/extensions.json ./
 RUN INSTALL_JOBS="${INSTALL_JOBS}" php install_extensions.php
 
-# GrowthExperiments shows its topic filter only when WikimediaMessages is
-# loaded, which femiwiki doesn't load; UnifiedExtensionForFemiwiki supplies the
-# topics instead
+# patches/ mirrors /mediawiki: patches/extensions/<name>/*.patch applies to
+# that extension. A patch that no longer applies fails the build.
 COPY patches/ /patches/
-RUN git -C /mediawiki/extensions/GrowthExperiments apply /patches/GrowthExperiments-REL1_46-topics.patch
+RUN for p in /patches/*/*/*.patch; do \
+      [ -e "$p" ] || continue; \
+      git -C "/mediawiki/$(dirname "${p#/patches/}")" apply "$p" || exit 1; \
+    done
