@@ -26,3 +26,9 @@ RUN --mount=type=bind,from=dockers-php-fpm,source=Dockerfile,target=/php-fpm.Doc
     composer config --global platform.php "$php"
 COPY extension-installer/install_extensions.php extension-installer/extensions.json ./
 RUN INSTALL_JOBS="${INSTALL_JOBS}" php install_extensions.php
+
+# GrowthExperiments shows its topic filter only when WikimediaMessages is
+# loaded, which femiwiki doesn't load; UnifiedExtensionForFemiwiki supplies the
+# topics instead
+COPY GrowthExperiments-topics.patch /tmp/
+RUN git -C /mediawiki/extensions/GrowthExperiments apply /tmp/GrowthExperiments-topics.patch

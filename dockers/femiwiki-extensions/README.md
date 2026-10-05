@@ -9,6 +9,10 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 - UnlinkedWikibase follows `master` for "Keep expired data beyond the TTL if necessary" (Gerrit change 1343968), which REL1_46 lacks; without it, infobox labels from Wikidata go blank whenever their cache entry expires. Drop it from `WMF-branches` when `WMF-branch` moves to a branch that has the change, REL1_47 or later, or when the change is backported to REL1_46.
 - PageViewInfoGA follows `master`, as femiwiki's maintainers own it and no longer backport its changes to release branches.
 
+## Patches
+
+- `GrowthExperiments-topics.patch` lets GrowthExperiments show its topic filter without WikimediaMessages, which femiwiki doesn't load; UnifiedExtensionForFemiwiki supplies the topics. `$wgGEHomepageSuggestedEditsEnableTopics` still turns the filter on and off. When a GrowthExperiments bump stops the patch applying, the build fails; refresh the patch against the new commit.
+
 ## v3.2.13
 
 - Move PageViewInfoGA to [c65d851](https://gerrit.wikimedia.org/g/mediawiki/extensions/PageViewInfoGA/+/c65d851ae8e8f4b93a08e4478888a2de94ec339e) of `master`, which asks Google STS for the cloud-platform scope when impersonating a service account. Without it, keyless authentication gets 403 from the IAM Credentials API and page view counts fail; see femiwiki/femiwiki#670.
