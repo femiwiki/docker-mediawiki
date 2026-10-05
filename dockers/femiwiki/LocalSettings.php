@@ -845,8 +845,9 @@ wfLoadExtension( 'PageViewInfo' );
 // Wikimedia's pageview API (#1282). The GA4 property's time zone is $wgLocaltimezone's.
 wfLoadExtension( 'PageViewInfoGA' );
 $wgPageViewInfoGAPropertyId = '258014701';
-// Written by the run script from SSM Parameter Store
-$wgPageViewInfoGACredentialsFile = '/run/secrets/google-analytics.json';
+// Workload Identity Federation from the instance's IAM role (femiwiki/femiwiki#670): no key. infra
+// writes this configuration, and google-subject-token.php the token it names
+$wgPageViewInfoGACredentialsFile = '/etc/mediawiki/google-analytics.json';
 
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
