@@ -13,6 +13,10 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 - `GrowthExperiments-topics.patch` lets GrowthExperiments show its topic filter without WikimediaMessages, which femiwiki doesn't load; UnifiedExtensionForFemiwiki supplies the topics. `$wgGEHomepageSuggestedEditsEnableTopics` still turns the filter on and off. When a GrowthExperiments bump stops the patch applying, the build fails; refresh the patch against the new commit.
 
+## v3.3.0
+
+- let GrowthExperiments show topics without WikimediaMessages
+
 ## v3.2.13
 
 - Move PageViewInfoGA to [c65d851](https://gerrit.wikimedia.org/g/mediawiki/extensions/PageViewInfoGA/+/c65d851ae8e8f4b93a08e4478888a2de94ec339e) of `master`, which asks Google STS for the cloud-platform scope when impersonating a service account. Without it, keyless authentication gets 403 from the IAM Credentials API and page view counts fail; see femiwiki/femiwiki#670.
