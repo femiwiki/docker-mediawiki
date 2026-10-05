@@ -26,3 +26,11 @@ RUN --mount=type=bind,from=dockers-php-fpm,source=Dockerfile,target=/php-fpm.Doc
     composer config --global platform.php "$php"
 COPY extension-installer/install_extensions.php extension-installer/extensions.json ./
 RUN INSTALL_JOBS="${INSTALL_JOBS}" php install_extensions.php
+
+# patches/ mirrors /mediawiki: patches/extensions/<name>/*.patch applies to
+# that extension. A patch that no longer applies fails the build.
+COPY patches/ /patches/
+RUN for p in /patches/*/*/*.patch; do \
+      [ -e "$p" ] || continue; \
+      git -C "/mediawiki/$(dirname "${p#/patches/}")" apply "$p" || exit 1; \
+    done

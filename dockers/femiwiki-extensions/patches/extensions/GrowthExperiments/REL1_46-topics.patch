@@ -1,0 +1,18 @@
+Written against GrowthExperiments REL1_46 (ee50489c). On an upgrade to a
+newer branch, check whether the WikimediaMessages check is still there and
+refresh or drop this patch.
+
+diff --git a/includes/HomepageModules/SuggestedEdits.php b/includes/HomepageModules/SuggestedEdits.php
+index 14231727b..f282ceeda 100644
+--- a/includes/HomepageModules/SuggestedEdits.php
++++ b/includes/HomepageModules/SuggestedEdits.php
+@@ -275,8 +275,7 @@ class SuggestedEdits extends BaseModule {
+ 		UserOptionsLookup $userOptionsLookup
+ 	) {
+ 		return self::isEnabledForAnyone( $context->getConfig() ) &&
+-			$context->getConfig()->get( 'GEHomepageSuggestedEditsEnableTopics' ) &&
+-			ExtensionRegistry::getInstance()->isLoaded( 'WikimediaMessages' );
++			$context->getConfig()->get( 'GEHomepageSuggestedEditsEnableTopics' );
+ 	}
+ 
+ 	/**
