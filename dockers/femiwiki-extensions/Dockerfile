@@ -30,5 +30,5 @@ RUN INSTALL_JOBS="${INSTALL_JOBS}" php install_extensions.php
 # GrowthExperiments shows its topic filter only when WikimediaMessages is
 # loaded, which femiwiki doesn't load; UnifiedExtensionForFemiwiki supplies the
 # topics instead
-COPY GrowthExperiments-REL1_46-topics.patch /tmp/
-RUN git -C /mediawiki/extensions/GrowthExperiments apply /tmp/GrowthExperiments-REL1_46-topics.patch
+COPY patches/ /patches/
+RUN git -C /mediawiki/extensions/GrowthExperiments apply /patches/GrowthExperiments-REL1_46-topics.patch
