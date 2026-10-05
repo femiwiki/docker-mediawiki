@@ -1,7 +1,7 @@
 name: Submit a PR for bumping the PHP minor version
 
-# Dependabot only bumps PHP patches; a newer minor waits until mediawiki.org
-# lists it as supported by the MediaWiki version we run
+# Dependabot only bumps PHP patches; a newer minor waits until the MediaWiki
+# version we run requires it, which follows what Wikimedia production runs
 on:
   schedule:
     - cron: '0 0 * * 1'
@@ -20,65 +20,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - run: npm ci
-
-      - name: Find the highest PHP minor MediaWiki supports
+      - name: Find the PHP minor MediaWiki requires
         id: check
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           BODY: ${{ runner.temp }}/body.md
         with:
           script: |
-            const fs = require('fs');
-            const semver = require('semver');
-            const mediawiki = fs
-              .readFileSync('dockers/mediawiki/Dockerfile', 'utf8')
-              .match(/^ARG MEDIAWIKI_VERSION=1\.(\d+)\./m)[1];
-            const dockerfile = 'dockers/php-fpm/Dockerfile';
-            const text = fs.readFileSync(dockerfile, 'utf8');
-            const [, cur, variant] = text.match(/^FROM .*php:(\d+\.\d+\.\d+)-(\S+)$/m);
-
-            const get = async (url) => {
-              const res = await fetch(url);
-              if (!res.ok) throw new Error(`${url}: ${res.status}`);
-              return res;
-            };
-
-            // Rows look like "|  3 text = 8.3.0+ |  3 start = 39 |  3 end = 46"
-            const template = 'https://www.mediawiki.org/wiki/Template:Compatibility_PHP';
-            const wikitext = await (await get(`${template}?action=raw`)).text();
-            const supported = [...wikitext.matchAll(/\|\s*(\d+) text = (\d+\.\d+)\.\S*\s*\|\s*\1 start = *(\d+)(?:\s*\|\s*\1 end = *(\d+))?/g)]
-              .filter(([, , , start, end]) => +start <= +mediawiki && (end === undefined || +mediawiki <= +end))
-              .map(([, , minor]) => `${minor}.0`);
-            const minor = semver.rsort(supported)[0];
-            if (!minor || semver.lte(minor, cur.replace(/\.\d+$/, '.0'))) {
-              core.info(`MediaWiki 1.${mediawiki} supports up to PHP ${minor?.replace(/\.0$/, '')}; we run ${cur}`);
-              return;
-            }
-
-            const prefix = minor.replace(/\.0$/, '');
-            const tags = await (await get(`https://hub.docker.com/v2/repositories/library/php/tags?name=${prefix}.&page_size=100`)).json();
-            const versions = tags.results
-              .map((t) => t.name.match(new RegExp(`^(${prefix.replace('.', '\\.')}\\.\\d+)-${variant}$`))?.[1])
-              .filter(Boolean);
-            if (versions.length === 0) {
-              core.warning(`No php:${prefix}.x-${variant} image yet`);
-              return;
-            }
-            const latest = semver.rsort(versions)[0];
-
-            fs.writeFileSync(dockerfile, text.replace(`php:${cur}-${variant}`, `php:${latest}-${variant}`));
-            const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const body = [
-              `[MediaWiki 1.${mediawiki} supports PHP ${prefix}](${template}), so this bumps PHP ${cur} → ${latest}.`,
-              '',
-              `Opened by [run ${context.runId}](${run}).`,
-            ].join('\n');
-            fs.writeFileSync(process.env.BODY, body + '\n');
-            core.info(body);
-            core.setOutput('ver', latest);
-            core.setOutput('minor', prefix);
-            core.setOutput('mediawiki', `1.${mediawiki}`);
+            const { default: bumpPhp } = await import(`${process.env.GITHUB_WORKSPACE}/.github/scripts/bump-php.mts`)
+            await bumpPhp({ core, context, env: process.env })
 
       - name: Update README
         if: steps.check.outputs.ver != ''
@@ -86,7 +36,7 @@ jobs:
         with:
           image: php-fpm
           level: minor
-          message: Bump php to ${{ steps.check.outputs.ver }}, which MediaWiki ${{ steps.check.outputs.mediawiki }} supports
+          message: Bump php to ${{ steps.check.outputs.ver }}, which MediaWiki ${{ steps.check.outputs.mediawiki }} requires
 
       # A new entry rebuilds the extensions, whose Dockerfile reads the new PHP
       - name: Update the extensions README
