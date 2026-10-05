@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.22
+
+- Bump femiwiki/femiwiki-extensions to v3.2.11
+  - keep top bar icons beside their labels in RTL (Femiwiki cda3f17) (femiwiki/FemiwikiSkin#1024)
+
 ## v2.0.21
 
 - Bump femiwiki/femiwiki-extensions to v3.2.10
