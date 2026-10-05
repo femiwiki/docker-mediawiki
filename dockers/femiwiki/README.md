@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.25
+
+- Bump femiwiki/femiwiki-extensions to v3.5.0
+  - define Codex CSS custom properties with Femiwiki colors (Femiwiki 7af371b) (femiwiki/FemiwikiSkin#1027)
+
 ## v2.0.24
 
 - Bump femiwiki/femiwiki-extensions to v3.4.0
