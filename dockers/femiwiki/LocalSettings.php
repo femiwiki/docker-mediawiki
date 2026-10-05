@@ -581,9 +581,7 @@ wfLoadExtension( 'CodeEditor' );
 wfLoadExtension( 'CodeMirror' );
 
 // ConfirmEdit
-wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha', 'ConfirmEdit/hCaptcha' ] );
-$wgReCaptchaSiteKey = getenv( 'WG_RE_CAPTCHA_SITE_KEY' ) ?: '';
-$wgReCaptchaSecretKey = getenv( 'WG_RE_CAPTCHA_SECRET_KEY' ) ?: '';
+wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/hCaptcha' ] );
 $wgHCaptchaSiteKey = trim( getenv( 'WG_H_CAPTCHA_SITE_KEY' ) ?: '' );
 $wgHCaptchaSecretKey = trim( getenv( 'WG_H_CAPTCHA_SECRET_KEY' ) ?: '' );
 // hCaptcha refuses every signup when a key is missing, so without both it stays
@@ -592,7 +590,6 @@ if ( $wgHCaptchaSiteKey !== '' && $wgHCaptchaSecretKey !== '' ) {
 	$wgCaptchaClass = 'HCaptcha';
 }
 $wgCaptchaTriggers['createaccount'] = true;
-// If you plan to use VisualEditor forget about this new and better No Captcha solution from Google.
 $wgCaptchaTriggers['edit'] = false;
 $wgCaptchaTriggers['create'] = false;
 $wgCaptchaTriggers['addurl'] = false;
@@ -1144,7 +1141,7 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	// AWS 플러그인 비활성화
 	$wgAWSBucketName = null;
 
-	// 구글 리캡차 비활성화
+	// 캡차 비활성화
 	$wgCaptchaTriggers['edit'] = false;
 	$wgCaptchaTriggers['create'] = false;
 	$wgCaptchaTriggers['createtalk'] = false;
