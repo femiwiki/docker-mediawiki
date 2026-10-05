@@ -11,15 +11,11 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 ## v3.2.13
 
-- move PageViewInfoGA to master (c65d851)
+- Move PageViewInfoGA to [c65d851](https://gerrit.wikimedia.org/g/mediawiki/extensions/PageViewInfoGA/+/c65d851ae8e8f4b93a08e4478888a2de94ec339e) of `master`, which asks Google STS for the cloud-platform scope when impersonating a service account. Without it, keyless authentication gets 403 from the IAM Credentials API and page view counts fail; see femiwiki/femiwiki#670.
 
 ## v3.2.12
 
 - Move 62 WMF extensions and skins to the heads of `REL1_46`
-
-## v3.2.12
-
-- Move PageViewInfoGA to [c65d851](https://gerrit.wikimedia.org/g/mediawiki/extensions/PageViewInfoGA/+/c65d851ae8e8f4b93a08e4478888a2de94ec339e) of `master`, which asks Google STS for the cloud-platform scope when impersonating a service account. Without it, keyless authentication gets 403 from the IAM Credentials API and page view counts fail; see femiwiki/femiwiki#670.
 
 ## v3.2.11
 
