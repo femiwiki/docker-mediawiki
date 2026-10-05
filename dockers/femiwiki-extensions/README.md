@@ -9,6 +9,10 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 - UnlinkedWikibase follows `master` for "Keep expired data beyond the TTL if necessary" (Gerrit change 1343968), which REL1_46 lacks; without it, infobox labels from Wikidata go blank whenever their cache entry expires. Drop it from `WMF-branches` when `WMF-branch` moves to a branch that has the change, REL1_47 or later, or when the change is backported to REL1_46.
 - PageViewInfoGA follows `master`, as femiwiki's maintainers own it and no longer backport its changes to release branches.
 
+## v3.2.13
+
+- move PageViewInfoGA to master (c65d851)
+
 ## v3.2.12
 
 - Move 62 WMF extensions and skins to the heads of `REL1_46`
