@@ -21,7 +21,7 @@ if [[ -n "${FW_CADDYFILE:-}" ]]; then
 fi
 
 caddy adapt --config Caddyfile --adapter caddyfile > /tmp/caddy.json
-php /a/caddy-warmup.php /tmp/caddy.json "$WARMUP_PORT" > /tmp/caddy-warmup.json
+php /usr/local/lib/femiwiki/caddy-warmup.php /tmp/caddy.json "$WARMUP_PORT" > /tmp/caddy-warmup.json
 NAME="$(cat /tmp/caddy-warmup-name)"
 
 caddy run --config /tmp/caddy-warmup.json &

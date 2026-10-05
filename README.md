@@ -31,7 +31,7 @@ http:
 - `MEDIAWIKI_SKIP_UPDATE`: 설정되었을 경우 컨테이너 시작 시 update.php를 실행하지 않습니다. update.php 실행은 미디어위키 설치 직후 혹은 확장 기능 추가 시에만 필요합니다.
 - `MEDIAWIKI_SKIP_IMPORT_SITES`: 설정되었을 경우 컨테이너 시작 시 importSites.php를 실행하지 않습니다. 내용이 변경되지 않았다면 한 데이터베이스에 두 번 이상 실행할 필요가 없습니다.
 
-`/a`에 위치한 LocalSettings.php 파일이나 site-list.xml 파일은 테스트 목적에 따라 교체할 수 있습니다.
+`/etc/mediawiki`에 위치한 LocalSettings.php 파일이나 site-list.xml 파일은 테스트 목적에 따라 교체할 수 있습니다.
 
 #### Caddy
 

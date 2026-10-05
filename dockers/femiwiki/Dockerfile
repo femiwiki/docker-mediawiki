@@ -1,6 +1,7 @@
-# PHP 설정은 /usr/local/etc/php, 미디어위키와 확장은 /srv/femiwiki.com,
-# 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 캐시는 /tmp/cache, 지역화 캐시는
-# /srv/l10n에 있습니다.
+# PHP 설정은 /usr/local/etc/php, 미디어위키와 확장은 /srv/femiwiki.com, 미디어위키
+# 설정은 /etc/mediawiki, 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 그 밖의
+# 스크립트는 /usr/local/lib/femiwiki, 시크릿은 /run/secrets, 캐시는 /tmp/cache,
+# 지역화 캐시는 /srv/l10n에 있습니다.
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.10.1 AS caddy
 
 FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:3.2.9 AS extensions
@@ -53,7 +54,7 @@ RUN for d in /srv/femiwiki.com/extensions/*/vendor/composer /srv/femiwiki.com/sk
 # The same for the classes extensions declare through AutoloadNamespaces,
 # registered by LocalSettings.php for the extensions it loads
 COPY autoload-extensions.php /tmp/
-RUN mkdir -p /a && php /tmp/autoload-extensions.php /srv/femiwiki.com /a/autoload-extensions.php &&\
+RUN mkdir -p /etc/mediawiki && php /tmp/autoload-extensions.php /srv/femiwiki.com /etc/mediawiki/autoload-extensions.php &&\
     rm /tmp/autoload-extensions.php
 
 # Web server should be able to write 'extensions/Widgets/compiled_templates'
@@ -63,16 +64,16 @@ RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 
 # Ship femiwiki resources
 COPY --chown=www-data:www-data ["resources", "Caddyfile", "robots.txt", "/srv/femiwiki.com/"]
-COPY 429.php /a/
-RUN php /a/429.php /srv/femiwiki.com /srv/femiwiki.com
-COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/a/"]
+COPY 429.php /tmp/
+RUN php /tmp/429.php /srv/femiwiki.com /srv/femiwiki.com && rm /tmp/429.php
+COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/etc/mediawiki/"]
 
-COPY --chown=www-data LocalSettings.php /a/
+COPY --chown=www-data LocalSettings.php /etc/mediawiki/
 
 # Every language's localisation cache, built once here rather than by the first
 # request for it in each container; see LocalSettings.php. Nothing at build time
 # can reach memcached or the database, and run purges the message blobs instead.
-RUN cp /a/LocalSettings.php LocalSettings.php &&\
+RUN cp /etc/mediawiki/LocalSettings.php LocalSettings.php &&\
     FW_L10N_BUILD=1 FW_MAIN_CACHE=none FW_PARSER_CACHE=none FW_MESSAGE_CACHE=none \
       php maintenance/run.php rebuildLocalisationCache \
       --no-database --skip-message-purge --force --no-progress --threads "$(nproc)" &&\
@@ -88,7 +89,7 @@ RUN mkdir -p /srv/fcgi-check &&\
 
 # Beside fcgi-probe.php and so outside /srv/femiwiki.com: Caddy resolves paths
 # under the site root, which leaves the probe pool as the only caller.
-COPY databasez.php /srv/fcgi-check/
+COPY databasez.php databasez-probe.php /srv/fcgi-check/
 
 # Reads secrets from SSM Parameter Store at start when SSM_SECRETS is set; see run.
 ARG TARGETARCH
@@ -122,5 +123,8 @@ EXPOSE 443
 EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
-COPY caddy-warmup.php warm-up.php databasez-probe.php create-session-schema.php /a/
+COPY caddy-warmup.php warm-up.php create-session-schema.php /usr/local/lib/femiwiki/
+
+# The paths femiwiki/infra still names, for one image generation; see #1332
+RUN mkdir /a && ln -s /etc/mediawiki/LocalSettings.php /etc/mediawiki/Hotfix.php /srv/fcgi-check/databasez-probe.php /a/
 CMD ["/usr/local/bin/run"]
