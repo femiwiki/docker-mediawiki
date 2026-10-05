@@ -53,7 +53,7 @@ RUN for d in /srv/femiwiki.com/extensions/*/vendor/composer /srv/femiwiki.com/sk
 # The same for the classes extensions declare through AutoloadNamespaces,
 # registered by LocalSettings.php for the extensions it loads
 COPY autoload-extensions.php /tmp/
-RUN mkdir -p /a && php /tmp/autoload-extensions.php /srv/femiwiki.com /a/autoload-extensions.php &&\
+RUN mkdir -p /etc/mediawiki && php /tmp/autoload-extensions.php /srv/femiwiki.com /etc/mediawiki/autoload-extensions.php &&\
     rm /tmp/autoload-extensions.php
 
 # Web server should be able to write 'extensions/Widgets/compiled_templates'
@@ -65,14 +65,14 @@ RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 COPY --chown=www-data:www-data ["resources", "Caddyfile", "robots.txt", "/srv/femiwiki.com/"]
 COPY 429.php /a/
 RUN php /a/429.php /srv/femiwiki.com /srv/femiwiki.com
-COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/a/"]
+COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/etc/mediawiki/"]
 
-COPY --chown=www-data LocalSettings.php /a/
+COPY --chown=www-data LocalSettings.php /etc/mediawiki/
 
 # Every language's localisation cache, built once here rather than by the first
 # request for it in each container; see LocalSettings.php. Nothing at build time
 # can reach memcached or the database, and run purges the message blobs instead.
-RUN cp /a/LocalSettings.php LocalSettings.php &&\
+RUN cp /etc/mediawiki/LocalSettings.php LocalSettings.php &&\
     FW_L10N_BUILD=1 FW_MAIN_CACHE=none FW_PARSER_CACHE=none FW_MESSAGE_CACHE=none \
       php maintenance/run.php rebuildLocalisationCache \
       --no-database --skip-message-purge --force --no-progress --threads "$(nproc)" &&\
@@ -123,4 +123,7 @@ EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
 COPY caddy-warmup.php warm-up.php databasez-probe.php create-session-schema.php /a/
+
+# The paths femiwiki/infra still names, for one image generation; see #1332
+RUN ln -s /etc/mediawiki/LocalSettings.php /etc/mediawiki/Hotfix.php /a/
 CMD ["/usr/local/bin/run"]

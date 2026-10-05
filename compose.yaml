@@ -23,7 +23,7 @@ services:
   fastcgi:
     image: ghcr.io/femiwiki/femiwiki:latest
     volumes:
-      - ./development/site-list.xml:/a/site-list.xml:ro
+      - ./development/site-list.xml:/etc/mediawiki/site-list.xml:ro
       - l18n_cache:/tmp/cache
     environment:
       MEDIAWIKI_DEBUG_MODE: 'true'

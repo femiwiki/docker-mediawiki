@@ -22,7 +22,10 @@ if ( !preg_match( '/CREATE TABLE [^\n]*objectcache \(.*?\n\)[^\n]*;/s', $sql, $m
 // The table options come from LocalSettings for the same reason the DDL comes
 // from tables-generated.sql: a copy here drifts. A wrong ROW_FORMAT is not a
 // cosmetic difference, it decides whether every session read decompresses a page.
-$settings = is_file( '/a/LocalSettings.php' ) ? '/a/LocalSettings.php' : __DIR__ . '/LocalSettings.php';
+$settings = '/etc/mediawiki/LocalSettings.php';
+if ( !is_file( $settings ) ) {
+	$settings = __DIR__ . '/LocalSettings.php';
+}
 if ( !preg_match( '/\$wgDBTableOptions\s*=\s*\'([^\']*)\'/', file_get_contents( $settings ), $o ) ) {
 	fwrite( STDERR, "wgDBTableOptions is not in $settings\n" );
 	exit( 1 );

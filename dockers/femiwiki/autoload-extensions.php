@@ -17,7 +17,7 @@
  */
 
 $root = $argv[1] ?? '/srv/femiwiki.com';
-$out = $argv[2] ?? '/a/autoload-extensions.php';
+$out = $argv[2] ?? '/etc/mediawiki/autoload-extensions.php';
 
 $manifests = array_merge(
 	glob( "$root/extensions/*/extension*.json" ),
