@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.26
+
+- Bump femiwiki/femiwiki-extensions to v3.5.2
+  - Update namespace of hook (UnifiedExtensionForFemiwiki b569e3a) (femiwiki/UnifiedExtensionForFemiwiki#216)
+
 ## v2.0.25
 
 - Bump femiwiki/femiwiki-extensions to v3.5.0
