@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.23
+
+- Bump femiwiki/femiwiki-extensions to v3.2.13
+  - 문서 정보의 조회수 다시 표시 (femiwiki/docker-mediawiki#1346)
+
 ## v2.0.22
 
 - Bump femiwiki/femiwiki-extensions to v3.2.11
