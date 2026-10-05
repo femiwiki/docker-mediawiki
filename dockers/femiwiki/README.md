@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.27
+
+- Bump femiwiki/femiwiki-extensions to v3.5.3
+  - follow the browser's default font size (Femiwiki f6519a5) (femiwiki/FemiwikiSkin#1021)
+
 ## v2.0.26
 
 - Bump femiwiki/femiwiki-extensions to v3.5.2
