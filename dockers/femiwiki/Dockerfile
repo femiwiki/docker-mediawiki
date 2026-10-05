@@ -63,8 +63,8 @@ RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 
 # Ship femiwiki resources
 COPY --chown=www-data:www-data ["resources", "Caddyfile", "robots.txt", "/srv/femiwiki.com/"]
-COPY 429.php /a/
-RUN php /a/429.php /srv/femiwiki.com /srv/femiwiki.com
+COPY 429.php /tmp/
+RUN php /tmp/429.php /srv/femiwiki.com /srv/femiwiki.com && rm /tmp/429.php
 COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/etc/mediawiki/"]
 
 COPY --chown=www-data LocalSettings.php /etc/mediawiki/
@@ -122,8 +122,8 @@ EXPOSE 443
 EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
-COPY caddy-warmup.php warm-up.php create-session-schema.php /a/
+COPY caddy-warmup.php warm-up.php create-session-schema.php /usr/local/lib/femiwiki/
 
 # The paths femiwiki/infra still names, for one image generation; see #1332
-RUN ln -s /etc/mediawiki/LocalSettings.php /etc/mediawiki/Hotfix.php /srv/fcgi-check/databasez-probe.php /a/
+RUN mkdir /a && ln -s /etc/mediawiki/LocalSettings.php /etc/mediawiki/Hotfix.php /srv/fcgi-check/databasez-probe.php /a/
 CMD ["/usr/local/bin/run"]
