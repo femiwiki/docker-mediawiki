@@ -106,7 +106,12 @@ export default async ({
       continue;
     }
     prs.push(pr.number);
-    const ref = `${owner}/${repo}#${pr.number}`;
+    // A bump lists the upstream changes in its body, so the line links those
+    // and not only the bump
+    const ref = [
+      ...(pr.head.ref.startsWith('bump-') ? upstream(pr.body ?? '') : []),
+      `${owner}/${repo}#${pr.number}`,
+    ].join(', ');
 
     const m = pr.title.match(/^([a-z]+)(\(([^)]+)\))?!?: (.*)$/);
     if (!m || !HEADINGS[m[1]]) {
@@ -134,6 +139,23 @@ export default async ({
   core.setOutput('refs', refs);
   core.setOutput('prs', prs.join(' '));
 };
+
+// The femiwiki pull requests a bump body lists the changes of, as
+// OWNER/REPO#N: a commit subject ends in one, a release note links one
+function upstream(body: string) {
+  const refs = new Set<string>();
+  for (const line of body.split('\n')) {
+    if (!/^[-*] /.test(line)) {
+      continue;
+    }
+    for (const m of line.matchAll(
+      /\((femiwiki\/[\w.-]+)#(\d+)\)|\(\[#\d+\]\(https:\/\/github\.com\/(femiwiki\/[\w.-]+)\/(?:pull|issues)\/(\d+)\)\)/g,
+    )) {
+      refs.add(`${m[1] ?? m[3]}#${m[2] ?? m[4]}`);
+    }
+  }
+  return [...refs];
+}
 
 // The README entries from `## v<to>` down to, not including, `## v<from>`,
 // each as a nested list item led by its version
