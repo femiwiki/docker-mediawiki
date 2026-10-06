@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.30
+
+- Bump femiwiki/femiwiki-extensions to v3.6.1
+  - keep the suggested edits intro from scrolling on Special:Homepage (Femiwiki d5858f3) (femiwiki/FemiwikiSkin#1033)
+
 ## v2.0.29
 
 - Bump femiwiki/femiwiki-extensions to v3.6.0
