@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.33
+
+- Bump femiwiki/femiwiki-extensions to v3.11.0
+  - Paint GrowthExperiments in the Femiwiki theme (Femiwiki 974ae2e) (femiwiki/FemiwikiSkin#1036)
+
 ## v2.0.32
 
 - Bump femiwiki/femiwiki-extensions to v3.10.0
