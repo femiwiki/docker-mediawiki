@@ -714,10 +714,10 @@ $wgGoogleSiteSearchAppend = true;
 wfLoadExtension( 'CommunityConfiguration' );
 wfLoadExtension( 'GrowthExperiments' );
 
-// UnifiedExtensionForFemiwiki finds the tasks instead of CirrusSearch.
-// Topics and the recommendation task types need services we don't run.
+// UnifiedExtensionForFemiwiki finds the tasks and topics instead of CirrusSearch.
+// The recommendation task types need services we don't run.
 $wgGEHomepageSuggestedEditsEnabled = true;
-$wgGEHomepageSuggestedEditsEnableTopics = false;
+$wgGEHomepageSuggestedEditsEnableTopics = true;
 $wgGENewcomerTasksLinkRecommendationsEnabled = false;
 $wgGENewcomerTasksImageRecommendationsEnabled = false;
 $wgGENewcomerTasksSectionImageRecommendationsEnabled = false;
