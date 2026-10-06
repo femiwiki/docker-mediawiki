@@ -1,5 +1,11 @@
 # femiwiki
 
+## v2.0.31
+
+- Bump femiwiki/femiwiki-extensions to v3.8.0
+  - widen special pages, history and diffs to 64rem (Femiwiki 4cb8a95) (femiwiki/FemiwikiSkin#1035)
+  - name this wiki instead of Wikipedia in GrowthExperiments messages (UnifiedExtensionForFemiwiki bf6ff1c) (femiwiki/UnifiedExtensionForFemiwiki#268)
+
 ## v2.0.30
 
 - Bump femiwiki/femiwiki-extensions to v3.6.1
