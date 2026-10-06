@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.34
+
+- Bump femiwiki/femiwiki-extensions to v3.11.1
+  - keep Special:Homepage within the screen on phones (Femiwiki e920293) (femiwiki/FemiwikiSkin#1037)
+
 ## v2.0.33
 
 - Bump femiwiki/femiwiki-extensions to v3.11.0
