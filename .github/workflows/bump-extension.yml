@@ -88,6 +88,8 @@ jobs:
             }
             // Notes of another organisation go in a code fence so their links create no back-references
             const fence = owner === 'femiwiki' ? '' : '````';
+            // Outside the fence a bare #N would link to this repository, so qualify it
+            if (!fence) notes = notes.replace(/(^|[^\w/[])#(\d+)\b/g, `$1${repo}#$2`);
             const body = `[${old} → ${now}](https://github.com/${repo}/compare/${old}...${now})\n\n${fence}\n${notes}\n${fence}\n`;
             fs.writeFileSync(env.BODY, body);
             core.info(body);
