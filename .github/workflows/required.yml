@@ -27,10 +27,15 @@ jobs:
     secrets:
       PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
+  shared-lint:
+    uses: femiwiki/.github/.github/workflows/shared-lint.yml@243836c393e62e7887baad11dd1619dcc1bb0fac
+    permissions:
+      contents: read
+
   # The one check branch protection requires. What has to pass is the
   # workflows called above, so adding a check does not touch femiwiki/infra.
   required:
-    needs: [lint, images]
+    needs: [lint, images, shared-lint]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
