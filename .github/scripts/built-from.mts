@@ -118,9 +118,21 @@ export default async ({
       add('other', [`* ${pr.title} (${ref})`]);
       continue;
     }
-    const lines = [`* ${m[3] ? `**${m[3]}:** ` : ''}${m[4]} (${ref})`];
+    // A bump of an extension or skin is scoped to the image it lands in and
+    // ends in "(<name> <version>)"; name the repository it came from instead
+    let [, , , scope, subject] = m;
+    const source = pr.head.ref.startsWith('bump-')
+      ? pr.body?.match(
+          /^\[[^\]]*\]\(https:\/\/github\.com\/[\w.-]+\/([\w.-]+)\/compare\//,
+        )?.[1]
+      : undefined;
+    if (source) {
+      scope = source;
+      subject = subject.replace(/ \([^()\s]+ [^()\s]+\)$/, '');
+    }
+    const lines = [`* ${scope ? `**${scope}:** ` : ''}${subject} (${ref})`];
 
-    const bump = m[4].match(/^bump ([\w-]+) image to v([\d.]+)$/);
+    const bump = subject.match(/^bump ([\w-]+) image to v([\d.]+)$/);
     if (bump) {
       const [, image, version] = bump;
       const readme = await readFile(`dockers/${image}/README.md`, sha);
