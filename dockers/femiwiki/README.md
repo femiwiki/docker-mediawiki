@@ -1,5 +1,11 @@
 # femiwiki
 
+## v2.0.32
+
+- Bump femiwiki/femiwiki-extensions to v3.10.0
+  - Let suggested edits be filtered by category topics (UnifiedExtensionForFemiwiki 69476a4) (femiwiki/UnifiedExtensionForFemiwiki#269)
+  - Paint primary buttons green and drop the border on other progressive buttons (Femiwiki 8f735ca) (femiwiki/FemiwikiSkin#1034)
+
 ## v2.0.31
 
 - Bump femiwiki/femiwiki-extensions to v3.8.0
