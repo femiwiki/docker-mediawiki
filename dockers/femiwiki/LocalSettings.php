@@ -261,10 +261,9 @@ $wgNativeImageLazyLoading = true;
 // be publically accessible from the web.
 $wgCacheDirectory = '/tmp/cache';
 
-// The localisation cache as PHP arrays, which opcache keeps in shared memory,
-// as Wikimedia does. The image builds every language into /srv/l10n, outside
-// the site root; see the Dockerfile. See femiwiki/infra#1073.
-$wgLocalisationCacheConf['storeClass'] = 'LCStoreStaticArray';
+// CDB files built into /srv/l10n by the Dockerfile, as Wikimedia does.
+// LCStoreStaticArray hides the sidebar override; femiwiki/docker-mediawiki#1379.
+$wgLocalisationCacheConf['storeClass'] = 'LCStoreCDB';
 $wgLocalisationCacheConf['storeDirectory'] = '/srv/l10n';
 // Nothing changes those files after the build, so a request does not stat
 // every i18n file to check them. Setup.php already reads special page aliases,
