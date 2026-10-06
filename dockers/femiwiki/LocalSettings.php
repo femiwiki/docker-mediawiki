@@ -714,8 +714,13 @@ $wgGoogleSiteSearchAppend = true;
 wfLoadExtension( 'CommunityConfiguration' );
 wfLoadExtension( 'GrowthExperiments' );
 
-// Disable SuggestedEdits which requires either CirrusSearch or ORES.
-$wgGEHomepageSuggestedEditsEnabled = false;
+// UnifiedExtensionForFemiwiki finds the tasks instead of CirrusSearch.
+// Topics and the recommendation task types need services we don't run.
+$wgGEHomepageSuggestedEditsEnabled = true;
+$wgGEHomepageSuggestedEditsEnableTopics = false;
+$wgGENewcomerTasksLinkRecommendationsEnabled = false;
+$wgGENewcomerTasksImageRecommendationsEnabled = false;
+$wgGENewcomerTasksSectionImageRecommendationsEnabled = false;
 
 // Disable Welcome Survey
 // (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see an example)
@@ -967,6 +972,7 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 // UnifiedExtensionForFemiwiki
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgUnifiedExtensionForFemiwikiPreAuth = true;
+$wgUnifiedExtensionForFemiwikiSuggestedEdits = true;
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
