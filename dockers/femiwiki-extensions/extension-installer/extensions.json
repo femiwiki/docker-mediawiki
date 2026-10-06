@@ -91,11 +91,11 @@
     "Femiwiki": {
       "type": "skin",
       "repository": "https://github.com/femiwiki/FemiwikiSkin",
-      "commit": "f6519a5b5425e705871d00c0d7268b74c777bb53"
+      "commit": "00857ec4daf317928f1c9a6ac44a0a174e8743ed"
     },
     "UnifiedExtensionForFemiwiki": {
       "repository": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki",
-      "commit": "b569e3a6eab1d0ff10c148441ca531a7ff8d95ea"
+      "commit": "2358a2cbb9fbfac8294f5fe87d6f28875434e251"
     }
   },
   "non-WMF": {
