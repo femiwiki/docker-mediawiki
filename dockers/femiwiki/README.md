@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.28
+
+- Bump femiwiki/femiwiki-extensions to v3.5.5
+  - use the OOUI theme for MediaWiki 1.46 (Femiwiki 00857ec) (femiwiki/FemiwikiSkin#1031)
+
 ## v2.0.27
 
 - Bump femiwiki/femiwiki-extensions to v3.5.3
