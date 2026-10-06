@@ -75,6 +75,7 @@ COPY --chown=www-data LocalSettings.php /etc/mediawiki/
 # can reach memcached or the database, and run purges the message blobs instead.
 RUN cp /etc/mediawiki/LocalSettings.php LocalSettings.php &&\
     FW_L10N_BUILD=1 FW_MAIN_CACHE=none FW_PARSER_CACHE=none FW_MESSAGE_CACHE=none \
+      FW_SESSION_CACHE=none \
       php maintenance/run.php rebuildLocalisationCache \
       --no-database --skip-message-purge --force --no-progress --threads "$(nproc)" &&\
     rm LocalSettings.php
