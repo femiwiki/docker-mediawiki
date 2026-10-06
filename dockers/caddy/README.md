@@ -2,6 +2,10 @@
 
 Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 
+## v1.11.0
+
+- Add caddy-cloudfront-ip [784a775](https://github.com/femiwiki/caddy-cloudfront-ip/commit/784a775e472892e784dc7cc6ff4ae2799d8404d8)
+
 ## v1.10.1
 
 - Bump caddy-mwcache to [aad9812](https://github.com/femiwiki/caddy-mwcache/commit/aad98123cedb9d9d2ef5e4c07affdb8a66902d75)
