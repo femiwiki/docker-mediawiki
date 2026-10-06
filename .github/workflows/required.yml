@@ -27,10 +27,15 @@ jobs:
     secrets:
       PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
+  long-comments:
+    uses: femiwiki/.github/.github/workflows/long-comments.yml@629c43b2f8f2a601bf0ab60bb35cfd2157fe55a8
+    permissions:
+      contents: read
+
   # The one check branch protection requires. What has to pass is the
   # workflows called above, so adding a check does not touch femiwiki/infra.
   required:
-    needs: [lint, images]
+    needs: [lint, images, long-comments]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
