@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.29
+
+- Bump femiwiki/femiwiki-extensions to v3.6.0
+  - Suggest edits for GrowthExperiments from database queries (UnifiedExtensionForFemiwiki 0517aa8) (femiwiki/UnifiedExtensionForFemiwiki#262)
+
 ## v2.0.28
 
 - Bump femiwiki/femiwiki-extensions to v3.5.5

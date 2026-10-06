@@ -4,7 +4,7 @@
 # 지역화 캐시는 /srv/l10n에 있습니다.
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.10.1 AS caddy
 
-FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:3.5.5 AS extensions
+FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:3.6.0 AS extensions
 
 FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:4.0.2
 
