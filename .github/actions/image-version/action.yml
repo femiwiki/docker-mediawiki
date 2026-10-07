@@ -1,0 +1,128 @@
+name: image-version
+description: >
+  Check that a pull request changing an image also raises the image's version,
+  and push the missing "## v…" entry onto the pull request when the app's key
+  is at hand. Main publishes under the README's version, so an image change that
+  keeps it overwrites the published tag and never reaches the image downstream.
+
+inputs:
+  image:
+    description: The directory under dockers/
+    required: true
+  application-id:
+    description: The app that pushes the entry
+    required: true
+  private-key:
+    description: >
+      The app's key, which pushes the entry. Empty in a fork's run and in
+      Dependabot's, which get no Actions secrets.
+    required: false
+    default: ''
+outputs:
+  pushed:
+    description: Whether an entry was pushed, which leaves this run on a stale head
+    value: ${{ steps.push.outputs.pushed == 'true' }}
+
+runs:
+  using: composite
+  steps:
+    - name: Check the image's version moves with its files
+      id: guard
+      if: github.event.pull_request
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        REPO: ${{ github.repository }}
+        IMAGE: ${{ inputs.image }}
+        BASE: ${{ github.event.pull_request.base.sha }}
+        HEAD: ${{ github.event.pull_request.head.sha }}
+      run: |
+        changed="$(gh api "repos/${REPO}/compare/${BASE}...${HEAD}" --jq '.files[].filename' \
+          | grep "^dockers/${IMAGE}/" | grep -vx "dockers/${IMAGE}/README.md" || true)"
+        if [ -z "$changed" ]; then
+          echo "Nothing under dockers/${IMAGE}/ changes but its README, so no new version is needed."
+          exit 0
+        fi
+        ver="$(gh api "repos/${REPO}/contents/dockers/${IMAGE}/README.md?ref=${HEAD}" -H 'Accept: application/vnd.github.raw' \
+          | grep -m 1 '## v' | cut -d'v' -f2)"
+        old="$(gh api "repos/${REPO}/contents/dockers/${IMAGE}/README.md?ref=${BASE}" -H 'Accept: application/vnd.github.raw' \
+          | grep -m 1 '## v' | cut -d'v' -f2)"
+        if [ "$ver" = "$old" ]; then
+          echo "dockers/${IMAGE}/ changes but its version is still v${ver}."
+          echo "missing=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "v${old} → v${ver}"
+        fi
+
+    - name: Say who adds the version when this run cannot
+      if: steps.guard.outputs.missing == 'true' && inputs.private-key == ''
+      shell: bash
+      env:
+        IMAGE: ${{ inputs.image }}
+        DEPENDABOT: ${{ github.actor == 'dependabot[bot]' }}
+      run: |
+        if [ "$DEPENDABOT" = true ]; then
+          echo "::error file=dockers/${IMAGE}/README.md::Dependabot's runs get no app key; approve the pull request and the version is added for you"
+        else
+          echo "::error file=dockers/${IMAGE}/README.md::dockers/${IMAGE}/ changes but its version does not; add a '## v…' entry above the first one"
+        fi
+        exit 1
+
+    - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+      if: steps.guard.outputs.missing == 'true' && inputs.private-key != ''
+      id: token
+      with:
+        application_id: ${{ inputs.application-id }}
+        application_private_key: ${{ inputs.private-key }}
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      if: steps.token.outcome == 'success'
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+        persist-credentials: false
+    - name: Title the entry after the pull request
+      id: entry
+      if: steps.token.outcome == 'success'
+      shell: bash
+      env:
+        TITLE: ${{ github.event.pull_request.title }}
+      run: |
+        level='patch'
+        [[ "$TITLE" =~ ^feat(\(|!|:) ]] && level='minor'
+        {
+          echo "level=${level}"
+          echo "message=${TITLE#*: }"
+        } >> "$GITHUB_OUTPUT"
+    - uses: ./.github/actions/add-changelog-entry
+      if: steps.token.outcome == 'success'
+      with:
+        image: ${{ inputs.image }}
+        level: ${{ steps.entry.outputs.level }}
+        message: ${{ steps.entry.outputs.message }}
+    # Pushed with the app's token, not GITHUB_TOKEN, so the new head gets its
+    # checks
+    - name: Push the version onto the pull request
+      id: push
+      if: steps.token.outcome == 'success'
+      shell: bash
+      env:
+        TOKEN: ${{ steps.token.outputs.token }}
+        REPO: ${{ github.repository }}
+        BRANCH: ${{ github.event.pull_request.head.ref }}
+        IMAGE: ${{ inputs.image }}
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git commit -qam "build(${IMAGE}): add the version this change publishes as"
+        remote="https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+        # Another image of the same pull request may push its version first
+        pushed=false
+        for _ in 1 2 3; do
+          git push -q "$remote" "HEAD:${BRANCH}" && pushed=true && break
+          git pull -q --rebase "$remote" "$BRANCH"
+        done
+        if [ "$pushed" != true ]; then
+          echo "::error::could not push the version onto ${BRANCH}"
+          exit 1
+        fi
+        echo "pushed=true" >> "$GITHUB_OUTPUT"
+        echo "::notice file=dockers/${IMAGE}/README.md::added $(grep -m 1 '^## v' "dockers/${IMAGE}/README.md"); the checks run again on that commit"
