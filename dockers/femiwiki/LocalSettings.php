@@ -479,12 +479,8 @@ $wgSitemapNamespaces = [
 	NS_WIDGET_TALK,
 	NS_MODULE,
 	NS_MODULE_TALK,
-	NS_TRANSLATIONS,
-	NS_TRANSLATIONS_TALK,
-	NS_GADGET,
-	NS_GADGET_TALK,
-	NS_GADGET_DEFINITION,
-	NS_GADGET_DEFINITION_TALK,
+	// Translate marks NS_TRANSLATIONS noindex, and Gadgets no longer registers
+	// NS_GADGET* so their leftover pages are 특수:Badtitle, which robots.txt blocks
 	NS_TOPIC,
 	NS_NEWSLETTER,
 	NS_NEWSLETTER_TALK,
