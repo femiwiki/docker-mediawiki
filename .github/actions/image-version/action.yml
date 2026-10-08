@@ -18,6 +18,10 @@ inputs:
       Dependabot's, which get no Actions secrets.
     required: false
     default: ''
+  merge-base:
+    description: Merge the base branch in first, as Dependabot no longer rebases a branch pushed to
+    required: false
+    default: 'false'
 outputs:
   pushed:
     description: Whether an entry was pushed, which leaves this run on a stale head
@@ -47,8 +51,9 @@ runs:
           | grep -m 1 '## v' | cut -d'v' -f2)"
         old="$(gh api "repos/${REPO}/contents/dockers/${IMAGE}/README.md?ref=${BASE}" -H 'Accept: application/vnd.github.raw' \
           | grep -m 1 '## v' | cut -d'v' -f2)"
-        if [ "$ver" = "$old" ]; then
-          echo "dockers/${IMAGE}/ changes but its version is still v${ver}."
+        # A branch cut before main's last release can carry an older version
+        if [ "$(printf '%s\n' "$old" "$ver" | sort -V | tail -n 1)" = "$old" ]; then
+          echo "dockers/${IMAGE}/ changes but its version v${ver} does not pass v${old}."
           echo "missing=true" >> "$GITHUB_OUTPUT"
         else
           echo "v${old} → v${ver}"
@@ -78,7 +83,27 @@ runs:
       if: steps.token.outcome == 'success'
       with:
         ref: ${{ github.event.pull_request.head.ref }}
+        fetch-depth: ${{ inputs.merge-base == 'true' && '0' || '1' }}
         persist-credentials: false
+    - name: Write commits as the workflow
+      if: steps.token.outcome == 'success'
+      shell: bash
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+    # The new version has to follow the one main carries now, not the one the
+    # branch was cut from
+    - name: Bring the base branch in
+      if: steps.token.outcome == 'success' && inputs.merge-base == 'true'
+      shell: bash
+      env:
+        BASE_REF: ${{ github.event.pull_request.base.ref }}
+      run: |
+        git fetch -q origin "$BASE_REF"
+        if ! git merge -q --no-edit FETCH_HEAD; then
+          echo "::error::the branch conflicts with ${BASE_REF}; comment '@dependabot recreate' and approve the new pull request"
+          exit 1
+        fi
     - name: Title the entry after the pull request
       id: entry
       if: steps.token.outcome == 'success'
@@ -110,15 +135,13 @@ runs:
         BRANCH: ${{ github.event.pull_request.head.ref }}
         IMAGE: ${{ inputs.image }}
       run: |
-        git config user.name 'github-actions[bot]'
-        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
         git commit -qam "build(${IMAGE}): add the version this change publishes as"
         remote="https://x-access-token:${TOKEN}@github.com/${REPO}.git"
         # Another image of the same pull request may push its version first
         pushed=false
         for _ in 1 2 3; do
           git push -q "$remote" "HEAD:${BRANCH}" && pushed=true && break
-          git pull -q --rebase "$remote" "$BRANCH"
+          git pull -q --rebase=merges "$remote" "$BRANCH"
         done
         if [ "$pushed" != true ]; then
           echo "::error::could not push the version onto ${BRANCH}"
@@ -126,3 +149,9 @@ runs:
         fi
         echo "pushed=true" >> "$GITHUB_OUTPUT"
         echo "::notice file=dockers/${IMAGE}/README.md::added $(grep -m 1 '^## v' "dockers/${IMAGE}/README.md"); the checks run again on that commit"
+    # The runner reads this action again when the job ends, and the head
+    # branch may predate it
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      if: always() && steps.token.outcome == 'success'
+      with:
+        persist-credentials: false

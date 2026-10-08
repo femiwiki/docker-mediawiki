@@ -51,3 +51,4 @@ jobs:
           image: ${{ matrix.image }}
           application-id: ${{ vars.PAT_APPLICATION_ID }}
           private-key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+          merge-base: true
