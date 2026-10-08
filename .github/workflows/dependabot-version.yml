@@ -1,0 +1,53 @@
+name: 'Dependabot: image version'
+
+# Dependabot's own runs get no secrets; a member's approval pushes the version
+# its image change needs. No required check name here (femiwiki/infra#870).
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions: {}
+
+jobs:
+  scope:
+    if: >-
+      github.event.review.state == 'approved'
+      && github.event.pull_request.user.login == 'dependabot[bot]'
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.review.author_association)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      changed: ${{ steps.scope.outputs.changed }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      # femiwiki versions itself in docker-femiwiki.yml, not by its README
+      - uses: ./.github/actions/image-scope
+        id: scope
+        with:
+          images: caddy femiwiki-extensions mediawiki php-fpm
+
+  version:
+    needs: scope
+    if: needs.scope.outputs.changed != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJSON(needs.scope.outputs.changed) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/image-version
+        with:
+          image: ${{ matrix.image }}
+          application-id: ${{ vars.PAT_APPLICATION_ID }}
+          private-key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
