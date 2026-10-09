@@ -96,18 +96,16 @@ runs:
         echo "title=$title" >> "$GITHUB_OUTPUT"
         echo "level=$level" >> "$GITHUB_OUTPUT"
         if [ -n "${feats}${fixes}${perfs}" ]; then
+          # shellcheck source=.github/wikitext.sh
+          source "$GITHUB_ACTION_PATH/../../wikitext.sh"
           {
             echo
-            echo '```wikitext'
             for type in feat fix perf; do
               case "$type" in feat) c=$feats ;; fix) c=$fixes ;; perf) c=$perfs ;; esac
               [ -n "$c" ] || continue
-              printf '===%s===\n\n' "$type"
               while IFS=$'\t' read -r text url; do
-                printf '*%s [%s]\n' "$text" "$url"
+                printf '%s\t*%s [%s]\n' "$type" "$text" "$url"
               done <<< "$c"
-              echo
-            done
-            echo '```'
+            done | wikitext_block
           } >> "$BODY"
         fi

@@ -283,6 +283,7 @@ jobs:
           sparse-checkout: |
             .github/release-notes.sh
             .github/scripts/built-from.mts
+            .github/wikitext.sh
           sparse-checkout-cone-mode: false
           path: self
           persist-credentials: false
