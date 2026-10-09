@@ -4,38 +4,19 @@
 # above any ===type=== go under the type of the pull request's title.
 # Usage: GH_TOKEN=... release-notes.sh OWNER/REPO PR_NUMBER...
 set -euo pipefail
+# shellcheck source=.github/wikitext.sh
+source "$(dirname "$0")/wikitext.sh"
 repo=$1
 shift
-fence=$'\x60\x60\x60'
 images="$(gh api "repos/${repo}/contents/dockers" --jq '.[] | select(.type == "dir") | .name' | paste -sd '|')"
-declare -A lines=()
-order=(feat fix perf)
 for n in "$@"; do
   pr="$(gh api "repos/${repo}/pulls/${n}")"
   title="$(jq -r .title <<< "$pr")"
-  body="$(jq -r '.body // ""' <<< "$pr" | tr -d '\r')"
-  block="$(awk -v f="$fence" 'index($0, f "wikitext") == 1 { on = 1; next } on && index($0, f) == 1 { on = 0 } on' <<< "$body")"
+  link="https://github.com/${repo}/pull/${n}"
   # An empty block says there is nothing for readers, so no line from the title either
-  if grep -q "^${fence}wikitext" <<< "$body"; then
-    type="${title%%[(!:]*}"
-    [[ " ${order[*]} " == *" ${type} "* ]] || order+=("$type")
-    while IFS= read -r line; do
-      if [[ "$line" =~ ^===\ *([^=]+[^=\ ])\ *===$ ]]; then
-        type="${BASH_REMATCH[1]}"
-        [[ " ${order[*]} " == *" ${type} "* ]] || order+=("$type")
-      elif [[ "$line" == \** ]]; then
-        [[ "$line" =~ \]$ ]] || line+=" [https://github.com/${repo}/pull/${n}]"
-        lines[$type]+="${line}"$'\n'
-      fi
-    done <<< "$block"
+  if jq -r '.body // ""' <<< "$pr" | wikitext_lines "${title%%[(!:]*}" "$link"; then
+    :
   elif [[ "$title" =~ ^(feat|fix|perf)\((${images})\)!?:\ (.+)$ ]]; then
-    lines[${BASH_REMATCH[1]}]+="*${BASH_REMATCH[3]} [https://github.com/${repo}/pull/${n}]"$'\n'
+    printf '%s\t*%s [%s]\n' "${BASH_REMATCH[1]}" "${BASH_REMATCH[3]}" "$link"
   fi
-done
-[ ${#lines[@]} -gt 0 ] || exit 0
-echo "${fence}wikitext"
-for type in "${order[@]}"; do
-  [ -n "${lines[$type]:-}" ] || continue
-  printf '===%s===\n\n%s\n\n' "$type" "$(printf '%s' "${lines[$type]}" | awk '!seen[$0]++')"
-done
-echo "$fence"
+done | wikitext_block

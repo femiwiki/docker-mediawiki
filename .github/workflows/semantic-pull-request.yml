@@ -104,8 +104,11 @@ jobs:
             if ( !blocks.length ) {
               core.setFailed( 'Add a ```wikitext block of "* ..." lines for readers, or an empty one if they see no change.' );
             }
+            // The categories of femiwiki/femiwiki coding-conventions.md, as a heading or a "(분류) " prefix
+            const categories = '추가|수정|성능 개선|보안 패치|내부 변화|버그';
+            const line = new RegExp( `^\\*|^\\((${ categories })\\) |^=== *([a-z]+|${ categories }) *===$` );
             const bad = blocks.flatMap( ( b ) => b[ 1 ].split( '\n' ) )
-              .filter( ( line ) => line && !/^\*|^===[^=].*===$/.test( line ) );
+              .filter( ( l ) => l && !line.test( l ) );
             if ( bad.length ) {
-              core.setFailed( `The release notes only take "* ..." and "===type===" lines, not:\n${ bad.join( '\n' ) }` );
+              core.setFailed( `The release notes only take "* ..." and "(분류) ..." lines and "===type===" or "===분류===" headings, with 분류 one of ${ categories.replace( /\|/g, ', ' ) }, not:\n${ bad.join( '\n' ) }` );
             }
