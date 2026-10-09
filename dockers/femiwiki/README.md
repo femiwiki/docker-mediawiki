@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.39
+
+- Bump femiwiki/femiwiki-extensions to v3.11.8
+  - let Echo run the notifications badge, so its count updates without a reload (femiwiki/FemiwikiSkin#1023)
+
 ## v2.0.38
 
 - Bump femiwiki/femiwiki-extensions to v3.11.7
