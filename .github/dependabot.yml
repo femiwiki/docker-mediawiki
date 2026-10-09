@@ -99,10 +99,11 @@ updates:
       interval: monthly
     reviewers:
       - 'femiwiki/reviewer'
-    ignore:
-      - dependency-name: '*'
-        update-types:
-          - 'version-update:semver-minor'
-          - 'version-update:semver-patch'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - 'femiwiki/.github/.github/workflows/*'
     cooldown:
       default-days: 7
