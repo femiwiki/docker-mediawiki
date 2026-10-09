@@ -1,17 +1,18 @@
 # shellcheck shell=bash
 # The ```wikitext blocks that carry a change to 페미위키:업데이트. Source it.
 
-# Prints each "* ..." line of the blocks of the pull request body on stdin as
-# TYPE<tab>LINE, TYPE being the ===heading=== above it or else $1, and a line
-# without a closing link gets $2. Fails when the body has no block.
+# Prints each "* ..." or "(분류) ..." line of the blocks in the PR body on stdin as TYPE<tab>*LINE, TYPE being the
+# ===heading=== above it or else $1, and a line without a link gets $2. Fails when the body has no block.
 wikitext_lines() {
   local type=$1 link=$2 fence=$'\x60\x60\x60' body line
+  local prefixed='^\((추가|수정|성능 개선|보안 패치|내부 변화|버그)\) '
   body="$(tr -d '\r')"
   grep -q "^${fence}wikitext" <<< "$body" || return 1
   while IFS= read -r line; do
     if [[ "$line" =~ ^===\ *([^=]+[^=\ ])\ *===$ ]]; then
       type="${BASH_REMATCH[1]}"
-    elif [[ "$line" == \** ]]; then
+    elif [[ "$line" == \** || "$line" =~ $prefixed ]]; then
+      [[ "$line" == \** ]] || line="*${line}"
       [[ "$line" =~ \]$ ]] || line+=" [${link}]"
       printf '%s\t%s\n' "$type" "$line"
     fi
