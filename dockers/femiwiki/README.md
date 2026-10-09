@@ -1,5 +1,14 @@
 # femiwiki
 
+## v2.0.38
+
+- Bump femiwiki/femiwiki-extensions to v3.11.7
+  - stop the search placeholder jumping on focus (femiwiki/FemiwikiSkin#1041)
+  - line up times in recent changes and watchlist (femiwiki/FemiwikiSkin#1044)
+  - size the protection lock like the other title icons (femiwiki/FemiwikiSkin#1040)
+  - line up the icons under the page title (Femiwiki 6c27dcc) (femiwiki/FemiwikiSkin#1038)
+  - centre the links beside the edit button (Femiwiki 4b950c8) (femiwiki/FemiwikiSkin#1039)
+
 ## v2.0.37
 
 - Bump femiwiki/femiwiki-extensions to v3.11.4
