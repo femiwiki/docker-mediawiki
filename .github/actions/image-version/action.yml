@@ -79,7 +79,7 @@ runs:
       with:
         application_id: ${{ inputs.application-id }}
         application_private_key: ${{ inputs.private-key }}
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       if: steps.token.outcome == 'success'
       with:
         ref: ${{ github.event.pull_request.head.ref }}
@@ -151,7 +151,7 @@ runs:
         echo "::notice file=dockers/${IMAGE}/README.md::added $(grep -m 1 '^## v' "dockers/${IMAGE}/README.md"); the checks run again on that commit"
     # The runner reads this action again when the job ends, and the head
     # branch may predate it
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       if: always() && steps.token.outcome == 'success'
       with:
         persist-credentials: false
