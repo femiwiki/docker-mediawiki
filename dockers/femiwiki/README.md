@@ -1,5 +1,11 @@
 # femiwiki
 
+## v2.0.37
+
+- Bump femiwiki/femiwiki-extensions to v3.11.4
+  - add an icon for create account in the menu (Femiwiki 178928a) (femiwiki/FemiwikiSkin#1046)
+  - keep section edit links on the heading line (Femiwiki 178928a) (femiwiki/FemiwikiSkin#1042)
+
 ## v2.0.36
 
 - Bump femiwiki/femiwiki-extensions to v3.11.3
