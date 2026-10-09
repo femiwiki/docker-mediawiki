@@ -28,7 +28,7 @@ jobs:
       PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
   long-comments:
-    uses: femiwiki/.github/.github/workflows/long-comments.yml@629c43b2f8f2a601bf0ab60bb35cfd2157fe55a8
+    uses: femiwiki/.github/.github/workflows/long-comments.yml@eef576bc3d6ee110cbe76a17eccb1c5c46ade8cd
     permissions:
       contents: read
 
