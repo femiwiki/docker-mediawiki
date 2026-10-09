@@ -5,7 +5,8 @@ description: >
   Appends the same changes to the body as a ```wikitext block, each linked to
   the pull request that made it, for the bumps downstream to copy line for line.
   Reads release-please notes, or conventional commit subjects when the release
-  has none.
+  has none. A change whose pull request has its own ```wikitext block brings
+  that block's lines instead, and none if the block is empty.
 
 inputs:
   repo:
@@ -98,14 +99,21 @@ runs:
         if [ -n "${feats}${fixes}${perfs}" ]; then
           # shellcheck source=.github/wikitext.sh
           source "$GITHUB_ACTION_PATH/../../wikitext.sh"
-          {
-            echo
+          block=$(
             for type in feat fix perf; do
               case "$type" in feat) c=$feats ;; fix) c=$fixes ;; perf) c=$perfs ;; esac
               [ -n "$c" ] || continue
               while IFS=$'\t' read -r text url; do
+                # The upstream pull request's own block, if it has one, says it for readers
+                if [[ "$url" == "https://github.com/$REPO/pull/"* ]] \
+                  && gh api "repos/$REPO/pulls/${url##*/}" --jq '.body // ""' | wikitext_lines "$type" "$url"; then
+                  continue
+                fi
                 printf '%s\t*%s [%s]\n' "$type" "$text" "$url"
               done <<< "$c"
             done | wikitext_block
-          } >> "$BODY"
+          )
+          # Even an empty block, so that release-notes.sh does not fall back to the title
+          [ -n "$block" ] || block=$'```wikitext\n```'
+          printf '\n%s\n' "$block" >> "$BODY"
         fi
