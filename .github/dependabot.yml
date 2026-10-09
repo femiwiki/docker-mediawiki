@@ -91,7 +91,9 @@ updates:
       default-days: 7
 
   - package-ecosystem: 'github-actions'
-    directory: '/'
+    directories:
+      - '/'
+      - '/.github/actions/*'
     commit-message:
       prefix: build
       include: scope
