@@ -847,6 +847,8 @@ $wgPageViewInfoGAPropertyId = '258014701';
 // Workload Identity Federation from the instance's IAM role (femiwiki/femiwiki#670): no key. infra
 // writes this configuration, and google-subject-token.php the token it names
 $wgPageViewInfoGACredentialsFile = '/etc/mediawiki/google-analytics.json';
+// The Google tag, with the web stream's measurement ID. It replaces the UA tag in MediaWiki:Common.js
+$wgPageViewInfoGATrackingID = 'G-023DFCJPXE';
 
 // ParserFunctions
 wfLoadExtension( 'ParserFunctions' );
@@ -1148,6 +1150,7 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 
 	// Google Analytics에서 조회수 읽어오기 비활성화
 	$wgPageViewInfoGAPropertyId = false;
+	$wgPageViewInfoGATrackingID = false;
 
 	// AWS 플러그인 비활성화
 	$wgAWSBucketName = null;
