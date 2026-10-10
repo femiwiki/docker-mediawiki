@@ -2,7 +2,7 @@
 # 설정은 /etc/mediawiki, 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 그 밖의
 # 스크립트는 /usr/local/lib/femiwiki, 시크릿은 /run/secrets, 캐시는 /tmp/cache,
 # 지역화 캐시는 /srv/l10n에 있습니다.
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.11.6 AS caddy
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:1.11.7 AS caddy
 
 FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:3.12.4 AS extensions
 
