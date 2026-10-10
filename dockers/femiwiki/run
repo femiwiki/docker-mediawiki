@@ -1,6 +1,20 @@
 #!/bin/bash
 set -euxo pipefail; IFS=$'\n\t'
 
+# Holds no port and never turns healthy, so the apply fails and the generation
+# before this one keeps serving until infra replaces this one. See femiwiki/infra#1281.
+stay_out_of_service() {
+  trap 'exit 0' TERM QUIT
+  sleep infinity &
+  wait $!
+}
+
+# The writable layer survives a restart, and autoheal restarts an unhealthy container
+if [ -e /tmp/warm-up-failed ]; then
+  echo 'This generation failed its warm-up, so it stays out of service' >&2
+  stay_out_of_service
+fi
+
 chmod +x /usr/local/bin/prerun
 /usr/local/bin/prerun
 
@@ -160,7 +174,20 @@ WARM_PID=$!
 while kill -0 "$WARM_PID" 2>/dev/null && kill -0 "$PHP_FPM_PID" 2>/dev/null; do
   sleep 1
 done
+WARM_STATUS=0
+if ! kill -0 "$WARM_PID" 2>/dev/null; then
+  wait "$WARM_PID" || WARM_STATUS=$?
+fi
 rm -f /tmp/warming
+
+# warm-up.php exits 3 when a page kept failing while another generation served
+if [ "$WARM_STATUS" -eq 3 ]; then
+  touch /tmp/warm-up-failed
+  trap - TERM
+  kill -QUIT "$PHP_FPM_PID"
+  wait "$PHP_FPM_PID" || true
+  stay_out_of_service
+fi
 
 # php-fpm may have died while the warm-up ran, and a reaped child answers no to
 # kill -0 while wait still remembers its status, so ask wait first.
