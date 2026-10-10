@@ -63,9 +63,31 @@ RUN mkdir -p /etc/mediawiki && php /tmp/autoload-extensions.php /srv/femiwiki.co
 RUN chmod o+w /srv/femiwiki.com/extensions/Widgets/compiled_templates
 
 # Ship femiwiki resources
-COPY --chown=www-data:www-data ["resources", "Caddyfile", "robots.txt", "/srv/femiwiki.com/"]
+COPY --chown=www-data:www-data ["resources", "Caddyfile", "/srv/femiwiki.com/"]
+
+# The web root holds only what readers fetch, so the rest of the tree is off the
+# web by layout, as in Wikimedia's docroot; see #1333.
+COPY --chown=www-data:www-data docroot /srv/docroot/
 COPY 429.php /tmp/
-RUN php /tmp/429.php /srv/femiwiki.com /srv/femiwiki.com && rm /tmp/429.php
+RUN php /tmp/429.php /srv/femiwiki.com /srv/docroot && rm /tmp/429.php
+# A top-level script a MediaWiki release adds fails the build until it is linked
+# here or named as not an entry point.
+ARG ENTRY_POINTS="api.php img_auth.php index.php load.php opensearch_desc.php rest.php thumb.php thumb_handler.php"
+RUN mkdir -p /srv/femiwiki.com/sitemap &&\
+    for f in $ENTRY_POINTS resources skins extensions fw-resources sitemap; do \
+      ln -s "../femiwiki.com/$f" "/srv/docroot/$f" || exit 1; \
+    done &&\
+    for f in /srv/femiwiki.com/*.php; do \
+      case " $ENTRY_POINTS autoload.php LocalSettings.php " in \
+        *" ${f##*/} "*) ;; \
+        *) echo "$f is neither linked into /srv/docroot nor listed as not an entry point" >&2; exit 1 ;; \
+      esac; \
+    done
+# The old web root keeps working for one image generation, until infra serves
+# /srv/docroot; see #1333.
+RUN for f in healthz.php robots.txt 429.html google6a8c7f190836bc0d.html naver2e986bb58727091ba14461e6215367f0.html; do \
+      ln -s "../docroot/$f" "/srv/femiwiki.com/$f" || exit 1; \
+    done
 COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/etc/mediawiki/"]
 
 COPY --chown=www-data LocalSettings.php /etc/mediawiki/
