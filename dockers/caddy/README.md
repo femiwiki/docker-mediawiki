@@ -2,6 +2,10 @@
 
 Route53와 caddy-mwcache 패키지를 설치한 Caddy를 빌드한다.
 
+## v1.11.8
+
+- Bump alpine from 3.22 to 3.24 in /dockers/caddy
+
 ## v1.11.7
 
 - Bump caddy-mwcache to [17d4dcc](https://github.com/femiwiki/caddy-mwcache/commit/17d4dcca51d27a6a2593bc4b4cd31aa96343f220)
