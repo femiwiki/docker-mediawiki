@@ -549,7 +549,8 @@ wfLoadExtension( 'BetaFeatures' );
 wfLoadExtension( 'BounceHandler' );
 $wgBounceHandlerInternalIPs = explode( ',', getenv( 'WG_BOUNCE_HANDLER_INTERNAL_IPS' ) );
 $wgBounceHandlerUnconfirmUsers = true;
-$wgBounceRecordLimit = 5; // Wikimedia's, within the default $wgBounceRecordPeriod of 7 days
+// Wikimedia's, within the default $wgBounceRecordPeriod of 7 days
+$wgBounceRecordLimit = 5;
 // SSM holds "placeholder" until the real value is entered by hand
 $fwVerpSecret = getenv( 'WG_VERP_SECRET' ) ?: '';
 if ( strlen( $fwVerpSecret ) >= 32 ) {
@@ -557,12 +558,14 @@ if ( strlen( $fwVerpSecret ) >= 32 ) {
 }
 // SES bounces come through CloudFront from a Lambda with no fixed address, so it
 // sends a token in the POST body, which Caddy does not log (#215)
-$fwBounceToken = getenv( 'WG_BOUNCE_HANDLER_TOKEN' ) ?: '';
-if ( strlen( $fwBounceToken ) >= 32
-	&& hash_equals( $fwBounceToken, (string)( $_POST['bouncehandlertoken'] ?? '' ) )
-) {
-	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0', '::/0' ];
-}
+$wgHooks['ApiBeforeMain'][] = static function ( $main ) {
+	global $wgBounceHandlerInternalIPs;
+	$token = getenv( 'WG_BOUNCE_HANDLER_TOKEN' ) ?: '';
+	$sent = $main->getRequest()->getPostValues()['bouncehandlertoken'] ?? '';
+	if ( strlen( $token ) >= 32 && hash_equals( $token, (string)$sent ) ) {
+		$wgBounceHandlerInternalIPs = [ '0.0.0.0/0', '::/0' ];
+	}
+};
 
 // CategoryTree
 wfLoadExtension( 'CategoryTree' );
