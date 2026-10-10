@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.48
+
+- Bump femiwiki/caddy to v1.11.6
+  - require the ristretto options rather than starting without them (femiwiki/caddy-mwcache#130)
+
 ## v2.0.47
 
 - Bump femiwiki/caddy to v1.11.5
