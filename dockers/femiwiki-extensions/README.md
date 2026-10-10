@@ -15,6 +15,10 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 - `extensions/GrowthExperiments/REL1_46-topics.patch` lets GrowthExperiments show its topic filter without WikimediaMessages, which femiwiki doesn't load; UnifiedExtensionForFemiwiki supplies the topics. `$wgGEHomepageSuggestedEditsEnableTopics` still turns the filter on and off.
 
+## v3.13.0
+
+- Bump Femiwiki to [08b14d5](https://github.com/femiwiki/FemiwikiSkin/commit/08b14d503acbc7a005d1f8987585f5b5b014d886)
+
 ## v3.12.14
 
 - Bump Femiwiki to [8a74eb4](https://github.com/femiwiki/FemiwikiSkin/commit/8a74eb47a7345c4667a8db53b268fdde6d3e6651)
