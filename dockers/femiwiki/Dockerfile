@@ -125,7 +125,4 @@ EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
 COPY caddy-warmup.php warm-up.php create-session-schema.php google-subject-token.php /usr/local/lib/femiwiki/
-
-# The paths femiwiki/infra still names, for one image generation; see #1332
-RUN mkdir /a && ln -s /etc/mediawiki/LocalSettings.php /etc/mediawiki/Hotfix.php /srv/fcgi-check/databasez-probe.php /a/
 CMD ["/usr/local/bin/run"]
