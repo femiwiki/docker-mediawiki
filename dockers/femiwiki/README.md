@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.46
+
+- Bump femiwiki/caddy to v1.11.4
+  - share one buffer pool across requests (femiwiki/caddy-mwcache#110)
+
 ## v2.0.45
 
 - Bump femiwiki/femiwiki-extensions to v3.12.1
