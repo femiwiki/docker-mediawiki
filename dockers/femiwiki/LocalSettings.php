@@ -95,10 +95,10 @@ $wgPasswordPolicy['policies']['default']['MinimalPasswordLength'] = [
 // Enable database-intensive features
 $wgMiserMode = true;
 
-// Off unless FW_PROFILER names a profiler. Not ProfilerOutputText, which writes
-// into the response body. Dumps go away with the container, so collect them
-// before a deploy replaces it.
+// Off unless FW_PROFILER names a profiler. Dumps go away with the container, so
+// collect them before a deploy replaces it.
 if ( getenv( 'FW_PROFILER' ) === 'excimer' ) {
+	AutoLoader::registerClasses( [ 'FemiwikiProfilerOutputFile' => '/etc/mediawiki/FemiwikiProfilerOutputFile.php' ] );
 	$fwProfilerDir = getenv( 'FW_PROFILER_DIR' ) ?: '/tmp/profiler';
 	if ( !is_dir( $fwProfilerDir ) ) {
 		mkdir( $fwProfilerDir, 0750, true );
@@ -113,7 +113,7 @@ if ( getenv( 'FW_PROFILER' ) === 'excimer' ) {
 		'maxDepth' => (int)( getenv( 'FW_PROFILER_MAX_DEPTH' ) ?: 100 ),
 		// Profiler::getOutputs() takes class names, and hands each of them the
 		// whole of $wgProfiler, so outputDir belongs here rather than nested
-		'output' => [ 'ProfilerOutputDump' ],
+		'output' => [ 'FemiwikiProfilerOutputFile' ],
 		'outputDir' => $fwProfilerDir,
 	];
 }
@@ -351,6 +351,7 @@ $wgExtraNamespaces[NS_BBS] = '게시판';
 $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
 // Permission
+$wgAutoConfirmAge = 3600;
 $wgGroupPermissions['*']['createaccount'] = true;
 $wgGroupPermissions['user']['flow-hide'] = false;
 $wgGroupPermissions['user']['flow-lock'] = false;
@@ -1005,6 +1006,7 @@ $wgDefaultUserOptions['twocolconflict'] = '1';
 wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgUnifiedExtensionForFemiwikiPreAuth = true;
 $wgUnifiedExtensionForFemiwikiSuggestedEdits = true;
+$wgUnifiedExtensionForFemiwikiBlockByEmail = false;
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );

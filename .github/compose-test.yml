@@ -5,3 +5,7 @@ services:
   fastcgi:
     environment:
       MEDIAWIKI_HOTFIX_SNIPPET: '<?php $$wgUseCdn = true; $$wgCdnServers = [];'
+      # Production profiles slow requests; every request here, so the output class runs
+      FW_PROFILER: excimer
+      FW_PROFILER_SAMPLING: '1'
+      FW_PROFILER_THRESHOLD: '0.001'
