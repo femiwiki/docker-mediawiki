@@ -121,6 +121,9 @@ jobs:
       # turned every cached redirect into an empty 200, and / into a blank page
       - name: Request redirects and an article twice through the cache
         run: .github/scripts/check-cached-twice.sh
+      # Only entry points, assets and the site's own files are on the web (#1333)
+      - name: Request what the web root serves and what it must not
+        run: .github/scripts/check-docroot.sh "$(docker ps -qf name=mediawiki_fastcgi | head -1)"
       # docker service logs can wait forever without printing a line, so read
       # each fastcgi task's container log, which is a local file, instead
       - name: Fail on any exception the wiki logged

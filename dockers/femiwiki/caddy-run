@@ -10,7 +10,7 @@ WARMUP_PORT=8443
 # on their schedule rather than ours. Passing it in makes that change an
 # apply; the copy in the image is what serves when nothing is passed.
 if [[ -n "${FW_ROBOTS_TXT:-}" ]]; then
-  printf '%s\n' "$FW_ROBOTS_TXT" > robots.txt
+  printf '%s\n' "$FW_ROBOTS_TXT" > /srv/docroot/robots.txt
 fi
 
 # The same for the Caddyfile, so a retuned zone is an apply rather than an

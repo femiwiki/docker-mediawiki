@@ -25,9 +25,14 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	tls {
 		dns route53
 	}
-	root * /srv/femiwiki.com
+	root * /srv/docroot
+	# Code under the asset directories is never a page; only its files are served
+	@asset_code path_regexp (?i)^/(resources|skins|extensions)/(.*/)?(\.[^/]*|[^/]*\.php)(/|$)
+	respond @asset_code 404
 	# Two ports so a new fastcgi container can start beside the old one
 	php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
+		# No index.php fallback: a path that is not a file is a 404, not the main page
+		try_files {path} {path}/index.php
 		# Take the response off php-fpm at memory speed so a slow reader holds
 		# Caddy rather than a worker. Responses here are 8 KB to 150 KB, and a
 		# larger one streams as before instead of failing. See femiwiki#583.
@@ -52,6 +57,7 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			rewrite /w/api.php /api.php
 			rewrite /w/* /index.php
 			php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
+				try_files {path} {path}/index.php
 				response_buffers {$FW_RESPONSE_BUFFERS:1MB}
 				lb_policy round_robin
 				lb_retries 1
@@ -120,9 +126,6 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	rewrite /w/* /index.php
 
 	respond /health-check 200
-
-	# 404 rather than 403: there is no reason to confirm the installer is there
-	respond /mw-config* 404
 }
 
 # php-fpm's status page and opcache report for Alloy on the host, on ports
