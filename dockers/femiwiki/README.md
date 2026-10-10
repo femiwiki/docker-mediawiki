@@ -1,5 +1,24 @@
 # femiwiki
 
+## v2.0.50
+
+- Bump femiwiki/caddy to v1.11.7
+
+## v2.0.49
+
+- Bump femiwiki/femiwiki-extensions to v3.12.4
+  - never start a wrapped footer line with a separator (femiwiki/FemiwikiSkin#1045)
+  - style VisualEditor's category edit link (femiwiki/FemiwikiSkin#1043)
+
+## v2.0.48
+
+- Bump femiwiki/caddy to v1.11.6
+  - require the ristretto options rather than starting without them (femiwiki/caddy-mwcache#130)
+
+## v2.0.47
+
+- Bump femiwiki/caddy to v1.11.5
+
 ## v2.0.46
 
 - Bump femiwiki/caddy to v1.11.4
