@@ -440,6 +440,29 @@ $wgAllowUserJs = true;
 // Allow external image link
 $wgAllowExternalImages = true;
 
+// CSP in WMF's shape: script hosts from FW_CSP_SCRIPT_SRC, default-src left at core's *.
+// Report-only unless FW_CSP_ENFORCE=1; logs on csp-report-only or csp. femiwiki/femiwiki#680
+$fwCSPPolicy = [
+	'useNonces' => false,
+	'includeCORS' => false,
+	'script-src' => array_values( array_filter(
+		array_map( 'trim', explode( ',', getenv( 'FW_CSP_SCRIPT_SRC' ) ?: '' ) )
+	) ),
+];
+if ( getenv( 'FW_CSP_ENFORCE' ) === '1' ) {
+	$wgCSPHeader = $fwCSPPolicy;
+} else {
+	$wgCSPReportOnlyHeader = $fwCSPPolicy;
+}
+// 1.46 names a URL in report-to, so Chrome ignores report-uri and sends nothing.
+// Drop it until 1.47's Reporting-Endpoints header (Gerrit 308b2b7, T424058).
+$wgHooks['ContentSecurityPolicyDirectives'][] = static function ( array &$directives ) {
+	$directives = array_values( array_filter(
+		$directives,
+		static fn ( $directive ) => !str_starts_with( $directive, 'report-to ' )
+	) );
+};
+
 // all pages (that are not redirects) are considered as valid articles
 $wgArticleCountMethod = 'any';
 
