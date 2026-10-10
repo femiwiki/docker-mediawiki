@@ -440,6 +440,29 @@ $wgAllowUserJs = true;
 // Allow external image link
 $wgAllowExternalImages = true;
 
+// Report-only CSP in WMF's shape: script hosts only, default-src left at core's *.
+// Reports are logged on the csp-report-only channel; see femiwiki/femiwiki#680.
+$wgCSPReportOnlyHeader = [
+	'useNonces' => false,
+	'includeCORS' => false,
+	'script-src' => [
+		// The Google tag from PageViewInfoGA
+		'*.googletagmanager.com',
+		// WidgetBot's crate for the discord-widget gadget
+		'cdn.jsdelivr.net',
+		// 위젯:구글 통계 and 위젯:인기있는 문서
+		'www.gstatic.com',
+	],
+];
+// 1.46 names a URL in report-to, so Chrome ignores report-uri and sends nothing.
+// Drop it until 1.47's Reporting-Endpoints header (Gerrit 308b2b7, T424058).
+$wgHooks['ContentSecurityPolicyDirectives'][] = static function ( array &$directives ) {
+	$directives = array_values( array_filter(
+		$directives,
+		static fn ( $directive ) => !str_starts_with( $directive, 'report-to ' )
+	) );
+};
+
 // all pages (that are not redirects) are considered as valid articles
 $wgArticleCountMethod = 'any';
 
