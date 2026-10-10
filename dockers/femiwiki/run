@@ -20,6 +20,7 @@ if [ -n "${SSM_SECRETS:-}" ]; then
   WG_SMTP_USERNAME="$(chamber read -q mediawiki/smtp username)"
   # Missing means BounceHandler keeps its default, so start anyway.
   WG_VERP_SECRET="$(chamber read -q mediawiki verp_secret)" || WG_VERP_SECRET=
+  WG_BOUNCE_HANDLER_TOKEN="$(chamber read -q mediawiki/bounce_handler token)" || WG_BOUNCE_HANDLER_TOKEN=
   set +a -x
 
   # PageViewInfoGA authenticates to Google with an OIDC token for this instance's IAM role

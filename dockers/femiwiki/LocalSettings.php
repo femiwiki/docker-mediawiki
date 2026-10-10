@@ -555,6 +555,14 @@ $fwVerpSecret = getenv( 'WG_VERP_SECRET' ) ?: '';
 if ( strlen( $fwVerpSecret ) >= 32 ) {
 	$wgVERPsecret = $fwVerpSecret;
 }
+// SES bounces come through CloudFront from a Lambda with no fixed address, so it
+// sends a token in the POST body, which Caddy does not log (#215)
+$fwBounceToken = getenv( 'WG_BOUNCE_HANDLER_TOKEN' ) ?: '';
+if ( strlen( $fwBounceToken ) >= 32
+	&& hash_equals( $fwBounceToken, (string)( $_POST['bouncehandlertoken'] ?? '' ) )
+) {
+	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0', '::/0' ];
+}
 
 // CategoryTree
 wfLoadExtension( 'CategoryTree' );
