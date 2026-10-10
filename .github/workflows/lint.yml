@@ -86,6 +86,26 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      # Dependabot leaves the @types/node major alone; this fails the PR that moves Node instead
+      - name: Check that @types/node and setup-node follow the Node github-script runs
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const fs = require( 'fs' );
+            const node = process.versions.node.split( '.' )[ 0 ];
+            const pkg = JSON.parse( fs.readFileSync( 'package.json', 'utf8' ) );
+            const types = pkg.devDependencies[ '@types/node' ].split( '.' )[ 0 ];
+            if ( types !== node ) {
+              core.setFailed( `github-script runs Node ${ node } but @types/node is ${ types }: npm install -D -E @types/node@${ node }` );
+            }
+            for ( const file of fs.readdirSync( '.github/workflows' ) ) {
+              const yaml = fs.readFileSync( `.github/workflows/${ file }`, 'utf8' );
+              for ( const [ , version ] of yaml.matchAll( /node-version:\s*['"]?(\d+)/g ) ) {
+                if ( version !== node ) {
+                  core.setFailed( `${ file } sets up Node ${ version } but github-script runs Node ${ node }` );
+                }
+              }
+            }
 
   hadolint:
     runs-on: ubuntu-22.04
