@@ -95,9 +95,8 @@ if [ -z "${MEDIAWIKI_SKIP_CRON:-}" ]; then
     if [ -n "${SSM_SECRETS:-}" ]; then
       echo '*/15 * * * * /usr/local/bin/php /usr/local/lib/femiwiki/google-subject-token.php'
     fi
-    # The types LocalSettings keeps off the every-minute runner still have to run,
-    # just not at its pace. A few every few minutes clears a backlog over days
-    # without the wiki or whatever it calls out to noticing. Empty means none.
+    # The types LocalSettings keeps off the every-minute runner, a few at a time.
+    # Unset means UnlinkedWikibaseFetch; empty means none.
     if [ -n "${FW_JOB_SLOW_TYPES-UnlinkedWikibaseFetch}" ]; then
       for t in $(echo "${FW_JOB_SLOW_TYPES-UnlinkedWikibaseFetch}" | tr ',' ' '); do
         echo "${FW_JOB_SLOW_SCHEDULE:-*/5 * * * *} /usr/local/bin/php /srv/femiwiki.com/maintenance/run.php runJobs --type=$t --maxjobs=${FW_JOB_SLOW_MAXJOBS:-20}"
