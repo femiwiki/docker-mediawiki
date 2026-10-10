@@ -122,8 +122,8 @@ if ( getenv( 'FW_PROFILER' ) === 'excimer' ) {
 $wgJobRunRate = 0;
 
 // Job types the every-minute runner leaves to a slower crontab entry, so an old
-// backlog does not go out at full speed. UnlinkedWikibaseFetch is the default:
-// each one is a request to Wikidata, and 63,468 were queued.
+// backlog does not go out at full speed. Unset means UnlinkedWikibaseFetch, each
+// a request to Wikidata with 63,468 queued; empty means none.
 $fwExcludedJobs = getenv( 'FW_JOB_TYPES_OFF_DEFAULT_QUEUE' );
 if ( $fwExcludedJobs === false ) {
 	$fwExcludedJobs = 'UnlinkedWikibaseFetch';
