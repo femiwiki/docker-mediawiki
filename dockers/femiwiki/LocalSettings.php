@@ -548,6 +548,8 @@ wfLoadExtension( 'BetaFeatures' );
 // BounceHandler
 wfLoadExtension( 'BounceHandler' );
 $wgBounceHandlerInternalIPs = explode( ',', getenv( 'WG_BOUNCE_HANDLER_INTERNAL_IPS' ) );
+$wgBounceHandlerUnconfirmUsers = true;
+$wgBounceRecordLimit = 5; // Wikimedia's, within the default $wgBounceRecordPeriod of 7 days
 // SSM holds "placeholder" until the real value is entered by hand
 $fwVerpSecret = getenv( 'WG_VERP_SECRET' ) ?: '';
 if ( strlen( $fwVerpSecret ) >= 32 ) {
