@@ -1,5 +1,12 @@
 # femiwiki
 
+## v2.0.57
+
+- Bump femiwiki/femiwiki-extensions to v3.12.8
+  - keep the ULS settings dialog and page previews inside narrow screens (femiwiki/FemiwikiSkin#1064)
+  - match title-button hover backgrounds to Codex quiet buttons (femiwiki/FemiwikiSkin#1065)
+  - square the corners of Codex buttons, text inputs and checkboxes (femiwiki/FemiwikiSkin#1066)
+
 ## v2.0.56
 
 - Bump femiwiki/femiwiki-extensions to v3.12.7
