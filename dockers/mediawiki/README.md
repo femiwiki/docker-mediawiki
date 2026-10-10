@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v4.0.3
+
+- Bump femiwiki/php-fpm to v1.7.1
+
 ## v4.0.2
 
 - Bump femiwiki/php-fpm to v1.7.0
