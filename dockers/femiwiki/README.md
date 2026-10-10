@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.63
+
+- Bump femiwiki/femiwiki-extensions to v3.12.14
+  - drop the extra top margin from the first term of a definition list (femiwiki/FemiwikiSkin#1087)
+
 ## v2.0.62
 
 - Bump femiwiki/femiwiki-extensions to v3.12.13
