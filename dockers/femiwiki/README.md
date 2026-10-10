@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.43
+
+- Bump femiwiki/caddy to v1.11.3
+  - compile the header regexps once (femiwiki/caddy-mwcache#109)
+
 ## v2.0.42
 
 - Bump femiwiki/caddy to v1.11.2
