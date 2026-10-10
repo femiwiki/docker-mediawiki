@@ -94,10 +94,19 @@ if ( $sibling ) {
 	}
 }
 
+// A 5xx is the page failing rather than the cache being cold. Nothing answering
+// in time is left alone, since a slow first compile looks the same.
+$failed = static function ( ?string $response ): bool {
+	return $response !== null &&
+		(bool)preg_match( '/^Status:\s*5\d\d/mi', explode( "\r\n\r\n", $response, 2 )[0] );
+};
+
 $first = true;
+$broken = [];
 foreach ( PAGES as [ $script, $uri, $query ] ) {
 	$encoded = implode( '/', array_map( 'rawurlencode', explode( '/', $uri ) ) );
 	$deadline = time() + intdiv( $budget, count( PAGES ) );
+	$response = null;
 	for ( $attempt = 0; $attempt < ATTEMPTS && time() < $deadline; $attempt++ ) {
 		$started = microtime( true );
 		$response = $ask( $host, (int)$port, $script, $encoded, $query, $first ? FIRST_TIMEOUT_MS : TIMEOUT_MS );
@@ -108,4 +117,14 @@ foreach ( PAGES as [ $script, $uri, $query ] ) {
 		}
 		usleep( 500000 );
 	}
+	if ( $failed( $response ) ) {
+		$broken[] = $uri;
+	}
+}
+
+// The warming file is left only while another generation serves; exit 3 tells
+// run to keep this one out of service and readers on that one (femiwiki/infra#1281)
+if ( $broken && file_exists( '/tmp/warming' ) ) {
+	fwrite( STDERR, 'warm-up: ' . implode( ', ', $broken ) . " never answered without a server error\n" );
+	exit( 3 );
 }
