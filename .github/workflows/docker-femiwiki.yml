@@ -19,6 +19,7 @@ jobs:
     # Already passed on the pull request; a squash merge ships the same tree
     if: github.event_name != 'push'
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     permissions:
       contents: read
     steps:
@@ -120,9 +121,18 @@ jobs:
       # turned every cached redirect into an empty 200, and / into a blank page
       - name: Request redirects and an article twice through the cache
         run: .github/scripts/check-cached-twice.sh
+      # docker service logs can wait forever without printing a line, so read
+      # each fastcgi task's container log, which is a local file, instead
       - name: Fail on any exception the wiki logged
+        timeout-minutes: 2
         run: |
-          if docker service logs mediawiki_fastcgi 2>&1 | grep -E '"channel":"exception"|PHP Fatal error'; then
+          cs="$(docker ps -aqf label=com.docker.swarm.service.name=mediawiki_fastcgi)"
+          [ -n "$cs" ] || { echo '::error::No mediawiki_fastcgi container to read the log of'; exit 1; }
+          for c in $cs; do
+            timeout 30 docker logs "$c" >> "$RUNNER_TEMP/fastcgi.log" 2>&1 \
+              || { echo "::error::Could not read the log of container $c"; exit 1; }
+          done
+          if grep -E '"channel":"exception"|PHP Fatal error' "$RUNNER_TEMP/fastcgi.log"; then
             exit 1
           fi
       - name: backup of failure
@@ -137,18 +147,24 @@ jobs:
           curl -Lv "$URL" && echo "Math success" || echo "Math failure"
       - name: backup of failure - docker status
         if: ${{ failure() }}
+        timeout-minutes: 1
         run: |
           docker ps;
           for s in $(docker service ls -q ); do docker service ps "$s"; done
           docker container ps;
       - name: backup of failure - docker logs
         if: ${{ failure() }}
+        timeout-minutes: 5
         run: |
-          for s in $(docker service ls -q ); do docker service logs "$s"; done
+          for s in $(docker service ls -q ); do
+            timeout 60 docker service logs "$s" || echo "::warning::docker service logs $s did not finish"
+          done
       - name: Check if the container is still up
+        timeout-minutes: 1
         run: test "$(docker service ps -qf 'desired-state=Running' -f 'desired-state=Ready' mediawiki_fastcgi)"
       - name: Try to access the mediawiki
-        run: curl -sSLvo /dev/null 127.0.0.1:8080 || docker service logs mediawiki_fastcgi
+        timeout-minutes: 2
+        run: curl -sSLvo /dev/null 127.0.0.1:8080 || timeout 60 docker service logs mediawiki_fastcgi
 
   build:
     strategy:
