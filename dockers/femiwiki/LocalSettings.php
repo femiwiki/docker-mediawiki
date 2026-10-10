@@ -563,7 +563,7 @@ $wgHooks['ApiBeforeMain'][] = static function ( $main ) {
 	$token = getenv( 'WG_BOUNCE_HANDLER_TOKEN' ) ?: '';
 	$sent = $main->getRequest()->getPostValues()['bouncehandlertoken'] ?? '';
 	if ( strlen( $token ) >= 32 && hash_equals( $token, (string)$sent ) ) {
-		$wgBounceHandlerInternalIPs = [ '0.0.0.0/0', '::/0' ];
+		$wgBounceHandlerInternalIPs = [ $main->getRequest()->getIP() ];
 	}
 };
 
