@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.56
+
+- Bump femiwiki/femiwiki-extensions to v3.12.7
+  - keep the header's last edit time current after a VisualEditor save (femiwiki/FemiwikiSkin#1059)
+
 ## v2.0.55
 
 - Bump femiwiki/femiwiki-extensions to v3.12.6
