@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.65
+
+- Bump femiwiki/femiwiki-extensions to v3.13.1
+  - draw notification badges in the accent with dark text (femiwiki/FemiwikiSkin#1092)
+
 ## v2.0.64
 
 - Bump femiwiki/femiwiki-extensions to v3.13.0
