@@ -1,5 +1,9 @@
 # femiwiki
 
+## v2.0.52
+
+- Bump femiwiki/mediawiki to v4.0.3
+
 ## v2.0.51
 
 - Bump femiwiki/caddy to v1.11.8
