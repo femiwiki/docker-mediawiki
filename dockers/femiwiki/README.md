@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.58
+
+- Bump femiwiki/femiwiki-extensions to v3.12.9
+  - keep the notifications footer label off its icon (femiwiki/FemiwikiSkin#1067)
+
 ## v2.0.57
 
 - Bump femiwiki/femiwiki-extensions to v3.12.8
