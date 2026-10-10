@@ -2,6 +2,10 @@
 
 미디어위키 실행에 필요한 각종 PHP 디펜던시들을 설치한다.
 
+## v1.7.1
+
+- Bump composer from 2.8.6 to 2.10.3 in /dockers/php-fpm
+
 ## v1.7.0
 
 - Add the memcached extension, MediaWiki's C memcached client
