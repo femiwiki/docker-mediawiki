@@ -1,0 +1,64 @@
+name: Submit a PR for bumping the PHP minor version
+
+# Dependabot only bumps PHP patches; a newer minor waits until the MediaWiki
+# version we run requires it, which follows what Wikimedia production runs
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  bump-php:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Find the PHP minor MediaWiki requires
+        id: check
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          BODY: ${{ runner.temp }}/body.md
+        with:
+          script: |
+            const { default: bumpPhp } = await import(`${process.env.GITHUB_WORKSPACE}/.github/scripts/bump-php.mts`)
+            await bumpPhp({ core, context, env: process.env })
+
+      - name: Update README
+        if: steps.check.outputs.ver != ''
+        uses: ./.github/actions/add-changelog-entry
+        with:
+          image: php-fpm
+          level: minor
+          message: Bump php to ${{ steps.check.outputs.ver }}, which MediaWiki ${{ steps.check.outputs.mediawiki }} requires
+
+      # A new entry rebuilds the extensions, whose Dockerfile reads the new PHP
+      - name: Update the extensions README
+        if: steps.check.outputs.ver != ''
+        uses: ./.github/actions/add-changelog-entry
+        with:
+          image: femiwiki-extensions
+          message: Resolve composer dependencies for PHP ${{ steps.check.outputs.minor }}
+
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        if: ${{ steps.check.outputs.ver != '' && github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+      - name: Create Pull Request
+        if: steps.check.outputs.ver != ''
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          commit-message: 'build(php-fpm): bump PHP to ${{ steps.check.outputs.ver }}'
+          title: 'build(php-fpm): bump PHP to ${{ steps.check.outputs.ver }}'
+          branch: bump-php
+          body-path: ${{ runner.temp }}/body.md

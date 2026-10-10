@@ -1,0 +1,114 @@
+---
+name: Semantic Pull Request
+on:
+  pull_request_target: # zizmor: ignore[dangerous-triggers]
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+    branches:
+      - main
+permissions: {}
+jobs:
+  semantic-pull-request:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+        id: lint_pr_title
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
+        if: always() && (steps.lint_pr_title.outputs.error_message != null)
+        with:
+          header: pr-title-lint-error
+          message: |
+            Your PR title must follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format.
+
+            Details:
+
+            ```
+            ${{ steps.lint_pr_title.outputs.error_message }}
+            ```
+
+      - if: ${{ steps.lint_pr_title.outputs.error_message == null }}
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
+        with:
+          header: pr-title-lint-error
+          delete: true
+
+  title-scope:
+    name: title scope
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        with:
+          script: |
+            // The release notes pick feat and fix by image scope, so the scope has to name what changed
+            const [ , type, scope ] = process.env.TITLE.match( /^(\w+)(?:\(([^)]+)\))?!?:/ ) ?? [];
+            if ( !type ) {
+              return;
+            }
+            const files = await github.paginate( github.rest.pulls.listFiles, {
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+            } );
+            const changed = new Set( files.flatMap( ( f ) => [ f.filename, f.previous_filename ] )
+              .map( ( path ) => path?.match( /^dockers\/([^/]+)\// )?.[ 1 ] )
+              .filter( Boolean ) );
+            const { data: dockers } = await github.rest.repos.getContent( {
+              ...context.repo,
+              path: 'dockers',
+              ref: context.payload.pull_request.base.sha,
+            } );
+            const images = new Set( dockers.filter( ( d ) => d.type === 'dir' ).map( ( d ) => d.name ) );
+            const expected = [ ...changed ].join( ', ' );
+            if ( [ 'feat', 'fix', 'perf' ].includes( type ) && changed.size && !changed.has( scope ) ) {
+              core.setFailed( `${ type } changes ${ expected }, so its scope should be one of them, not "${ scope ?? '' }".` );
+            } else if ( images.has( scope ) && !changed.has( scope ) ) {
+              core.setFailed( `The scope "${ scope }" names an image this pull request does not change${ expected ? ` (it changes ${ expected })` : '' }.` );
+            }
+
+  release-note:
+    name: release note
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+        with:
+          script: |
+            // release-notes.sh carries these blocks to 페미위키:업데이트; bots write their own
+            if ( context.payload.pull_request.user.type === 'Bot' ) {
+              return;
+            }
+            const files = await github.paginate( github.rest.pulls.listFiles, {
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+            } );
+            if ( !files.some( ( f ) => [ f.filename, f.previous_filename ].some( ( path ) => path?.startsWith( 'dockers/' ) ) ) ) {
+              return;
+            }
+            const blocks = [ ...( process.env.BODY ?? '' ).replace( /\r/g, '' ).matchAll( /^```wikitext[ \t]*\n([^]*?)^```[ \t]*$/gm ) ];
+            if ( !blocks.length ) {
+              core.setFailed( 'Add a ```wikitext block of "* ..." lines for readers, or an empty one if they see no change.' );
+            }
+            // The categories of femiwiki/femiwiki coding-conventions.md, as a heading or a "(분류) " prefix
+            const categories = '추가|수정|성능 개선|보안 패치|내부 변화|버그';
+            const line = new RegExp( `^\\*|^\\((${ categories })\\) |^=== *([a-z]+|${ categories }) *===$` );
+            const bad = blocks.flatMap( ( b ) => b[ 1 ].split( '\n' ) )
+              .filter( ( l ) => l && !line.test( l ) );
+            if ( bad.length ) {
+              core.setFailed( `The release notes only take "* ..." and "(분류) ..." lines and "===type===" or "===분류===" headings, with 분류 one of ${ categories.replace( /\|/g, ', ' ) }, not:\n${ bad.join( '\n' ) }` );
+            }

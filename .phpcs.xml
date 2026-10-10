@@ -2,8 +2,8 @@
 <ruleset>
 	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki" />
 	<rule ref="./vendor/phpcompatibility/php-compatibility/PHPCompatibility" />
-	<config name="testVersion" value="8.0-8.1" />
 	<file>.</file>
+	<exclude-pattern type="relative">^dockers/femiwiki-extensions/extension-installer/vendor/</exclude-pattern>
 	<arg name="extensions" value="php" />
 	<arg name="encoding" value="UTF-8" />
 </ruleset>

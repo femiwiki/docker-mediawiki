@@ -1,0 +1,7 @@
+# The image test deploys this over compose.yaml. Debug mode turns $wgUseCdn
+# off, which makes every response private, so Caddy's cache would never store
+# one; the test needs the cacheable responses production serves.
+services:
+  fastcgi:
+    environment:
+      MEDIAWIKI_HOTFIX_SNIPPET: '<?php $$wgUseCdn = true; $$wgCdnServers = [];'

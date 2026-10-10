@@ -3,7 +3,7 @@
 # See 'PHP version & extensions' section on https://hub.docker.com/_/composer for more details.
 FROM --platform=$TARGETPLATFORM composer:2.8.6 AS composer
 
-FROM --platform=$TARGETPLATFORM php:8.1.32-fpm
+FROM --platform=$TARGETPLATFORM php:8.3.35-fpm-bookworm
 ARG TARGETPLATFORM
 ARG TINI_VERSION=0.18.0
 
@@ -46,12 +46,22 @@ RUN install-php-extensions \
     # Required by Scribunto
     luasandbox \
     wikidiff2 \
+    # The C memcached client. MediaWiki's pure-PHP client spends about 14% of a
+    # page's CPU reading and writing its sockets. See femiwiki/infra#1073.
+    memcached-3.4.0 \
 ;
 
 # Install the default object cache
 RUN pecl channel-update pecl.php.net
 RUN pecl install apcu
 RUN docker-php-ext-enable apcu
+
+# A sampling profiler, so where CPU goes stops being inferred from Caddy's
+# wall-clock durations. It costs nothing until MediaWiki is told to use it, and
+# it samples on a timer rather than instrumenting calls, which is why it can be
+# left in a production image at all. See femiwiki/femiwiki#532.
+RUN pecl install excimer
+RUN docker-php-ext-enable excimer
 
 COPY ./php.ini                 /usr/local/etc/php/php.ini
 COPY ./opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
@@ -60,7 +70,6 @@ COPY ./www.conf                /usr/local/etc/php-fpm.d/www.conf
 
 # As of PHP 8.3.0, a fallback value can be specified that will be used when the referenced variable
 # is not defined. (https://www.php.net/manual/en/configuration.file.php)
-# However, at the time of writing, PHP 8.3 is not yet available for MediaWiki.
 ENV PHP_POST_MAX_SIZE=10M \
     PHP_UPLOAD_MAX_FILESIZE=10M \
     PHP_FPM_EMERGENCY_RESTART_THRESHOLD=5 \

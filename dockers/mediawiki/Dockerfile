@@ -1,5 +1,5 @@
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/php-fpm:1.4.0
-ARG MEDIAWIKI_VERSION=1.43.8
+FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/php-fpm:1.7.0
+ARG MEDIAWIKI_VERSION=1.46.2
 
 RUN mkdir /mediawiki/
 RUN MEDIAWIKI_MAJOR_VERSION="$(echo $MEDIAWIKI_VERSION | cut -d. -f-2)" &&\
@@ -18,6 +18,7 @@ RUN crontab /tmp/crontab && rm /tmp/crontab
 COPY cron/generate-sitemap \
       cron/update-special-pages \
       cron/run-jobs \
+      cron/publish-dump \
       /usr/local/bin/
 
 # Install scripts

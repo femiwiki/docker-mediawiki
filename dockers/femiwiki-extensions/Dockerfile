@@ -1,31 +1,36 @@
-ARG MEDIAWIKI_VERSION=1.43.1
+# 미디어위키 확장을 병렬로 미리 받아 두는 스테이지. composer 이미지에 설치기용
+# PHP, 의존성용 composer, 다운로드용 git과 curl이 있고, npm은 스킨이 쓰는
+# 패키지를 설치한다.
+FROM composer:2.10.3
 
-#
-# 미디어위키 확장 설치 스테이지. 루비 스크립트를 이용해 수많은 미디어위키
-# 확장들을 병렬로 빠르게 미리 다운받아 놓는다.
-#
-FROM ruby:3.3.0-alpine
+RUN apk add --no-cache npm
 
-# ARG instructions without a value inside of a build stage to use the default
-# value of an ARG declared before the first FROM use
-ARG MEDIAWIKI_VERSION
+# git fetch can leave maintenance running in the background, which writes into
+# .git while the installer deletes it ("Directory not empty")
+RUN git config --global maintenance.auto false &&\
+    git config --global gc.auto 0
 
-# aria2
-#
-# References:
-#   https://aria2.github.io/
-RUN apk update && apk add \
-      aria2
+# How many extensions to fetch at once. Left empty, the installer reads the
+# building machine's CPU count with nproc on every build and uses twice that.
+ARG INSTALL_JOBS=
 
-# Install aria2.conf
-COPY extension-installer/aria2.conf /root/.config/aria2/aria2.conf
+WORKDIR /installer
+COPY extension-installer/composer.json extension-installer/composer.lock ./
+RUN composer install --no-dev --no-interaction --no-progress
+# This image's PHP is newer than the one that runs the extensions, so composer
+# resolves their dependencies for the PHP that dockers/php-fpm/Dockerfile names.
+# Build with --build-context dockers-php-fpm=dockers/php-fpm.
+RUN --mount=type=bind,from=dockers-php-fpm,source=Dockerfile,target=/php-fpm.Dockerfile \
+    php="$(sed -nE 's/^FROM .* php:([0-9.]+)-.*/\1/p' /php-fpm.Dockerfile)" &&\
+    test -n "$php" &&\
+    composer config --global platform.php "$php"
+COPY extension-installer/install_extensions.php extension-installer/extensions.json ./
+RUN INSTALL_JOBS="${INSTALL_JOBS}" php install_extensions.php
 
-RUN mkdir /mediawiki/
-
-# Extensions and skins setup
-COPY extension-installer/* /
-RUN bundle config set deployment 'true' &&\
-    bundle config set without 'development test' &&\
-    bundle install
-RUN MEDIAWIKI_BRANCH="REL$(echo $MEDIAWIKI_VERSION | cut -d. -f-2 | sed 's/\./_/g')" &&\
-    bundle exec ruby /install_extensions.rb "${MEDIAWIKI_BRANCH}"
+# patches/ mirrors /mediawiki: patches/extensions/<name>/*.patch applies to
+# that extension. A patch that no longer applies fails the build.
+COPY patches/ /patches/
+RUN for p in /patches/*/*/*.patch; do \
+      [ -e "$p" ] || continue; \
+      git -C "/mediawiki/$(dirname "${p#/patches/}")" apply "$p" || exit 1; \
+    done

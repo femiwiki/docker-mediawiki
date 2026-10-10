@@ -1,0 +1,10 @@
+failure-threshold: warning
+ignored:
+  # Pinning distro package versions breaks builds whenever the mirror drops the old version
+  - DL3008
+  - DL3018
+  # Rules the images already break; fixing them changes and republishes every image
+  - DL3004
+  - DL3029
+  - DL3065
+  - DL4006

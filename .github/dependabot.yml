@@ -2,6 +2,9 @@ version: 2
 updates:
   - package-ecosystem: 'docker'
     directory: '/'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
@@ -11,6 +14,9 @@ updates:
 
   - package-ecosystem: 'composer'
     directory: '/'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
@@ -20,6 +26,9 @@ updates:
 
   - package-ecosystem: 'npm'
     directory: '/'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
@@ -27,8 +36,53 @@ updates:
     cooldown:
       default-days: 7
 
-  - package-ecosystem: 'bundler'
+  - package-ecosystem: 'docker'
+    directory: '/dockers/femiwiki-extensions'
+    commit-message:
+      prefix: build
+      include: scope
+    schedule:
+      interval: monthly
+    reviewers:
+      - 'femiwiki/reviewer'
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: 'docker'
+    directory: '/dockers/php-fpm'
+    commit-message:
+      prefix: build
+      include: scope
+    schedule:
+      interval: monthly
+    reviewers:
+      - 'femiwiki/reviewer'
+    ignore:
+      # A new PHP minor needs MediaWiki's support for it checked first
+      - dependency-name: 'php'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: 'docker'
+    directory: '/dockers/caddy'
+    commit-message:
+      prefix: build
+      include: scope
+    schedule:
+      interval: monthly
+    reviewers:
+      - 'femiwiki/reviewer'
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: 'composer'
     directory: '/dockers/femiwiki-extensions/extension-installer'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
@@ -37,15 +91,21 @@ updates:
       default-days: 7
 
   - package-ecosystem: 'github-actions'
-    directory: '/'
+    directories:
+      - '/'
+      - '/.github/actions/*'
+    commit-message:
+      prefix: build
+      include: scope
     schedule:
       interval: monthly
     reviewers:
       - 'femiwiki/reviewer'
-    ignore:
-      - dependency-name: '*'
-        update-types:
-          - 'version-update:semver-minor'
-          - 'version-update:semver-patch'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - 'femiwiki/.github/.github/workflows/*'
     cooldown:
       default-days: 7

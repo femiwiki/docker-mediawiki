@@ -2,6 +2,9 @@
 dockers/femiwiki-extensions/extension-installer/extensions.json
 composer.lock
 
+# Go templates, YAML only once updatecli renders them
+/updatecli/
+
 # composer dependencies
 /vendor/
 

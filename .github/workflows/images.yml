@@ -1,0 +1,147 @@
+name: 'Docker: images'
+
+# Pull requests reach this through required.yml. Pushes to main and dispatches
+# run it directly, as they always have, to build and publish.
+on:
+  workflow_call:
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY:
+        description: Opens the downstream bump pull requests; only used from main
+        required: false
+  push:
+    # A mw-* branch builds the next MediaWiki release, e.g. mw-1.46
+    branches: [main, 'mw-*']
+    paths:
+      - 'dockers/**'
+  workflow_dispatch:
+    inputs:
+      image:
+        description: The image to build and, from main, publish
+        required: true
+        type: choice
+        options: [caddy, femiwiki, femiwiki-extensions, mediawiki, php-fpm]
+
+# No concurrency group here on purpose: cancelling this run would take the
+# gate below with it, and a cancelled check satisfies a required check no
+# better than a failed one does. Each image workflow cancels its own stale
+# builds instead, which leaves this run free to report what it found.
+permissions: {}
+
+jobs:
+  scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      changed: ${{ steps.scope.outputs.changed }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/image-scope
+        id: scope
+        with:
+          images: caddy femiwiki femiwiki-extensions mediawiki php-fpm
+          dispatched: ${{ inputs.image }}
+
+  # The permissions below are the union the called workflow declares. Its
+  # publishing jobs run only on main, and the app key is empty for a fork.
+
+  caddy:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'caddy')
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/docker-image.yml
+    with:
+      image: caddy
+      downstream: femiwiki
+      automerge: true
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+  femiwiki:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'femiwiki')
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: read
+    uses: ./.github/workflows/docker-femiwiki.yml
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+  femiwiki-extensions:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'femiwiki-extensions')
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/docker-image.yml
+    with:
+      image: femiwiki-extensions
+      downstream: femiwiki
+      # femiwiki-extensions is an amd64-only image, so no arm64 is needed
+      arches: '["amd64"]'
+      automerge: true
+      # Its Dockerfile reads the PHP version production runs from php-fpm's
+      build-contexts: dockers-php-fpm=dockers/php-fpm
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+  mediawiki:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'mediawiki')
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/docker-image.yml
+    with:
+      image: mediawiki
+      downstream: femiwiki
+      automerge: true
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+  php-fpm:
+    needs: scope
+    if: contains(fromJSON(needs.scope.outputs.changed), 'php-fpm')
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/docker-image.yml
+    with:
+      image: php-fpm
+      downstream: mediawiki
+      automerge: true
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+  images:
+    name: image builds
+    needs: [scope, caddy, femiwiki, femiwiki-extensions, mediawiki, php-fpm]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/image-gate
+        with:
+          scope: ${{ needs.scope.result }}
+          images: >-
+            caddy=${{ needs.caddy.result }}
+            femiwiki=${{ needs.femiwiki.result }}
+            femiwiki-extensions=${{ needs.femiwiki-extensions.result }}
+            mediawiki=${{ needs.mediawiki.result }}
+            php-fpm=${{ needs.php-fpm.result }}

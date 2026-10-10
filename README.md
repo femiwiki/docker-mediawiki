@@ -7,7 +7,7 @@
 
 ## Usage of Docker Image
 
-페미위키를 위한 [PHP-FPM] 서버이며 동일한 이미지로 [Caddy] 웹 서버를 실행할 수도 있습니다. 다음 예시 Compose file를 참고해 주세요. compose.yml에서 실행 가능한 개발용 전체 예시를 볼 수 있습니다.
+페미위키를 위한 [PHP-FPM] 서버이며 동일한 이미지로 [Caddy] 웹 서버를 실행할 수도 있습니다. 다음 예시 Compose file를 참고해 주세요. compose.yaml에서 실행 가능한 개발용 전체 예시를 볼 수 있습니다.
 
 ```yml
 fastcgi:
@@ -31,7 +31,7 @@ http:
 - `MEDIAWIKI_SKIP_UPDATE`: 설정되었을 경우 컨테이너 시작 시 update.php를 실행하지 않습니다. update.php 실행은 미디어위키 설치 직후 혹은 확장 기능 추가 시에만 필요합니다.
 - `MEDIAWIKI_SKIP_IMPORT_SITES`: 설정되었을 경우 컨테이너 시작 시 importSites.php를 실행하지 않습니다. 내용이 변경되지 않았다면 한 데이터베이스에 두 번 이상 실행할 필요가 없습니다.
 
-`/a`에 위치한 LocalSettings.php 파일이나 site-list.xml 파일은 테스트 목적에 따라 교체할 수 있습니다.
+`/etc/mediawiki`에 위치한 LocalSettings.php 파일이나 site-list.xml 파일은 테스트 목적에 따라 교체할 수 있습니다.
 
 #### Caddy
 
@@ -53,11 +53,11 @@ cp dockers/femiwiki/LocalSettings.php development/
 cp dockers/femiwiki/Hotfix.php development/
 
 # In case of Docker swarm
-docker stack deploy --prune -c compose.yml mediawiki
+docker stack deploy --prune -c compose.yaml mediawiki
 # If you want some tweaks
-docker stack deploy --prune -c compose.yml -c compose.override.yml mediawiki
+docker stack deploy --prune -c compose.yaml -c compose.override.yaml mediawiki
 # In case of Docker Compose
-docker compose -f compose.yml up
+docker compose -f compose.yaml up
 ```
 
 브라우저에서 [http://127.0.0.1:8080]을 방문할 수 있습니다.
@@ -84,7 +84,7 @@ flowchart TD
     composer --> femiwiki/php-fpm
     php-fpm --> femiwiki/php-fpm --> femiwiki/mediawiki --> femiwiki/femiwiki
     caddy --> femiwiki/caddy --> femiwiki/femiwiki
-    ruby --> femiwiki/femiwiki-extensions --> femiwiki/femiwiki
+    composer --> femiwiki/femiwiki-extensions --> femiwiki/femiwiki
 ```
 
 &nbsp;

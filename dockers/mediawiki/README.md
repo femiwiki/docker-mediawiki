@@ -1,5 +1,45 @@
 # docker-mediawiki
 
+## v4.0.2
+
+- Bump femiwiki/php-fpm to v1.7.0
+
+## v4.0.1
+
+- Bump MediaWiki to v1.46.2
+
+## v4.0.0
+
+- Bump MediaWiki to v1.46.1
+
+## v3.6.0
+
+- publish a public dump to Internet Archive twice a year
+
+## v3.5.4
+
+- Bump femiwiki/php-fpm to v1.6.0
+
+## v3.5.3
+
+- Bump MediaWiki to v1.43.10
+
+## v3.5.2
+
+- Bump MediaWiki to v1.43.9
+
+## v3.5.1
+
+- shorten every comment block of five or more lines
+
+## v3.5.0
+
+- say on stdout when the sitemap has been rebuilt
+
+## v3.4.5
+
+- Bump femiwiki/php-fpm to v1.5.0
+
 ## v3.4.4
 
 - Bump MediaWiki to v1.43.8

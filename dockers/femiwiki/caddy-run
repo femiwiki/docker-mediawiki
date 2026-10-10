@@ -1,0 +1,36 @@
+#!/bin/bash
+# Opens the real listeners only once a loopback handshake proves the certificate
+# is loaded. The config goes as Caddyfile text: mwcache reads its options only
+# from the adapter (femiwiki/caddy-mwcache#119).
+set -euo pipefail
+cd /srv/femiwiki.com
+WARMUP_PORT=8443
+
+# robots.txt names crawlers and the paths they may not take, which changes
+# on their schedule rather than ours. Passing it in makes that change an
+# apply; the copy in the image is what serves when nothing is passed.
+if [[ -n "${FW_ROBOTS_TXT:-}" ]]; then
+  printf '%s\n' "$FW_ROBOTS_TXT" > robots.txt
+fi
+
+# The same for the Caddyfile, so a retuned zone is an apply rather than an
+# image. A broken file fails `caddy adapt` below, so the container never gets
+# healthy and the old one keeps serving.
+if [[ -n "${FW_CADDYFILE:-}" ]]; then
+  printf '%s\n' "$FW_CADDYFILE" > Caddyfile
+fi
+
+caddy adapt --config Caddyfile --adapter caddyfile > /tmp/caddy.json
+php /usr/local/lib/femiwiki/caddy-warmup.php /tmp/caddy.json "$WARMUP_PORT" > /tmp/caddy-warmup.json
+NAME="$(cat /tmp/caddy-warmup-name)"
+
+caddy run --config /tmp/caddy-warmup.json &
+CADDY_PID=$!
+# tini signals only this script, and the kernel kills Caddy when it exits, so
+# docker stop would cut every request in flight. Caddy drains on its own TERM.
+trap 'kill -TERM "$CADDY_PID"; wait "$CADDY_PID"; exit $?' TERM
+until curl -sfk -o /dev/null --resolve "$NAME:$WARMUP_PORT:127.0.0.1" "https://$NAME:$WARMUP_PORT/"; do
+  sleep 0.2
+done
+curl -sf --unix-socket /run/caddy-warmup.sock -H 'Content-Type: text/caddyfile' --data-binary @Caddyfile http://caddy/load
+wait

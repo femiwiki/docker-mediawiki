@@ -1,0 +1,232 @@
+name: 'Docker: image'
+
+# Builds one versioned image and, on main, publishes it and opens the pull
+# request that bumps it in the image built on top of it. A mw-* branch publishes
+# its versions without the bump. Called by images.yml.
+on:
+  workflow_call:
+    inputs:
+      image:
+        description: The directory under dockers/, also the ghcr.io/femiwiki name
+        required: true
+        type: string
+      downstream:
+        description: The image under dockers/ whose Dockerfile is bumped to the new version
+        required: true
+        type: string
+      arches:
+        description: The architectures to build, as a JSON array
+        required: false
+        type: string
+        default: '["amd64", "arm64"]'
+      automerge:
+        description: Merge the downstream bump pull request once its checks pass
+        required: false
+        type: boolean
+        default: false
+      build-contexts:
+        description: Named build contexts the Dockerfile reads, as name=path lines
+        required: false
+        type: string
+        default: ''
+    secrets:
+      PAT_APPLICATION_PRIVATE_KEY:
+        description: Opens the downstream bump pull request; only used from main
+        required: false
+
+concurrency:
+  group: docker-${{ inputs.image }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      ver: ${{ steps.version.outputs.ver }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - id: version
+        env:
+          IMAGE: ${{ inputs.image }}
+        run: echo "ver=$(grep -m 1 '## v' "dockers/${IMAGE}/README.md" | cut -d'v' -f2)" >> "$GITHUB_OUTPUT"
+      - uses: ./.github/actions/image-version
+        id: guard
+        with:
+          image: ${{ inputs.image }}
+          application-id: ${{ vars.PAT_APPLICATION_ID }}
+          private-key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+      # This run is for a head that no longer merges as it stands
+      - name: Leave the checks to the new head
+        if: steps.guard.outputs.pushed == 'true'
+        run: exit 1
+
+  build:
+    needs: get-version
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ${{ fromJSON(inputs.arches) }}
+    runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+      - name: Log in to ghcr.io
+        if: github.repository_owner == 'femiwiki' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-'))
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build linux/${{ matrix.arch }}
+        id: build
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
+        with:
+          context: '{{ defaultContext }}:dockers/${{ inputs.image }}'
+          platforms: linux/${{ matrix.arch }}
+          build-contexts: ${{ inputs.build-contexts }}
+          cache-from: type=gha,scope=${{ inputs.image }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ inputs.image }}-${{ matrix.arch }}
+          outputs: ${{ (github.repository_owner == 'femiwiki' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-'))) && format('type=image,name=ghcr.io/femiwiki/{0},push-by-digest=true,name-canonical=true,push=true', inputs.image) || 'type=cacheonly' }}
+      - name: Export digest
+        if: github.repository_owner == 'femiwiki' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-'))
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          mkdir -p "${RUNNER_TEMP}/digests"
+          touch "${RUNNER_TEMP}/digests/${DIGEST#sha256:}"
+      - name: Upload digest
+        if: github.repository_owner == 'femiwiki' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-'))
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: digests-${{ inputs.image }}-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  push-manifest:
+    needs: [get-version, build]
+    if: github.repository_owner == 'femiwiki' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-'))
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+      - name: Download digests
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-${{ inputs.image }}-*
+          merge-multiple: true
+      - name: Log in to ghcr.io
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create and push manifest
+        working-directory: ${{ runner.temp }}/digests
+        env:
+          IMAGE: ${{ inputs.image }}
+          VER: ${{ needs.get-version.outputs.ver }}
+        run: |
+          image="ghcr.io/femiwiki/${IMAGE}"
+          args=(-t "${image}:${VER}")
+          # A mw-* branch builds the next MediaWiki release: its versions are
+          # published, but neither as latest nor bumped downstream on main
+          [ "$GITHUB_REF_NAME" = main ] && args+=(-t "${image}:latest")
+          for digest in *; do
+            args+=("${image}@sha256:${digest}")
+          done
+          docker buildx imagetools create "${args[@]}"
+
+  bump-downstream:
+    needs: [get-version, push-manifest]
+    if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # Main as it is now, not the commit this run built: create-pull-request
+      # cuts the branch from what is checked out, and a bump merged since then
+      # edits the same lines, as #1310 did to #1311
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: main
+          persist-credentials: false
+          # The release notes read back to the version downstream uses
+          fetch-depth: 0
+      # A run re-run after a newer release was bumped would otherwise bump back
+      - name: Check downstream is behind this version
+        id: behind
+        env:
+          IMAGE: ${{ inputs.image }}
+          DOWNSTREAM: ${{ inputs.downstream }}
+          VER: ${{ needs.get-version.outputs.ver }}
+        run: |
+          old="$(grep -oE "ghcr\.io/femiwiki/${IMAGE}:[0-9.]+" "dockers/${DOWNSTREAM}/Dockerfile" | head -n 1 | cut -d: -f2)"
+          if [ "$(printf '%s\n' "$old" "$VER" | sort -V | tail -n 1)" = "$old" ]; then
+            echo "::notice file=dockers/${DOWNSTREAM}/Dockerfile::already on ${IMAGE} v${old}, so v${VER} is not bumped"
+          else
+            echo "behind=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: ./.github/actions/add-nev-version-entry-to-changelog
+        if: steps.behind.outputs.behind == 'true'
+        with:
+          version: ${{ needs.get-version.outputs.ver }}
+          upstream: ${{ inputs.image }}
+          downstream: ${{ inputs.downstream }}
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        if: steps.behind.outputs.behind == 'true'
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+      # One branch per image pair, so a newer release force-updates the open
+      # bump pull request instead of opening a second one beside it
+      - name: Create Pull Request
+        if: steps.behind.outputs.behind == 'true'
+        id: create-pull-request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          commit-message: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to v${{ needs.get-version.outputs.ver }}'
+          title: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to v${{ needs.get-version.outputs.ver }}'
+          branch: bump-${{ inputs.image }}-${{ inputs.downstream }}
+          body-path: ${{ runner.temp }}/body.md
+      # A conflicting pull request reports no failing check of its own, so it
+      # fails here, e.g. when the open one merged while this run was pushing
+      - name: Check the pull request merges
+        if: steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: |
+          # GitHub answers UNKNOWN until it has tried the merge
+          for _ in $(seq 24); do
+            state="$(gh pr view "$PR_NUMBER" --repo "$REPO" --json mergeable --jq .mergeable)"
+            [ "$state" = UNKNOWN ] || break
+            sleep 5
+          done
+          if [ "$state" != MERGEABLE ]; then
+            echo "::error::#${PR_NUMBER} is ${state} against main; re-run this job to rebuild it from main"
+            exit 1
+          fi
+      - name: Enable Pull Request Automerge
+        if: inputs.automerge && steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: gh pr merge --squash --auto "$PR_NUMBER"

@@ -6,11 +6,19 @@
   "scripts": {
     "lint": "prettier . --check",
     "fix": "prettier . --write",
-    "minify-svg": "svgo --config=.svgo.config.js -q -r -f dockers/femiwiki/resources/"
+    "minify-svg": "svgo --config=.svgo.config.js -q -r -f dockers/femiwiki/resources/",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@prettier/plugin-xml": "^3.4.2",
-    "prettier": "^3.9.6",
-    "svgo": "^4.0.2"
+    "prettier": "^3.9.9",
+    "semver": "^7.8.5",
+    "svgo": "^4.1.0"
+  },
+  "devDependencies": {
+    "@actions/core": "3.0.1",
+    "@actions/github": "9.1.1",
+    "@types/node": "24.19.1",
+    "typescript": "7.0.2"
   }
 }

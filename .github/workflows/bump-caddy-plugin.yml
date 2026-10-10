@@ -1,0 +1,113 @@
+name: Submit a PR for bumping a Caddy plugin
+
+on:
+  repository_dispatch:
+    types: [bump-caddy-plugin]
+
+  workflow_dispatch:
+    inputs:
+      plugin:
+        description: The plugin repository under femiwiki (also the ARG name, upper-cased)
+        type: string
+
+      ver:
+        description: The version released, or for a plugin pinned by commit the full commit hash
+        type: string
+
+permissions: {}
+
+jobs:
+  bump-caddy-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Update the Dockerfile and collect the upstream changes
+        id: bump
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLUGIN: ${{ github.event.client_payload.plugin || inputs.plugin }}
+          VER: ${{ github.event.client_payload.sha || github.event.client_payload.version || inputs.ver }}
+          BODY: ${{ runner.temp }}/body.md
+        run: |
+          prefix="$(echo "$PLUGIN" | tr 'a-z-' 'A-Z_')"
+          repo="femiwiki/$PLUGIN"
+          if grep -qE "^ARG ${prefix}_COMMIT=" dockers/caddy/Dockerfile; then
+            [[ "$VER" =~ ^[0-9a-f]{40}$ ]] \
+              || { echo "::error::$PLUGIN is pinned by commit, so it takes a full commit hash, not $VER"; exit 1; }
+            arg="${prefix}_COMMIT"
+            full_old=$(grep -oE "^ARG ${arg}=\S+" dockers/caddy/Dockerfile | cut -d= -f2)
+            old=${full_old:0:7}
+            new=${VER:0:7}
+            message="Bump $PLUGIN to [$new](https://github.com/$repo/commit/$VER)"
+          else
+            arg="${prefix}_VERSION"
+            old=$(grep -oE "^ARG ${arg}=\S+" dockers/caddy/Dockerfile | cut -d= -f2)
+            [ -n "$old" ] || { echo "::error::no ARG ${prefix}_COMMIT or $arg in dockers/caddy/Dockerfile"; exit 1; }
+            new=$VER
+            message="Bump $PLUGIN to [$VER](https://github.com/$repo/releases/tag/$VER)"
+          fi
+          sed -i -E "s|^(ARG ${arg}=).*|\1${VER}|" dockers/caddy/Dockerfile
+          notes=$(gh release view "$VER" --repo "$repo" --json body --jq .body || true)
+          # A bare (#N) would link to a pull request of this repository
+          subjects=$(gh api "repos/$repo/compare/$old...$new" --jq '.commits[] | "- " + (.commit.message | split("\n")[0])' \
+            | sed -E "s|\(#([0-9]+)\)|($repo#\1)|g")
+          {
+            echo "[$old → $new](https://github.com/$repo/compare/$old...$new)"
+            echo
+            if [ -n "$notes" ]; then
+              echo "$notes"
+            else
+              grep -vE '^- (Localisation updates|build:)' <<< "$subjects" || true
+            fi
+          } > "$BODY"
+          cat "$BODY"
+          {
+            echo "plugin=$PLUGIN"
+            echo "ver=$new"
+            echo "old=$old"
+            echo "message=$message"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: ./.github/actions/release-title
+        id: title
+        with:
+          repo: femiwiki/${{ steps.bump.outputs.plugin }}
+          old: ${{ steps.bump.outputs.old }}
+          ver: ${{ steps.bump.outputs.ver }}
+          scope: caddy
+          name: ${{ steps.bump.outputs.plugin }}
+          body: ${{ runner.temp }}/body.md
+
+      - name: Update README
+        uses: ./.github/actions/add-changelog-entry
+        with:
+          image: caddy
+          level: ${{ steps.title.outputs.level }}
+          message: ${{ steps.bump.outputs.message }}
+
+      - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
+        if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
+        id: get_workflow_token
+        with:
+          application_id: ${{ vars.PAT_APPLICATION_ID }}
+          application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
+
+      - name: Create Pull Request
+        id: create-pull-request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          commit-message: ${{ steps.title.outputs.title }}
+          title: ${{ steps.title.outputs.title }}
+          branch: bump-${{ steps.bump.outputs.plugin }}
+          body-path: ${{ runner.temp }}/body.md
+
+      - name: Enable Pull Request Automerge
+        if: steps.create-pull-request.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        run: gh pr merge --squash --auto "$PR_NUMBER"

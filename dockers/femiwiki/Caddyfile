@@ -1,23 +1,81 @@
+# The copy that serves comes from femiwiki/infra, docker/res/Caddyfile, by way
+# of FW_CADDYFILE. This one is what a container without that variable falls back
+# to, so edit the infra copy unless that is what you mean to change.
 {
 	# Global options
 	storage s3
 
 	order mwcache before rewrite
-	# NOTE: See @filter for the further details
-	order respond before rewrite
+	# NOTE: See @block_cidr and @claudebot for the further details
+	order respond before mwcache
+	order encode before mwcache
+
+	# The idle fastcgi port fails its check every second; keep that out of the
+	# log. FW_LOG_EXCLUDE adds to the list, so a logger that turns out to be
+	# too chatty can be silenced from infra without building an image.
+	log default {
+		exclude http.handlers.reverse_proxy.health_checker.active {$FW_LOG_EXCLUDE}
+	}
+
+	servers {
+		metrics
+	}
 }
 femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 	tls {
 		dns route53
 	}
 	root * /srv/femiwiki.com
-	php_fastcgi {$FASTCGI_ADDR}
+	# Two ports so a new fastcgi container can start beside the old one
+	php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
+		# Take the response off php-fpm at memory speed so a slow reader holds
+		# Caddy rather than a worker. Responses here are 8 KB to 150 KB, and a
+		# larger one streams as before instead of failing. See femiwiki#583.
+		response_buffers {$FW_RESPONSE_BUFFERS:1MB}
+		lb_policy round_robin
+		# One immediate retry reaches the other port; waiting longer only
+		# delays the fallback below
+		lb_retries 1
+		health_uri /healthz.php
+		health_interval 1s
+		health_timeout 10s
+		health_fails 3
+	}
+	# When no port passes /healthz.php (a drain file left behind, as on
+	# 2026-09-21), send reads to any php-fpm that answers instead of a 503.
+	# This route gets the original URI, so the rewrites are repeated; the
+	# fallback field keeps these out of the Site down alert's good responses.
+	handle_errors 503 {
+		@read method GET HEAD
+		handle @read {
+			log_append fallback true
+			rewrite /w/api.php /api.php
+			rewrite /w/* /index.php
+			php_fastcgi 127.0.0.1:9000 127.0.0.1:9001 {
+				response_buffers {$FW_RESPONSE_BUFFERS:1MB}
+				lb_policy round_robin
+				lb_retries 1
+				# Try the other port when one refuses; left alone, only GET is retried
+				lb_retry_match {
+					method GET HEAD
+				}
+			}
+			encode gzip
+		}
+		handle {
+			respond 503
+		}
+	}
 	file_server
 	encode gzip
 	mwcache {
+		# A budget in bytes: 64 MiB holds about 1,400 responses, well above the
+		# 595 addresses an ordinary twenty minutes asks for. num_counters is
+		# about ten times that, and ristretto's per-entry overhead is counted
+		# because it is memory really used.
 		ristretto {
-			num_counters 10000
-			max_cost 1000
+			num_counters {$FW_MWCACHE_NUM_COUNTERS:14000}
+			max_cost_bytes {$FW_MWCACHE_MAX_COST_BYTES:67108864}
 			buffer_items 64
 		}
 		purge_acl {
@@ -36,7 +94,26 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 		X-Frame-Options "DENY"
 	}
 	log {
-		format json
+		# Drop the fields that are the same on every request (the headers set
+		# above, Via, Alt-Svc, X-Powered-By, Date and the TLS handshake), which
+		# were two thirds of each line.
+		format filter {
+			wrap json
+			fields {
+				request>tls delete
+				request>headers>Accept delete
+				request>headers>Accept-Encoding delete
+				resp_headers>Accept-Ch delete
+				resp_headers>Alt-Svc delete
+				resp_headers>Date delete
+				resp_headers>Strict-Transport-Security delete
+				resp_headers>Via delete
+				resp_headers>X-Content-Type-Options delete
+				resp_headers>X-Frame-Options delete
+				resp_headers>X-Powered-By delete
+				resp_headers>X-Xss-Protection delete
+			}
+		}
 	}
 
 	rewrite /w/api.php /api.php
@@ -44,34 +121,40 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 
 	respond /health-check 200
 
-	@block_cidr {
-		remote_ip {$BLOCKED_CIDR}
+	# 404 rather than 403: there is no reason to confirm the installer is there
+	respond /mw-config* 404
+}
+
+# php-fpm's status page and opcache report for Alloy on the host, on ports
+# infra alternates per generation like the probe port. The status page has a
+# port of its own so it answers while www is saturated.
+http://127.0.0.1:{$FW_METRICS_PORT} {
+	bind 127.0.0.1
+
+	handle /fpm-status {
+		reverse_proxy 127.0.0.1:{$PHP_FPM_STATUS_LISTEN} {
+			transport fastcgi {
+				root /srv/metrics
+				# Leaves /fpm-status whole as SCRIPT_NAME, which is what php-fpm matches
+				split .php
+			}
+		}
 	}
 
-	respond @block_cidr 403 {
-		close
+	handle /opcache.php {
+		reverse_proxy 127.0.0.1:{$PHP_FPM_LISTEN} {
+			transport fastcgi {
+				root /srv/metrics
+				split .php
+			}
+		}
 	}
+}
 
-	# Ignore malformed requests
-	@filter0 {
-		path /w/특수:내언어/페미위키:대문
-		vars_regexp {query} ^=[0-9]{1,5}$
-	}
-	@filter1 {
-		path /
-		vars_regexp {query} ^[A-Z]{5}=[A-Z]{3}$
-	}
-	@filter2 {
-		header User-Agent *ClaudeBot*
-	}
-
-	respond @filter0 403 {
-		close
-	}
-	respond @filter1 403 {
-		close
-	}
-	respond @filter2 403 {
-		close
-	}
+# A port of this container's own, so the healthcheck cannot be answered by the
+# previous Caddy sharing :80 on the host network; infra alternates it per
+# generation like php-fpm's
+http://127.0.0.1:{$FW_PROBE_PORT} {
+	bind 127.0.0.1
+	respond /health-check 200
 }
