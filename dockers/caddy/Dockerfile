@@ -11,7 +11,7 @@ RUN git clone -q https://github.com/ss098/certmagic-s3 /src/certmagic-s3 &&\
     git -C /src/certmagic-s3 checkout -q "${CADDY_CERTMAGIC_S3_COMMIT}" &&\
     git -C /src/certmagic-s3 apply /tmp/certmagic-s3-list.patch
 
-RUN XCADDY_DEBUG=1 xcaddy build v2.11.4 \
+RUN XCADDY_DEBUG=1 xcaddy build v2.11.7 \
       --with github.com/caddy-dns/route53 \
       --with "github.com/femiwiki/caddy-mwcache@${CADDY_MWCACHE_COMMIT}" \
       --with "github.com/ss098/certmagic-s3=/src/certmagic-s3" \
