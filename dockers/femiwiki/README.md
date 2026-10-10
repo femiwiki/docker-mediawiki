@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.44
+
+- Bump femiwiki/femiwiki-extensions to v3.12.0
+  - let sysops send a notification to every user or to a group (femiwiki/UnifiedExtensionForFemiwiki#273)
+
 ## v2.0.43
 
 - Bump femiwiki/caddy to v1.11.3
