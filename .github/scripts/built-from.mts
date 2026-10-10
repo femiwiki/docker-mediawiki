@@ -55,6 +55,52 @@ export default async ({
     }
   };
 
+  // The commits an image's Dockerfile takes in between two trees: each base
+  // image's after its old pin up to its new one, and what those build on
+  const builtOn = async (
+    image: string,
+    from: string,
+    to: string,
+  ): Promise<string[]> => {
+    const before = pins(await readFile(`dockers/${image}/Dockerfile`, from));
+    const after = pins(await readFile(`dockers/${image}/Dockerfile`, to));
+    const out: string[] = [];
+    for (const [base, version] of Object.entries(after)) {
+      const was = before[base];
+      if (!was || was === version) {
+        continue;
+      }
+      // Newest first. A change under dockers/<base> raises its README
+      // version, so the version tells which pin first carries a commit.
+      const found: string[] = [];
+      let last: string | undefined;
+      walk: for await (const { data } of github.paginate.iterator(
+        github.rest.repos.listCommits,
+        { owner, repo, sha: to, path: `dockers/${base}`, per_page: 100 },
+      )) {
+        for (const c of data) {
+          const v =
+            (await readFile(`dockers/${base}/README.md`, c.sha)).match(
+              /^## v(.+)$/m,
+            )?.[1] ?? '';
+          if (newer(v, version)) {
+            continue;
+          }
+          if (!newer(v, was)) {
+            last = c.sha;
+            break walk;
+          }
+          found.push(c.sha);
+        }
+      }
+      if (found.length > 0 && last) {
+        out.push(...(await builtOn(base, last, found[0])));
+      }
+      out.push(...found.reverse());
+    }
+    return out;
+  };
+
   let commits = [sha];
   if (old) {
     try {
@@ -72,17 +118,34 @@ export default async ({
     }
   }
 
-  // The upstream versions the running image was built on, so a bump lists
-  // only what is new to production
-  const deployed: Record<string, string> = {};
-  if (old) {
-    const dockerfile = await readFile('dockers/femiwiki/Dockerfile', old);
-    for (const m of dockerfile.matchAll(
-      /ghcr\.io\/femiwiki\/([\w-]+):([\d.]+)/g,
-    )) {
-      deployed[m[1]] = m[2];
+  // Another image's change reaches this one only once its Dockerfile pins it,
+  // wherever it was merged
+  const own: string[] = [];
+  for (const c of commits) {
+    const { data } = await github.rest.repos.getCommit({ owner, repo, ref: c });
+    const files = (data.files ?? []).map((f) => f.filename);
+    if (
+      files.length === 0 ||
+      !files.every(
+        (f) => f.startsWith('dockers/') && !f.startsWith('dockers/femiwiki/'),
+      )
+    ) {
+      own.push(c);
     }
   }
+  // One merged before the running image comes first; one merged in this range
+  // keeps its place
+  const pinned = old ? await builtOn('femiwiki', old, sha) : [];
+  commits = [
+    ...pinned.filter((c) => !commits.includes(c)),
+    ...commits.filter((c) => own.includes(c) || pinned.includes(c)),
+  ];
+
+  // The upstream versions the running image was built on, so a bump lists
+  // only what is new to production
+  const deployed = old
+    ? pins(await readFile('dockers/femiwiki/Dockerfile', old))
+    : {};
 
   const sections: Record<string, string[]> = {};
   const add = (type: string, lines: string[]) => {
@@ -151,6 +214,29 @@ export default async ({
   core.setOutput('refs', refs);
   core.setOutput('prs', prs.join(' '));
 };
+
+// The femiwiki images a Dockerfile builds on, each at the version it pins
+function pins(dockerfile: string) {
+  const out: Record<string, string> = {};
+  for (const m of dockerfile.matchAll(
+    /ghcr\.io\/femiwiki\/([\w-]+):([\d.]+)/g,
+  )) {
+    out[m[1]] = m[2];
+  }
+  return out;
+}
+
+// Whether version a is above version b, both dotted numbers
+function newer(a: string, b: string) {
+  const x = a.split('.').map(Number);
+  const y = b.split('.').map(Number);
+  for (let i = 0; i < Math.max(x.length, y.length); i++) {
+    if ((x[i] ?? 0) !== (y[i] ?? 0)) {
+      return (x[i] ?? 0) > (y[i] ?? 0);
+    }
+  }
+  return false;
+}
 
 // The femiwiki pull requests a bump body lists the changes of, as
 // OWNER/REPO#N: a commit subject ends in one, a release note links one
