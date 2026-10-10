@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.61
+
+- Bump femiwiki/femiwiki-extensions to v3.12.12
+  - scroll wide TablePager tables inside the page (femiwiki/FemiwikiSkin#1071)
+
 ## v2.0.60
 
 - Bump femiwiki/femiwiki-extensions to v3.12.11
