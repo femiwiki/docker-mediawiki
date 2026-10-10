@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.62
+
+- Bump femiwiki/femiwiki-extensions to v3.12.13
+  - drop Firebase short links from the share dialog (femiwiki/FemiwikiSkin#1072)
+
 ## v2.0.61
 
 - Bump femiwiki/femiwiki-extensions to v3.12.12
