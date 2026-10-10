@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.59
+
+- Bump femiwiki/femiwiki-extensions to v3.12.10
+  - keep code monospace in English and Japanese text (femiwiki/FemiwikiSkin#1069)
+
 ## v2.0.58
 
 - Bump femiwiki/femiwiki-extensions to v3.12.9
