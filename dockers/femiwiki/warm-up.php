@@ -49,7 +49,7 @@ $ask = static function (
 	$client->setReadWriteTimeout( $timeoutMs );
 	try {
 		return $client->request( REQUEST + [
-			'SCRIPT_FILENAME' => "/srv/femiwiki.com/$script",
+			'SCRIPT_FILENAME' => "/srv/docroot/$script",
 			'SCRIPT_NAME' => "/$script",
 			'REQUEST_URI' => $uri . ( $query === '' ? '' : "?$query" ),
 			'QUERY_STRING' => $query,
