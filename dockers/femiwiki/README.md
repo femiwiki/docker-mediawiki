@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.55
+
+- Bump femiwiki/femiwiki-extensions to v3.12.6
+  - drop the Echo popup workaround that Echo now covers (femiwiki/FemiwikiSkin#1060)
+
 ## v2.0.54
 
 - Bump femiwiki/caddy to v1.11.9
