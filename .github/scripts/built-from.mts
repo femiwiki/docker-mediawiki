@@ -74,15 +74,9 @@ export default async ({
 
   // The upstream versions the running image was built on, so a bump lists
   // only what is new to production
-  const deployed: Record<string, string> = {};
-  if (old) {
-    const dockerfile = await readFile('dockers/femiwiki/Dockerfile', old);
-    for (const m of dockerfile.matchAll(
-      /ghcr\.io\/femiwiki\/([\w-]+):([\d.]+)/g,
-    )) {
-      deployed[m[1]] = m[2];
-    }
-  }
+  const deployed = old
+    ? pins(await readFile('dockers/femiwiki/Dockerfile', old))
+    : {};
 
   const sections: Record<string, string[]> = {};
   const add = (type: string, lines: string[]) => {
@@ -151,6 +145,17 @@ export default async ({
   core.setOutput('refs', refs);
   core.setOutput('prs', prs.join(' '));
 };
+
+// The femiwiki images a Dockerfile builds on, each at the version it pins
+function pins(dockerfile: string) {
+  const out: Record<string, string> = {};
+  for (const m of dockerfile.matchAll(
+    /ghcr\.io\/femiwiki\/([\w-]+):([\d.]+)/g,
+  )) {
+    out[m[1]] = m[2];
+  }
+  return out;
+}
 
 // The femiwiki pull requests a bump body lists the changes of, as
 // OWNER/REPO#N: a commit subject ends in one, a release note links one
