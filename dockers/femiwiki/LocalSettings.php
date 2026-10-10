@@ -548,6 +548,11 @@ wfLoadExtension( 'BetaFeatures' );
 // BounceHandler
 wfLoadExtension( 'BounceHandler' );
 $wgBounceHandlerInternalIPs = explode( ',', getenv( 'WG_BOUNCE_HANDLER_INTERNAL_IPS' ) );
+// SSM holds "placeholder" until the real value is entered by hand
+$fwVerpSecret = getenv( 'WG_VERP_SECRET' ) ?: '';
+if ( strlen( $fwVerpSecret ) >= 32 ) {
+	$wgVERPsecret = $fwVerpSecret;
+}
 
 // CategoryTree
 wfLoadExtension( 'CategoryTree' );
