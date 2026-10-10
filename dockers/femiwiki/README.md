@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.66
+
+- Bump femiwiki/femiwiki-extensions to v3.13.3
+  - darken the top bar to #736ac9 so its white text reaches 4.5:1 (femiwiki/FemiwikiSkin#1089)
+
 ## v2.0.65
 
 - Bump femiwiki/femiwiki-extensions to v3.13.1
