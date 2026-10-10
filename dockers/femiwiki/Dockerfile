@@ -88,7 +88,7 @@ RUN mkdir -p /srv/femiwiki.com/sitemap &&\
 RUN for f in healthz.php robots.txt 429.html google6a8c7f190836bc0d.html naver2e986bb58727091ba14461e6215367f0.html; do \
       ln -s "../docroot/$f" "/srv/femiwiki.com/$f" || exit 1; \
     done
-COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/etc/mediawiki/"]
+COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "FemiwikiProfilerOutputFile.php", "/etc/mediawiki/"]
 
 COPY --chown=www-data LocalSettings.php /etc/mediawiki/
 
