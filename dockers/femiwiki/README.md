@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.64
+
+- Bump femiwiki/femiwiki-extensions to v3.13.0
+  - round controls to 0.3em and raise buttons (femiwiki/FemiwikiSkin#1090)
+
 ## v2.0.63
 
 - Bump femiwiki/femiwiki-extensions to v3.12.14
