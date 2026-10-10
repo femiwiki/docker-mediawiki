@@ -82,10 +82,33 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
+          node-version-file: package.json
           cache: npm
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      # Dependabot leaves the @types/node major alone; this fails the PR that moves github-script's Node instead
+      - name: Check that engines.node and @types/node follow the Node github-script runs
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const fs = require( 'fs' );
+            const major = ( v ) => String( v ).replace( /^\D*/, '' ).split( '.' )[ 0 ];
+            const node = major( process.versions.node );
+            const pkg = JSON.parse( fs.readFileSync( 'package.json', 'utf8' ) );
+            const engines = major( pkg.engines.node );
+            const types = major( pkg.devDependencies[ '@types/node' ] );
+            if ( engines !== node || types !== node ) {
+              core.setFailed(
+                `github-script runs Node ${ node }, engines.node is ${ engines }, @types/node is ${ types }: ` +
+                `set engines.node to "${ node }" and run npm install -D -E @types/node@${ node } in this PR`
+              );
+            }
+            for ( const file of fs.readdirSync( '.github/workflows' ) ) {
+              if ( /^\s*node-version:/m.test( fs.readFileSync( `.github/workflows/${ file }`, 'utf8' ) ) ) {
+                core.setFailed( `${ file } sets node-version; use node-version-file: package.json` );
+              }
+            }
 
   hadolint:
     runs-on: ubuntu-22.04

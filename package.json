@@ -3,6 +3,9 @@
   "repository": "git@github.com:femiwiki/docker-mediawiki.git",
   "author": "Femiwiki Team <admin@femiwiki.com>",
   "license": "AGPL3+",
+  "engines": {
+    "node": "24"
+  },
   "scripts": {
     "lint": "prettier . --check",
     "fix": "prettier . --write",

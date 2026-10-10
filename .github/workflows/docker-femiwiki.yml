@@ -42,7 +42,7 @@ jobs:
           tags: ghcr.io/femiwiki/femiwiki:docker-test
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 24
+          node-version-file: package.json
       # A MediaWiki: page the new code no longer reads stops working without an
       # error, as the Cite tool definition did in femiwiki/femiwiki#645. This
       # only warns, since a page the deployed code still reads has to wait for

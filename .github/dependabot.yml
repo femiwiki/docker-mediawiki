@@ -33,6 +33,11 @@ updates:
       interval: monthly
     reviewers:
       - 'femiwiki/reviewer'
+    ignore:
+      # Follows the Node github-script runs; the etc-lint job fails the PR that moves it
+      - dependency-name: '@types/node'
+        update-types:
+          - 'version-update:semver-major'
     cooldown:
       default-days: 7
 
