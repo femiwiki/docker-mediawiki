@@ -83,11 +83,6 @@ RUN mkdir -p /srv/femiwiki.com/sitemap &&\
         *) echo "$f is neither linked into /srv/docroot nor listed as not an entry point" >&2; exit 1 ;; \
       esac; \
     done
-# The old web root keeps working for one image generation, until infra serves
-# /srv/docroot; see #1333.
-RUN for f in healthz.php robots.txt 429.html google6a8c7f190836bc0d.html naver2e986bb58727091ba14461e6215367f0.html; do \
-      ln -s "../docroot/$f" "/srv/femiwiki.com/$f" || exit 1; \
-    done
 COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "FemiwikiProfilerOutputFile.php", "/etc/mediawiki/"]
 
 COPY --chown=www-data LocalSettings.php /etc/mediawiki/
