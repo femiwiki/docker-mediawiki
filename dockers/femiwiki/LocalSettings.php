@@ -440,9 +440,8 @@ $wgAllowUserJs = true;
 // Allow external image link
 $wgAllowExternalImages = true;
 
-// CSP in WMF's shape: script hosts only, default-src left at core's *. Report-only
-// unless FW_CSP_ENFORCE=1. Reports log on csp-report-only, or csp. See femiwiki/femiwiki#680.
-// FW_CSP_SCRIPT_SRC lists the script hosts beyond 'self', comma-separated.
+// CSP in WMF's shape: script hosts from FW_CSP_SCRIPT_SRC, default-src left at core's *.
+// Report-only unless FW_CSP_ENFORCE=1; logs on csp-report-only or csp. femiwiki/femiwiki#680
 $fwCSPPolicy = [
 	'useNonces' => false,
 	'includeCORS' => false,
