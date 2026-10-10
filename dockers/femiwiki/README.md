@@ -1,5 +1,11 @@
 # femiwiki
 
+## v2.0.42
+
+- Bump femiwiki/caddy to v1.11.2
+  - emit RFC-compliant Date headers (femiwiki/caddy-mwcache#107)
+  - keep serving the response when a cache write is dropped (femiwiki/caddy-mwcache#108)
+
 ## v2.0.41
 
 - Bump femiwiki/femiwiki-extensions to v3.11.9
