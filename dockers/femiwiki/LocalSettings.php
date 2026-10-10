@@ -98,7 +98,7 @@ $wgMiserMode = true;
 // Off unless FW_PROFILER names a profiler. Dumps go away with the container, so
 // collect them before a deploy replaces it.
 if ( getenv( 'FW_PROFILER' ) === 'excimer' ) {
-	$wgAutoloadClasses['FemiwikiProfilerOutputFile'] = '/etc/mediawiki/FemiwikiProfilerOutputFile.php';
+	AutoLoader::registerClasses( [ 'FemiwikiProfilerOutputFile' => '/etc/mediawiki/FemiwikiProfilerOutputFile.php' ] );
 	$fwProfilerDir = getenv( 'FW_PROFILER_DIR' ) ?: '/tmp/profiler';
 	if ( !is_dir( $fwProfilerDir ) ) {
 		mkdir( $fwProfilerDir, 0750, true );
