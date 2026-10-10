@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.60
+
+- Bump femiwiki/femiwiki-extensions to v3.12.11
+  - list related articles flush with rules instead of boxed cards (femiwiki/FemiwikiSkin#1073)
+
 ## v2.0.59
 
 - Bump femiwiki/femiwiki-extensions to v3.12.10
