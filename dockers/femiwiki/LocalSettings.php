@@ -442,22 +442,12 @@ $wgAllowExternalImages = true;
 
 // CSP in WMF's shape: script hosts only, default-src left at core's *. Report-only
 // unless FW_CSP_ENFORCE=1. Reports log on csp-report-only, or csp. See femiwiki/femiwiki#680.
-$fwCSPScriptSrc = getenv( 'FW_CSP_SCRIPT_SRC' );
-if ( $fwCSPScriptSrc === false ) {
-	$fwCSPScriptSrc = implode( ',', [
-		// The Google tag from PageViewInfoGA
-		'*.googletagmanager.com',
-		// WidgetBot's crate for the discord-widget gadget
-		'cdn.jsdelivr.net',
-		// 위젯:구글 통계 and 위젯:인기있는 문서
-		'www.gstatic.com',
-	] );
-}
+// FW_CSP_SCRIPT_SRC lists the script hosts beyond 'self', comma-separated.
 $fwCSPPolicy = [
 	'useNonces' => false,
 	'includeCORS' => false,
 	'script-src' => array_values( array_filter(
-		array_map( 'trim', explode( ',', $fwCSPScriptSrc ) )
+		array_map( 'trim', explode( ',', getenv( 'FW_CSP_SCRIPT_SRC' ) ?: '' ) )
 	) ),
 ];
 if ( getenv( 'FW_CSP_ENFORCE' ) === '1' ) {
