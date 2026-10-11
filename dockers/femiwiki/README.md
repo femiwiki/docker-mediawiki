@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.67
+
+- Bump femiwiki/femiwiki-extensions to v3.14.0
+  - FemiwikiSkin 6.0.0, the 2026 design renewal (Femiwiki 017069e) (femiwiki/docker-mediawiki#1492)
+
 ## v2.0.66
 
 - Bump femiwiki/femiwiki-extensions to v3.13.3
