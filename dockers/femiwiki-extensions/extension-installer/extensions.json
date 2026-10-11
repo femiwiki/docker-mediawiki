@@ -91,7 +91,7 @@
     "Femiwiki": {
       "type": "skin",
       "repository": "https://github.com/femiwiki/FemiwikiSkin",
-      "commit": "aa6cc7ef03a7dac065620ef7bcf4c433cb1c0b50"
+      "commit": "9c56b9a5f4ad85a8633adcc7ba7a940301436e33"
     },
     "UnifiedExtensionForFemiwiki": {
       "repository": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki",
