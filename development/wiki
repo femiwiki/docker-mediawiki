@@ -144,6 +144,14 @@ cmd_articles() {
   php_in initSiteStats --update > /dev/null
 }
 
+# An unread talk page message and mention, so Echo's badges have a count
+cmd_notifications() {
+  echo "Hello from the local wiki. --~~~~" | save_page "User talk:$WIKI_USER" 'Echo seed'
+  printf '== Echo seed ==\n[[User:%s]], please look at this. --~~~~\n' "$WIKI_USER" |
+    save_page 'Talk:페미니즘' 'Echo seed'
+  php_in runJobs > /dev/null
+}
+
 cmd_up() {
   local first=
   checkout FemiwikiSkin femiwiki/FemiwikiSkin "$SKIN_REF"
@@ -167,6 +175,7 @@ cmd_up() {
     cmd_pages
     cmd_articles
     cmd_gadgets
+    cmd_notifications
   fi
   echo "$URL/"
 }
@@ -179,6 +188,7 @@ development/wiki reset     stop and delete the database
 development/wiki gadgets   apply REMOTE_GADGETS_REFS again
 development/wiki pages     copy MediaWiki:Sidebar and MediaWiki:Mainpage again
 development/wiki articles  import ARTICLES again
+development/wiki notifications  leave the test account unread notifications
 EOF
 }
 
@@ -189,5 +199,6 @@ case "${1:-}" in
   gadgets) cmd_gadgets ;;
   pages) cmd_pages ;;
   articles) cmd_articles ;;
+  notifications) cmd_notifications ;;
   *) usage; exit 1 ;;
 esac
