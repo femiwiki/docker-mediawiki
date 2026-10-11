@@ -312,7 +312,7 @@ $wgFemiwikiHeadItems = [
 	'fav3' => '<link rel="icon" type="image/png" sizes="32x32" href="/fw-resources/favicons/favicon-32.png">',
 	'fav4' => '<link rel="icon" type="image/png" sizes="16x16" href="/fw-resources/favicons/favicon-16.png">',
 	'fav6' => '<link rel="manifest" href="/fw-resources/favicons/manifest.json">',
-	'fav7' => '<meta name="theme-color" content="#aca6e4">',
+	'fav7' => '<meta name="theme-color" content="#736ac9">',
 ];
 
 //
