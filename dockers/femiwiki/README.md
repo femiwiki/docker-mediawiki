@@ -1,5 +1,12 @@
 # femiwiki
 
+## v2.0.70
+
+- Bump femiwiki/femiwiki-extensions to v3.14.5
+  - Keep the suggested-edit dot on the edit button (femiwiki/FemiwikiSkin#1164)
+  - show the notifications popup above the site menu (femiwiki/FemiwikiSkin#1163)
+  - keep section edit links beside a floated image (femiwiki/FemiwikiSkin#1162)
+
 ## v2.0.69
 
 - Bump femiwiki/femiwiki-extensions to v3.14.2
