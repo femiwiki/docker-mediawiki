@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.68
+
+- Bump femiwiki/femiwiki-extensions to v3.14.1
+  - keep Translate's progress circles in the language list (femiwiki/FemiwikiSkin#1158)
+
 ## v2.0.67
 
 - Bump femiwiki/femiwiki-extensions to v3.14.0
