@@ -58,7 +58,13 @@ development/wiki reset   # 멈추고 데이터베이스를 지웁니다
 - `MediaWiki:Sidebar`와 문서는 femiwiki.com의 `api.php`와 `action=raw`로 하나씩 가져옵니다. 파일은 올리지 않고 femiwiki.com의 것을 보여줍니다.
 - 운영 비밀값이나 서비스가 필요한 이메일, hCaptcha, S3 업로드, 디스코드 최근 바뀜 피드, 구글 애널리틱스 조회수, OAuth 서명 키, cron 작업, CDN과 운영 Caddyfile의 요청 제한은 빠져 있습니다.
 - 로컬 FemiwikiSkin 체크아웃(`npm install`한 것)을 띄우려면 `compose.override.yaml`의 `./development/.cache/FemiwikiSkin` 두 곳을 체크아웃 경로(예: `../FemiwikiSkin`)로 바꾸고 `development/wiki up`을 실행합니다. 고친 Less나 JS는 주소에 `?debug=1`을 붙이면 새로고침에 바로 보이고, 붙이지 않으면 캐시 때문에 5분까지 걸립니다. 사내 확장도 `fastcgi`의 `volumes`에 `- ../Sanctions:/srv/femiwiki.com/extensions/Sanctions:ro`처럼 더할 수 있습니다.
-- rootless Podman이라면 `podman system service`를 켜고 `DOCKER_HOST=unix://$XDG_RUNTIME_DIR/podman/podman.sock`을 지정합니다.
+- docker 데몬 대신 rootless Podman을 쓰려면, `development/wiki`의 `up`·`down`·`reset`을 포함한 모든 명령 전에 Podman API 소켓을 켜고 `DOCKER_HOST`를 지정합니다.
+
+  ```bash
+  mkdir -p "$XDG_RUNTIME_DIR/podman"
+  podman system service --time=0 "unix://$XDG_RUNTIME_DIR/podman/podman.sock" &
+  export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+  ```
 
 이미지 테스트처럼 `compose.override.yaml` 없이 띄우려면 `docker compose -f compose.yaml up`을 실행합니다.
 
