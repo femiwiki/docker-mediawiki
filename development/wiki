@@ -1,26 +1,21 @@
 #!/bin/bash
-# A femiwiki.com look-alike on localhost; see README.md.
-#   ./wiki up        start, and on the first start load site pages, gadgets and articles
-#   ./wiki down      stop, keeping the database
-#   ./wiki reset     stop and delete the database
-#   ./wiki gadgets   apply REMOTE_GADGETS_REFS again
-#   ./wiki pages     copy MediaWiki:Sidebar and MediaWiki:Mainpage from femiwiki.com again
-#   ./wiki articles  import ARTICLES again
+# Starts and fills the wiki of compose.override.yaml; see README.md
 set -euo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
-[ -e .env ] || cp .env.example .env
+[ -e development/wiki.env ] || cp development/wiki.env.example development/wiki.env
 set -a
 # shellcheck source=/dev/null
-. ./.env
+. development/wiki.env
 set +a
+URL=http://127.0.0.1:8080
 
 UA='femiwiki-local-wiki/1.0 (+https://github.com/femiwiki/docker-mediawiki)'
 COMPOSE=(docker compose)
 
-# Fetches a GitHub repository into .cache/<name> and checks out a ref
+# Fetches a GitHub repository into development/.cache/<name> and checks out a ref
 checkout() {
-  local name="$1" repo="$2" ref="$3" dir=".cache/$1"
+  local name="$1" repo="$2" ref="$3" dir="development/.cache/$1"
   [ -d "$dir/.git" ] || git clone -q --no-checkout "https://github.com/$repo.git" "$dir"
   git -C "$dir" fetch -q origin "$ref"
   git -C "$dir" -c advice.detachedHead=false checkout -q --detach FETCH_HEAD
@@ -66,7 +61,7 @@ installed() {
 }
 
 wait_for_wiki() {
-  local url="http://localhost:${WIKI_PORT}/w/Special:Version"
+  local url="$URL/w/Special:Version"
   echo "Waiting for $url"
   for _ in $(seq 300); do
     curl -sf -o /dev/null "$url" && return
@@ -83,22 +78,22 @@ wait_for_wiki() {
 cmd_gadgets() {
   local base stage overlay mb files repo
   checkout remote-gadgets femiwiki/remote-gadgets "${REMOTE_GADGETS_REFS%% *}"
-  base="$(git -C .cache/remote-gadgets rev-parse HEAD)"
+  base="$(git -C development/.cache/remote-gadgets rev-parse HEAD)"
   stage="$(mktemp -d)"
-  git -C .cache/remote-gadgets archive "$base" pages gadgets lua | tar -x -C "$stage"
+  git -C development/.cache/remote-gadgets archive "$base" pages gadgets lua | tar -x -C "$stage"
   for overlay in ${REMOTE_GADGETS_REFS#* }; do
     [ "$overlay" = "$REMOTE_GADGETS_REFS" ] && break
-    git -C .cache/remote-gadgets fetch -q origin "$overlay"
-    mb="$(git -C .cache/remote-gadgets merge-base "$base" FETCH_HEAD)"
-    files="$(git -C .cache/remote-gadgets diff --name-only --diff-filter=d "$mb" FETCH_HEAD -- pages gadgets lua)"
+    git -C development/.cache/remote-gadgets fetch -q origin "$overlay"
+    mb="$(git -C development/.cache/remote-gadgets merge-base "$base" FETCH_HEAD)"
+    files="$(git -C development/.cache/remote-gadgets diff --name-only --diff-filter=d "$mb" FETCH_HEAD -- pages gadgets lua)"
     echo "$overlay: $(echo "$files" | grep -c .) files"
     for f in $files; do
       mkdir -p "$stage/$(dirname "$f")"
-      git -C .cache/remote-gadgets show "FETCH_HEAD:$f" > "$stage/$f"
+      git -C development/.cache/remote-gadgets show "FETCH_HEAD:$f" > "$stage/$f"
     done
   done
   # apply.py names the page for each file; mwclient is only needed to edit femiwiki.com
-  repo="$PWD/.cache/remote-gadgets"
+  repo="$PWD/development/.cache/remote-gadgets"
   (cd "$stage" && python3 -I -c '
 import sys, types
 sys.modules["mwclient"] = types.ModuleType("mwclient")
@@ -143,7 +138,7 @@ cmd_articles() {
     done
   done
   rm -f "$tmp"
-  "${COMPOSE[@]}" cp mark-for-translation.php fastcgi:/tmp/mark-for-translation.php
+  "${COMPOSE[@]}" cp development/mark-for-translation.php fastcgi:/tmp/mark-for-translation.php
   echo "require '/tmp/mark-for-translation.php';" | php_in eval
   php_in rebuildrecentchanges > /dev/null
   php_in initSiteStats --update > /dev/null
@@ -153,7 +148,8 @@ cmd_up() {
   local first=
   checkout FemiwikiSkin femiwiki/FemiwikiSkin "$SKIN_REF"
   checkout OOUIFemiwikiTheme femiwiki/OOUIFemiwikiTheme "$OOUI_REF"
-  mkdir -p .cache/FemiwikiSkin/node_modules/@femiwiki/ooui-femiwiki-theme
+  # Where the theme is mounted, which a read-only skin mount cannot create
+  mkdir -p development/.cache/FemiwikiSkin/node_modules/@femiwiki/ooui-femiwiki-theme
   "${COMPOSE[@]}" up -d --wait mysql
   if installed; then
     export MEDIAWIKI_SKIP_INSTALL=1
@@ -172,7 +168,18 @@ cmd_up() {
     cmd_articles
     cmd_gadgets
   fi
-  echo "http://localhost:${WIKI_PORT}/"
+  echo "$URL/"
+}
+
+usage() {
+  cat <<'EOF'
+development/wiki up        start; the first start also loads pages, articles and gadgets
+development/wiki down      stop, keeping the database
+development/wiki reset     stop and delete the database
+development/wiki gadgets   apply REMOTE_GADGETS_REFS again
+development/wiki pages     copy MediaWiki:Sidebar and MediaWiki:Mainpage again
+development/wiki articles  import ARTICLES again
+EOF
 }
 
 case "${1:-}" in
@@ -182,5 +189,5 @@ case "${1:-}" in
   gadgets) cmd_gadgets ;;
   pages) cmd_pages ;;
   articles) cmd_articles ;;
-  *) sed -n '2,8p' "$0"; exit 1 ;;
+  *) usage; exit 1 ;;
 esac

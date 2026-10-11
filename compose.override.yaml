@@ -1,22 +1,25 @@
-# 스킨 등 개발할 때엔 아래 라인 중 필요한 것을 주석해제 후 다음과 같이 실행:
-#   docker stack deploy --prune -c compose.yaml -c compose.override.yaml mediawiki
-# 혹은:
-#   docker compose up
-version: '3'
-# services:
-#   http:
-#     volumes:
-#       - ../Femiwiki:/srv/femiwiki.com/skins/Femiwiki
-#   fastcgi:
-#     volumes:
-#       - ../Femiwiki:/srv/femiwiki.com/skins/Femiwiki
-#       - ../AchievementBadges:/srv/femiwiki.com/extensions/AchievementBadges
-#       - ../DiscordRCFeed:/srv/femiwiki.com/extensions/DiscordRCFeed
-#       - ../FacetedCategory:/srv/femiwiki.com/extensions/FacetedCategory
-#       - ../PageViewInfoGA:/srv/femiwiki.com/extensions/PageViewInfoGA
-#       - ../Sanctions:/srv/femiwiki.com/extensions/Sanctions
-#       - ../UnifiedExtensionForFemiwiki:/srv/femiwiki.com/extensions/UnifiedExtensionForFemiwiki
-#     environment:
-#       - MEDIAWIKI_SKIP_INSTALL=1
-#       - MEDIAWIKI_SKIP_UPDATE=1
-#       - MEDIAWIKI_SKIP_IMPORT_SITES=1
+# The local wiki, read by docker compose over compose.yaml but not by the image
+# test. development/wiki up checks out what it mounts; see README.md.
+services:
+  http:
+    volumes:
+      - ./development/.cache/FemiwikiSkin:/srv/femiwiki.com/skins/Femiwiki:ro
+      - ./development/.cache/OOUIFemiwikiTheme:/srv/femiwiki.com/skins/Femiwiki/node_modules/@femiwiki/ooui-femiwiki-theme:ro
+    # SELinux would keep the containers from reading the bind mounts
+    security_opt: [label=disable]
+  fastcgi:
+    volumes:
+      - ./development/.cache/FemiwikiSkin:/srv/femiwiki.com/skins/Femiwiki:ro
+      - ./development/.cache/OOUIFemiwikiTheme:/srv/femiwiki.com/skins/Femiwiki/node_modules/@femiwiki/ooui-femiwiki-theme:ro
+      - ./development/LocalSettings.local.php:/etc/mediawiki/LocalSettings.local.php:ro
+    security_opt: [label=disable]
+    environment:
+      MEDIAWIKI_HOTFIX_SNIPPET: "<?php require '/etc/mediawiki/LocalSettings.local.php';"
+      MEDIAWIKI_SKIP_INSTALL: ${MEDIAWIKI_SKIP_INSTALL:-}
+      MEDIAWIKI_SKIP_CRON: 'true'
+      WG_SECRET_KEY: local-wiki-secret-key-not-for-production-0123456789abcdef
+      # Errors only; warnings fill the output of every maintenance script
+      MEDIAWIKI_LOG_LEVEL: '400'
+    depends_on:
+      mysql:
+        condition: service_healthy

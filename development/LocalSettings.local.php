@@ -1,10 +1,6 @@
 <?php
-/**
- * Mounted over /etc/mediawiki/Hotfix.php, so it runs after the production
- * LocalSettings.php and its MEDIAWIKI_DEBUG_MODE block.
- *
- * @file
- */
+// The local wiki's settings, required from Hotfix.php by compose.override.yaml
+// after the production LocalSettings.php and its MEDIAWIKI_DEBUG_MODE block
 
 // Pages should look like femiwiki.com, so no debug toolbar under them
 $wgDebugToolbar = false;
@@ -26,9 +22,6 @@ $wgForeignFileRepos[] = [
 $wgEnableEmail = false;
 $wgEnableUserEmail = false;
 $wgRCFeeds = [];
-
-// No CDN here; [''] from the unset WG_CDN_SERVERS would purge each URL itself
-$wgCdnServers = [];
 
 // DevelopmentSettings.php shrinks these for tests, which long articles and
 // VisualEditor on them exceed; back to MediaWiki's defaults as in production

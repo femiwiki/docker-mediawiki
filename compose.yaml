@@ -32,7 +32,7 @@ services:
       WG_DB_SERVER: mysql
       WG_DB_USER: mediawiki
       WG_DB_PASSWORD: mediawiki
-      WG_MEMCACHED_SERVERS: http:8080
+      WG_MEMCACHED_SERVERS: memcached:11211
       WG_BOUNCE_HANDLER_INTERNAL_IPS: 127.0.0.1
       WG_O_AUTH_2_PRIVATE_KEY: "------BEGIN RSA PRIVATE KEY-----\n------END RSA PRIVATE KEY-----"
     depends_on:

@@ -1,7 +1,6 @@
 <?php
-// Required from `run.php eval`. Imported pages keep their <translate> tags,
-// which show as text until the page is marked for translation as on
-// femiwiki.com. The same calls as action=markfortranslation, without a token.
+// Marks imported pages that carry <translate> tags, as femiwiki.com has them,
+// the way action=markfortranslation does but without a token. Run by wiki.
 
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\Translate\MessageGroupProcessing\RevTagStore;
