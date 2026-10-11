@@ -1137,7 +1137,8 @@ require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 $wgWBClientSettings['dataBridgeEnabled'] = true;
 $wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 	str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
-$wgWBClientSettings['repoSiteName'] = 'wikibase-repo-site-name';
+// A literal, not a message key: the key's MediaWiki: page was retired in femiwiki/femiwiki#661
+$wgWBClientSettings['repoSiteName'] = '위키베이스';
 // Defaults to $wgDBname, while sitelinks and subscriptions are stored as femiwiki
 $wgWBClientSettings['siteGlobalID'] = 'femiwiki';
 
