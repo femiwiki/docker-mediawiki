@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.69
+
+- Bump femiwiki/femiwiki-extensions to v3.14.2
+  - Fit the FlaggedRevs status dialog on phones (femiwiki/FemiwikiSkin#1161)
+
 ## v2.0.68
 
 - Bump femiwiki/femiwiki-extensions to v3.14.1
