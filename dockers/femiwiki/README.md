@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.71
+
+- Bump femiwiki/femiwiki-extensions to v3.14.6
+  - 제재안 투표권이 있는 사용자가 작성자가 숨겨진 판의 차이를 볼 때 오류가 나던 문제를 고쳤습니다. (femiwiki/docker-mediawiki#1505)
+
 ## v2.0.70
 
 - Bump femiwiki/femiwiki-extensions to v3.14.5
