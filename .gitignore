@@ -11,3 +11,7 @@
 
 # npm dependencies
 /node_modules/
+
+# ./local-wiki/wiki
+/local-wiki/.cache/
+/local-wiki/.env

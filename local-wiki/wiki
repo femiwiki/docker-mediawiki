@@ -1,0 +1,186 @@
+#!/bin/bash
+# A femiwiki.com look-alike on localhost; see README.md.
+#   ./wiki up        start, and on the first start load site pages, gadgets and articles
+#   ./wiki down      stop, keeping the database
+#   ./wiki reset     stop and delete the database
+#   ./wiki gadgets   apply REMOTE_GADGETS_REFS again
+#   ./wiki pages     copy MediaWiki:Sidebar and MediaWiki:Mainpage from femiwiki.com again
+#   ./wiki articles  import ARTICLES again
+set -euo pipefail
+cd "$(dirname "$0")"
+
+[ -e .env ] || cp .env.example .env
+set -a
+# shellcheck source=/dev/null
+. ./.env
+set +a
+
+UA='femiwiki-local-wiki/1.0 (+https://github.com/femiwiki/docker-mediawiki)'
+COMPOSE=(docker compose)
+
+# Fetches a GitHub repository into .cache/<name> and checks out a ref
+checkout() {
+  local name="$1" repo="$2" ref="$3" dir=".cache/$1"
+  [ -d "$dir/.git" ] || git clone -q --no-checkout "https://github.com/$repo.git" "$dir"
+  git -C "$dir" fetch -q origin "$ref"
+  git -C "$dir" -c advice.detachedHead=false checkout -q --detach FETCH_HEAD
+  echo "$name: $ref at $(git -C "$dir" rev-parse --short HEAD)"
+}
+
+urlencode() {
+  python3 -I -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1]))' "$1"
+}
+
+php_in() {
+  "${COMPOSE[@]}" exec -T fastcgi php /srv/femiwiki.com/maintenance/run.php "$@"
+}
+
+# Saves stdin as a page through edit.php, so no login, rate limit or captcha
+save_page() {
+  php_in edit --user Admin --summary "$2" -- "$1" > /dev/null
+}
+
+# One GET to femiwiki.com. api.php and action=raw count only against this
+# address's own budget there; on a 429 it waits as long as it is told.
+fetch() {
+  local out="$1" url="$2" code retry
+  while :; do
+    read -r code retry < <(curl -sS -A "$UA" -o "$out" -w '%{http_code} %header{retry-after}\n' "$url")
+    case "$code" in
+      200) return ;;
+      429)
+        echo "429 from femiwiki.com, waiting ${retry:-60}s" >&2
+        sleep "${retry:-60}"
+        ;;
+      *)
+        echo "$code from $url" >&2
+        return 1
+        ;;
+    esac
+  done
+}
+
+installed() {
+  "${COMPOSE[@]}" exec -T mysql mysql -umediawiki -pmediawiki -N femiwiki \
+    -e "SHOW TABLES LIKE 'page'" 2> /dev/null | grep -q page
+}
+
+wait_for_wiki() {
+  local url="http://localhost:${WIKI_PORT}/w/Special:Version"
+  echo "Waiting for $url"
+  for _ in $(seq 300); do
+    curl -sf -o /dev/null "$url" && return
+    if ! "${COMPOSE[@]}" ps --status running --services | grep -qx fastcgi; then
+      "${COMPOSE[@]}" logs --tail 50 fastcgi
+      exit 1
+    fi
+    sleep 2
+  done
+  echo 'The wiki did not answer in 10 minutes' >&2
+  exit 1
+}
+
+cmd_gadgets() {
+  local base stage overlay mb files repo
+  checkout remote-gadgets femiwiki/remote-gadgets "${REMOTE_GADGETS_REFS%% *}"
+  base="$(git -C .cache/remote-gadgets rev-parse HEAD)"
+  stage="$(mktemp -d)"
+  git -C .cache/remote-gadgets archive "$base" pages gadgets lua | tar -x -C "$stage"
+  for overlay in ${REMOTE_GADGETS_REFS#* }; do
+    [ "$overlay" = "$REMOTE_GADGETS_REFS" ] && break
+    git -C .cache/remote-gadgets fetch -q origin "$overlay"
+    mb="$(git -C .cache/remote-gadgets merge-base "$base" FETCH_HEAD)"
+    files="$(git -C .cache/remote-gadgets diff --name-only --diff-filter=d "$mb" FETCH_HEAD -- pages gadgets lua)"
+    echo "$overlay: $(echo "$files" | grep -c .) files"
+    for f in $files; do
+      mkdir -p "$stage/$(dirname "$f")"
+      git -C .cache/remote-gadgets show "FETCH_HEAD:$f" > "$stage/$f"
+    done
+  done
+  # apply.py names the page for each file; mwclient is only needed to edit femiwiki.com
+  repo="$PWD/.cache/remote-gadgets"
+  (cd "$stage" && python3 -I -c '
+import sys, types
+sys.modules["mwclient"] = types.ModuleType("mwclient")
+sys.path.insert(0, sys.argv[1])
+import apply
+for f in apply.get_all_files():
+    print(f + "\t" + apply.file_to_title(f))
+' "$repo") > "$stage/titles.tsv"
+  while IFS=$'\t' read -r f title; do
+    echo "  $title"
+    save_page "$title" "remote-gadgets $REMOTE_GADGETS_REFS" < "$stage/$f"
+  done < "$stage/titles.tsv"
+  rm -rf "$stage"
+}
+
+cmd_pages() {
+  local title tmp
+  tmp="$(mktemp)"
+  for title in MediaWiki:Sidebar MediaWiki:Mainpage; do
+    fetch "$tmp" "https://femiwiki.com/index.php?title=$(urlencode "$title")&action=raw"
+    echo "  $title"
+    save_page "$title" 'femiwiki.com에서 복사' < "$tmp"
+    sleep "$EXPORT_INTERVAL"
+  done
+  rm -f "$tmp"
+}
+
+# Each article, then every template and module it uses, through api.php
+cmd_articles() {
+  local title tmp query
+  tmp="$(mktemp)"
+  IFS='|' read -ra titles <<< "$ARTICLES"
+  for title in "${titles[@]}"; do
+    echo "  $title"
+    for query in "titles=$(urlencode "$title")" "generator=templates&gtllimit=max&titles=$(urlencode "$title")"; do
+      fetch "$tmp" "https://femiwiki.com/api.php?action=query&export=1&exportnowrap=1&$query"
+      # An article using no template comes back as JSON rather than an empty dump
+      if grep -q '<page>' "$tmp"; then
+        php_in importDump --no-updates < "$tmp" > /dev/null
+      fi
+      sleep "$EXPORT_INTERVAL"
+    done
+  done
+  rm -f "$tmp"
+  "${COMPOSE[@]}" cp mark-for-translation.php fastcgi:/tmp/mark-for-translation.php
+  echo "require '/tmp/mark-for-translation.php';" | php_in eval
+  php_in rebuildrecentchanges > /dev/null
+  php_in initSiteStats --update > /dev/null
+}
+
+cmd_up() {
+  local first=
+  checkout FemiwikiSkin femiwiki/FemiwikiSkin "$SKIN_REF"
+  checkout OOUIFemiwikiTheme femiwiki/OOUIFemiwikiTheme "$OOUI_REF"
+  mkdir -p .cache/FemiwikiSkin/node_modules/@femiwiki/ooui-femiwiki-theme
+  "${COMPOSE[@]}" up -d --wait mysql
+  if installed; then
+    export MEDIAWIKI_SKIP_INSTALL=1
+  else
+    first=1
+  fi
+  "${COMPOSE[@]}" up -d
+  wait_for_wiki
+  # The image's localisation cache knows only the skin it was built with
+  php_in rebuildLocalisationCache --lang=ko,en --force --no-progress > /dev/null
+  php_in purgeMessageBlobStore
+  if [ -n "$first" ]; then
+    php_in changePassword --user Admin --password "$WIKI_ADMIN_PASSWORD"
+    php_in createAndPromote --sysop --interface-admin "$WIKI_USER" "$WIKI_PASSWORD"
+    cmd_pages
+    cmd_articles
+    cmd_gadgets
+  fi
+  echo "http://localhost:${WIKI_PORT}/"
+}
+
+case "${1:-}" in
+  up) cmd_up ;;
+  down) "${COMPOSE[@]}" down ;;
+  reset) "${COMPOSE[@]}" down -v ;;
+  gadgets) cmd_gadgets ;;
+  pages) cmd_pages ;;
+  articles) cmd_articles ;;
+  *) sed -n '2,8p' "$0"; exit 1 ;;
+esac

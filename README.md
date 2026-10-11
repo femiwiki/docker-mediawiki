@@ -41,6 +41,15 @@ Caddy를 실행할 경우에는 Caddyfile을 `/srv/femiwiki.com/Caddyfile`로 �
 ./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
 ```
 
+## Local wiki
+
+femiwiki.com과 같은 이미지·설정·스킨·가젯·실제 문서 몇 개로 꾸린 위키를 로컬에서 띄웁니다. 로그인 화면, 비주얼 편집기, 가젯처럼 정적 스킨 미리보기로는 볼 수 없는 것을 확인할 때 씁니다. [local-wiki/README.md](local-wiki/README.md)를 참고하세요.
+
+```bash
+local-wiki/wiki up    # http://localhost:8080/
+local-wiki/wiki down
+```
+
 ## Usage of Docker Compose file
 
 [Docker Swarm] 혹은 [Docker Composer]을 이용해, 아래와 같이 간편하게 페미위키를 로컬에서 실행할 수

@@ -4,6 +4,7 @@
 	<rule ref="./vendor/phpcompatibility/php-compatibility/PHPCompatibility" />
 	<file>.</file>
 	<exclude-pattern type="relative">^dockers/femiwiki-extensions/extension-installer/vendor/</exclude-pattern>
+	<exclude-pattern type="relative">^local-wiki/\.cache/</exclude-pattern>
 	<arg name="extensions" value="php" />
 	<arg name="encoding" value="UTF-8" />
 </ruleset>

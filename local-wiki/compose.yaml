@@ -1,0 +1,62 @@
+# A femiwiki.com look-alike on localhost; see README.md. Started by ./wiki up.
+name: femiwiki-local
+
+x-wiki: &wiki
+  image: ${FEMIWIKI_IMAGE:-ghcr.io/femiwiki/femiwiki:latest}
+  volumes:
+    - ./.cache/FemiwikiSkin:/srv/femiwiki.com/skins/Femiwiki:ro,z
+    - ./.cache/OOUIFemiwikiTheme:/srv/femiwiki.com/skins/Femiwiki/node_modules/@femiwiki/ooui-femiwiki-theme:ro,z
+    - ./LocalSettings.local.php:/etc/mediawiki/Hotfix.php:ro,z
+
+services:
+  http:
+    <<: *wiki
+    command: caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    ports:
+      - 127.0.0.1:${WIKI_PORT:-8080}:8080
+    volumes:
+      - ./.cache/FemiwikiSkin:/srv/femiwiki.com/skins/Femiwiki:ro,z
+      - ./.cache/OOUIFemiwikiTheme:/srv/femiwiki.com/skins/Femiwiki/node_modules/@femiwiki/ooui-femiwiki-theme:ro,z
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro,z
+    depends_on:
+      - fastcgi
+  fastcgi:
+    <<: *wiki
+    environment:
+      MEDIAWIKI_DEBUG_MODE: 'true'
+      MEDIAWIKI_SERVER: http://localhost:${WIKI_PORT:-8080}
+      MEDIAWIKI_SKIP_INSTALL: ${MEDIAWIKI_SKIP_INSTALL:-}
+      MEDIAWIKI_SKIP_CRON: 'true'
+      # Errors only; warnings fill the output of every maintenance script
+      MEDIAWIKI_LOG_LEVEL: '400'
+      MEDIAWIKI_SKIP_IMPORT_SITES: 'true'
+      WG_DB_SERVER: mysql
+      WG_DB_USER: mediawiki
+      WG_DB_PASSWORD: mediawiki
+      WG_SECRET_KEY: local-wiki-secret-key-not-for-production-0123456789abcdef
+      WG_MEMCACHED_SERVERS: memcached:11211
+      WG_BOUNCE_HANDLER_INTERNAL_IPS: 127.0.0.1
+      PHP_FPM_LISTEN: '9000'
+    depends_on:
+      mysql:
+        condition: service_healthy
+      memcached:
+        condition: service_started
+  mysql:
+    image: mysql:8.4
+    volumes:
+      - database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: local
+      MYSQL_DATABASE: femiwiki
+      MYSQL_USER: mediawiki
+      MYSQL_PASSWORD: mediawiki
+    healthcheck:
+      test: [CMD, mysqladmin, ping, -h, 127.0.0.1, -plocal]
+      interval: 2s
+      retries: 60
+  memcached:
+    image: memcached:1.6.23-alpine
+
+volumes:
+  database:
