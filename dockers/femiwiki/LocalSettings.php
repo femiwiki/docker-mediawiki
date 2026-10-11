@@ -1137,7 +1137,8 @@ require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
 $wgWBClientSettings['dataBridgeEnabled'] = true;
 $wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
 	str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
-$wgWBClientSettings['repoSiteName'] = 'wikibase-repo-site-name';
+// Wikibase's translated name, as on Special:SpecialPages
+$wgWBClientSettings['repoSiteName'] = 'specialpages-group-wikibase';
 // Defaults to $wgDBname, while sitelinks and subscriptions are stored as femiwiki
 $wgWBClientSettings['siteGlobalID'] = 'femiwiki';
 
