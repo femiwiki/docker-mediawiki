@@ -2,6 +2,7 @@
   "WMF-branch": "REL1_46",
   "WMF-branches": {
     "PageViewInfoGA": "master",
+    "Sanctions": "master",
     "UnlinkedWikibase": "master"
   },
   "WMF-extensions": {
@@ -59,7 +60,7 @@
     "Renameuser": "f88553dc65dc2ddc1f1606e30e6ce2c1e18effc4",
     "ReplaceText": "06a2e35a0ac551d3801242805ce4fe3488b37535",
     "RevisionSlider": "fc832478ccdd346fed9b933c6c2921428f58f8d3",
-    "Sanctions": "cfad23646a391733674b56611d80550b8b201a48",
+    "Sanctions": "fff75f246fd3db36d01f96ffadeb58834b72357f",
     "Scribunto": "32a434e236aabaeef6c0c90edf9243dfd8eb0b5a",
     "SecureLinkFixer": "dc632b01fb4158cdf3c290e2dced0fbe9b2eebff",
     "SecurePoll": "e1a0bd96a0ad666d17a2d473a8bd2b10be2c8584",
