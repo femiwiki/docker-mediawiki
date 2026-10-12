@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.74
+
+- Bump femiwiki/femiwiki-extensions to v3.14.10
+  - Match Echo's current button style when theming emails (femiwiki/UnifiedExtensionForFemiwiki#278)
+
 ## v2.0.73
 
 - Bump femiwiki/femiwiki-extensions to v3.14.8
