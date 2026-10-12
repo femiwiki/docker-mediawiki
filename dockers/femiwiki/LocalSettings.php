@@ -1007,6 +1007,7 @@ wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
 $wgUnifiedExtensionForFemiwikiPreAuth = true;
 $wgUnifiedExtensionForFemiwikiSuggestedEdits = true;
 $wgUnifiedExtensionForFemiwikiBlockByEmail = false;
+$wgUnifiedExtensionForFemiwikiModifyEmailTheme = true;
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
