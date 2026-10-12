@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.73
+
+- Bump femiwiki/femiwiki-extensions to v3.14.8
+  - pass UserOptionsLookup to GrowthExperiments' FeatureManager (femiwiki/UnifiedExtensionForFemiwiki#279)
+
 ## v2.0.72
 
 - Bump femiwiki/femiwiki-extensions to v3.14.7
