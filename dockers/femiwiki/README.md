@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.72
+
+- Bump femiwiki/femiwiki-extensions to v3.14.7
+  - BetaFeatures d2dc64b → da820cc (femiwiki/docker-mediawiki#1507)
+
 ## v2.0.71
 
 - Bump femiwiki/femiwiki-extensions to v3.14.6
