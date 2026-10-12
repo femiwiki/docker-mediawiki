@@ -720,6 +720,12 @@ $wgGroupPermissions['*']['unreviewedpages'] = true;
 // Flow
 wfLoadExtension( 'Flow' );
 $wgFlowDefaultLimit = 2;
+// Protection level for Flow boards being retired. Sysops hold it only while the
+// boards are protected; once it is removed from every group nobody can post there.
+$wgRestrictionLevels[] = 'flow-archived';
+$wgAvailableRights[] = 'flow-archived';
+$wgGroupPermissions['sysop']['flow-archived'] = true;
+$wgGrantPermissions['protect']['flow-archived'] = true;
 
 // Gadgets
 wfLoadExtension( 'Gadgets' );
