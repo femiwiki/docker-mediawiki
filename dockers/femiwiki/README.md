@@ -1,5 +1,11 @@
 # femiwiki
 
+## v2.0.75
+
+- Bump femiwiki/femiwiki-extensions to v3.14.11
+  - give the abuse filter tabs their own icons (femiwiki/FemiwikiSkin#1167)
+  - count wikitext talk page topics on the talk tab (femiwiki/FemiwikiSkin#1166)
+
 ## v2.0.74
 
 - Bump femiwiki/femiwiki-extensions to v3.14.10
