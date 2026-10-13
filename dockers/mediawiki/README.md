@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v4.0.4
+
+- send run-jobs output to the cron log
+
 ## v4.0.3
 
 - Bump femiwiki/php-fpm to v1.7.1
