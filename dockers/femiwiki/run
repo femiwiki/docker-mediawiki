@@ -121,6 +121,12 @@ if [ -z "${MEDIAWIKI_SKIP_CRON:-}" ]; then
 
   # Start cron daemon
   cron
+
+  # The sitemap volume is per host, so a new host would serve none until the
+  # first scheduled run, up to four hours later. See femiwiki/femiwiki#611.
+  if [ -z "$(ls -A /srv/femiwiki.com/sitemap)" ]; then
+    /usr/local/bin/generate-sitemap >> /var/log/cron.log 2>&1 &
+  fi
 fi
 
 chmod +x /usr/local/bin/postrun
