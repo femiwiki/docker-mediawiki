@@ -11,3 +11,7 @@
 
 # npm dependencies
 /node_modules/
+
+# development/wiki
+/development/.cache/
+/development/wiki.env

@@ -43,24 +43,30 @@ Caddy를 실행할 경우에는 Caddyfile을 `/srv/femiwiki.com/Caddyfile`로 �
 
 ## Usage of Docker Compose file
 
-[Docker Swarm] 혹은 [Docker Composer]을 이용해, 아래와 같이 간편하게 페미위키를 로컬에서 실행할 수
-있습니다. 데이터베이스와 memcached 등 미디어위키에 필요한 서비스들이 실행됩니다.
+[Docker Compose]로 femiwiki.com과 같은 이미지와 LocalSettings.php에 스킨, 가젯, 실제 문서 몇 개를 얹은 위키를 로컬에서 띄웁니다. 로그인한 화면, 비주얼 편집기, 가젯처럼 정적 스킨 미리보기로는 볼 수 없는 것을 확인할 때 씁니다.
 
 ```bash
-docker swarm init
-
-cp dockers/femiwiki/LocalSettings.php development/
-cp dockers/femiwiki/Hotfix.php development/
-
-# In case of Docker swarm
-docker stack deploy --prune -c compose.yaml mediawiki
-# If you want some tweaks
-docker stack deploy --prune -c compose.yaml -c compose.override.yaml mediawiki
-# In case of Docker Compose
-docker compose -f compose.yaml up
+development/wiki up      # 첫 실행은 설치와 문서 적재로 몇 분 걸립니다
+development/wiki down    # 멈춥니다. 다시 up 하면 문서가 남아 있습니다
+development/wiki reset   # 멈추고 데이터베이스를 지웁니다
 ```
 
 브라우저에서 [http://127.0.0.1:8080]을 방문할 수 있습니다.
+
+- `compose.yaml`은 이미지 테스트(CI)도 쓰는 공통 부분이고, `docker compose`가 그 위에 읽는 `compose.override.yaml`이 스킨 마운트와 [development/LocalSettings.local.php](development/LocalSettings.local.php)를 더합니다.
+- FemiwikiSkin과 OOUIFemiwikiTheme의 ref, 먼저 적용할 [remote-gadgets] ref와 그 위에 겹칠 풀 리퀘스트, 가져올 문서, 테스트 계정은 [development/wiki.env.example](development/wiki.env.example)에 있고, 첫 실행 때 `development/wiki.env`로 복사됩니다. ref를 바꾼 뒤에는 스킨이면 `development/wiki up`, 가젯이면 `development/wiki gadgets`를 실행합니다.
+- `MediaWiki:Sidebar`와 문서는 femiwiki.com의 `api.php`와 `action=raw`로 하나씩 가져옵니다. 파일은 올리지 않고 femiwiki.com의 것을 보여줍니다.
+- 운영 비밀값이나 서비스가 필요한 이메일, hCaptcha, S3 업로드, 디스코드 최근 바뀜 피드, 구글 애널리틱스 조회수, OAuth 서명 키, cron 작업, CDN과 운영 Caddyfile의 요청 제한은 빠져 있습니다.
+- 로컬 FemiwikiSkin 체크아웃(`npm install`한 것)을 띄우려면 `compose.override.yaml`의 `./development/.cache/FemiwikiSkin` 두 곳을 체크아웃 경로(예: `../FemiwikiSkin`)로 바꾸고 `development/wiki up`을 실행합니다. 고친 Less나 JS는 주소에 `?debug=1`을 붙이면 새로고침에 바로 보이고, 붙이지 않으면 캐시 때문에 5분까지 걸립니다. 사내 확장도 `fastcgi`의 `volumes`에 `- ../Sanctions:/srv/femiwiki.com/extensions/Sanctions:ro`처럼 더할 수 있습니다.
+- docker 데몬 대신 rootless Podman을 쓰려면, `development/wiki`의 `up`·`down`·`reset`을 포함한 모든 명령 전에 Podman API 소켓을 켜고 `DOCKER_HOST`를 지정합니다.
+
+  ```bash
+  mkdir -p "$XDG_RUNTIME_DIR/podman"
+  podman system service --time=0 "unix://$XDG_RUNTIME_DIR/podman/podman.sock" &
+  export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+  ```
+
+이미지 테스트처럼 `compose.override.yaml` 없이 띄우려면 `docker compose -f compose.yaml up`을 실행합니다.
 
 ## Build
 
@@ -100,8 +106,8 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 [github checks status]: https://badgen.net/github/checks/femiwiki/docker-mediawiki
 [github checks link]: https://github.com/femiwiki/docker-mediawiki
 [femiwiki.com]: https://femiwiki.com
-[docker swarm]: https://docs.docker.com/engine/swarm/
-[docker composer]: https://docs.docker.com/compose/
+[docker compose]: https://docs.docker.com/compose/
+[remote-gadgets]: https://github.com/femiwiki/remote-gadgets
 [femiwiki/ami]: https://github.com/femiwiki/ami
 [how to deploy weekly femiwiki to production]: https://github.com/femiwiki/femiwiki/blob/main/how-to-deploy-weekly-femi-wiki-to-production.md
 [php-fpm]: https://php-fpm.org/
