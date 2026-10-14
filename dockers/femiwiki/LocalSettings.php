@@ -7,6 +7,45 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
+// Off unless FW_PROFILER names a profiler. No $wgProfiler output writes excimer to a file (#1304).
+// Files go away with the container, so collect them before a deploy replaces it.
+if ( getenv( 'FW_PROFILER' ) === 'excimer' && PHP_SAPI !== 'cli' && extension_loaded( 'excimer' )
+	// One request in this many is profiled at all
+	&& mt_rand( 1, (int)( getenv( 'FW_PROFILER_SAMPLING' ) ?: 1000 ) ) === 1
+) {
+	$fwProfilerDir = getenv( 'FW_PROFILER_DIR' ) ?: '/tmp/profiler';
+	// Of those, only the ones slower than this many seconds are written out
+	$fwProfilerThreshold = (float)( getenv( 'FW_PROFILER_THRESHOLD' ) ?: 3 );
+	// The request is the root frame of every stack
+	$fwProfilerRequest = strtr( ( $_SERVER['REQUEST_METHOD'] ?? '-' ) . '_' . ( $_SERVER['REQUEST_URI'] ?? '-' ),
+		[ ';' => '%3B', ' ' => '%20' ] );
+	$fwProfilerStart = $_SERVER['REQUEST_TIME_FLOAT'];
+	// By CPU rather than wall time: the surplus credit charge is CPU alone
+	$fwProfiler = new ExcimerProfiler();
+	$fwProfiler->setEventType( EXCIMER_CPU );
+	$fwProfiler->setPeriod( (float)( getenv( 'FW_PROFILER_PERIOD' ) ?: 0.01 ) );
+	$fwProfiler->setMaxDepth( (int)( getenv( 'FW_PROFILER_MAX_DEPTH' ) ?: 100 ) );
+	// Called once, when the profiler is destroyed at the end of the request
+	$fwProfiler->setFlushCallback( static function ( ExcimerLog $log ) use (
+		$fwProfilerDir, $fwProfilerThreshold, $fwProfilerRequest, $fwProfilerStart
+	) {
+		$elapsed = microtime( true ) - $fwProfilerStart;
+		if ( $elapsed < $fwProfilerThreshold ) {
+			return;
+		}
+		if ( !is_dir( $fwProfilerDir ) ) {
+			mkdir( $fwProfilerDir, 0750, true );
+		}
+		$out = '';
+		foreach ( explode( "\n", trim( $log->formatCollapsed() ) ) as $line ) {
+			$out .= "$fwProfilerRequest;$line\n";
+		}
+		// Elapsed milliseconds first so that ls puts the worst request last
+		file_put_contents( sprintf( '%s/%06.0f-%s.txt', $fwProfilerDir, $elapsed * 1000, uniqid() ), $out );
+	}, PHP_INT_MAX );
+	$fwProfiler->start();
+}
+
 $wgSitename = '페미위키';
 
 // The URL base path of the wiki; see https://www.mediawiki.org/wiki/Manual:Short_URL
@@ -94,29 +133,6 @@ $wgPasswordPolicy['policies']['default']['MinimalPasswordLength'] = [
 
 // Enable database-intensive features
 $wgMiserMode = true;
-
-// Off unless FW_PROFILER names a profiler. Dumps go away with the container, so
-// collect them before a deploy replaces it.
-if ( getenv( 'FW_PROFILER' ) === 'excimer' ) {
-	AutoLoader::registerClasses( [ 'FemiwikiProfilerOutputFile' => '/etc/mediawiki/FemiwikiProfilerOutputFile.php' ] );
-	$fwProfilerDir = getenv( 'FW_PROFILER_DIR' ) ?: '/tmp/profiler';
-	if ( !is_dir( $fwProfilerDir ) ) {
-		mkdir( $fwProfilerDir, 0750, true );
-	}
-	$wgProfiler = [
-		'class' => ProfilerExcimer::class,
-		// One request in this many is profiled at all
-		'sampling' => (int)( getenv( 'FW_PROFILER_SAMPLING' ) ?: 1000 ),
-		// Of those, only the ones slower than this many seconds are written out
-		'threshold' => (float)( getenv( 'FW_PROFILER_THRESHOLD' ) ?: 3 ),
-		'period' => (float)( getenv( 'FW_PROFILER_PERIOD' ) ?: 0.01 ),
-		'maxDepth' => (int)( getenv( 'FW_PROFILER_MAX_DEPTH' ) ?: 100 ),
-		// Profiler::getOutputs() takes class names, and hands each of them the
-		// whole of $wgProfiler, so outputDir belongs here rather than nested
-		'output' => [ 'FemiwikiProfilerOutputFile' ],
-		'outputDir' => $fwProfilerDir,
-	];
-}
 
 // Make no jobs will be performed during ordinary requests
 $wgJobRunRate = 0;

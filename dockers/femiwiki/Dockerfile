@@ -83,7 +83,7 @@ RUN mkdir -p /srv/femiwiki.com/sitemap &&\
         *) echo "$f is neither linked into /srv/docroot nor listed as not an entry point" >&2; exit 1 ;; \
       esac; \
     done
-COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "FemiwikiProfilerOutputFile.php", "/etc/mediawiki/"]
+COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/etc/mediawiki/"]
 
 COPY --chown=www-data LocalSettings.php /etc/mediawiki/
 
