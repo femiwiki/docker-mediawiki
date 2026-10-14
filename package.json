@@ -10,7 +10,8 @@
     "lint": "prettier . --check",
     "fix": "prettier . --write",
     "minify-svg": "svgo --config=.svgo.config.js -q -r -f dockers/femiwiki/resources/",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "test": "node --test '.github/scripts/*.test.mts'"
   },
   "dependencies": {
     "@prettier/plugin-xml": "^3.4.2",
