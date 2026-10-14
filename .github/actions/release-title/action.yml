@@ -6,7 +6,8 @@ description: >
   the pull request that made it, for the bumps downstream to copy line for line.
   Reads release-please notes, or conventional commit subjects when the release
   has none. A change whose pull request has its own ```wikitext block brings
-  that block's lines instead, and none if the block is empty.
+  that block's lines instead, and none if the block is empty. A title too long
+  for GitHub keeps the leading changes and counts the rest; the block keeps all.
 
 inputs:
   repo:
@@ -34,12 +35,12 @@ outputs:
     value: ${{ steps.title.outputs.title }}
   level:
     description: The part of the image version to raise, minor for features, patch otherwise.
-    value: ${{ steps.title.outputs.level }}
+    value: ${{ steps.changes.outputs.level }}
 
 runs:
   using: composite
   steps:
-    - id: title
+    - id: changes
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}
@@ -79,22 +80,17 @@ runs:
         feats=$(changes Features feat)
         fixes=$(changes 'Bug Fixes' fix)
         perfs=$(changes 'Performance Improvements' perf)
-        joined() { cut -f1 <<< "$1" | paste -sd ';' | sed 's/;/; /g'; }
         if [ -n "$feats" ]; then
-          title="feat(${SCOPE}): $(joined "$feats") ($NAME $VER)"
-          level=minor
+          type=feat c=$feats level=minor
         elif [ -n "$fixes" ]; then
-          title="fix(${SCOPE}): $(joined "$fixes") ($NAME $VER)"
-          level=patch
+          type=fix c=$fixes level=patch
         elif [ -n "$perfs" ]; then
-          title="perf(${SCOPE}): $(joined "$perfs") ($NAME $VER)"
-          level=patch
+          type=perf c=$perfs level=patch
         else
-          title="build(${SCOPE}): bump $NAME to $VER"
-          level=patch
+          type=build c='' level=patch
         fi
-        echo "$title"
-        echo "title=$title" >> "$GITHUB_OUTPUT"
+        cut -f1 <<< "$c" > "$RUNNER_TEMP/release-title-changes"
+        echo "type=$type" >> "$GITHUB_OUTPUT"
         echo "level=$level" >> "$GITHUB_OUTPUT"
         if [ -n "${feats}${fixes}${perfs}" ]; then
           # shellcheck source=.github/wikitext.sh
@@ -117,3 +113,17 @@ runs:
           [ -n "$block" ] || block=$'```wikitext\n```'
           printf '\n%s\n' "$block" >> "$BODY"
         fi
+
+    - id: title
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        CHANGES: ${{ runner.temp }}/release-title-changes
+        TYPE: ${{ steps.changes.outputs.type }}
+        SCOPE: ${{ inputs.scope }}
+        NAME: ${{ inputs.name }}
+        VER: ${{ inputs.ver }}
+      with:
+        script: |
+          const { default: releaseTitle } = await import(`${process.env.ACTION_PATH}/../../scripts/release-title.mts`)
+          releaseTitle({ core, env: process.env })

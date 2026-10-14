@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "strict": true,
     "target": "es2023",
     "module": "nodenext",

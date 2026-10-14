@@ -87,6 +87,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - run: npm test
       # Dependabot leaves the @types/node major alone; this fails the PR that moves github-script's Node instead
       - name: Check that engines.node and @types/node follow the Node github-script runs
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
