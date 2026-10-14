@@ -28,20 +28,17 @@ $login = '/w/' . rawurlencode( '특수:로그인' );
 $signup = '/w/' . rawurlencode( '특수:계정만들기' );
 $en = [
 	't' => $title( 'en' ),
-	'b' => 'Too many of these requests have arrived just now, so this one was turned away. The limit '
-		. 'is shared between everyone who is not logged in, so you may be seeing this without '
-		. 'having done anything yourself. It applies to page histories, differences, old '
-		. 'revisions and searches, never to reading an article.',
+	'b' => 'There are too many requests from logged-out users right now. Please try again later, '
+		. 'or log in to continue.',
 	'c' => 'Log in',
 	'd' => 'Create an account',
 ];
 $ko = [
 	't' => $title( 'ko' ),
-	'b' => '지금 이런 요청이 너무 많이 들어와서 이 요청은 받지 못했습니다. 이 한도는 로그인하지 않은 '
-		. '방문자가 함께 나눠 쓰기 때문에, 직접 아무것도 하지 않았는데도 이 화면이 보일 수 '
-		. '있습니다. 문서 역사, 차이, 옛 판, 검색에만 걸리고 문서를 읽는 데에는 걸리지 않습니다.',
+	'b' => '로그인하지 않은 사용자의 접속이 많아 일시적으로 이용이 제한되었습니다. '
+		. '잠시 후 다시 시도하거나 로그인해 주세요.',
 	'c' => '로그인',
-	'd' => '계정 만들기',
+	'd' => '가입하기',
 ];
 // JSON_HEX_TAG keeps a "</script>" in a message from closing the element
 $koJson = json_encode( $ko, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG );
@@ -65,6 +62,21 @@ h1{font-size:1.4em;margin:0 0 .6em}</style>
 <p><a id="login" href="$login" rel="nofollow">$enCall</a> &middot;
 <a href="$signup" id="signup" rel="nofollow">$enJoin</a></p>
 <script>
+// Bring the reader back to the page that was refused once they have logged in
+(function () {
+	try {
+		var query = new URLSearchParams(location.search);
+		var title = location.pathname.indexOf("/w/") === 0
+			? decodeURIComponent(location.pathname.slice(3))
+			: query.get("title");
+		query.delete("title");
+		if (!title) return;
+		var back = "?returnto=" + encodeURIComponent(title);
+		if (query.toString()) back += "&returntoquery=" + encodeURIComponent(query.toString());
+		document.getElementById("login").search = back;
+		document.getElementById("signup").search = back;
+	} catch (e) {}
+})();
 (function () {
 	var ko = $koJson;
 	var langs = navigator.languages || [navigator.language];
