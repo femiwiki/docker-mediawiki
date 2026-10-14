@@ -511,6 +511,8 @@ $wgSitemapNamespaces = [
 
 // Served at /rest.php/site/v1/sitemap/0, as Wikimedia does (T400023)
 $wgSitemapApiConfig['enabled'] = true;
+// 1.46 loads site/v1 only in DevelopmentSettings.php
+$wgRestAPIAdditionalRouteFiles[] = 'includes/Rest/site.v1.json';
 
 // Provide Namespace Aliases
 $wgNamespaceAliases = [
@@ -1186,6 +1188,8 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	require_once "includes/DevelopmentSettings.php";
 	// Overwrite DevelopmentSettings
 	$wgCacheDirectory = '/tmp/cache';
+	// It adds site.v1.json again, which REST refuses as a duplicate module
+	$wgRestAPIAdditionalRouteFiles = array_values( array_unique( $wgRestAPIAdditionalRouteFiles ) );
 
 	$wgDebugToolbar = true;
 
