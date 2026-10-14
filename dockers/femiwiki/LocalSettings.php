@@ -176,6 +176,11 @@ $wgMemCachedServers = explode( ',', getenv( 'WG_MEMCACHED_SERVERS' ) );
 // femiwiki/femiwiki#645 needs this set without an image build, and the reason
 // is shown to readers, so it is text rather than a flag.
 $wgReadOnly = getenv( 'WG_READ_ONLY' ) ?: false;
+// VisualEditor stashes Parsoid HTML on open; the default stash is the
+// database, which read-only refuses. See femiwiki/femiwiki#654.
+if ( $wgReadOnly ) {
+	$wgParsoidCacheConfig['StashType'] = $wgMainCacheType;
+}
 
 // The session store on its own connection when WG_SESSION_DB_NAME names a
 // schema, so $wgReadOnly on the main load balancer does not silently drop
