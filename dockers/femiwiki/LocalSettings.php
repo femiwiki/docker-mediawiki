@@ -509,6 +509,9 @@ $wgSitemapNamespaces = [
 	NS_NEWSLETTER_TALK,
 ];
 
+// Served at /rest.php/site/v1/sitemap/0, as Wikimedia does (T400023)
+$wgSitemapApiConfig['enabled'] = true;
+
 // Provide Namespace Aliases
 $wgNamespaceAliases = [
 	'도' => NS_HELP,
