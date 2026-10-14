@@ -1,5 +1,11 @@
 # femiwiki
 
+## v2.0.79
+
+- Bump femiwiki/femiwiki-extensions to v3.14.13
+  - keep recent changes rows inside narrow screens (femiwiki/FemiwikiSkin#1168)
+  - leave room between menu icons for a mouse (femiwiki/FemiwikiSkin#1169)
+
 ## v2.0.78
 
 - Bump femiwiki/caddy to v1.11.10
