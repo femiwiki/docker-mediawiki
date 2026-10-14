@@ -504,7 +504,7 @@ $wgSitemapNamespaces = [
 	NS_MODULE,
 	NS_MODULE_TALK,
 	// Translate marks NS_TRANSLATIONS noindex
-	NS_TOPIC,
+	// NS_TOPIC, stale copies of the wikitext talk pages
 	NS_NEWSLETTER,
 	NS_NEWSLETTER_TALK,
 ];
