@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.77
+
+- Bump femiwiki/femiwiki-extensions to v3.14.12
+  - keep Flow boards out of the sitemap (femiwiki/UnifiedExtensionForFemiwiki#281)
+
 ## v2.0.76
 
 - Bump femiwiki/mediawiki to v4.0.4
