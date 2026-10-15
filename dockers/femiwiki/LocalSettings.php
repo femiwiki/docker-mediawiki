@@ -1235,6 +1235,17 @@ if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
 	$wgWBRepoSettings['formatterUrlProperty'] = null;
 }
 
+// Settings infra passes as a JSON object of global names to values, after the
+// defaults above so it overrides them
+$fwSettings = getenv( 'FW_SETTINGS' );
+if ( $fwSettings ) {
+	foreach ( json_decode( $fwSettings, associative: true, flags: JSON_THROW_ON_ERROR ) as $fwName => $fwValue ) {
+		$GLOBALS[$fwName] = $fwValue;
+	}
+	unset( $fwName, $fwValue );
+}
+unset( $fwSettings );
+
 require_once '/etc/mediawiki/Hotfix.php';
 
 // Class map of the extensions loaded above, written at build by
