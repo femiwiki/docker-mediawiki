@@ -274,6 +274,9 @@ $wgFileExtensions = array_merge(
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = '/usr/bin/convert';
 $wgSVGConverter = 'rsvg';
+// MediaWiki 1.46 serves small SVGs as the original file by default, and PageImages then puts that SVG
+// in og:image, which link previews don't show (femiwiki/femiwiki#688). Render SVGs as PNG as before 1.46.
+$wgSVGNativeRendering = false;
 $wgNativeImageLazyLoading = true;
 
 // Set $wgCacheDirectory to a writable directory on the web server
