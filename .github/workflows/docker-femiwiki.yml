@@ -117,10 +117,10 @@ jobs:
           c="$(docker ps -qf name=mediawiki_fastcgi | head -1)"
           docker cp .github/scripts/CheckResourceLoader.php "$c:/tmp/CheckResourceLoader.php"
           docker exec "$c" php /tmp/CheckResourceLoader.php 2>&1 | grep -v -e '^{' -e '^$'
-      # A cache hit has to answer as MediaWiki did: femiwiki/caddy-mwcache#165
-      # turned every cached redirect into an empty 200, and / into a blank page
-      - name: Request redirects and an article twice through the cache
-        run: .github/scripts/check-cached-twice.sh
+      # A cache hit has to answer as MediaWiki did (femiwiki/caddy-mwcache#165),
+      # with the copy caddy-run runs before opening a public port
+      - name: Request redirects and pages twice through the cache
+        run: docker exec "$(docker ps -qf name=mediawiki_http | head -1)" php /usr/local/lib/femiwiki/check-cached-twice.php
       - name: Check that the profiler wrote the requests out
         run: |
           c="$(docker ps -qf name=mediawiki_fastcgi | head -1)"

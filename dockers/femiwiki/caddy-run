@@ -1,7 +1,5 @@
 #!/bin/bash
-# Opens the real listeners only once a loopback handshake proves the certificate
-# is loaded. The config goes as Caddyfile text: mwcache reads its options only
-# from the adapter (femiwiki/caddy-mwcache#119).
+# Opens the real listeners once the certificate loads and real pages pass on loopback (femiwiki/infra#1104)
 set -euo pipefail
 cd /srv/femiwiki.com
 WARMUP_PORT=8443
@@ -29,8 +27,14 @@ CADDY_PID=$!
 # tini signals only this script, and the kernel kills Caddy when it exits, so
 # docker stop would cut every request in flight. Caddy drains on its own TERM.
 trap 'kill -TERM "$CADDY_PID"; wait "$CADDY_PID"; exit $?' TERM
+# The main page answers once the certificate is loaded and a php-fpm is up
 until curl -sfk -o /dev/null --resolve "$NAME:$WARMUP_PORT:127.0.0.1" "https://$NAME:$WARMUP_PORT/"; do
   sleep 0.2
 done
+# FW_PREFLIGHT=off is for a deploy that has to go out while the check is wrong
+if [[ "${FW_PREFLIGHT:-}" != off ]]; then
+  php /usr/local/lib/femiwiki/check-cached-twice.php "https://$NAME:$WARMUP_PORT" 127.0.0.1
+fi
+# As Caddyfile text: mwcache reads its options only from the adapter (femiwiki/caddy-mwcache#119)
 curl -sf --unix-socket /run/caddy-warmup.sock -H 'Content-Type: text/caddyfile' --data-binary @Caddyfile http://caddy/load
 wait
