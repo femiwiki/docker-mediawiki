@@ -141,5 +141,5 @@ EXPOSE 443
 EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
-COPY caddy-warmup.php warm-up.php create-session-schema.php google-subject-token.php /usr/local/lib/femiwiki/
+COPY caddy-warmup.php check-cached-twice.php warm-up.php create-session-schema.php google-subject-token.php /usr/local/lib/femiwiki/
 CMD ["/usr/local/bin/run"]
