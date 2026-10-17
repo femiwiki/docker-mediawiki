@@ -73,8 +73,7 @@ RUN php /tmp/429.php /srv/femiwiki.com /srv/docroot && rm /tmp/429.php
 # A top-level script a MediaWiki release adds fails the build until it is linked
 # here or named as not an entry point.
 ARG ENTRY_POINTS="api.php img_auth.php index.php load.php opensearch_desc.php rest.php thumb.php thumb_handler.php"
-RUN mkdir -p /srv/femiwiki.com/sitemap &&\
-    for f in $ENTRY_POINTS resources skins extensions fw-resources sitemap; do \
+RUN for f in $ENTRY_POINTS resources skins extensions fw-resources; do \
       ln -s "../femiwiki.com/$f" "/srv/docroot/$f" || exit 1; \
     done &&\
     for f in /srv/femiwiki.com/*.php; do \
