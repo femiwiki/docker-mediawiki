@@ -1,0 +1,4 @@
+# add-changelog-entry finds duplicate bullets by whole line, so these
+# changelogs keep one bullet per line
+[per-file-ignores]
+"dockers/*/README.md" = ["MD013"]
