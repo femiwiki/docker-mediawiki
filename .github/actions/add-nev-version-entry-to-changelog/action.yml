@@ -44,8 +44,8 @@ runs:
           fi
         fi
 
-        # Update Dockerfile
-        sed -i "s/$OLD_VER/${INPUTS_VERSION}/" dockers/${INPUTS_DOWNSTREAM}/Dockerfile
+        # Update Dockerfile, only the image reference: a bare version also matches inside commit hashes
+        sed -i -E "s#(ghcr\.io/femiwiki/${INPUTS_UPSTREAM}:)${OLD_VER//./\\.}([^0-9.]|\$)#\1${INPUTS_VERSION}\2#" dockers/${INPUTS_DOWNSTREAM}/Dockerfile
         if [ ! -z "$(git status --porcelain)" ]; then
           # Add an entry to README.md
           head -n 2 dockers/${INPUTS_DOWNSTREAM}/README.md > temp.md
