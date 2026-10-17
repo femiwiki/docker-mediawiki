@@ -33,7 +33,7 @@ jobs:
       contents: read
 
   shared-lint:
-    uses: femiwiki/.github/.github/workflows/shared-lint.yml@83cf82f19470239fae4bdf4c11138bd0a82efd69
+    uses: femiwiki/.github/.github/workflows/shared-lint.yml@5b2ac3da712fc79c09e58ac0a8999f862bd7a7f0
     permissions:
       contents: read
 
