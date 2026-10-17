@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.84
+
+- Bump femiwiki/femiwiki-extensions to v3.14.18
+  - give the filled button to "Add topic" on talk pages (femiwiki/FemiwikiSkin#1173)
+
 ## v2.0.83
 
 - Bump femiwiki/femiwiki-extensions to v3.14.17
