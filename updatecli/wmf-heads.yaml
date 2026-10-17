@@ -9,7 +9,7 @@ sources:
   {{ $type }}-{{ $name }}:
     kind: shell
     spec:
-      command: git ls-remote --exit-code https://gerrit.wikimedia.org/r/mediawiki/{{ $type }}s/{{ $name }} refs/heads/{{ $branch }}
+      command: git ls-remote --exit-code https://github.com/wikimedia/mediawiki-{{ $type }}s-{{ $name }} refs/heads/{{ $branch }}
     transformers:
       - findsubmatch:
           pattern: '^([0-9a-f]{40})\t'
