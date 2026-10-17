@@ -8,6 +8,12 @@ import type { getOctokit } from "@actions/github";
 
 type GitHub = ReturnType<typeof getOctokit>;
 
+const need = (env: NodeJS.ProcessEnv, name: string) => {
+	const value = env[name];
+	if (!value) throw new Error(`${name} is not set`);
+	return value;
+};
+
 // The sections and their order are release-please's
 const HEADINGS: Record<string, string> = {
 	feat: "Features",
@@ -33,10 +39,10 @@ export default async ({
 	core: typeof Core;
 	env: NodeJS.ProcessEnv;
 }) => {
-	const [owner, repo] = env.REPO!.split("/");
-	const sha = env.SHA!;
+	const [owner, repo] = need(env, "REPO").split("/");
+	const sha = need(env, "SHA");
 	// The image tag ends in the commit it was built from
-	const old = readFileSync(env.CONTAINER_TF!, "utf8").match(
+	const old = readFileSync(need(env, "CONTAINER_TF"), "utf8").match(
 		/ghcr\.io\/femiwiki\/femiwiki:[^"]*-([0-9a-f]{8})"/,
 	)?.[1];
 

@@ -7,6 +7,12 @@ export const MAX = 256;
 
 const length = (s: string) => [...s].length;
 
+const need = (env: NodeJS.ProcessEnv, name: string) => {
+	const value = env[name];
+	if (!value) throw new Error(`${name} is not set`);
+	return value;
+};
+
 export const releaseTitle = ({
 	type,
 	scope,
@@ -31,7 +37,7 @@ export const releaseTitle = ({
 	}
 	// Not even the first change fits whole
 	const more = changes.length > 1 ? `; and ${changes.length - 1} more` : "";
-	const room = MAX - length(head + "…" + more + tail);
+	const room = MAX - length(`${head}…${more}${tail}`);
 	return `${head}${[...changes[0]].slice(0, room).join("")}…${more}${tail}`;
 };
 
@@ -42,15 +48,15 @@ export default ({
 	core: typeof Core;
 	env: NodeJS.ProcessEnv;
 }) => {
-	const changes = readFileSync(env.CHANGES!, "utf8")
+	const changes = readFileSync(need(env, "CHANGES"), "utf8")
 		.split("\n")
 		.filter((line) => line !== "");
 	const title = releaseTitle({
-		type: env.TYPE!,
-		scope: env.SCOPE!,
+		type: need(env, "TYPE"),
+		scope: need(env, "SCOPE"),
 		changes,
-		name: env.NAME!,
-		ver: env.VER!,
+		name: need(env, "NAME"),
+		ver: need(env, "VER"),
 	});
 	core.info(title);
 	core.setOutput("title", title);

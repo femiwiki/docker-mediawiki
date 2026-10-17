@@ -19,6 +19,12 @@ const get = async (url: string) => {
 	return res;
 };
 
+const need = (env: NodeJS.ProcessEnv, name: string) => {
+	const value = env[name];
+	if (!value) throw new Error(`${name} is not set`);
+	return value;
+};
+
 export default async ({
 	core,
 	context,
@@ -30,10 +36,14 @@ export default async ({
 }) => {
 	const mediawiki = readFileSync("dockers/mediawiki/Dockerfile", "utf8").match(
 		/^ARG MEDIAWIKI_VERSION=(\S+)$/m,
-	)![1];
+	)?.[1];
+	if (!mediawiki)
+		throw new Error("No MEDIAWIKI_VERSION in dockers/mediawiki/Dockerfile");
 	const dockerfile = "dockers/php-fpm/Dockerfile";
 	const text = readFileSync(dockerfile, "utf8");
-	const [, cur, variant] = text.match(/^FROM .*php:(\d+\.\d+\.\d+)-(\S+)$/m)!;
+	const from = text.match(/^FROM .*php:(\d+\.\d+\.\d+)-(\S+)$/m);
+	if (!from) throw new Error(`No php FROM line in ${dockerfile}`);
+	const [, cur, variant] = from;
 
 	const composer = `https://github.com/wikimedia/mediawiki/blob/${mediawiki}/composer.json`;
 	const manifest = await (
@@ -65,7 +75,7 @@ export default async ({
 		core.warning(`No php:${floor}.x-${variant} image yet`);
 		return;
 	}
-	const latest = versions.sort(compare).at(-1)!;
+	const latest = versions.sort(compare)[versions.length - 1];
 
 	writeFileSync(
 		dockerfile,
@@ -77,7 +87,7 @@ export default async ({
 		"",
 		`Opened by [run ${context.runId}](${run}).`,
 	].join("\n");
-	writeFileSync(env.BODY!, body + "\n");
+	writeFileSync(need(env, "BODY"), `${body}\n`);
 	core.info(body);
 	core.setOutput("ver", latest);
 	core.setOutput("minor", floor);

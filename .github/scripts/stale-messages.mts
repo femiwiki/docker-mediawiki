@@ -38,8 +38,13 @@ const lcfirst = (s: string) => s[0].toLowerCase() + s.slice(1);
 const ucfirst = (s: string) => s[0].toUpperCase() + s.slice(1);
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+type AllPages = {
+	query: { allpages: { title: string }[] };
+	continue?: Record<string, string>;
+};
+
 // Caddy throttles api.php and says when to come back
-const get = async (url: string): Promise<any> => {
+const get = async (url: string): Promise<AllPages> => {
 	for (let i = 0; ; i++) {
 		const res = await fetch(url);
 		if (res.ok) return res.json();
@@ -51,7 +56,7 @@ const get = async (url: string): Promise<any> => {
 };
 
 const pages: string[] = [];
-for (let cont: Record<string, string> = {}; cont; ) {
+for (let cont: Record<string, string> | undefined = {}; cont; ) {
 	const q = new URLSearchParams({
 		action: "query",
 		format: "json",
@@ -62,7 +67,7 @@ for (let cont: Record<string, string> = {}; cont; ) {
 		...cont,
 	});
 	const res = await get(`${api}?${q}`);
-	pages.push(...res.query.allpages.map((p: { title: string }) => p.title));
+	pages.push(...res.query.allpages.map((p) => p.title));
 	cont = res.continue;
 }
 pages.push(...extra);

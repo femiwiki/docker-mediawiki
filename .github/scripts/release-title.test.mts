@@ -32,7 +32,7 @@ test("a long release keeps the leading changes and counts the rest", () => {
 	assert.ok([...title].length <= MAX, `${[...title].length} characters`);
 	const kept = title.match(
 		/^feat\(femiwiki-extensions\): (.*); and (\d+) more \(FemiwikiSkin v6\.0\.0\)$/,
-	)!;
+	);
 	assert.ok(kept, title);
 	const listed = kept[1].split("; ");
 	assert.deepEqual(listed, changes.slice(0, listed.length));
