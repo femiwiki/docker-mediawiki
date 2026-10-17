@@ -1,0 +1,11 @@
+# The shared lint's defaults, plus the updatecli template that is YAML only once rendered
+extends: default
+ignore: |
+  /updatecli/wmf-heads.yaml
+rules:
+  comments:
+    min-spaces-from-content: 1
+  document-start: disable
+  line-length: disable
+  truthy:
+    check-keys: false

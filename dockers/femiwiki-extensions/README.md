@@ -451,7 +451,7 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 ## v1.5.7
 
-- Rebuild for https://gerrit.wikimedia.org/r/c/mediawiki/extensions/PageViewInfoGA/+/1074723?usp=dashboard
+- Rebuild for <https://gerrit.wikimedia.org/r/c/mediawiki/extensions/PageViewInfoGA/+/1074723?usp=dashboard>
 
 ## v1.5.6
 

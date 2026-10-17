@@ -1,13 +1,13 @@
 {
-  "compilerOptions": {
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
-    "strict": true,
-    "target": "es2023",
-    "module": "nodenext",
-    "erasableSyntaxOnly": true,
-    "verbatimModuleSyntax": true,
-    "types": ["node"]
-  },
-  "include": [".github/scripts/*.mts"]
+	"compilerOptions": {
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"strict": true,
+		"target": "es2023",
+		"module": "nodenext",
+		"erasableSyntaxOnly": true,
+		"verbatimModuleSyntax": true,
+		"types": ["node"]
+	},
+	"include": [".github/scripts/*.mts"]
 }

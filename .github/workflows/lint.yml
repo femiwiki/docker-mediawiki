@@ -85,7 +85,6 @@ jobs:
           node-version-file: package.json
           cache: npm
       - run: npm ci
-      - run: npm run lint
       - run: npm run typecheck
       - run: npm test
       # Dependabot leaves the @types/node major alone; this fails the PR that moves github-script's Node instead
