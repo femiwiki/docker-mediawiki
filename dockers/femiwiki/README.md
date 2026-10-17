@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.85
+
+- Bump femiwiki/femiwiki-extensions to v3.14.19
+  - draw a line beside talk page replies (femiwiki/FemiwikiSkin#1174)
+
 ## v2.0.84
 
 - Bump femiwiki/femiwiki-extensions to v3.14.18
