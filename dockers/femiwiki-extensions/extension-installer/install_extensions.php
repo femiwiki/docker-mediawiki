@@ -43,14 +43,13 @@ function wfFetch( string $dir, array $sources, string $sha, array $mirrors ): st
 	// A relative submodule URL resolves against origin
 	wfMust( [ 'git', '-C', $dir, 'remote', 'add', 'origin', $source ] );
 	wfMust( [ 'git', '-C', $dir, '-c', 'advice.detachedHead=false', 'checkout', '-q', $sha ] );
-	// Phabricator refuses to serve a commit by its hash, and Gerrit refuses
-	// cloud IP ranges such as GitHub's runners, so their submodules come from
-	// the GitHub repositories they mirror; other hosts may still refuse a
-	// shallow fetch of a commit no ref points at
+	// Phabricator won't serve a commit by its hash and Gerrit refuses GitHub's
+	// runners, so their submodules come from the GitHub mirrors listed instead
 	$config = [];
 	foreach ( $mirrors as $from => $to ) {
 		array_push( $config, '-c', "url.$to.insteadOf=$from" );
 	}
+	// Some hosts refuse a shallow fetch of a commit no ref points at
 	$submodules = [ 'git', ...$config, '-C', $dir, 'submodule', 'update', '-q', '--init', '--recursive' ];
 	wfTries( [ ...$submodules, '--depth', '1' ] ) || wfMust( $submodules );
 	return $source;
