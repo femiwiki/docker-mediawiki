@@ -494,41 +494,12 @@ $wgNamespacesWithSubpages[NS_MAIN] = true;
 $wgNamespaceRobotPolicies = [
 	NS_USER => 'noindex,nofollow',
 	NS_USER_TALK => 'noindex,nofollow',
-];
-$wgSitemapNamespaces = [
-	NS_MAIN,
-	NS_TALK,
-	// Exclude noindex namespaces
-	// See https://github.com/femiwiki/femiwiki/issues/211
-	// NS_USER,
-	// NS_USER_TALK,
-	NS_PROJECT,
-	NS_PROJECT_TALK,
-	NS_FILE,
-	NS_FILE_TALK,
-	NS_MEDIAWIKI,
-	NS_MEDIAWIKI_TALK,
-	NS_TEMPLATE,
-	NS_TEMPLATE_TALK,
-	NS_HELP,
-	NS_HELP_TALK,
-	NS_CATEGORY,
-	NS_CATEGORY_TALK,
-	NS_ITEM,
-	NS_ITEM_TALK,
-	NS_PROPERTY,
-	NS_PROPERTY_TALK,
-	NS_WIDGET,
-	NS_WIDGET_TALK,
-	NS_MODULE,
-	NS_MODULE_TALK,
-	// Translate marks NS_TRANSLATIONS noindex
-	// NS_TOPIC, stale copies of the wikitext talk pages
-	NS_NEWSLETTER,
-	NS_NEWSLETTER_TALK,
+	// Stale copies of the wikitext talk pages
+	NS_TOPIC => 'noindex,nofollow',
 ];
 
-// Served at /rest.php/site/v1/sitemap/0, as Wikimedia does (T400023)
+// Served at /rest.php/site/v1/sitemap/0, as Wikimedia does (T400023). Like
+// Wikimedia, no $wgSitemapNamespaces: the noindex namespaces above stay out.
 $wgSitemapApiConfig['enabled'] = true;
 // 1.46 loads site/v1 only in DevelopmentSettings.php
 $wgRestAPIAdditionalRouteFiles[] = 'includes/Rest/site.v1.json';
