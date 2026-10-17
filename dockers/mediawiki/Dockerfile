@@ -15,12 +15,7 @@ RUN sudo -u www-data mkdir -p /tmp/file-cache /tmp/cache
 # Install and register cron
 COPY cron/crontab /tmp/crontab
 RUN crontab /tmp/crontab && rm /tmp/crontab
-COPY cron/generate-sitemap \
-      cron/update-special-pages \
+COPY cron/update-special-pages \
       cron/run-jobs \
       cron/publish-dump \
       /usr/local/bin/
-
-# Install scripts
-RUN mkdir -p /mediawiki/sitemap &&\
-    chown www-data:www-data /mediawiki/sitemap

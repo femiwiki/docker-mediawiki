@@ -18,7 +18,7 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 ## v3.14.14
 
-- replace Prettier with the shared Biome, rumdl and yamllint jobs
+- fetch Gerrit submodules from their GitHub mirrors
 
 ## v3.14.13
 

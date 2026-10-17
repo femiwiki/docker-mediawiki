@@ -45,5 +45,3 @@ Disallow: /*&title=%ED%8A%B9%EC%88%98%3A
 # https://github.com/femiwiki/nomad/issues/270
 Disallow: /index.php?hidelinks=1&hidetrans=1&title=
 Disallow: /*&mobileaction=toggle_view_mobile
-
-sitemap:https://femiwiki.com/sitemap/sitemap-index-femiwiki.xml

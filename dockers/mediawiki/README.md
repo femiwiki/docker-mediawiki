@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v4.0.5
+
+- drop the cron sitemap for the REST one
+
 ## v4.0.4
 
 - send run-jobs output to the cron log
