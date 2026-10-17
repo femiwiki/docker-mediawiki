@@ -21,7 +21,7 @@ http:
     - ./path/to/Caddyfile:/srv/femiwiki.com/Caddyfile:ro
 ```
 
-#### MediaWiki
+### MediaWiki
 
 다음 환경 변수를 설정할 수 있습니다.
 
@@ -33,11 +33,11 @@ http:
 
 `/etc/mediawiki`에 위치한 LocalSettings.php 파일이나 site-list.xml 파일은 테스트 목적에 따라 교체할 수 있습니다.
 
-#### Caddy
+### Caddy
 
-Caddy를 실행할 경우에는 Caddyfile을 `/srv/femiwiki.com/Caddyfile`로 마운트하고 `caddy run`을 커맨드로 사용하여야 합니다. [Usage of Docker Image](#usage-of-docker-image)를 참고하세요. 파일 마운트의 경우 일부 텍스트 편집기로 인한 편집이 무시될 수 있음을 주의하세요. (https://github.com/moby/moby/issues/15793)
+Caddy를 실행할 경우에는 Caddyfile을 `/srv/femiwiki.com/Caddyfile`로 마운트하고 `caddy run`을 커맨드로 사용하여야 합니다. [Usage of Docker Image](#usage-of-docker-image)를 참고하세요. 파일 마운트의 경우 일부 텍스트 편집기로 인한 편집이 무시될 수 있음을 주의하세요. (<https://github.com/moby/moby/issues/15793>)
 
-```
+```text
 ./caddy/Caddyfile.dev:/srv/femiwiki.com/Caddyfile:ro
 ```
 
@@ -102,8 +102,6 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 [femiwiki.com]: https://femiwiki.com
 [docker swarm]: https://docs.docker.com/engine/swarm/
 [docker composer]: https://docs.docker.com/compose/
-[femiwiki/ami]: https://github.com/femiwiki/ami
-[how to deploy weekly femiwiki to production]: https://github.com/femiwiki/femiwiki/blob/main/how-to-deploy-weekly-femi-wiki-to-production.md
 [php-fpm]: https://php-fpm.org/
 [caddy]: https://caddyserver.com/
 [http://127.0.0.1:8080]: http://127.0.0.1:8080

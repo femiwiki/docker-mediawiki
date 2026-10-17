@@ -1,11 +1,11 @@
 {
-  "extra": {
-    "merge-plugin": {
-      "include": [
-        "extensions/AWS/composer.json",
-        "extensions/PageViewInfoGA/composer.json",
-        "extensions/Wikibase/composer.json"
-      ]
-    }
-  }
+	"extra": {
+		"merge-plugin": {
+			"include": [
+				"extensions/AWS/composer.json",
+				"extensions/PageViewInfoGA/composer.json",
+				"extensions/Wikibase/composer.json"
+			]
+		}
+	}
 }

@@ -1,0 +1,10 @@
+{
+	"files": {
+		"includes": [
+			"**",
+			"!dockers/femiwiki-extensions/extension-installer/extensions.json",
+			"!composer.lock",
+			"!**/*.svg"
+		]
+	}
+}
