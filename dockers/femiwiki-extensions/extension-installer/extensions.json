@@ -93,6 +93,10 @@
       "repository": "https://github.com/femiwiki/DelayedJobQueue",
       "commit": "64e7f944fdd7e030df0c64a0a4dd0622d64abbd8"
     },
+    "FediFeeds": {
+      "repository": "https://github.com/femiwiki/FediFeeds",
+      "commit": "339f1807489e6c2822aabbfbaab65ff596bb2ede"
+    },
     "Femiwiki": {
       "type": "skin",
       "repository": "https://github.com/femiwiki/FemiwikiSkin",
