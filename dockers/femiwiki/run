@@ -49,7 +49,7 @@ echo 'Starting Femiwiki ...'
 # Run Install.php
 if [ -z "${MEDIAWIKI_SKIP_INSTALL:-}" ]; then
   echo 'Start installing Mediawiki ...'
-  php /srv/femiwiki.com/maintenance/install.php \
+  php /srv/femiwiki.com/maintenance/run.php install \
     --lang ko \
     --scriptpath '/w' \
     --dbtype mysql \
@@ -81,7 +81,7 @@ fi
 
 # Run update script
 if [ -z "${MEDIAWIKI_SKIP_UPDATE:-}" ]; then
-  /srv/femiwiki.com/maintenance/update.php --quick
+  php /srv/femiwiki.com/maintenance/run.php update --quick
 fi
 
 # ResourceLoader keeps each module's messages in memcached for a week. The
@@ -91,7 +91,7 @@ php /srv/femiwiki.com/maintenance/run.php purgeMessageBlobStore || true
 
 # Add Femiwiki to the sites table
 if [ -z "${MEDIAWIKI_SKIP_IMPORT_SITES:-}" ]; then
-  php /srv/femiwiki.com/maintenance/importSites.php /etc/mediawiki/site-list.xml
+  php /srv/femiwiki.com/maintenance/run.php importSites /etc/mediawiki/site-list.xml
 fi
 
 # Cron passes jobs none of this environment, so the crontab sets BASH_ENV (and

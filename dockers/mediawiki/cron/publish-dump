@@ -27,7 +27,7 @@ trap 'log "failed, see /var/log/cron.log"' ERR
 
 for mode in full logs; do
   file="$DIR/femiwiki-$DATE-$mode.xml.gz"
-  nice -n 19 php maintenance/dumpBackup.php "--$mode" --quiet --output="gzip:$file"
+  nice -n 19 php maintenance/run.php dumpBackup "--$mode" --quiet --output="gzip:$file"
   # A dump cut off midway has no closing tag.
   gzip -dc "$file" | tail -n 1 | grep -q '</mediawiki>'
 done

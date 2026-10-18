@@ -7,4 +7,4 @@ set -euo pipefail; IFS=$'\n\t'
 
 cd /srv/femiwiki.com
 
-php maintenance/updateSpecialPages.php
+php maintenance/run.php updateSpecialPages
