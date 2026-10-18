@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.91
+
+- Bump femiwiki/caddy to v1.13.0
+  - answer conditional requests on hits and send Age (femiwiki/caddy-mwcache#198)
+
 ## v2.0.90
 
 - Bump femiwiki/femiwiki-extensions to v3.15.0
