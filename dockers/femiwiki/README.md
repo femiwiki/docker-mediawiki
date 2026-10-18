@@ -1,5 +1,25 @@
 # femiwiki
 
+## v2.0.91
+
+- Bump femiwiki/caddy to v1.13.0
+  - answer conditional requests on hits and send Age (femiwiki/caddy-mwcache#198)
+
+## v2.0.90
+
+- Bump femiwiki/femiwiki-extensions to v3.15.0
+  - follow the Codex breakpoint tokens (femiwiki/FemiwikiSkin#1179)
+
+## v2.0.89
+
+- Bump femiwiki/caddy to v1.12.0
+  - coalesce concurrent misses for one page (femiwiki/caddy-mwcache#197)
+
+## v2.0.88
+
+- Bump femiwiki/femiwiki-extensions to v3.14.21
+  - install the OOUI theme with the dialog and popup shadows (femiwiki/FemiwikiSkin#1177)
+
 ## v2.0.87
 
 - Bump femiwiki/femiwiki-extensions to v3.14.20
