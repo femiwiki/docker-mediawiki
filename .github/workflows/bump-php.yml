@@ -30,22 +30,6 @@ jobs:
             const { default: bumpPhp } = await import(`${process.env.GITHUB_WORKSPACE}/.github/scripts/bump-php.mts`)
             await bumpPhp({ core, context, env: process.env })
 
-      - name: Update README
-        if: steps.check.outputs.ver != ''
-        uses: ./.github/actions/add-changelog-entry
-        with:
-          image: php-fpm
-          level: minor
-          message: Bump php to ${{ steps.check.outputs.ver }}, which MediaWiki ${{ steps.check.outputs.mediawiki }} requires
-
-      # A new entry rebuilds the extensions, whose Dockerfile reads the new PHP
-      - name: Update the extensions README
-        if: steps.check.outputs.ver != ''
-        uses: ./.github/actions/add-changelog-entry
-        with:
-          image: femiwiki-extensions
-          message: Resolve composer dependencies for PHP ${{ steps.check.outputs.minor }}
-
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
         if: ${{ steps.check.outputs.ver != '' && github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         id: get_workflow_token

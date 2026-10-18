@@ -44,6 +44,8 @@ jobs:
         id: scope
         with:
           images: caddy femiwiki femiwiki-extensions mediawiki php-fpm
+          # femiwiki-extensions resolves its dependencies for the PHP php-fpm runs
+          contexts: femiwiki-extensions=dockers/php-fpm/Dockerfile
           dispatched: ${{ inputs.image }}
 
   # The permissions below are the union the called workflow declares. Its

@@ -1,7 +1,5 @@
-// Lists the pull requests between the femiwiki image infra runs and this one,
-// for the body of the infra bump pull request. A pull request that only bumps
-// an upstream image says nothing by its title, so the upstream README entries
-// it brings in are listed under it.
+// Lists the pull requests, base images' included, between the femiwiki image
+// infra runs and this one, for the body of the infra bump pull request.
 import { readFileSync } from "node:fs";
 import type * as Core from "@actions/core";
 import type { getOctokit } from "@actions/github";
@@ -61,6 +59,38 @@ export default async ({
 		}
 	};
 
+	// The commit a pin was built from: a tag ends in it, and a version from before
+	// #1272 is the newest commit whose README entry is not above it
+	const builtFrom = async (image: string, pin: string, ref: string) => {
+		const tagged = pin.match(/-([0-9a-f]{8})$/)?.[1];
+		if (tagged) {
+			try {
+				const { data } = await github.rest.repos.getCommit({
+					owner,
+					repo,
+					ref: tagged,
+				});
+				return data.sha;
+			} catch {
+				return undefined;
+			}
+		}
+		for await (const { data } of github.paginate.iterator(
+			github.rest.repos.listCommits,
+			{ owner, repo, sha: ref, path: `dockers/${image}`, per_page: 100 },
+		)) {
+			for (const c of data) {
+				const v = (await readFile(`dockers/${image}/README.md`, c.sha)).match(
+					/^## v(.+)$/m,
+				)?.[1];
+				if (v && !newer(v, pin)) {
+					return c.sha;
+				}
+			}
+		}
+		return undefined;
+	};
+
 	// The commits an image's Dockerfile takes in between two trees: each base
 	// image's after its old pin up to its new one, and what those build on
 	const builtOn = async (
@@ -71,35 +101,42 @@ export default async ({
 		const before = pins(await readFile(`dockers/${image}/Dockerfile`, from));
 		const after = pins(await readFile(`dockers/${image}/Dockerfile`, to));
 		const out: string[] = [];
-		for (const [base, version] of Object.entries(after)) {
+		for (const [base, pin] of Object.entries(after)) {
 			const was = before[base];
-			if (!was || was === version) {
+			if (!was || was === pin) {
 				continue;
 			}
-			// Newest first. A change under dockers/<base> raises its README
-			// version, so the version tells which pin first carries a commit.
+			const [last, head] = await Promise.all([
+				builtFrom(base, was, from),
+				builtFrom(base, pin, to),
+			]);
+			if (!last || !head) {
+				core.warning(
+					`Could not find what ${base}:${was}...${pin} was built from.`,
+				);
+				continue;
+			}
+			const { data } = await github.rest.repos.compareCommits({
+				owner,
+				repo,
+				base: last,
+				head,
+			});
+			const between = new Set(data.commits.map((c) => c.sha));
+			// Newest first
 			const found: string[] = [];
-			let last: string | undefined;
 			walk: for await (const { data } of github.paginate.iterator(
 				github.rest.repos.listCommits,
-				{ owner, repo, sha: to, path: `dockers/${base}`, per_page: 100 },
+				{ owner, repo, sha: head, path: `dockers/${base}`, per_page: 100 },
 			)) {
 				for (const c of data) {
-					const v =
-						(await readFile(`dockers/${base}/README.md`, c.sha)).match(
-							/^## v(.+)$/m,
-						)?.[1] ?? "";
-					if (newer(v, version)) {
-						continue;
-					}
-					if (!newer(v, was)) {
-						last = c.sha;
+					if (!between.has(c.sha)) {
 						break walk;
 					}
 					found.push(c.sha);
 				}
 			}
-			if (found.length > 0 && last) {
+			if (found.length > 0) {
 				out.push(...(await builtOn(base, last, found[0])));
 			}
 			out.push(...found.reverse());
@@ -147,12 +184,6 @@ export default async ({
 		...commits.filter((c) => own.includes(c) || pinned.includes(c)),
 	];
 
-	// The upstream versions the running image was built on, so a bump lists
-	// only what is new to production
-	const deployed = old
-		? pins(await readFile("dockers/femiwiki/Dockerfile", old))
-		: {};
-
 	const sections: Record<string, string[]> = {};
 	const add = (type: string, lines: string[]) => {
 		sections[type] ??= [];
@@ -178,7 +209,11 @@ export default async ({
 		// A bump lists the upstream changes in its body, so the line links those
 		// and not only the bump
 		const ref = [
-			...(pr.head.ref.startsWith("bump-") ? upstream(pr.body ?? "") : []),
+			...(pr.head.ref.startsWith("bump-")
+				? upstream(pr.body ?? "").filter(
+						(r) => !r.startsWith(`${owner}/${repo}#`),
+					)
+				: []),
 			`${owner}/${repo}#${pr.number}`,
 		].join(", ");
 
@@ -199,16 +234,7 @@ export default async ({
 			scope = source;
 			subject = subject.replace(/ \([^()\s]+ [^()\s]+\)$/, "");
 		}
-		const lines = [`* ${scope ? `**${scope}:** ` : ""}${subject} (${ref})`];
-
-		const bump = subject.match(/^bump ([\w-]+) image to v([\d.]+)$/);
-		if (bump) {
-			const [, image, version] = bump;
-			const readme = await readFile(`dockers/${image}/README.md`, sha);
-			lines.push(...entries(readme, version, deployed[image]));
-			deployed[image] = version;
-		}
-		add(m[1], lines);
+		add(m[1], [`* ${scope ? `**${scope}:** ` : ""}${subject} (${ref})`]);
 	}
 
 	let refs = "";
@@ -221,11 +247,11 @@ export default async ({
 	core.setOutput("prs", prs.join(" "));
 };
 
-// The femiwiki images a Dockerfile builds on, each at the version it pins
+// The femiwiki images a Dockerfile builds on, each at the tag it pins
 function pins(dockerfile: string) {
 	const out: Record<string, string> = {};
 	for (const m of dockerfile.matchAll(
-		/ghcr\.io\/femiwiki\/([\w-]+):([\d.]+)/g,
+		/ghcr\.io\/femiwiki\/([\w-]+):([\w.-]+)/g,
 	)) {
 		out[m[1]] = m[2];
 	}
@@ -259,31 +285,4 @@ function upstream(body: string) {
 		}
 	}
 	return [...refs];
-}
-
-// The README entries from `## v<to>` down to, not including, `## v<from>`,
-// each as a nested list item led by its version
-function entries(readme: string, to: string, from?: string) {
-	const out: string[] = [];
-	let version = "";
-	for (const line of readme.split("\n")) {
-		const heading = line.match(/^## v(.+)$/);
-		if (heading) {
-			if (heading[1] === from || (version && !from)) {
-				break;
-			}
-			if (version || heading[1] === to) {
-				version = heading[1];
-			}
-			continue;
-		}
-		if (!version) {
-			continue;
-		}
-		const item = line.match(/^(\s*)- (.*)$/);
-		if (item) {
-			out.push(item[1] ? `    * ${item[2]}` : `  * v${version}: ${item[2]}`);
-		}
-	}
-	return out;
 }

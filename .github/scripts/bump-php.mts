@@ -90,6 +90,4 @@ export default async ({
 	writeFileSync(need(env, "BODY"), `${body}\n`);
 	core.info(body);
 	core.setOutput("ver", latest);
-	core.setOutput("minor", floor);
-	core.setOutput("mediawiki", mediawiki.split(".").slice(0, 2).join("."));
 };

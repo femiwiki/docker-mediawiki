@@ -33,9 +33,6 @@ outputs:
   title:
     description: The pull request title.
     value: ${{ steps.title.outputs.title }}
-  level:
-    description: The part of the image version to raise, minor for features, patch otherwise.
-    value: ${{ steps.changes.outputs.level }}
 
 runs:
   using: composite
@@ -81,17 +78,16 @@ runs:
         fixes=$(changes 'Bug Fixes' fix)
         perfs=$(changes 'Performance Improvements' perf)
         if [ -n "$feats" ]; then
-          type=feat c=$feats level=minor
+          type=feat c=$feats
         elif [ -n "$fixes" ]; then
-          type=fix c=$fixes level=patch
+          type=fix c=$fixes
         elif [ -n "$perfs" ]; then
-          type=perf c=$perfs level=patch
+          type=perf c=$perfs
         else
-          type=build c='' level=patch
+          type=build c=''
         fi
         cut -f1 <<< "$c" > "$RUNNER_TEMP/release-title-changes"
         echo "type=$type" >> "$GITHUB_OUTPUT"
-        echo "level=$level" >> "$GITHUB_OUTPUT"
         if [ -n "${feats}${fixes}${perfs}" ]; then
           # shellcheck source=.github/wikitext.sh
           source "$GITHUB_ACTION_PATH/../../wikitext.sh"

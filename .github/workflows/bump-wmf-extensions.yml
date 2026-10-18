@@ -62,13 +62,6 @@ jobs:
           cat "$BODY"
           echo "count=$count" >> "$GITHUB_OUTPUT"
 
-      - name: Update README
-        if: steps.body.outputs.count != '0'
-        uses: ./.github/actions/add-changelog-entry
-        with:
-          image: femiwiki-extensions
-          message: Move ${{ steps.body.outputs.count }} WMF extensions and skins to the heads of `${{ steps.values.outputs.branch }}`
-
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
         if: ${{ steps.body.outputs.count != '0' && github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         id: get_workflow_token

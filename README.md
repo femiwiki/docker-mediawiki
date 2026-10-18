@@ -21,9 +21,9 @@ Dockerfile, 테스트용 도커 컴포즈 파일 등 다양한 코드를 담고�
 
 ```yml
 fastcgi:
-  image: ghcr.io/femiwiki/mediawiki
+  image: ghcr.io/femiwiki/femiwiki
 http:
-  image: ghcr.io/femiwiki/mediawiki
+  image: ghcr.io/femiwiki/femiwiki
   command: caddy run
   ports:
     - 80:80
