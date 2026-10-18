@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.86
+
+- Bump femiwiki/caddy to v1.11.12
+  - bypass the cache for any Authorization header (femiwiki/caddy-mwcache#194)
+
 ## v2.0.85
 
 - Bump femiwiki/femiwiki-extensions to v3.14.19
