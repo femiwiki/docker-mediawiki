@@ -89,6 +89,10 @@
     "Vector": "cfd0e5ead4d6285d4053da78c50143362024da39"
   },
   "in-house": {
+    "DelayedJobQueue": {
+      "repository": "https://github.com/femiwiki/DelayedJobQueue",
+      "commit": "64e7f944fdd7e030df0c64a0a4dd0622d64abbd8"
+    },
     "Femiwiki": {
       "type": "skin",
       "repository": "https://github.com/femiwiki/FemiwikiSkin",
