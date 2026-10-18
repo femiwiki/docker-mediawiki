@@ -261,6 +261,9 @@ $wgMWLoggerDefaultSpi = [
 // HTTP Cache setting
 $wgUseCdn = true;
 $wgCdnServers = explode( ',', getenv( 'WG_CDN_SERVERS' ) );
+// Purge each edited page again 11 seconds later, as Wikimedia does, in case a
+// render begun before the edit was stored after the first purge (femiwiki/femiwiki#701)
+$wgCdnReboundPurgeDelay = 11;
 
 // To enable image uploads, make sure the 'images' directory
 // is writable, then set this to true:
@@ -629,6 +632,15 @@ $wgCaptchaTriggers['badlogin'] = false;
 // DarkMode
 wfLoadExtension( 'DarkMode' );
 $wgDarkModeTogglePosition = 'footer';
+
+// DelayedJobQueue
+wfLoadExtension( 'DelayedJobQueue' );
+// The database queue, plus delayed jobs, which $wgCdnReboundPurgeDelay needs
+$wgJobTypeConf['default'] = [
+	'class' => \MediaWiki\Extension\DelayedJobQueue\DelayedJobQueueDB::class,
+	'order' => 'random',
+	'claimTTL' => 3600,
+];
 
 // Description2
 wfLoadExtension( 'Description2' );

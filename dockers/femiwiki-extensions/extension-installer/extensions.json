@@ -91,7 +91,7 @@
   "in-house": {
     "DelayedJobQueue": {
       "repository": "https://github.com/femiwiki/DelayedJobQueue",
-      "commit": "64e7f944fdd7e030df0c64a0a4dd0622d64abbd8"
+      "commit": "f7167efe6d7ce3d10e452b9f480563defcf8ebbd"
     },
     "FediFeeds": {
       "repository": "https://github.com/femiwiki/FediFeeds",
@@ -100,11 +100,11 @@
     "Femiwiki": {
       "type": "skin",
       "repository": "https://github.com/femiwiki/FemiwikiSkin",
-      "commit": "cb145a13a83b51bf28f2f3ff69f61f2eec182399"
+      "commit": "d55f3d1b9aecb42d4e813d75c30f975ebc2fa891"
     },
     "UnifiedExtensionForFemiwiki": {
       "repository": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki",
-      "commit": "8d086304083a5390e6b7b924baeb4e951f42da3c"
+      "commit": "a3866829d29262e20aebb4386c0063551ca286a2"
     }
   },
   "non-WMF": {

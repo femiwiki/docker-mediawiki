@@ -6,7 +6,7 @@
  * way nothing reads it. update.php only catches settings marked deprecated or
  * obsolete, so a setting dropped without a mark needs this check.
  *
- * Usage: php CheckConfigKeys.php FILE
+ * Usage: php maintenance/run.php CheckConfigKeys.php FILE
  *
  * @file
  */
