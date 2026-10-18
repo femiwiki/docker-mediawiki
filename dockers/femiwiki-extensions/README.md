@@ -18,7 +18,7 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 ## v3.15.0
 
-- load FediFeeds
+- install FediFeeds
 
 ## v3.14.19
 
