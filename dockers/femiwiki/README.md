@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.90
+
+- Bump femiwiki/femiwiki-extensions to v3.15.0
+  - follow the Codex breakpoint tokens (femiwiki/FemiwikiSkin#1179)
+
 ## v2.0.89
 
 - Bump femiwiki/caddy to v1.12.0
