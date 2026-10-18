@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.97
+
+- Bump femiwiki/caddy to v1.13.2
+  - close a backend replaced by a config load (femiwiki/caddy-mwcache#202)
+
 ## v2.0.96
 
 - Bump femiwiki/femiwiki-extensions to v3.17.3
