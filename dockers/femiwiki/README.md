@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.88
+
+- Bump femiwiki/femiwiki-extensions to v3.14.21
+  - install the OOUI theme with the dialog and popup shadows (femiwiki/FemiwikiSkin#1177)
+
 ## v2.0.87
 
 - Bump femiwiki/femiwiki-extensions to v3.14.20
