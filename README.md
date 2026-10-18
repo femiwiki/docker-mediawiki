@@ -111,6 +111,13 @@ flowchart TD
     composer --> femiwiki/femiwiki-extensions --> femiwiki/femiwiki
 ```
 
+## 기술 블로그
+
+이 이미지로 한 일 가운데 일부를 [페미위키 기술 블로그]에 적었습니다.
+
+- [미디어위키 1.46 업그레이드](https://femiwiki.com/?curid=80471)
+- [Claude Code로 크롤러 막기](https://femiwiki.com/?curid=81514)
+
 &nbsp;
 
 ---
@@ -131,3 +138,4 @@ of the [GNU Affero General Public License v3.0] or any later version. See
 [http://127.0.0.1:8080]: http://127.0.0.1:8080
 [gnu affero general public license v3.0]: LICENSE
 [copyright]: COPYRIGHT
+[페미위키 기술 블로그]: https://femiwiki.com/?curid=30779
