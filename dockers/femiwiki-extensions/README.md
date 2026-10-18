@@ -20,6 +20,10 @@ This docker image contains MediaWiki extensions Femiwiki uses.
 
 - install FediFeeds
 
+## v3.14.20
+
+- Bump Femiwiki to [613a093](https://github.com/femiwiki/FemiwikiSkin/commit/613a093c50d789aa50b833a559897cc865134808)
+
 ## v3.14.19
 
 - Bump Femiwiki to [2817942](https://github.com/femiwiki/FemiwikiSkin/commit/2817942c8ed676b6a9663430f734956ccbfbc3c4)
