@@ -127,13 +127,6 @@ jobs:
             '.[$section][$ext][$field] = $ver' "$json" > "${RUNNER_TEMP}/extensions.json"
           mv "${RUNNER_TEMP}/extensions.json" "$json"
 
-      - name: Update README
-        uses: ./.github/actions/add-changelog-entry
-        with:
-          image: femiwiki-extensions
-          level: ${{ steps.title.outputs.level }}
-          message: ${{ steps.vars.outputs.message }}
-
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
         if: ${{ github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main' }}
         id: get_workflow_token

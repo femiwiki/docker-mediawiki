@@ -1,0 +1,74 @@
+name: bump-pin
+description: >
+  Pin a newly published upstream image in a downstream Dockerfile and write the
+  pull request body: the pull requests into the upstream image since the commit
+  the old pin was built from, and the release notes they carry. Needs the whole
+  history checked out.
+inputs:
+  tag:
+    description: The tag just published, <time>-<commit>
+    required: true
+  upstream:
+    description: The image under dockers/ that was published
+    required: true
+  downstream:
+    description: The image under dockers/ whose Dockerfile pins it
+    required: true
+outputs:
+  behind:
+    description: Whether the downstream pinned an older build, so the Dockerfile changed
+    value: ${{ steps.pin.outputs.behind }}
+runs:
+  using: composite
+  steps:
+    - id: pin
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        TAG: ${{ inputs.tag }}
+        UPSTREAM: ${{ inputs.upstream }}
+        DOWNSTREAM: ${{ inputs.downstream }}
+      run: |
+        set -euo pipefail
+        dockerfile="dockers/${DOWNSTREAM}/Dockerfile"
+        old="$(grep -oE "ghcr\.io/femiwiki/${UPSTREAM}:[^[:space:]]+" "$dockerfile" | head -n 1 | cut -d: -f2)"
+
+        # A tag ends in the commit it was built from. A version from before
+        # femiwiki/docker-mediawiki#1272 names the commit that wrote its README entry
+        if [[ "$old" =~ -([0-9a-f]{8})$ ]]; then
+          since="$(git rev-parse --verify -q "${BASH_REMATCH[1]}^{commit}" || true)"
+        else
+          since="$(git log --format=%H -G "^## v${old//./\\.}\$" -- "dockers/${UPSTREAM}/README.md" | tail -n 1)"
+        fi
+        # A run re-run after a newer build was pinned would otherwise pin back
+        if [ -n "$since" ] && git merge-base --is-ancestor "$GITHUB_SHA" "$since"; then
+          echo "::notice file=${dockerfile}::already on ${UPSTREAM}:${old}, so ${TAG} is not pinned"
+          exit 0
+        fi
+        echo "behind=true" >> "$GITHUB_OUTPUT"
+        sed -i -E "s#(ghcr\.io/femiwiki/${UPSTREAM}:)[^[:space:]]+#\1${TAG}#" "$dockerfile"
+
+        # The pull requests in between, each with the release notes it carries
+        # as nested OWNER/REPO#N lines, then all their notes as one block
+        prs=()
+        if [ -n "$since" ]; then
+          for c in $(git log --reverse --format=%H "${since}..${GITHUB_SHA}" -- "dockers/${UPSTREAM}"); do
+            n="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${c}/pulls" --jq '.[0].number // empty')"
+            [ -z "$n" ] || prs+=("$n")
+          done
+        fi
+        {
+          echo "ghcr.io/femiwiki/${UPSTREAM} ${old} → ${TAG}"
+          echo
+          for n in "${prs[@]}"; do
+            echo "- $(gh api "repos/${GITHUB_REPOSITORY}/pulls/${n}" --jq .title) (${GITHUB_REPOSITORY}#${n})"
+            .github/release-notes.sh "$GITHUB_REPOSITORY" "$n" | grep '^\*' \
+              | sed -E 's/^\*[[:space:]]*(.*) \[([^] ]+)\]$/  - \1 (\2)/; s#\(https://github\.com/([^/]+/[^/]+)/pull/([0-9]+)\)$#(\1\#\2)#' \
+              || true
+          done
+          if [ ${#prs[@]} -gt 0 ]; then
+            notes="$(.github/release-notes.sh "$GITHUB_REPOSITORY" "${prs[@]}")"
+            [ -z "$notes" ] || printf '\n%s\n' "$notes"
+          fi
+        } > "${RUNNER_TEMP}/body.md"
+        cat "${RUNNER_TEMP}/body.md"

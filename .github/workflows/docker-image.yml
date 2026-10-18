@@ -1,8 +1,7 @@
 name: 'Docker: image'
 
-# Builds one versioned image and, on main, publishes it and opens the pull
-# request that bumps it in the image built on top of it. A mw-* branch publishes
-# its versions without the bump. Called by images.yml.
+# Builds one image; main publishes it as <time>-<commit> and opens the pull
+# request pinning it downstream, a mw-* branch only publishes. Via images.yml.
 on:
   workflow_call:
     inputs:
@@ -11,7 +10,7 @@ on:
         required: true
         type: string
       downstream:
-        description: The image under dockers/ whose Dockerfile is bumped to the new version
+        description: The image under dockers/ whose Dockerfile is bumped to the new tag
         required: true
         type: string
       arches:
@@ -41,33 +40,7 @@ concurrency:
 permissions: {}
 
 jobs:
-  get-version:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      ver: ${{ steps.version.outputs.ver }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - id: version
-        env:
-          IMAGE: ${{ inputs.image }}
-        run: echo "ver=$(grep -m 1 '## v' "dockers/${IMAGE}/README.md" | cut -d'v' -f2)" >> "$GITHUB_OUTPUT"
-      - uses: ./.github/actions/image-version
-        id: guard
-        with:
-          image: ${{ inputs.image }}
-          application-id: ${{ vars.PAT_APPLICATION_ID }}
-          private-key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
-      # This run is for a head that no longer merges as it stands
-      - name: Leave the checks to the new head
-        if: steps.guard.outputs.pushed == 'true'
-        run: exit 1
-
   build:
-    needs: get-version
     strategy:
       fail-fast: false
       matrix:
@@ -115,13 +88,22 @@ jobs:
           retention-days: 1
 
   push-manifest:
-    needs: [get-version, build]
+    needs: [build]
     if: github.repository_owner == 'femiwiki' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/mw-'))
     runs-on: ubuntu-latest
     permissions:
       packages: write
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      # A mw-* branch builds the next MediaWiki release, e.g. mw-1.46 publishes
+      # 1.46-<time>-<sha>, and nothing on main is bumped to it
+      - id: tag
+        run: |
+          prefix=''
+          [ "$GITHUB_REF_NAME" = main ] || prefix="${GITHUB_REF_NAME#mw-}-"
+          echo "tag=${prefix}$(date +%Y-%m-%dT%H-%M)-$(echo "$GITHUB_SHA" | cut -c1-8)" >> "$GITHUB_OUTPUT"
       - name: Download digests
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -134,24 +116,22 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      # No latest: only the femiwiki image's is pulled, by compose.yaml
       - name: Create and push manifest
         working-directory: ${{ runner.temp }}/digests
         env:
           IMAGE: ${{ inputs.image }}
-          VER: ${{ needs.get-version.outputs.ver }}
+          TAG: ${{ steps.tag.outputs.tag }}
         run: |
           image="ghcr.io/femiwiki/${IMAGE}"
-          args=(-t "${image}:${VER}")
-          # A mw-* branch builds the next MediaWiki release: its versions are
-          # published, but neither as latest nor bumped downstream on main
-          [ "$GITHUB_REF_NAME" = main ] && args+=(-t "${image}:latest")
+          args=(-t "${image}:${TAG}")
           for digest in *; do
             args+=("${image}@sha256:${digest}")
           done
           docker buildx imagetools create "${args[@]}"
 
   bump-downstream:
-    needs: [get-version, push-manifest]
+    needs: [push-manifest]
     if: github.repository_owner == 'femiwiki' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
@@ -165,44 +145,30 @@ jobs:
         with:
           ref: main
           persist-credentials: false
-          # The release notes read back to the version downstream uses
+          # The pull request body lists the commits since the one downstream pins
           fetch-depth: 0
-      # A run re-run after a newer release was bumped would otherwise bump back
-      - name: Check downstream is behind this version
-        id: behind
-        env:
-          IMAGE: ${{ inputs.image }}
-          DOWNSTREAM: ${{ inputs.downstream }}
-          VER: ${{ needs.get-version.outputs.ver }}
-        run: |
-          old="$(grep -oE "ghcr\.io/femiwiki/${IMAGE}:[0-9.]+" "dockers/${DOWNSTREAM}/Dockerfile" | head -n 1 | cut -d: -f2)"
-          if [ "$(printf '%s\n' "$old" "$VER" | sort -V | tail -n 1)" = "$old" ]; then
-            echo "::notice file=dockers/${DOWNSTREAM}/Dockerfile::already on ${IMAGE} v${old}, so v${VER} is not bumped"
-          else
-            echo "behind=true" >> "$GITHUB_OUTPUT"
-          fi
-      - uses: ./.github/actions/add-nev-version-entry-to-changelog
-        if: steps.behind.outputs.behind == 'true'
+      - uses: ./.github/actions/bump-pin
+        id: pin
         with:
-          version: ${{ needs.get-version.outputs.ver }}
+          tag: ${{ needs.push-manifest.outputs.tag }}
           upstream: ${{ inputs.image }}
           downstream: ${{ inputs.downstream }}
       - uses: peter-murray/workflow-application-token-action@dad2b81e50ce3edeb5f3b7ffbd79f731368bd668 # v5.1.1
-        if: steps.behind.outputs.behind == 'true'
+        if: steps.pin.outputs.behind == 'true'
         id: get_workflow_token
         with:
           application_id: ${{ vars.PAT_APPLICATION_ID }}
           application_private_key: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
-      # One branch per image pair, so a newer release force-updates the open
+      # One branch per image pair, so a newer build force-updates the open
       # bump pull request instead of opening a second one beside it
       - name: Create Pull Request
-        if: steps.behind.outputs.behind == 'true'
+        if: steps.pin.outputs.behind == 'true'
         id: create-pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
-          commit-message: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to v${{ needs.get-version.outputs.ver }}'
-          title: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to v${{ needs.get-version.outputs.ver }}'
+          commit-message: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to ${{ needs.push-manifest.outputs.tag }}'
+          title: 'build(${{ inputs.downstream }}): bump ${{ inputs.image }} image to ${{ needs.push-manifest.outputs.tag }}'
           branch: bump-${{ inputs.image }}-${{ inputs.downstream }}
           body-path: ${{ runner.temp }}/body.md
       # A conflicting pull request reports no failing check of its own, so it

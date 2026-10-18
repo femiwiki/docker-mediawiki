@@ -4,6 +4,12 @@ inputs:
   images:
     description: The image directory names under dockers/, space separated
     required: true
+  contexts:
+    description: >
+      Files outside an image's directory that its build reads, as image=path
+      pairs, space separated
+    required: false
+    default: ''
   dispatched:
     description: The image a workflow_dispatch asked for
     required: false
@@ -19,11 +25,17 @@ runs:
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       env:
         IMAGES: ${{ inputs.images }}
+        CONTEXTS: ${{ inputs.contexts }}
         DISPATCHED: ${{ inputs.dispatched }}
       with:
         script: |
           const fs = require('fs');
           const images = process.env.IMAGES.split(/\s+/).filter(Boolean);
+          const contexts = process.env.CONTEXTS.split(/\s+/).filter(Boolean).map(pair => pair.split('='));
+          // An image's own files and what its build reads; its README is only
+          // read by people, so editing it publishes nothing
+          const builds = (image, file) => (file.startsWith(`dockers/${image}/`) && file !== `dockers/${image}/README.md`)
+            || contexts.some(([name, path]) => name === image && file.startsWith(path));
           let changed;
           if (context.eventName === 'workflow_dispatch') {
             changed = images.filter(image => image === process.env.DISPATCHED);
@@ -32,7 +44,7 @@ runs:
             const { data } = await github.rest.repos.compareCommitsWithBasehead(
               { ...context.repo, basehead: `${context.payload.before}...${context.payload.after}` });
             const files = data.files.map(file => file.filename);
-            changed = images.filter(image => files.some(file => file.startsWith(`dockers/${image}/`)));
+            changed = images.filter(image => files.some(file => builds(image, file)));
           } else {
             const files = await github.paginate(github.rest.pulls.listFiles,
               { ...context.repo, pull_number: context.issue.number, per_page: 100 },
@@ -41,7 +53,7 @@ runs:
             const workflow = image => fs.existsSync(`.github/workflows/docker-${image}.yml`)
               ? `.github/workflows/docker-${image}.yml` : '.github/workflows/docker-image.yml';
             changed = images.filter(image => files.some(file =>
-              file.startsWith(`dockers/${image}/`) || file === workflow(image)));
+              builds(image, file) || file === workflow(image)));
           }
           core.info(`Images to build: ${JSON.stringify(changed)}`);
           core.setOutput('changed', JSON.stringify(changed));
