@@ -89,6 +89,10 @@
     "Vector": "cfd0e5ead4d6285d4053da78c50143362024da39"
   },
   "in-house": {
+    "FediFeeds": {
+      "repository": "https://github.com/femiwiki/FediFeeds",
+      "commit": "339f1807489e6c2822aabbfbaab65ff596bb2ede"
+    },
     "Femiwiki": {
       "type": "skin",
       "repository": "https://github.com/femiwiki/FemiwikiSkin",

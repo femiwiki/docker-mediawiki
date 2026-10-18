@@ -693,6 +693,11 @@ wfLoadExtension( 'EmbedVideo' );
 // FacetedCategory
 wfLoadExtension( 'FacetedCategory' );
 
+// FediFeeds
+wfLoadExtension( 'FediFeeds' );
+// infra rewrites fedi.femiwiki.com/actors/ to the extension's REST route
+$wgFediFeedsActorBase = 'https://fedi.femiwiki.com/actors/';
+
 // FlaggedRevs
 wfLoadExtension( 'FlaggedRevs' );
 $wgFlaggedRevsNamespaces = [
