@@ -1,5 +1,9 @@
 # docker-mediawiki
 
+## v4.0.6
+
+- run maintenance scripts through maintenance/run.php
+
 ## v4.0.5
 
 - drop the cron sitemap for the REST one
