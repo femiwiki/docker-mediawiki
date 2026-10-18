@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.92
+
+- Bump femiwiki/caddy to v1.13.1
+  - report the cache's cost in use as a gauge (femiwiki/caddy-mwcache#199)
+
 ## v2.0.91
 
 - Bump femiwiki/caddy to v1.13.0
