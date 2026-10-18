@@ -91,7 +91,7 @@
   "in-house": {
     "DelayedJobQueue": {
       "repository": "https://github.com/femiwiki/DelayedJobQueue",
-      "commit": "64e7f944fdd7e030df0c64a0a4dd0622d64abbd8"
+      "commit": "f7167efe6d7ce3d10e452b9f480563defcf8ebbd"
     },
     "FediFeeds": {
       "repository": "https://github.com/femiwiki/FediFeeds",
