@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.87
+
+- Bump femiwiki/femiwiki-extensions to v3.14.20
+  - keep the VisualEditor link popup tail inside the popup (femiwiki/FemiwikiSkin#1176)
+
 ## v2.0.86
 
 - Bump femiwiki/caddy to v1.11.12
