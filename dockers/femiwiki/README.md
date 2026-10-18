@@ -1,5 +1,10 @@
 # femiwiki
 
+## v2.0.89
+
+- Bump femiwiki/caddy to v1.12.0
+  - coalesce concurrent misses for one page (femiwiki/caddy-mwcache#197)
+
 ## v2.0.88
 
 - Bump femiwiki/femiwiki-extensions to v3.14.21
