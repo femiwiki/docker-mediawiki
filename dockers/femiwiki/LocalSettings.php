@@ -499,6 +499,12 @@ $wgNamespaceRobotPolicies = [
 	NS_USER_TALK => 'noindex,nofollow',
 	// Stale copies of the wikitext talk pages
 	NS_TOPIC => 'noindex,nofollow',
+	// Pages left in the Gadget and Gadget definition namespaces, which Gadgets
+	// dropped in 1.42. They render as Special:Badtitle.
+	2300 => 'noindex,nofollow',
+	2301 => 'noindex,nofollow',
+	2302 => 'noindex,nofollow',
+	2303 => 'noindex,nofollow',
 ];
 
 // Served at /rest.php/site/v1/sitemap/0, as Wikimedia does (T400023). Like
