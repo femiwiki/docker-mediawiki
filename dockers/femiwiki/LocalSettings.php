@@ -1141,7 +1141,6 @@ wfLoadExtension( 'WikibaseRepository', "$IP/extensions/Wikibase/extension-repo.j
 require_once "$IP/extensions/Wikibase/repo/ExampleSettings.php";
 $wgWBRepoSettings['enableEntitySearchUI'] = false;
 $wgWBRepoSettings['siteLinkGroups'] = [ 'femiwiki' ];
-$wgWBRepoSettings['dataBridgeEnabled'] = true;
 $wgWBRepoSettings['conceptBaseUri'] = $wgCanonicalServer . str_replace( '$1', 'Item:', $wgArticlePath );
 $wgWBRepoSettings['statementSections'] = [
 	'item' => [
@@ -1157,10 +1156,6 @@ $wgWBRepoSettings['formatterUrlProperty'] = 'P61';
 // WikiBase - client
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
-// See https://github.com/femiwiki/docker-mediawiki/issues/324
-$wgWBClientSettings['dataBridgeEnabled'] = true;
-$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
-	str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
 // Wikibase's translated name, as on Special:SpecialPages
 $wgWBClientSettings['repoSiteName'] = 'specialpages-group-wikibase';
 // Defaults to $wgDBname, while sitelinks and subscriptions are stored as femiwiki
@@ -1187,8 +1182,6 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 	$wgForceHTTPS = substr( $wgServer, 0, 5 ) === 'https';
 	$wgCanonicalServer = $wgServer;
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
-	$wgWBClientSettings['dataBridgeHrefRegExp'] = '^' . $wgCanonicalServer .
-		str_replace( '$1', '(Item:(Q[1-9][0-9]*)).*#(P[1-9][0-9]*)', $wgArticlePath ) . '$';
 	// No fedi host here, so actor ids use the REST route on this server
 	$wgFediFeedsActorBase = null;
 }
