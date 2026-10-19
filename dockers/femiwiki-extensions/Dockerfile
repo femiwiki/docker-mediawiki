@@ -21,7 +21,7 @@ RUN composer install --no-dev --no-interaction --no-progress
 # resolves their dependencies for the PHP that dockers/php-fpm/Dockerfile names.
 # Build with --build-context dockers-php-fpm=dockers/php-fpm.
 RUN --mount=type=bind,from=dockers-php-fpm,source=Dockerfile,target=/php-fpm.Dockerfile \
-    php="$(sed -nE 's/^FROM .* php:([0-9.]+)-.*/\1/p' /php-fpm.Dockerfile)" &&\
+    php="$(sed -nE 's/^FROM .*php:([0-9.]+)-.*/\1/p' /php-fpm.Dockerfile)" &&\
     test -n "$php" &&\
     composer config --global platform.php "$php"
 COPY extension-installer/install_extensions.php extension-installer/extensions.json ./
