@@ -2,11 +2,13 @@
 # 설정은 /etc/mediawiki, 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 그 밖의
 # 스크립트는 /usr/local/lib/femiwiki, 시크릿은 /run/secrets, 캐시는 /tmp/cache,
 # 지역화 캐시는 /srv/l10n에 있습니다.
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/caddy:2026-10-19T13-10-a4bdaab4 AS caddy
+FROM ghcr.io/femiwiki/caddy:2026-10-19T13-10-a4bdaab4 AS caddy
 
+# Only an amd64 image is published; its files are the same on every platform.
+# hadolint ignore=DL3029
 FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2026-10-19T17-45-bc0ba442 AS extensions
 
-FROM --platform=$TARGETPLATFORM ghcr.io/femiwiki/mediawiki:2026-10-19T16-51-22034835
+FROM ghcr.io/femiwiki/mediawiki:2026-10-19T16-51-22034835
 
 # Set timezone
 ENV TZ=Asia/Seoul
@@ -114,9 +116,10 @@ ARG CHAMBER_VERSION=v3.1.5
 RUN BASE="https://github.com/segmentio/chamber/releases/download/${CHAMBER_VERSION}" &&\
     curl -fSL "$BASE/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" -o "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" &&\
     curl -fSL "$BASE/chamber-${CHAMBER_VERSION}.sha256sums" -o /tmp/chamber.sha256sums &&\
-    grep "linux-${TARGETARCH}" /tmp/chamber.sha256sums | sed 's|  chamber-|  /tmp/chamber-|' | sha256sum -c - &&\
+    sed -n "s|  chamber-\(.*-linux-${TARGETARCH}\)\$|  /tmp/chamber-\1|p" /tmp/chamber.sha256sums > /tmp/chamber.sha256 &&\
+    sha256sum -c /tmp/chamber.sha256 &&\
     install -m 0755 "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" /usr/local/bin/chamber &&\
-    rm "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" /tmp/chamber.sha256sums
+    rm "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" /tmp/chamber.sha256sums /tmp/chamber.sha256
 
 # php-fpm's status page and an opcache report, read through the metrics site in
 # the Caddyfile. /srv/metrics is outside the public site's root.

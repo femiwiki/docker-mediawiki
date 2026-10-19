@@ -1,9 +1,9 @@
 # Composer 이미지는 PHP 버전을 따로 설정할 수 없어 스테이지를 생성해 /usr/bin/composer만 복사해
 # 사용하여야 합니다.
 # See 'PHP version & extensions' section on https://hub.docker.com/_/composer for more details.
-FROM --platform=$TARGETPLATFORM composer:2.10.3 AS composer
+FROM composer:2.10.3 AS composer
 
-FROM --platform=$TARGETPLATFORM php:8.3.35-fpm-bookworm
+FROM php:8.3.35-fpm-bookworm
 ARG TARGETPLATFORM
 ARG TINI_VERSION=0.18.0
 
@@ -90,7 +90,7 @@ ENV PHP_POST_MAX_SIZE=10M \
 # Tini
 #
 # See https://github.com/krallin/tini for the further details
-RUN PLATFORM="$(echo $TARGETPLATFORM | cut -d/ -f2)" &&\
+RUN PLATFORM="${TARGETPLATFORM#*/}" && PLATFORM="${PLATFORM%%/*}" &&\
     curl -sLfo /tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${PLATFORM}"
 RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
