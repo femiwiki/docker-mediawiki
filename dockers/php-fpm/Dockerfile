@@ -67,6 +67,9 @@ COPY ./php.ini                 /usr/local/etc/php/php.ini
 COPY ./opcache-recommended.ini /usr/local/etc/php/conf.d/opcache-recommended.ini
 COPY ./php-fpm.conf            /usr/local/etc/php-fpm.conf
 COPY ./www.conf                /usr/local/etc/php-fpm.d/www.conf
+# The official image's zz-docker.conf sorts after www.conf and would pin the
+# listen address to 9000. Its other line, daemonize = no, is in php-fpm.conf.
+RUN rm /usr/local/etc/php-fpm.d/zz-docker.conf
 
 # As of PHP 8.3.0, a fallback value can be specified that will be used when the referenced variable
 # is not defined. (https://www.php.net/manual/en/configuration.file.php)
@@ -75,6 +78,7 @@ ENV PHP_POST_MAX_SIZE=10M \
     PHP_FPM_EMERGENCY_RESTART_THRESHOLD=5 \
     PHP_FPM_EMERGENCY_RESTART_INTERVAL=1m \
     PHP_FPM_PROCESS_CONTROL_TIMEOUT=10s \
+    PHP_FPM_LISTEN=9000 \
     PHP_FPM_PM_MAX_CHILDREN=20 \
     PHP_FPM_PM_START_SERVERS=2 \
     PHP_FPM_PM_MIN_SPARE_SERVERS=1 \
