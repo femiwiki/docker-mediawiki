@@ -1,4 +1,4 @@
-FROM ghcr.io/femiwiki/php-fpm:2026-10-19T16-47-9f88b637
+FROM ghcr.io/femiwiki/php-fpm:2026-10-19T23-14-d876d221
 ARG MEDIAWIKI_VERSION=1.46.2
 
 RUN mkdir /mediawiki/
