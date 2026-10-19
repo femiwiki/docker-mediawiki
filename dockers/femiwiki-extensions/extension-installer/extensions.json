@@ -95,7 +95,7 @@
     },
     "FediFeeds": {
       "repository": "https://github.com/femiwiki/FediFeeds",
-      "commit": "681ebdd035df6df48acd5fdc01b0f549ea399bdd"
+      "commit": "53445b5a2a5a2cd0f5d8a390461eb6f323f7259b"
     },
     "Femiwiki": {
       "type": "skin",
