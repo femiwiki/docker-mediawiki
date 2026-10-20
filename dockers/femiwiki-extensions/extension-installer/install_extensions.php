@@ -101,7 +101,7 @@ function wfInstallWmf( string $type, string $name, string $sha, string $branch, 
 
 /**
  * One of our own extensions or skins at its pinned commit, with the npm
- * packages it loads at runtime
+ * packages it loads at runtime and the Composer packages it requires
  *
  * @param string $type 'extension' or 'skin'
  * @param string $name
@@ -117,6 +117,13 @@ function wfInstallInHouse( string $type, string $name, string $repository, strin
 	$package = "$dir/package.json";
 	if ( is_file( $package ) && ( json_decode( file_get_contents( $package ), true )['dependencies'] ?? [] ) ) {
 		wfMust( [ 'npm', 'ci', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund', '--prefix', $dir ] );
+	}
+
+	// Such as FediFeeds' protocol libraries, which come from our own GitHub repositories
+	$composer = "$dir/composer.json";
+	if ( is_file( $composer ) && ( json_decode( file_get_contents( $composer ), true )['require'] ?? [] ) ) {
+		wfMust( [ 'composer', 'install', '--no-dev', '--ignore-platform-req=ext-*',
+			'--ignore-platform-req=lib-*', '--no-interaction', '--no-progress', '--working-dir', $dir ] );
 	}
 
 	wfMust( [ 'find', $dir, '-name', '.git', '-prune', '-exec', 'rm', '-rf', '{}', '+' ] );
