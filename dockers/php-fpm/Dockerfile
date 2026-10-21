@@ -4,8 +4,6 @@
 FROM composer:2.10.3 AS composer
 
 FROM php:8.3.36-fpm-bookworm
-ARG TARGETPLATFORM
-ARG TINI_VERSION=0.18.0
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
@@ -90,14 +88,8 @@ ENV PHP_POST_MAX_SIZE=10M \
     PHP_FPM_PM_MAX_REQUESTS=200 \
     PHP_FPM_REQUEST_TERMINATE_TIMEOUT=30
 
-#
-# Tini
-#
-# See https://github.com/krallin/tini for the further details
-RUN PLATFORM="${TARGETPLATFORM#*/}" && PLATFORM="${PLATFORM%%/*}" &&\
-    curl -sLfo /tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${PLATFORM}"
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
+# The containers run under Docker's own tini (`init = true` in femiwiki/infra)
+ENTRYPOINT []
 
 # Remove packages which is not needed anymore (build dependencies of PHP extensions)
 ONBUILD RUN apt-get autoremove -y --purge \

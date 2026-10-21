@@ -4,6 +4,7 @@ services:
   http:
     image: ghcr.io/femiwiki/femiwiki:latest
     command: caddy run
+    init: true
     ports:
       - 8080:8080
     volumes:
@@ -22,6 +23,7 @@ services:
         max-size: '100m'
   fastcgi:
     image: ghcr.io/femiwiki/femiwiki:latest
+    init: true
     volumes:
       - ./development/site-list.xml:/etc/mediawiki/site-list.xml:ro
       - l18n_cache:/tmp/cache

@@ -24,8 +24,8 @@ NAME="$(cat /tmp/caddy-warmup-name)"
 
 caddy run --config /tmp/caddy-warmup.json &
 CADDY_PID=$!
-# tini signals only this script, and the kernel kills Caddy when it exits, so
-# docker stop would cut every request in flight. Caddy drains on its own TERM.
+# docker-init signals only this script, and the kernel kills Caddy when it exits,
+# so docker stop would cut every request in flight. Caddy drains on its own TERM.
 trap 'kill -TERM "$CADDY_PID"; wait "$CADDY_PID"; exit $?' TERM
 # The main page answers once the certificate is loaded and a php-fpm is up
 until curl -sfk -o /dev/null --resolve "$NAME:$WARMUP_PORT:127.0.0.1" "https://$NAME:$WARMUP_PORT/"; do
