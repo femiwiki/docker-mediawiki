@@ -3,7 +3,7 @@
 # See 'PHP version & extensions' section on https://hub.docker.com/_/composer for more details.
 FROM composer:2.10.3 AS composer
 
-FROM php:8.3.35-fpm-bookworm
+FROM php:8.3.36-fpm-bookworm
 ARG TARGETPLATFORM
 ARG TINI_VERSION=0.18.0
 
