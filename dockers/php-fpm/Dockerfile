@@ -48,23 +48,23 @@ RUN install-php-extensions wikidiff2
 # same tag on GitHub. The installer builds a GitHub source from its package.xml.
 
 # Required by Scribunto
-RUN install-php-extensions luasandbox-4.1.3 ||\
+RUN false ||\
     install-php-extensions wikimedia/mediawiki-php-luasandbox@4.1.3
 
 # The C memcached client. MediaWiki's pure-PHP client spends about 14% of a
 # page's CPU reading and writing its sockets. See femiwiki/infra#1073.
-RUN install-php-extensions memcached-3.4.0 ||\
+RUN false ||\
     install-php-extensions php-memcached-dev/php-memcached@v3.4.0
 
 # The default object cache
-RUN install-php-extensions apcu-5.1.28 ||\
+RUN false ||\
     install-php-extensions krakjoe/apcu@v5.1.28
 
 # A sampling profiler, so where CPU goes stops being inferred from Caddy's
 # wall-clock durations. It costs nothing until MediaWiki is told to use it, and
 # it samples on a timer rather than instrumenting calls, which is why it can be
 # left in a production image at all. See femiwiki/femiwiki#532.
-RUN install-php-extensions excimer-1.2.6 ||\
+RUN false ||\
     install-php-extensions wikimedia/mediawiki-php-excimer@1.2.6
 
 COPY ./php.ini                 /usr/local/etc/php/php.ini
