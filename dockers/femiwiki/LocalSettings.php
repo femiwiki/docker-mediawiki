@@ -847,6 +847,9 @@ $wgMFMobileFormatterOptions = [
 $wgDefaultUserOptions['mobile-specialpages'] = false;
 // Advanced mode is available for users
 $wgMFAdvancedMobileContributions = true;
+// Open the source editor in the mobile view for users who have never used the desktop
+// editor. Users who have keep their last desktop choice.
+$wgMFFallbackEditor = 'source';
 // Enable the use Wikibase and associated features
 $wgMFUseWikibase = true;
 $wgMFEnableWikidataDescriptions = [
