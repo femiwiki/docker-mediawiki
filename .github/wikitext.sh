@@ -36,3 +36,45 @@ wikitext_block() {
       print f
     }'
 }
+
+# Prints the ```wikitext block of the PR body in file $1 plus the stdin block's lines whose links it never offered, and
+# a comment listing the links offered, so a rebuild keeps lines edited by hand. Nothing when neither has a line.
+wikitext_carry() {
+  local fence=$'\x60\x60\x60' marker='wikitext links:' old new offered="" line type="" last="" url fresh added=""
+  local -A known
+  old="$(tr -d '\r' < "$1")"
+  new="$(cat)"
+  links() { grep -oE '\[https://[^] ]+' | cut -c2-; }
+  inside() { awk -v f="$fence" 'index($0, f "wikitext") == 1 { on = 1; next } on && index($0, f) == 1 { on = 0 } on'; }
+  for url in $(sed -nE "s/^<!-- ${marker} (.*) -->\$/\1/p" <<< "$old") $(inside <<< "$old" | links); do
+    known[$url]=1
+  done
+  old="$(inside <<< "$old" | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}')"
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^===\ *([^=]+[^=\ ])\ *===$ ]]; then
+      type="${BASH_REMATCH[1]}"
+    elif [[ "$line" == \** ]]; then
+      fresh=""
+      for url in $(links <<< "$line"); do
+        [ -n "${known[$url]:-}" ] || fresh=1
+      done
+      [ -n "$fresh" ] || continue
+      if [ "$type" != "$last" ]; then
+        added+=$'\n'"===${type}==="$'\n\n'
+        last=$type
+      fi
+      added+="${line}"$'\n'
+    fi
+  done < <(inside <<< "$new")
+  for url in $( (printf '%s\n' "${!known[@]}"; inside <<< "$new" | links) | sort -u); do
+    offered+=" $url"
+  done
+  [ -n "${old}${added}" ] || return 0
+  printf '<!-- %s%s -->\n' "$marker" "$offered"
+  printf '%swikitext\n' "$fence"
+  if [ -n "$old" ]; then
+    printf '%s\n%s%s\n' "$old" "$added" "$fence"
+  else
+    printf '%s%s\n' "${added#$'\n'}" "$fence"
+  fi
+}

@@ -364,6 +364,8 @@ jobs:
             exit 0
           fi
           echo "Rebuilding femiwiki/infra#${n} on top of its own contents."
+          # Its ```wikitext block, for the body step to keep the lines edited by hand
+          gh pr view "$n" --repo femiwiki/infra --json body --jq .body > "${RUNNER_TEMP}/bump-body.md"
           # Its generation is running only if the apply job on its head passed.
           head="$(gh pr view "$n" --repo femiwiki/infra --json headRefOid --jq .headRefOid)"
           # An apply still running is about to make its number the running one.
@@ -439,13 +441,19 @@ jobs:
         env:
           REFS: ${{ steps.source.outputs.refs }}
         run: |
+          # shellcheck source=.github/wikitext.sh
+          source self/.github/wikitext.sh
+          # A rebuild keeps the open pull request's block as translated and adds only the new changes
+          [ -f "${RUNNER_TEMP}/bump-body.md" ] || : > "${RUNNER_TEMP}/bump-body.md"
+          [ -f "${RUNNER_TEMP}/wikitext.md" ] || : > "${RUNNER_TEMP}/wikitext.md"
+          notes="$(wikitext_carry "${RUNNER_TEMP}/bump-body.md" < "${RUNNER_TEMP}/wikitext.md")"
           {
             echo 'Built from:'
             echo
             printf '%s\n' "$REFS"
-            if [ -s "${RUNNER_TEMP}/wikitext.md" ]; then
+            if [ -n "$notes" ]; then
               echo
-              cat "${RUNNER_TEMP}/wikitext.md"
+              printf '%s\n' "$notes"
             fi
           } > "${RUNNER_TEMP}/body.md"
           cat "${RUNNER_TEMP}/body.md"
