@@ -8,7 +8,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 }
 
 // Off unless FW_PROFILER names a profiler. No $wgProfiler output writes excimer to a file (#1304).
-// Files go away with the container, so collect them before a deploy replaces it.
+// Kept requests go to Grafana Cloud Profiles if configured (femiwiki/femiwiki#614), else to a file.
 if ( getenv( 'FW_PROFILER' ) === 'excimer' && PHP_SAPI !== 'cli' && extension_loaded( 'excimer' )
 	// One request in this many is profiled at all
 	&& mt_rand( 1, (int)( getenv( 'FW_PROFILER_SAMPLING' ) ?: 1000 ) ) === 1
@@ -21,24 +21,58 @@ if ( getenv( 'FW_PROFILER' ) === 'excimer' && PHP_SAPI !== 'cli' && extension_lo
 		[ ';' => '%3B', ' ' => '%20' ] );
 	$fwProfilerStart = $_SERVER['REQUEST_TIME_FLOAT'];
 	// By CPU rather than wall time: the surplus credit charge is CPU alone
+	$fwProfilerPeriod = (float)( getenv( 'FW_PROFILER_PERIOD' ) ?: 0.01 );
+	$fwProfilerPyroscope = [
+		'url' => getenv( 'FW_PROFILER_PYROSCOPE_URL' ),
+		'user' => getenv( 'FW_PROFILER_PYROSCOPE_USER' ),
+		'password' => getenv( 'FW_PROFILER_PYROSCOPE_PASSWORD' ),
+	];
 	$fwProfiler = new ExcimerProfiler();
 	$fwProfiler->setEventType( EXCIMER_CPU );
-	$fwProfiler->setPeriod( (float)( getenv( 'FW_PROFILER_PERIOD' ) ?: 0.01 ) );
+	$fwProfiler->setPeriod( $fwProfilerPeriod );
 	$fwProfiler->setMaxDepth( (int)( getenv( 'FW_PROFILER_MAX_DEPTH' ) ?: 100 ) );
 	// Called once, when the profiler is destroyed at the end of the request
 	$fwProfiler->setFlushCallback( static function ( ExcimerLog $log ) use (
-		$fwProfilerDir, $fwProfilerThreshold, $fwProfilerRequest, $fwProfilerStart
+		$fwProfilerDir, $fwProfilerThreshold, $fwProfilerRequest, $fwProfilerStart, $fwProfilerPeriod,
+		$fwProfilerPyroscope
 	) {
-		$elapsed = microtime( true ) - $fwProfilerStart;
+		$now = microtime( true );
+		$elapsed = $now - $fwProfilerStart;
 		if ( $elapsed < $fwProfilerThreshold ) {
 			return;
-		}
-		if ( !is_dir( $fwProfilerDir ) ) {
-			mkdir( $fwProfilerDir, 0750, true );
 		}
 		$out = '';
 		foreach ( explode( "\n", trim( $log->formatCollapsed() ) ) as $line ) {
 			$out .= "$fwProfilerRequest;$line\n";
+		}
+		if ( $fwProfilerPyroscope['url'] && $fwProfilerPyroscope['password'] ) {
+			// Pyroscope's ingest API takes the collapsed stacks as they are, in its
+			// "folded" format. The response has already gone out by now.
+			$ch = curl_init( rtrim( $fwProfilerPyroscope['url'], '/' ) . '/ingest?' . http_build_query( [
+				'name' => 'mediawiki.cpu',
+				'from' => (int)$fwProfilerStart,
+				'until' => (int)ceil( $now ),
+				'format' => 'folded',
+				'sampleRate' => (int)round( 1 / $fwProfilerPeriod ),
+			] ) );
+			curl_setopt_array( $ch, [
+				CURLOPT_POST => true,
+				CURLOPT_POSTFIELDS => $out,
+				CURLOPT_HTTPHEADER => [ 'Content-Type: binary/octet-stream' ],
+				CURLOPT_USERPWD => $fwProfilerPyroscope['user'] . ':' . $fwProfilerPyroscope['password'],
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_CONNECTTIMEOUT => 2,
+				CURLOPT_TIMEOUT => 5,
+			] );
+			$sent = curl_exec( $ch ) !== false && curl_getinfo( $ch, CURLINFO_RESPONSE_CODE ) === 200;
+			if ( $sent ) {
+				return;
+			}
+			trigger_error( 'Could not send a profile to ' . $fwProfilerPyroscope['url'] . ': '
+				. ( curl_error( $ch ) ?: 'HTTP ' . curl_getinfo( $ch, CURLINFO_RESPONSE_CODE ) ), E_USER_WARNING );
+		}
+		if ( !is_dir( $fwProfilerDir ) ) {
+			mkdir( $fwProfilerDir, 0750, true );
 		}
 		// Elapsed milliseconds first so that ls puts the worst request last
 		file_put_contents( sprintf( '%s/%06.0f-%s.txt', $fwProfilerDir, $elapsed * 1000, uniqid() ), $out );
