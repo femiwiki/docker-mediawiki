@@ -36,6 +36,8 @@ RUN docker-php-ext-install -j8 \
     intl \
     mysqli \
     opcache \
+    # rebuildLocalisationCache --threads and runJobs --procs fork with it
+    pcntl \
     sockets \
 ;
 
