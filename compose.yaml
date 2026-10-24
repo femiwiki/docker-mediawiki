@@ -1,5 +1,4 @@
 # This compose file is for develompent and build testing
-version: '3'
 services:
   http:
     image: ghcr.io/femiwiki/femiwiki:latest

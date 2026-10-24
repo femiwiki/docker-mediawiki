@@ -10,6 +10,13 @@ inputs:
       pairs, space separated
     required: false
     default: ''
+  tests:
+    description: >
+      Files outside an image's directory that only its pull request test reads,
+      as image=path pairs, space separated; they build the image on a pull
+      request but publish nothing
+    required: false
+    default: ''
   dispatched:
     description: The image a workflow_dispatch asked for
     required: false
@@ -26,12 +33,15 @@ runs:
       env:
         IMAGES: ${{ inputs.images }}
         CONTEXTS: ${{ inputs.contexts }}
+        TESTS: ${{ inputs.tests }}
         DISPATCHED: ${{ inputs.dispatched }}
       with:
         script: |
           const fs = require('fs');
           const images = process.env.IMAGES.split(/\s+/).filter(Boolean);
-          const contexts = process.env.CONTEXTS.split(/\s+/).filter(Boolean).map(pair => pair.split('='));
+          const pairs = value => value.split(/\s+/).filter(Boolean).map(pair => pair.split('='));
+          const contexts = pairs(process.env.CONTEXTS);
+          const tests = pairs(process.env.TESTS);
           // An image's own files and what its build reads; its README is only
           // read by people, so editing it publishes nothing
           const builds = (image, file) => (file.startsWith(`dockers/${image}/`) && file !== `dockers/${image}/README.md`)
@@ -52,8 +62,10 @@ runs:
             // The workflow that builds an image: its own, else the shared one
             const workflow = image => fs.existsSync(`.github/workflows/docker-${image}.yml`)
               ? `.github/workflows/docker-${image}.yml` : '.github/workflows/docker-image.yml';
+            const tested = (image, file) => file === workflow(image)
+              || tests.some(([name, path]) => name === image && file.startsWith(path));
             changed = images.filter(image => files.some(file =>
-              builds(image, file) || file === workflow(image)));
+              builds(image, file) || tested(image, file)));
           }
           core.info(`Images to build: ${JSON.stringify(changed)}`);
           core.setOutput('changed', JSON.stringify(changed));
