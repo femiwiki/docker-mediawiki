@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Reference:
+#   https://github.com/femiwiki/PropertySuggesterLocalStats
+
+set -euo pipefail; IFS=$'\n\t'
+
+cd /srv/femiwiki.com
+
+php maintenance/run.php ./extensions/PropertySuggesterLocalStats/maintenance/RebuildPropertyPairs.php
