@@ -2,7 +2,7 @@
 #   docker stack deploy --prune -c compose.yaml -c compose.override.yaml mediawiki
 # 혹은:
 #   docker compose up
-version: '3'
+services: {}
 # services:
 #   http:
 #     volumes:
