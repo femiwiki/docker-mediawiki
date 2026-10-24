@@ -55,6 +55,7 @@
     "ParserFunctions": "261a217e242fe176d6090a1102611a1a43c1d2d9",
     "Poem": "7a05889112c8ed8ea68f203df639a4e7161be819",
     "Popups": "8009004bfc8427c6f729bd8608ed5d1867ea6bc7",
+    "PropertySuggester": "d442ec47d1a3ea8c34c2c2d96e2d6342ec16efbe",
     "QuickInstantCommons": "64d4fb9979f3b41627b30ab0708fb1a7e411d143",
     "RealMe": "5a08ed15b26c7a4bee7eca59799c3dde49fca65a",
     "RelatedArticles": "a36bfb50b55ce6273263433d1d29ae2f7f7a587d",
@@ -103,6 +104,10 @@
       "type": "skin",
       "repository": "https://github.com/femiwiki/FemiwikiSkin",
       "commit": "8e92d8aecda27a39e42ec00c5992949b40e528f8"
+    },
+    "PropertySuggesterLocalStats": {
+      "repository": "https://github.com/femiwiki/PropertySuggesterLocalStats",
+      "commit": "7d428cc413f4835c18d90724e72da5b0142e0ff4"
     },
     "UnifiedExtensionForFemiwiki": {
       "repository": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki",
