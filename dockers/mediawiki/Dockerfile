@@ -18,4 +18,5 @@ RUN crontab /tmp/crontab && rm /tmp/crontab
 COPY cron/update-special-pages \
       cron/run-jobs \
       cron/publish-dump \
+      cron/rebuild-property-pairs \
       /usr/local/bin/
