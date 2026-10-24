@@ -1267,6 +1267,13 @@ $wgWBRepoSettings['statementSections']['property'] = [
 	],
 ];
 
+// PropertySuggester, with statistics counted from Femiwiki's own items by
+// PropertySuggesterLocalStats (femiwiki/docker-mediawiki#522)
+wfLoadExtension( 'PropertySuggester' );
+wfLoadExtension( 'PropertySuggesterLocalStats' );
+$wgPropertySuggesterClassifyingPropertyIds = [ 1, 36 ];
+$wgPropertySuggesterInitialSuggestions = [ 1 ];
+
 // WikiBase - client
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
