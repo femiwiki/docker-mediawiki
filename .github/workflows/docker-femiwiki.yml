@@ -27,6 +27,9 @@ jobs:
         with:
           persist-credentials: false
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+        with:
+          # The runner is thrown away after the job; removing the builder took 16-22 seconds
+          cleanup: false
       - name: Edit configuration
         run: |
           mv dockers/femiwiki/LocalSettings.php development
@@ -205,6 +208,9 @@ jobs:
         with:
           persist-credentials: false
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+        with:
+          # The runner is thrown away after the job; removing the builder took 16-22 seconds
+          cleanup: false
       - name: Log in to ghcr.io
         if: github.repository_owner == 'femiwiki' && github.event.pull_request.head.repo.fork != true
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
