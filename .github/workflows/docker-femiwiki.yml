@@ -47,7 +47,9 @@ jobs:
           context: '{{ defaultContext }}:dockers/femiwiki'
           platforms: linux/amd64
           cache-from: type=registry,ref=ghcr.io/femiwiki/femiwiki:buildcache-amd64
-          load: true
+          # Docker takes the layers as they are, so compressing them to load
+          # the image only costs time
+          outputs: type=docker,compression=uncompressed
           push: false
           tags: ghcr.io/femiwiki/femiwiki:docker-test
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
