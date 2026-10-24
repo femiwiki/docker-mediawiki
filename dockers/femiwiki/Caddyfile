@@ -88,6 +88,8 @@ femiwiki.com *.femiwiki.com 127.0.0.1:80 localhost:80 {
 			10.0.0.0/8
 			127.0.0.1
 		}
+		# A page per Accept-Language, as $wgULSLanguageDetection renders it
+		vary_accept_language
 	}
 	header {
 		# HSTS

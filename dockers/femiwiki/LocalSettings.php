@@ -1067,7 +1067,11 @@ $wgUnifiedExtensionForFemiwikiModifyEmailTheme = true;
 wfLoadExtension( 'UniversalLanguageSelector' );
 $wgULSPosition = 'interlanguage';
 $wgULSIMEEnabled = false;
-$wgULSLanguageDetection = false;
+// Safe only while Caddy's mwcache has vary_accept_language
+// (femiwiki/caddy-mwcache#188); check-cached-twice.php checks it
+$wgULSLanguageDetection = true;
+// A language cookie is not in the cache key, so anonymous readers still
+// change language only with ?uselang=
 $wgULSAnonCanChangeLanguage = false;
 // Enable ULS compact links beta feature to opt-out
 $wgDefaultUserOptions['uls-compact-links'] = 1;

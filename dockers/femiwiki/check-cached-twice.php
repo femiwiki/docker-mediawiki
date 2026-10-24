@@ -5,6 +5,9 @@
  * same Location, or a 200 with a body. The second request is the cache hit,
  * which is what returned an empty 200 for every redirect in
  * femiwiki/caddy-mwcache#165, and served femiwiki.com/ blank for nine hours.
+ * Then it asks for the main page in several languages, in turn, and fails if
+ * one is served another's, as every reader got the first crawler's language
+ * in femiwiki/femiwiki#322.
  *
  * caddy-run runs it against the new Caddy before that opens a public port, and
  * the image test runs it against the test stack.
@@ -22,10 +25,11 @@ if ( $connectTo !== null ) {
 }
 
 /** @return array{int, string, string} status, Location, body */
-$get = static function ( string $path, bool $gzip ) use ( $base, $resolve ): array {
+$get = static function ( string $path, bool $gzip, array $headers = [] ) use ( $base, $resolve ): array {
 	$ch = curl_init( $base . $path );
 	curl_setopt_array( $ch, [
 		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_HTTPHEADER => $headers,
 		CURLOPT_RESOLVE => $resolve,
 		// Loopback to a name the certificate covers; the handshake is not what is checked
 		CURLOPT_SSL_VERIFYPEER => false,
@@ -80,4 +84,21 @@ $check( '/index.php?title=Special:Version', 301 );
 $check( $mainPath, 200 );
 $check( '/rest.php/v1/search/title?q=a&limit=1', 200 );
 $check( '/load.php?modules=startup&only=scripts', 200 );
+
+// ULS picks the interface language from Accept-Language, and the cache keeps a
+// page per header. No header gets the content language.
+foreach ( [ 1, 2 ] as $i ) {
+	foreach ( [ 'en' => 'en', 'ja' => 'ja', '' => 'ko' ] as $acceptLanguage => $want ) {
+		$headers = $acceptLanguage === '' ? [] : [ "Accept-Language: $acceptLanguage" ];
+		[ $code, , $body ] = $get( $mainPath, true, $headers );
+		$lang = preg_match( '/<html\b[^>]*\slang="([^"]*)"/', $body, $m ) ? $m[1] : '';
+		$line = "$mainPath (Accept-Language: " . ( $acceptLanguage ?: 'none' ) . ", request $i): $code, lang=\"$lang\"";
+		if ( $code === 200 && $lang === $want ) {
+			echo "$line\n";
+		} else {
+			fwrite( STDERR, "$line; want lang=\"$want\"\n" );
+			$fail = true;
+		}
+	}
+}
 exit( $fail ? 1 : 0 );
