@@ -1186,9 +1186,79 @@ wfLoadExtension( 'WikibaseQualityConstraints' );
 // Femiwiki's own; the defaults are Wikidata's IDs, and P31 here is something else
 $wgWBQualityConstraintsInstanceOfId = 'P1';
 $wgWBQualityConstraintsSubclassOfId = 'P36';
-// Same Wikidata entity as ConstraintScopeId; on the default the import makes it
-// twice and stops (femiwiki/docker-mediawiki#437)
-$wgWBQualityConstraintsConstraintEntityTypesId = 'skip';
+// Entities made by hand on Femiwiki (femiwiki/docker-mediawiki#437). Lexeme and
+// MediaInfo ones are left out, as Femiwiki has neither.
+$wgWBQualityConstraintsPropertyConstraintId = 'P89';
+$wgWBQualityConstraintsExceptionToConstraintId = 'P90';
+$wgWBQualityConstraintsConstraintStatusId = 'P91';
+$wgWBQualityConstraintsLanguagePropertyId = 'P92';
+$wgWBQualityConstraintsClassId = 'P93';
+$wgWBQualityConstraintsRelationId = 'P94';
+$wgWBQualityConstraintsPropertyId = 'P95';
+$wgWBQualityConstraintsQualifierOfPropertyConstraintId = 'P96';
+$wgWBQualityConstraintsMinimumQuantityId = 'P97';
+$wgWBQualityConstraintsMaximumQuantityId = 'P98';
+$wgWBQualityConstraintsMinimumDateId = 'P99';
+$wgWBQualityConstraintsMaximumDateId = 'P100';
+$wgWBQualityConstraintsNamespaceId = 'P101';
+$wgWBQualityConstraintsFormatAsARegularExpressionId = 'P102';
+$wgWBQualityConstraintsSyntaxClarificationId = 'P103';
+$wgWBQualityConstraintsConstraintClarificationId = 'P104';
+$wgWBQualityConstraintsConstraintScopeId = 'P105';
+$wgWBQualityConstraintsSeparatorId = 'P106';
+$wgWBQualityConstraintsPropertyScopeId = 'P107';
+$wgWBQualityConstraintsMandatoryConstraintId = 'Q494';
+$wgWBQualityConstraintsSuggestionConstraintId = 'Q495';
+$wgWBQualityConstraintsDistinctValuesConstraintId = 'Q496';
+$wgWBQualityConstraintsMultiValueConstraintId = 'Q497';
+$wgWBQualityConstraintsUsedAsQualifierConstraintId = 'Q498';
+$wgWBQualityConstraintsSingleValueConstraintId = 'Q499';
+$wgWBQualityConstraintsSymmetricConstraintId = 'Q500';
+$wgWBQualityConstraintsTypeConstraintId = 'Q501';
+$wgWBQualityConstraintsValueTypeConstraintId = 'Q502';
+$wgWBQualityConstraintsInverseConstraintId = 'Q503';
+$wgWBQualityConstraintsItemRequiresClaimConstraintId = 'Q504';
+$wgWBQualityConstraintsValueRequiresClaimConstraintId = 'Q505';
+$wgWBQualityConstraintsConflictsWithConstraintId = 'Q506';
+$wgWBQualityConstraintsOneOfConstraintId = 'Q507';
+$wgWBQualityConstraintsMandatoryQualifierConstraintId = 'Q508';
+$wgWBQualityConstraintsAllowedQualifiersConstraintId = 'Q509';
+$wgWBQualityConstraintsRangeConstraintId = 'Q510';
+$wgWBQualityConstraintsDifferenceWithinRangeConstraintId = 'Q511';
+$wgWBQualityConstraintsCommonsLinkConstraintId = 'Q512';
+$wgWBQualityConstraintsContemporaryConstraintId = 'Q513';
+$wgWBQualityConstraintsFormatConstraintId = 'Q514';
+$wgWBQualityConstraintsUsedForValuesOnlyConstraintId = 'Q515';
+$wgWBQualityConstraintsUsedAsReferenceConstraintId = 'Q516';
+$wgWBQualityConstraintsNoBoundsConstraintId = 'Q517';
+$wgWBQualityConstraintsAllowedUnitsConstraintId = 'Q518';
+$wgWBQualityConstraintsSingleBestValueConstraintId = 'Q519';
+$wgWBQualityConstraintsAllowedEntityTypesConstraintId = 'Q520';
+$wgWBQualityConstraintsCitationNeededConstraintId = 'Q521';
+$wgWBQualityConstraintsPropertyScopeConstraintId = 'Q522';
+$wgWBQualityConstraintsLabelInLanguageConstraintId = 'Q523';
+$wgWBQualityConstraintsNoneOfConstraintId = 'Q524';
+$wgWBQualityConstraintsIntegerConstraintId = 'Q525';
+$wgWBQualityConstraintsInstanceOfRelationId = 'Q526';
+$wgWBQualityConstraintsSubclassOfRelationId = 'Q527';
+$wgWBQualityConstraintsInstanceOrSubclassOfRelationId = 'Q528';
+$wgWBQualityConstraintsConstraintCheckedOnMainValueId = 'Q529';
+$wgWBQualityConstraintsConstraintCheckedOnQualifiersId = 'Q530';
+$wgWBQualityConstraintsConstraintCheckedOnReferencesId = 'Q531';
+$wgWBQualityConstraintsWikibaseItemId = 'Q532';
+$wgWBQualityConstraintsWikibasePropertyId = 'Q533';
+$wgWBQualityConstraintsAsMainValueId = 'Q534';
+$wgWBQualityConstraintsAsQualifiersId = 'Q535';
+$wgWBQualityConstraintsAsReferencesId = 'Q536';
+// Wikidata uses one property for both
+$wgWBQualityConstraintsConstraintEntityTypesId = $wgWBQualityConstraintsConstraintScopeId;
+$wgWBRepoSettings['statementSections']['property'] = [
+	'statements' => null,
+	'constraints' => [
+		'type' => 'propertySet',
+		'propertyIds' => [ $wgWBQualityConstraintsPropertyConstraintId ],
+	],
+];
 
 // WikiBase - client
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
