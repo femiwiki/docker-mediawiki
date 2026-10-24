@@ -98,6 +98,9 @@ $wgForceHTTPS = true;
 
 // The URL path to the logo.
 $wgLogos = [
+	// '1x' is shown on top of the HTML emails MediaWiki sends, such as email confirmation.
+	// Mail clients such as Gmail don't show SVG, so this is a PNG on a colored background.
+	'1x' => "$wgResourceBasePath/fw-resources/favicons/favicon-192.png",
 	// 'icon' is used by modern Skin:Vector (maximally 50x50)
 	'icon' => "$wgResourceBasePath/fw-resources/symbol-transparent-white.svg",
 	// 'svg' and 'wordmark' are used by Skin:Femiwiki
