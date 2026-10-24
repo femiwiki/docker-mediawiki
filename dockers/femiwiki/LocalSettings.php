@@ -1181,6 +1181,15 @@ $wgWBRepoSettings['statementSections'] = [
 ];
 $wgWBRepoSettings['formatterUrlProperty'] = 'P61';
 
+// WikibaseQualityConstraints
+wfLoadExtension( 'WikibaseQualityConstraints' );
+// Femiwiki's own; the defaults are Wikidata's IDs, and P31 here is something else
+$wgWBQualityConstraintsInstanceOfId = 'P1';
+$wgWBQualityConstraintsSubclassOfId = 'P36';
+// Same Wikidata entity as ConstraintScopeId; on the default the import makes it
+// twice and stops (femiwiki/docker-mediawiki#437)
+$wgWBQualityConstraintsConstraintEntityTypesId = 'skip';
+
 // WikiBase - client
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
 require_once "$IP/extensions/Wikibase/client/ExampleSettings.php";
