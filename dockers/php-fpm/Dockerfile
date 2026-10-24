@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
       # Build dependencies
       build-essential \
       libicu-dev \
+      libgmp-dev \
       # Runtime depenencies
       imagemagick \
       librsvg2-bin \
@@ -33,6 +34,7 @@ ENV XDG_DATA_HOME /data
 # Install the PHP extensions we need
 RUN docker-php-ext-install -j8 \
     calendar \
+    gmp \
     intl \
     mysqli \
     opcache \
@@ -95,6 +97,7 @@ ENTRYPOINT []
 ONBUILD RUN apt-get autoremove -y --purge \
     build-essential \
     libicu-dev \
+    libgmp-dev \
 ;
 
 # Prepare PHP log
