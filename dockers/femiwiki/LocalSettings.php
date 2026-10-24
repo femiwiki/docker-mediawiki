@@ -971,6 +971,9 @@ wfLoadExtension( 'RevisionSlider' );
 
 // Sanctions
 wfLoadExtension( 'Sanctions' );
+// New sanctions are discussed on their own subpages with DiscussionTools. Sanctions already on
+// Flow topics stay there until they end.
+$wgSanctionsDiscussionBackend = 'DiscussionTools';
 
 // Scribunto
 wfLoadExtension( 'Scribunto' );
