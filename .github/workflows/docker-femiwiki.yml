@@ -32,6 +32,15 @@ jobs:
           mv dockers/femiwiki/LocalSettings.php development
           mv dockers/femiwiki/Hotfix.php development
           sed -i -r 's~ghcr\.io\/femiwiki\/femiwiki:.+~ghcr\.io\/femiwiki\/femiwiki:docker-test~' compose.yaml
+      # The stale-pages step below pulls the same image and joins this pull
+      # instead of starting its own
+      - name: Start pulling the image production runs
+        env:
+          CONTAINER_TF: https://raw.githubusercontent.com/femiwiki/infra/main/docker/container.tf
+        run: |
+          deployed="$(curl -sSf "$CONTAINER_TF" | grep -oE 'ghcr\.io/femiwiki/femiwiki:[^"]+' | head -1)"
+          echo "DEPLOYED_IMAGE=${deployed}" >> "$GITHUB_ENV"
+          setsid nohup docker pull -q "$deployed" > "${RUNNER_TEMP}/pull.log" 2>&1 &
       - name: Build amd64 image for testing
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
@@ -49,10 +58,9 @@ jobs:
       # only warns, since a page the deployed code still reads has to wait for
       # the cutover before it can go.
       - name: 'List the MediaWiki: pages this image stops reading'
-        env:
-          CONTAINER_TF: https://raw.githubusercontent.com/femiwiki/infra/main/docker/container.tf
         run: |
-          deployed="$(curl -sSf "$CONTAINER_TF" | grep -oE 'ghcr\.io/femiwiki/femiwiki:[^"]+' | head -1)"
+          deployed="$DEPLOYED_IMAGE"
+          docker pull -q "$deployed" > /dev/null
           for pair in "old:${deployed}" new:ghcr.io/femiwiki/femiwiki:docker-test; do
             c="$(docker create "${pair#*:}")"
             docker cp -q "$c:/srv/femiwiki.com" "${RUNNER_TEMP}/${pair%%:*}"
