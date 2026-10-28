@@ -1,4 +1,7 @@
 {
+	"require": {
+		"aws/aws-sdk-php": "^3.361"
+	},
 	"extra": {
 		"merge-plugin": {
 			"include": [
