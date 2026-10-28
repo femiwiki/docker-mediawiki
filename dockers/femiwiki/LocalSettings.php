@@ -629,6 +629,23 @@ $wgHooks['ApiBeforeMain'][] = static function ( $main ) {
 // CategoryTree
 wfLoadExtension( 'CategoryTree' );
 
+// Chart, rendered by the chart-renderer Lambda, which accepts only a token for this instance's
+// role (femiwiki/femiwiki#671). run and cron write the token, infra sets the URL
+wfLoadExtension( 'Chart' );
+if ( getenv( 'FW_CHART_RENDERER_URL' ) ) {
+	$fwChartRendererToken = '/run/secrets/chart-renderer-token';
+	$wgChartServiceUrl = getenv( 'FW_CHART_RENDERER_URL' ) .
+		( is_readable( $fwChartRendererToken ) ? trim( file_get_contents( $fwChartRendererToken ) ) : '' );
+}
+$wgJsonConfigModels['Chart.JsonConfig'] = 'MediaWiki\Extension\Chart\JCChartContent';
+$wgJsonConfigs['Chart.JsonConfig'] = [
+	'namespace' => 486,
+	'nsName' => 'Data',
+	'pattern' => '/.\.chart$/',
+	'license' => 'CC-BY-SA-4.0',
+	'isLocal' => true,
+];
+
 // CharInsert
 wfLoadExtension( 'CharInsert' );
 
@@ -816,6 +833,18 @@ wfLoadExtension( 'GuidedTour' );
 
 // InputBox
 wfLoadExtension( 'InputBox' );
+
+// JsonConfig, for the Data: pages Chart draws from
+wfLoadExtension( 'JsonConfig' );
+$wgJsonConfigEnableLuaSupport = true;
+$wgJsonConfigModels['Tabular.JsonConfig'] = 'JsonConfig\JCTabularContent';
+$wgJsonConfigs['Tabular.JsonConfig'] = [
+	'namespace' => 486,
+	'nsName' => 'Data',
+	'pattern' => '/.\.tab$/',
+	'license' => 'CC-BY-SA-4.0',
+	'isLocal' => true,
+];
 
 // Josa
 wfLoadExtension( 'Josa' );

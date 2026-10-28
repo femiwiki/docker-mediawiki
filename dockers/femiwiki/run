@@ -44,6 +44,10 @@ if [ -n "${SSM_SECRETS:-}" ]; then
   install -d -o www-data -g www-data -m 0700 /run/secrets
   php /usr/local/lib/femiwiki/google-subject-token.php ||
     echo 'No Google subject token; PageViewInfo shows no view counts until cron gets one' >&2
+  # Chart's renderer accepts only this instance role's tokens (femiwiki/femiwiki#671). Missing
+  # only means charts show an error until cron gets one, so start anyway.
+  php /usr/local/lib/femiwiki/chart-renderer-token.php ||
+    echo 'No chart renderer token; charts fail to render until cron gets one' >&2
 fi
 
 echo 'Starting Femiwiki ...'
@@ -107,9 +111,10 @@ if [ -z "${MEDIAWIKI_SKIP_CRON:-}" ]; then
     echo 'SHELL=/bin/bash'
     echo 'BASH_ENV=/etc/femiwiki-cron.env'
     crontab -l
-    # A token lives an hour; PageViewInfoGA reads it at most hourly
+    # A token lives an hour; PageViewInfoGA reads it at most hourly, Chart on every render
     if [ -n "${SSM_SECRETS:-}" ]; then
       echo '*/15 * * * * /usr/local/bin/php /usr/local/lib/femiwiki/google-subject-token.php'
+      echo '*/15 * * * * /usr/local/bin/php /usr/local/lib/femiwiki/chart-renderer-token.php'
     fi
     # The types LocalSettings keeps off the every-minute runner, a few at a time.
     # Unset means UnlinkedWikibaseFetch; empty means none.
