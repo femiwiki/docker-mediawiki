@@ -6,7 +6,7 @@ FROM ghcr.io/femiwiki/caddy:2026-10-24T07-00-94139304 AS caddy
 
 # Only an amd64 image is published; its files are the same on every platform.
 # hadolint ignore=DL3029
-FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2026-10-26T14-18-9f718b26 AS extensions
+FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2026-10-28T00-07-197aa5df AS extensions
 
 FROM ghcr.io/femiwiki/mediawiki:2026-10-24T14-35-963c8270
 
@@ -139,5 +139,5 @@ EXPOSE 443
 EXPOSE 9000
 
 COPY ["run", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
-COPY caddy-warmup.php check-cached-twice.php warm-up.php create-session-schema.php google-subject-token.php /usr/local/lib/femiwiki/
+COPY caddy-warmup.php check-cached-twice.php warm-up.php create-session-schema.php google-subject-token.php chart-renderer-token.php /usr/local/lib/femiwiki/
 CMD ["/usr/local/bin/run"]
