@@ -65,8 +65,9 @@ file_put_contents( "$out/429.html", <<<HTML
 --tonal-active:#d3cff4;--tonal-text:#5144a3;--shadow:rgba(0,0,0,.5)}
 @media (prefers-color-scheme:dark){:root{--bg:#101418;--text:#eaecf0;--link:#8579c2;--tonal:#36355b;
 --tonal-hover:#3d3b68;--tonal-active:#464379;--tonal-text:#c3bffd;--shadow:rgba(0,0,0,.87)}}
-body{margin:0;word-break:keep-all;overflow-wrap:break-word;background:var(--bg);color:var(--text);font:17px/1.7 "Apple SD Gothic Neo","Noto Sans KR","본고딕",
-"Noto Sans CJK KR","나눔바른고딕","나눔고딕",NanumGothic,"맑은고딕","Malgun Gothic",Arial,Dotum,sans-serif}
+body{margin:0;word-break:keep-all;overflow-wrap:break-word;background:var(--bg);color:var(--text);
+font:17px/1.7 "Apple SD Gothic Neo","Noto Sans KR","본고딕","Noto Sans CJK KR","나눔바른고딕","나눔고딕",NanumGothic,
+"맑은고딕","Malgun Gothic",Arial,Dotum,sans-serif}
 header{background:#736ac9;height:44px;display:flex;align-items:center;padding:0 1.3rem}
 header a{display:flex}
 header svg{height:26px;width:auto}
