@@ -417,6 +417,10 @@ $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 // Permission
 $wgAutoConfirmAge = 3600;
 $wgGroupPermissions['*']['createaccount'] = true;
+// Deleted pages and revisions are public unless suppressed (see 페미위키:삭제 정책)
+$wgGroupPermissions['*']['browsearchive'] = true;
+$wgGroupPermissions['*']['deletedhistory'] = true;
+$wgGroupPermissions['*']['deletedtext'] = true;
 $wgGroupPermissions['user']['flow-hide'] = false;
 $wgGroupPermissions['user']['flow-lock'] = false;
 $wgGroupPermissions['user']['editcontentmodel'] = false;
