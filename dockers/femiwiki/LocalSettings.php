@@ -853,6 +853,23 @@ $wgJsonConfigs['Tabular.JsonConfig'] = [
 // Josa
 wfLoadExtension( 'Josa' );
 
+// Kartographer, with tiles from tile.openstreetmap.org since maps.wikimedia.org is closed to
+// other wikis. That server has no styles or @2x tiles, and no /img/ snapshots for static mode
+wfLoadExtension( 'Kartographer' );
+$wgKartographerMapServer = 'https://tile.openstreetmap.org';
+$wgKartographerStyles = [ '' ];
+$wgKartographerDfltStyle = '';
+$wgKartographerSrcsetScales = [];
+$wgKartographerSimpleStyleMarkers = false;
+$wgJsonConfigModels['Map.JsonConfig'] = 'JsonConfig\JCMapDataContent';
+$wgJsonConfigs['Map.JsonConfig'] = [
+	'namespace' => 486,
+	'nsName' => 'Data',
+	'pattern' => '/.\.map$/',
+	'license' => 'CC-BY-SA-4.0',
+	'isLocal' => true,
+];
+
 // Linter
 wfLoadExtension( 'Linter' );
 
