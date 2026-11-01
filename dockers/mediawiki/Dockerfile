@@ -12,9 +12,7 @@ RUN MEDIAWIKI_MAJOR_VERSION="${MEDIAWIKI_VERSION%.*}" &&\
 # See https://www.mediawiki.org/wiki/Manual:$wgCacheDirectory for details
 RUN install -d -o www-data -g www-data /tmp/file-cache /tmp/cache
 
-# Install and register cron
-COPY cron/crontab /tmp/crontab
-RUN crontab /tmp/crontab && rm /tmp/crontab
+# The scheduled maintenance; the femiwiki image installs the crontab that runs it
 COPY cron/update-special-pages \
       cron/run-jobs \
       cron/publish-dump \

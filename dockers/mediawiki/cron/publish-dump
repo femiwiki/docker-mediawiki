@@ -23,7 +23,7 @@ AUTH="$DIR/auth"
 (umask 077; echo "authorization: LOW $IA_ACCESS_KEY:$IA_SECRET_KEY" > "$AUTH")
 
 log() { printf 'publish-dump: %s\n' "$1" > /proc/1/fd/1; }
-trap 'log "failed, see /var/log/cron.log"' ERR
+trap 'log "failed, see the container log"' ERR
 
 for mode in full logs; do
   file="$DIR/femiwiki-$DATE-$mode.xml.gz"
