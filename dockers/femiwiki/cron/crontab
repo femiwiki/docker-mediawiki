@@ -1,0 +1,5 @@
+# The scheduled maintenance, installed by start.sh where jobs run. Each line
+# writes to the container's own output, so it reaches the log collector.
+1 5 */3 * * /usr/local/bin/update-special-pages > /proc/1/fd/1 2>&1
+31 4 * * * /usr/local/bin/rebuild-property-pairs > /proc/1/fd/1 2>&1
+0 18 1 1,7 * /usr/local/bin/publish-dump > /proc/1/fd/1 2>&1

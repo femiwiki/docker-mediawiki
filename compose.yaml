@@ -1,4 +1,16 @@
 # This compose file is for develompent and build testing
+# Shared by fastcgi and jobrunner, which run the same image
+x-mediawiki-env: &mediawiki-env
+  MEDIAWIKI_DEBUG_MODE: 'true'
+  MEDIAWIKI_SERVER: http://127.0.0.1:8080
+  WG_INTERNAL_SERVER: http://http:8080
+  WG_DB_SERVER: mysql
+  WG_DB_USER: mediawiki
+  WG_DB_PASSWORD: mediawiki
+  WG_MEMCACHED_SERVERS: memcached:11211
+  WG_BOUNCE_HANDLER_INTERNAL_IPS: 127.0.0.1
+  WG_O_AUTH_2_PRIVATE_KEY: "------BEGIN RSA PRIVATE KEY-----\n------END RSA PRIVATE KEY-----"
+
 services:
   http:
     image: ghcr.io/femiwiki/femiwiki:latest
@@ -27,15 +39,19 @@ services:
       - ./development/site-list.xml:/etc/mediawiki/site-list.xml:ro
       - l18n_cache:/tmp/cache
     environment:
-      MEDIAWIKI_DEBUG_MODE: 'true'
-      MEDIAWIKI_SERVER: http://127.0.0.1:8080
-      WG_INTERNAL_SERVER: http://http:8080
-      WG_DB_SERVER: mysql
-      WG_DB_USER: mediawiki
-      WG_DB_PASSWORD: mediawiki
-      WG_MEMCACHED_SERVERS: memcached:11211
-      WG_BOUNCE_HANDLER_INTERNAL_IPS: 127.0.0.1
-      WG_O_AUTH_2_PRIVATE_KEY: "------BEGIN RSA PRIVATE KEY-----\n------END RSA PRIVATE KEY-----"
+      <<: *mediawiki-env
+      # Jobs run in jobrunner below
+      MEDIAWIKI_SKIP_CRON: '1'
+    depends_on:
+      - mysql
+      - memcached
+  # The job queue and the scheduled maintenance, apart from page requests as in
+  # production. fastcgi runs install.php, so the first batches fail until it is done.
+  jobrunner:
+    image: ghcr.io/femiwiki/femiwiki:latest
+    command: jobrunner
+    init: true
+    environment: *mediawiki-env
     depends_on:
       - mysql
       - memcached

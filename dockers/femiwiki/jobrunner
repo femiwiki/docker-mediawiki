@@ -1,0 +1,41 @@
+#!/bin/bash
+set -euxo pipefail; IFS=$'\n\t'
+
+# The job queue and scheduled maintenance, apart from page requests (#968).
+# Exactly one of these should run.
+
+# shellcheck source=dockers/femiwiki/start.sh
+. /usr/local/lib/femiwiki/start.sh
+fw_load_secrets
+fw_install_settings
+fw_install_crontab jobs
+
+cron -f &
+CRON_PID=$!
+
+# SIGTERM stops cron and lets the batch finish within --maxtime; bash runs the
+# trap only once the foreground batch returns. publish-dump gets the stop timeout.
+STOPPING=
+SLEEP_PID=
+trap 'STOPPING=1; kill "$CRON_PID" 2>/dev/null || true; [ -z "$SLEEP_PID" ] || kill "$SLEEP_PID" 2>/dev/null || true' TERM
+
+# A loop rather than a crontab line, so there is never more than one batch and
+# a stop can wait for it. One batch a minute at most, as cron ran it.
+while [ -z "$STOPPING" ]; do
+  started=$SECONDS
+  /usr/local/bin/run-jobs || echo "run-jobs exited with $?" >&2
+  rest=$((60 - (SECONDS - started)))
+  if [ -z "$STOPPING" ] && [ "$rest" -gt 0 ]; then
+    sleep "$rest" &
+    SLEEP_PID=$!
+    wait "$SLEEP_PID" || true
+    SLEEP_PID=
+  fi
+  # Cron gone means the schedule is gone; stop so the container restarts
+  if ! kill -0 "$CRON_PID" 2>/dev/null && [ -z "$STOPPING" ]; then
+    echo 'cron exited; stopping so the container restarts' >&2
+    exit 1
+  fi
+done
+
+wait "$CRON_PID" 2>/dev/null || true
