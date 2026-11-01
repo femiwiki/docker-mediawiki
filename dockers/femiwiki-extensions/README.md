@@ -31,7 +31,3 @@ written against.
   show its topic filter without WikimediaMessages, which femiwiki doesn't load;
   UnifiedExtensionForFemiwiki supplies the topics.
   `$wgGEHomepageSuggestedEditsEnableTopics` still turns the filter on and off.
-- `extensions/Kartographer/REL1_46-no-static-map.patch` keeps `<mapframe>`
-  from asking `$wgKartographerMapServer` for a `/img/` snapshot outside static
-  mode, and has VisualEditor always draw the interactive map. The map server,
-  tile.openstreetmap.org, has no snapshots.
