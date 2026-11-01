@@ -18,7 +18,7 @@ fi
 chmod +x /usr/local/bin/prerun
 /usr/local/bin/prerun
 
-# shellcheck source=start.sh
+# shellcheck source=dockers/femiwiki/start.sh
 . /usr/local/lib/femiwiki/start.sh
 fw_load_secrets
 
@@ -59,10 +59,8 @@ if [ -z "${MEDIAWIKI_SKIP_IMPORT_SITES:-}" ]; then
   php /srv/femiwiki.com/maintenance/run.php importSites /etc/mediawiki/site-list.xml
 fi
 
-# Production runs the jobs in a container of their own (jobrunner, see
-# femiwiki/docker-mediawiki#968) and sets MEDIAWIKI_SKIP_CRON here, as does a
-# stack beside production on a replica, because the jobs write. Cron still
-# refreshes the tokens this container's pages need.
+# Production (jobs in jobrunner, #968) and a replica stack set MEDIAWIKI_SKIP_CRON;
+# cron then only refreshes the tokens this container's pages need.
 if [ -z "${MEDIAWIKI_SKIP_CRON:-}" ]; then
   fw_install_crontab jobs '* * * * * /usr/local/bin/run-jobs > /proc/1/fd/1 2>&1'
   cron

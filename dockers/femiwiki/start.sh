@@ -1,10 +1,7 @@
 # shellcheck shell=bash
-# Startup shared by run, which serves pages, and jobrunner, which runs the job
-# queue and the scheduled maintenance. Both source this file.
+# Startup shared by run (pages) and jobrunner (jobs), which both source it
 
-# Secrets come from SSM Parameter Store in production. Local and CI runs pass
-# them as plain env instead and leave SSM_SECRETS unset. Tracing is off for this
-# block so the values never reach the container log.
+# Production reads secrets from SSM; local and CI pass plain env. No tracing, to keep them out of the log.
 # shellcheck disable=SC2034  # exported by set -a, read by LocalSettings.php
 fw_load_secrets() {
   if [ -z "${SSM_SECRETS:-}" ]; then
@@ -41,9 +38,8 @@ fw_load_secrets() {
 fw_install_settings() {
   cp -f /etc/mediawiki/LocalSettings.php /srv/femiwiki.com/LocalSettings.php
 
-  # LocalSettings.php creates the profile directory if it is missing, and the
-  # maintenance scripts and cron run as root, so it would be php-fpm's to
-  # write only if a request got there first.
+  # Made here because maintenance and cron run as root and would otherwise
+  # create it unwritable for php-fpm
   if [ -n "${FW_PROFILER:-}" ]; then
     install -d -o www-data -g www-data -m 0750 "${FW_PROFILER_DIR:-/tmp/profiler}"
   fi
@@ -55,12 +51,8 @@ HOTFIX
   fi
 }
 
-# Replaces the crontab. With "jobs" (rather than "tokens") it holds the scheduled maintenance and the
-# slow job types; the tokens are refreshed wherever SSM_SECRETS is set, since
-# every container that renders pages reads them. Extra lines come as further
-# arguments. Cron passes jobs none of this environment, so the crontab sets
-# BASH_ENV (and SHELL, since dash ignores it) to a file of the variables the
-# jobs need. See femiwiki/femiwiki#588.
+# Replaces the crontab: "jobs" or "tokens", then extra lines. Every container
+# that renders pages needs the tokens; BASH_ENV carries the env (femiwiki#588).
 fw_install_crontab() {
   local jobs="$1"
   shift

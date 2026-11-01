@@ -1,12 +1,10 @@
 #!/bin/bash
 set -euxo pipefail; IFS=$'\n\t'
 
-# Runs the job queue and the scheduled maintenance in a container of its own,
-# from the same image as run, so a heavy job cannot take memory from page
-# requests and a deploy of the web tier does not cut a job off. See
-# femiwiki/docker-mediawiki#968. Exactly one of these should run.
+# The job queue and scheduled maintenance, apart from page requests (#968).
+# Exactly one of these should run.
 
-# shellcheck source=start.sh
+# shellcheck source=dockers/femiwiki/start.sh
 . /usr/local/lib/femiwiki/start.sh
 fw_load_secrets
 fw_install_settings
@@ -15,10 +13,8 @@ fw_install_crontab jobs
 cron -f &
 CRON_PID=$!
 
-# On SIGTERM, schedule nothing more and let the batch in progress finish; it
-# stops by itself within --maxtime. Bash runs the trap only once that
-# foreground batch returns, which is the point. A scheduled script cron already
-# started, such as publish-dump, is left to the stop timeout.
+# SIGTERM stops cron and lets the batch finish within --maxtime; bash runs the
+# trap only once the foreground batch returns. publish-dump gets the stop timeout.
 STOPPING=
 SLEEP_PID=
 trap 'STOPPING=1; kill "$CRON_PID" 2>/dev/null || true; [ -z "$SLEEP_PID" ] || kill "$SLEEP_PID" 2>/dev/null || true' TERM
