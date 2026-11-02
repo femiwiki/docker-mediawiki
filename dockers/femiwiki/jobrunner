@@ -19,6 +19,9 @@ STOPPING=
 SLEEP_PID=
 trap 'STOPPING=1; kill "$CRON_PID" 2>/dev/null || true; [ -z "$SLEEP_PID" ] || kill "$SLEEP_PID" 2>/dev/null || true' TERM
 
+# Startup is traced; the loop is not, or it logs a dozen lines a minute
+set +x
+
 # A loop rather than a crontab line, so there is never more than one batch and
 # a stop can wait for it. One batch a minute at most, as cron ran it.
 while [ -z "$STOPPING" ]; do
