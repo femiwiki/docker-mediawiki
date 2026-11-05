@@ -24,16 +24,9 @@ const REQUEST = [
 	'HTTP_USER_AGENT' => 'femiwiki-warm-up',
 ];
 
-// Pages an anonymous reader may see, asked as /w/제목 the way Caddy passes them
-// on; a page that redirects to the login compiles nothing. The loop below
-// percent-encodes each title.
-const PAGES = [
-	[ 'index.php', '/w/페미위키:대문', '' ],
-	[ 'index.php', '/w/특수:로그인', '' ],
-	[ 'api.php', '/api.php', 'action=query&meta=siteinfo&format=json' ],
-	// Built cold, it outlasted caddy-run's 30-second preflight (femiwiki/infra#1588)
-	[ 'load.php', '/load.php', 'modules=startup&only=scripts' ],
-];
+// The pages Caddy's preflight checks, so none of them reaches it cold
+// (femiwiki/infra#1588)
+$pages = require __DIR__ . '/preflight-pages.php';
 
 // A page that never answers 200 must not spend the whole budget and leave the
 // others cold.
@@ -45,7 +38,7 @@ const FIRST_TIMEOUT_MS = 90000;
 const TIMEOUT_MS = 30000;
 
 $ask = static function (
-	string $host, int $port, string $script, string $uri, string $query, int $timeoutMs
+	string $host, int $port, string $script, string $uri, string $query, int $timeoutMs, string $pathInfo = ''
 ): ?string {
 	$client = new Adoy\FastCGI\Client( $host, $port );
 	$client->setReadWriteTimeout( $timeoutMs );
@@ -55,6 +48,7 @@ $ask = static function (
 			'SCRIPT_NAME' => "/$script",
 			'REQUEST_URI' => $uri . ( $query === '' ? '' : "?$query" ),
 			'QUERY_STRING' => $query,
+			'PATH_INFO' => $pathInfo,
 		], '' );
 	} catch ( Throwable $e ) {
 		// php-fpm may not be listening yet, or the page may be slow while the
@@ -66,17 +60,19 @@ $ask = static function (
 // php-fpm sends a Status header only when the answer is not a plain 200, and
 // only in the header block: a page whose text begins a line with Status: is
 // not an error.
-$served = static function ( ?string $response ): bool {
+$status = static function ( ?string $response ): int {
 	if ( $response === null ) {
-		return false;
+		return 0;
 	}
 	$headers = explode( "\r\n\r\n", $response, 2 )[0];
-	return !preg_match( '/^Status:\s*(?!200)/mi', $headers );
+	return preg_match( '/^Status:\s*(\d{3})/mi', $headers, $m ) ? (int)$m[1] : 200;
+};
+$served = static function ( ?string $response ) use ( $status ): bool {
+	return $status( $response ) === 200;
 };
 
-$report = static function ( string $uri, ?string $response, float $seconds ) use ( $served ): void {
-	$status = $response === null ? 'nothing' : ( $served( $response ) ? '200' : trim( strtok( $response, "\n" ) ) );
-	fwrite( STDERR, sprintf( "warm-up: %s answered %s in %.1fs\n", $uri, $status, $seconds ) );
+$report = static function ( string $uri, ?string $response, float $seconds ) use ( $status ): void {
+	fwrite( STDERR, sprintf( "warm-up: %s answered %s in %.1fs\n", $uri, $status( $response ) ?: 'nothing', $seconds ) );
 };
 
 [ $host, $port ] = explode( ':', getenv( 'FCGI_WARMUP_URL' ) ?: '127.0.0.1:9000' );
@@ -98,26 +94,45 @@ if ( $sibling ) {
 
 // A 5xx is the page failing rather than the cache being cold. Nothing answering
 // in time is left alone, since a slow first compile looks the same.
-$failed = static function ( ?string $response ): bool {
-	return $response !== null &&
-		(bool)preg_match( '/^Status:\s*5\d\d/mi', explode( "\r\n\r\n", $response, 2 )[0] );
+$failed = static function ( ?string $response ) use ( $status ): bool {
+	return $status( $response ) >= 500;
 };
 
 $first = true;
+$main = null;
 $broken = [];
-foreach ( PAGES as [ $script, $uri, $query ] ) {
-	$encoded = implode( '/', array_map( 'rawurlencode', explode( '/', $uri ) ) );
-	$deadline = time() + intdiv( $budget, count( PAGES ) );
+foreach ( $pages as [ $uri, $want ] ) {
+	if ( $uri === '{main}' ) {
+		if ( $main === null ) {
+			fwrite( STDERR, "warm-up: siteinfo gave no main page, so skipping it\n" );
+			continue;
+		}
+		$uri = $main;
+	}
+	// Split the way Caddy's php_fastcgi does: a .php path names its script, and
+	// anything else is rewritten to index.php with the original URI kept
+	[ $path, $query ] = explode( '?', $uri, 2 ) + [ 1 => '' ];
+	$script = 'index.php';
+	$pathInfo = '';
+	if ( preg_match( '#^/([^/]+\.php)(/.*)?$#', $path, $m ) ) {
+		$script = $m[1];
+		$pathInfo = $m[2] ?? '';
+	}
+	$deadline = time() + intdiv( $budget, count( $pages ) );
 	$response = null;
 	for ( $attempt = 0; $attempt < ATTEMPTS && time() < $deadline; $attempt++ ) {
 		$started = microtime( true );
-		$response = $ask( $host, (int)$port, $script, $encoded, $query, $first ? FIRST_TIMEOUT_MS : TIMEOUT_MS );
+		$response = $ask( $host, (int)$port, $script, $path, $query, $first ? FIRST_TIMEOUT_MS : TIMEOUT_MS, $pathInfo );
 		$report( $uri, $response, microtime( true ) - $started );
 		$first = false;
-		if ( $served( $response ) ) {
+		if ( $status( $response ) === $want ) {
 			break;
 		}
 		usleep( 500000 );
+	}
+	if ( $main === null && str_starts_with( $uri, '/api.php?action=query&meta=siteinfo' ) && $response !== null ) {
+		$base = json_decode( explode( "\r\n\r\n", $response, 2 )[1] ?? '', true )['query']['general']['base'] ?? null;
+		$main = is_string( $base ) ? parse_url( $base, PHP_URL_PATH ) : null;
 	}
 	if ( $failed( $response ) ) {
 		$broken[] = $uri;
