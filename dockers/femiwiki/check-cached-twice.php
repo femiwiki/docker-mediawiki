@@ -10,7 +10,8 @@
  * in femiwiki/femiwiki#322.
  *
  * caddy-run runs it against the new Caddy before that opens a public port, and
- * the image test runs it against the test stack.
+ * the image test runs it against the test stack. The pages are the ones
+ * warm-up.php asks php-fpm for, from preflight-pages.php.
  *
  * Usage: php check-cached-twice.php <base URL> [address to connect to]
  *   the address replaces the base URL's host in DNS only, as curl --resolve
@@ -78,12 +79,14 @@ $check = static function ( string $path, int $want, string $wantLocation = '' ) 
 	}
 };
 
-$check( '/', 301, $main );
-$check( '/w/Special:Version', 301 );
-$check( '/index.php?title=Special:Version', 301 );
-$check( $mainPath, 200 );
-$check( '/rest.php/v1/search/title?q=a&limit=1', 200 );
-$check( '/load.php?modules=startup&only=scripts', 200 );
+foreach ( require __DIR__ . '/preflight-pages.php' as $page ) {
+	[ $path, $want, $wantLocation ] = $page + [ 2 => '' ];
+	$check(
+		$path === '{main}' ? $mainPath : $path,
+		$want,
+		$wantLocation === '{main}' ? $main : $wantLocation
+	);
+}
 
 // ULS picks the interface language from Accept-Language, and the cache keeps a
 // page per header. No header gets the content language.

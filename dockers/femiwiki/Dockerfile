@@ -140,5 +140,5 @@ EXPOSE 9000
 
 COPY ["run", "jobrunner", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
 COPY cron/crontab /etc/femiwiki/crontab
-COPY start.sh caddy-warmup.php check-cached-twice.php warm-up.php create-session-schema.php google-subject-token.php chart-renderer-token.php /usr/local/lib/femiwiki/
+COPY start.sh caddy-warmup.php check-cached-twice.php warm-up.php preflight-pages.php create-session-schema.php google-subject-token.php chart-renderer-token.php /usr/local/lib/femiwiki/
 CMD ["/usr/local/bin/run"]
