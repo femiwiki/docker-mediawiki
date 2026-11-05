@@ -72,7 +72,8 @@ $served = static function ( ?string $response ) use ( $status ): bool {
 };
 
 $report = static function ( string $uri, ?string $response, float $seconds ) use ( $status ): void {
-	fwrite( STDERR, sprintf( "warm-up: %s answered %s in %.1fs\n", $uri, $status( $response ) ?: 'nothing', $seconds ) );
+	$got = $status( $response ) ?: 'nothing';
+	fwrite( STDERR, sprintf( "warm-up: %s answered %s in %.1fs\n", $uri, $got, $seconds ) );
 };
 
 [ $host, $port ] = explode( ':', getenv( 'FCGI_WARMUP_URL' ) ?: '127.0.0.1:9000' );
@@ -122,7 +123,8 @@ foreach ( $pages as [ $uri, $want ] ) {
 	$response = null;
 	for ( $attempt = 0; $attempt < ATTEMPTS && time() < $deadline; $attempt++ ) {
 		$started = microtime( true );
-		$response = $ask( $host, (int)$port, $script, $path, $query, $first ? FIRST_TIMEOUT_MS : TIMEOUT_MS, $pathInfo );
+		$timeoutMs = $first ? FIRST_TIMEOUT_MS : TIMEOUT_MS;
+		$response = $ask( $host, (int)$port, $script, $path, $query, $timeoutMs, $pathInfo );
 		$report( $uri, $response, microtime( true ) - $started );
 		$first = false;
 		if ( $status( $response ) === $want ) {
