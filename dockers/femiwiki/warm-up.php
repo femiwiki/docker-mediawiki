@@ -31,6 +31,8 @@ const PAGES = [
 	[ 'index.php', '/w/페미위키:대문', '' ],
 	[ 'index.php', '/w/특수:로그인', '' ],
 	[ 'api.php', '/api.php', 'action=query&meta=siteinfo&format=json' ],
+	// Built cold, it outlasted caddy-run's 30-second preflight (femiwiki/infra#1588)
+	[ 'load.php', '/load.php', 'modules=startup&only=scripts' ],
 ];
 
 // A page that never answers 200 must not spend the whole budget and leave the
