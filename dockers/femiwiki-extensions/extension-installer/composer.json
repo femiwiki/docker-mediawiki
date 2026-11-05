@@ -7,7 +7,7 @@
 		"symfony/process": "^8.0"
 	},
 	"require-dev": {
-		"phan/phan": "6.0.7"
+		"phan/phan": "6.0.11"
 	},
 	"scripts": {
 		"phan": "phan --no-progress-bar"
