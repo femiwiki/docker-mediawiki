@@ -106,7 +106,7 @@
     "Femiwiki": {
       "type": "skin",
       "repository": "https://github.com/femiwiki/FemiwikiSkin",
-      "commit": "674be8927b1edaceb5f2c5e5603765b3ef3b9391"
+      "commit": "ebe9475f40dd1b6fe2444aa27964240e413c0d78"
     },
     "PropertySuggesterLocalStats": {
       "repository": "https://github.com/femiwiki/PropertySuggesterLocalStats",
