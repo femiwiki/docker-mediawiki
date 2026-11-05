@@ -28,12 +28,12 @@ jobs:
       PAT_APPLICATION_PRIVATE_KEY: ${{ secrets.PAT_APPLICATION_PRIVATE_KEY }}
 
   long-comments:
-    uses: femiwiki/.github/.github/workflows/long-comments.yml@c7a2145630ac96a51c74a94a7b508c27ab0de134
+    uses: femiwiki/.github/.github/workflows/long-comments.yml@ef16ea5429bae11332adede94803d8dbfdb18a31
     permissions:
       contents: read
 
   shared-lint:
-    uses: femiwiki/.github/.github/workflows/shared-lint.yml@c7a2145630ac96a51c74a94a7b508c27ab0de134
+    uses: femiwiki/.github/.github/workflows/shared-lint.yml@ef16ea5429bae11332adede94803d8dbfdb18a31
     permissions:
       contents: read
 
