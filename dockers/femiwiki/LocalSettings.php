@@ -1115,6 +1115,11 @@ $wgUnifiedExtensionForFemiwikiPreAuth = true;
 $wgUnifiedExtensionForFemiwikiSuggestedEdits = true;
 $wgUnifiedExtensionForFemiwikiBlockByEmail = false;
 $wgUnifiedExtensionForFemiwikiModifyEmailTheme = true;
+// Pages rankingbot saves the rankings to; users listed there earn the ranking badges
+$wgUnifiedExtensionForFemiwikiRankingPages = [
+	'페미위키:활동적인 사용자/데이터',
+	'페미위키:활동적인 사용자/바이트 데이터',
+];
 
 // UniversalLanguageSelector
 wfLoadExtension( 'UniversalLanguageSelector' );
