@@ -1,5 +1,4 @@
-# Settings that are plain values, read by MediaWiki's SettingsBuilder. LocalSettings.php loads this
-# file before its own settings; see the comment there and femiwiki/docker-mediawiki#1271.
+# Plain values, loaded before the rest of LocalSettings.php (#1271).
 # Format: https://www.mediawiki.org/wiki/Manual:YAML_settings_file_format
 
 extensions:

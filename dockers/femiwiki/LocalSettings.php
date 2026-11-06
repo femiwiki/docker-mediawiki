@@ -80,9 +80,7 @@ if ( getenv( 'FW_PROFILER' ) === 'excimer' && PHP_SAPI !== 'cli' && extension_lo
 	$fwProfiler->start();
 }
 
-// Plain values live in LocalSettings.yaml (femiwiki/docker-mediawiki#1271). MediaWiki only queues
-// the file here and applies it after this file returns, so apply() now: the PHP below then reads
-// the YAML values, and a key set again below overrides the YAML one. Keep each key in one file.
+// Applied now rather than after this file, so the PHP below reads these values. Keep each key in one file.
 $wgSettings->loadFile( '/etc/mediawiki/LocalSettings.yaml' );
 $wgSettings->apply();
 
