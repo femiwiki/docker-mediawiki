@@ -1,0 +1,24 @@
+# Settings that are plain values, read by MediaWiki's SettingsBuilder. LocalSettings.php loads this
+# file before its own settings; see the comment there and femiwiki/docker-mediawiki#1271.
+# Format: https://www.mediawiki.org/wiki/Manual:YAML_settings_file_format
+
+extensions:
+  - RelatedArticles
+
+config:
+  Sitename: 페미위키
+  EnableCanonicalServerLink: true
+
+  # UPO: also a user preference option (https://www.mediawiki.org/wiki/Help:User_preference_option)
+  AllowHTMLEmail: true
+
+  EmergencyContact: admin@femiwiki.com
+  PasswordSender: admin@femiwiki.com
+
+  UnwatchedPageThreshold: 0
+  WatchlistExpiry: true
+  EnableWatchlistLabels: true
+
+  # RelatedArticles
+  RelatedArticlesCardLimit: 6
+  RelatedArticlesDescriptionSource: textextracts

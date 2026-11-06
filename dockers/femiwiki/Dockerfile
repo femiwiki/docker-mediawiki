@@ -86,7 +86,7 @@ RUN for f in $ENTRY_POINTS resources skins extensions fw-resources; do \
     done
 COPY --chown=www-data:www-data ["site-list.xml", "Hotfix.php", "/etc/mediawiki/"]
 
-COPY --chown=www-data LocalSettings.php /etc/mediawiki/
+COPY --chown=www-data ["LocalSettings.php", "LocalSettings.yaml", "/etc/mediawiki/"]
 
 # Every language's localisation cache, built once here rather than by the first
 # request for it in each container; see LocalSettings.php. Nothing at build time

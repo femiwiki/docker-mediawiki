@@ -80,7 +80,11 @@ if ( getenv( 'FW_PROFILER' ) === 'excimer' && PHP_SAPI !== 'cli' && extension_lo
 	$fwProfiler->start();
 }
 
-$wgSitename = '페미위키';
+// Plain values live in LocalSettings.yaml (femiwiki/docker-mediawiki#1271). MediaWiki only queues
+// the file here and applies it after this file returns, so apply() now: the PHP below then reads
+// the YAML values, and a key set again below overrides the YAML one. Keep each key in one file.
+$wgSettings->loadFile( '/etc/mediawiki/LocalSettings.yaml' );
+$wgSettings->apply();
 
 // The URL base path of the wiki; see https://www.mediawiki.org/wiki/Manual:Short_URL
 $wgScriptPath = '';
@@ -91,7 +95,6 @@ $wgServer = 'https://femiwiki.com';
 $wgCanonicalServer = 'https://femiwiki.com';
 // Used to purge CDN cache (https://github.com/femiwiki/femiwiki/issues/239)
 $wgInternalServer = getenv( 'WG_INTERNAL_SERVER' );
-$wgEnableCanonicalServerLink = true;
 
 // Make the HTTP to HTTPS redirect be unconditional
 $wgForceHTTPS = true;
@@ -124,17 +127,8 @@ $wgSMTP = [
 	'auth' => true,
 ];
 
-// UPO: also a user preference option (https://www.mediawiki.org/wiki/Help:User_preference_option)
-$wgAllowHTMLEmail = true;
-
-$wgEmergencyContact = 'admin@femiwiki.com';
-$wgPasswordSender = 'admin@femiwiki.com';
-
 // UPO
 $wgEmailConfirmToEdit = true;
-$wgUnwatchedPageThreshold = 0;
-$wgWatchlistExpiry = true;
-$wgEnableWatchlistLabels = true;
 
 // Database settings
 $wgDBtype = 'mysql';
@@ -1007,11 +1001,6 @@ wfLoadExtension( 'QuickInstantCommons' );
 
 // RealMe
 wfLoadExtension( 'RealMe' );
-
-// RelatedArticles
-wfLoadExtension( 'RelatedArticles' );
-$wgRelatedArticlesCardLimit = 6;
-$wgRelatedArticlesDescriptionSource = 'textextracts';
 
 // Renameuser
 wfLoadExtension( 'Renameuser' );
