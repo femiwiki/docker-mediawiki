@@ -25,6 +25,12 @@ RUN apt-get update && apt-get install -y \
       unzip \
   ;
 
+# Korean fonts for the share cards UnifiedExtensionForFemiwiki draws with GD and
+# rsvg-convert. Only the two sans faces are kept; the serif ones would add 52MB.
+RUN apt-get install -y fonts-noto-cjk &&\
+    rm /usr/share/fonts/opentype/noto/NotoSerifCJK-* &&\
+    fc-cache -f
+
 RUN sh -c 'cd /usr/bin; wget -O- https://getmic.ro | GETMICRO_REGISTER=y sh'
 
 # See https://caddyserver.com/docs/conventions#file-locations for details
@@ -45,6 +51,9 @@ RUN docker-php-ext-install -j8 \
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN install-php-extensions wikidiff2
+
+# With FreeType, so UnifiedExtensionForFemiwiki can measure text for its share cards
+RUN install-php-extensions gd
 
 # pecl.php.net times out under load, so each pecl release falls back to the
 # same tag on GitHub. The installer builds a GitHub source from its package.xml.
