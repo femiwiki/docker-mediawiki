@@ -1077,6 +1077,8 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 	$wgWBRepoSettings['conceptBaseUri'] = $wgServer . '/w/Item:';
 	// No fedi host here, so actor ids use the REST route on this server
 	$wgFediFeedsActorBase = null;
+	// Nothing outside can reach these actors, so no bridge would take their follows
+	$wgFediFeedsAutoFollow = [];
 }
 
 //

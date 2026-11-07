@@ -117,6 +117,10 @@ config:
   EnableCanonicalServerLink: true
   EnableWatchlistLabels: true
 
+  # Bridgy Fed bridges to Bluesky the accounts that follow its bot
+  FediFeedsAutoFollow:
+    - bsky.brid.gy@bsky.brid.gy
+
   # Use FlaggedRevs only as a protection-like mechanism
   FlaggedRevsProtection: true
 
