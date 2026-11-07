@@ -25,6 +25,19 @@ RUN apt-get update && apt-get install -y \
       unzip \
   ;
 
+# Share card fonts for UnifiedExtensionForFemiwiki; Noto CJK's sans faces stay
+# only for the Hanja that Pretendard lacks
+ADD --checksum=sha256:3ffbacde6ab8411f1d2db54bb9b1f0b3ee2a738932033722cf0388c06aed1c93 \
+    https://raw.githubusercontent.com/orioncactus/pretendard/v1.3.9/packages/pretendard/dist/public/static/Pretendard-Regular.otf /usr/local/share/fonts/pretendard/
+ADD --checksum=sha256:2e91915fab54df71cc9598ebf608b2bdb54c6fe3c066ac61dff0bc44fca71cc7 \
+    https://raw.githubusercontent.com/orioncactus/pretendard/v1.3.9/packages/pretendard/dist/public/static/Pretendard-Bold.otf /usr/local/share/fonts/pretendard/
+ADD --checksum=sha256:d31ddd9f2bed32fd7e302a205cf2380ba0de6529152d239ef99cfb6f261bfc04 \
+    https://raw.githubusercontent.com/orioncactus/pretendard/v1.3.9/LICENSE /usr/local/share/fonts/pretendard/OFL.txt
+RUN apt-get install -y fonts-noto-cjk &&\
+    rm /usr/share/fonts/opentype/noto/NotoSerifCJK-* &&\
+    chmod 0644 /usr/local/share/fonts/pretendard/* &&\
+    fc-cache -f
+
 RUN sh -c 'cd /usr/bin; wget -O- https://getmic.ro | GETMICRO_REGISTER=y sh'
 
 # See https://caddyserver.com/docs/conventions#file-locations for details
@@ -45,6 +58,9 @@ RUN docker-php-ext-install -j8 \
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN install-php-extensions wikidiff2
+
+# With FreeType, so UnifiedExtensionForFemiwiki can measure text for its share cards
+RUN install-php-extensions gd
 
 # pecl.php.net times out under load, so each pecl release falls back to the
 # same tag on GitHub. The installer builds a GitHub source from its package.xml.
