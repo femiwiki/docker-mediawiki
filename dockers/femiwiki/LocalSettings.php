@@ -572,8 +572,7 @@ $wgGroupPermissions['sysop']['abusefilter-privatedetails'] = false;
 $wgGroupPermissions['checkuser']['abusefilter-privatedetails'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
-// AWS
-// One bucket with a path per zone. $wgAWSBucketPrefix, which spread the zones
+// AWS: one bucket with a path per zone. $wgAWSBucketPrefix, which spread the zones
 // over four buckets, is deprecated by the extension.
 $wgAWSBucketName = 'uploads-302617221463-ap-northeast-2-an';
 // The default is the global endpoint, which answers 307 for a young bucket
