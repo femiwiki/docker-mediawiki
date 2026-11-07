@@ -170,6 +170,9 @@ config:
   # writes this configuration, and google-subject-token.php the token it names
   PageViewInfoGACredentialsFile: /etc/mediawiki/google-analytics.json
 
+  # So the Google tag does not compete with the page on slow phones (femiwiki/femiwiki#612)
+  PageViewInfoGALoadAfterPageLoad: true
+
   PasswordSender: admin@femiwiki.com
   PFEnableStringFunctions: true
   RelatedArticlesCardLimit: 6
