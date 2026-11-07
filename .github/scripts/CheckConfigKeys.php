@@ -7,11 +7,13 @@
  * obsolete, so a setting dropped without a mark needs this check.
  *
  * Usage: php maintenance/run.php CheckConfigKeys.php FILE
+ * FILE is LocalSettings.php or a YAML settings file such as LocalSettings.yaml.
  *
  * @file
  */
 
 use MediaWiki\Settings\SettingsBuilder;
+use MediaWiki\Settings\Source\Format\YamlFormat;
 
 $IP = getenv( 'MW_INSTALL_PATH' ) ?: '/srv/femiwiki.com';
 require_once "$IP/maintenance/Maintenance.php";
@@ -42,16 +44,27 @@ class CheckConfigKeys extends Maintenance {
 			}
 		}
 
-		$source = file_get_contents( $this->getArg( 0 ) );
-		preg_match_all( '/^\s*\$(wg\w+)\s*(?:\[[^\]\n]*\]\s*)*(?:=|\.=|\+=)/m', $source, $matches );
-		$unknown = array_diff( array_unique( $matches[1] ), array_keys( $known ) );
+		$file = $this->getArg( 0 );
+		$source = file_get_contents( $file );
+		if ( str_ends_with( $file, '.yaml' ) ) {
+			// SettingsBuilder sets each key of these sections as $wg<key>
+			$settings = ( new YamlFormat() )->decode( $source );
+			$assigned = array_map(
+				static fn ( $key ) => "wg$key",
+				array_keys( ( $settings['config'] ?? [] ) + ( $settings['config-overrides'] ?? [] ) )
+			);
+		} else {
+			preg_match_all( '/^\s*\$(wg\w+)\s*(?:\[[^\]\n]*\]\s*)*(?:=|\.=|\+=)/m', $source, $matches );
+			$assigned = array_unique( $matches[1] );
+		}
+		$unknown = array_diff( $assigned, array_keys( $known ) );
 		sort( $unknown );
 
 		if ( $unknown ) {
 			$this->fatalError( "Nothing declares these settings:\n\$"
 				. implode( "\n\$", $unknown ) );
 		}
-		$this->output( count( array_unique( $matches[1] ) ) . " settings, all declared\n" );
+		$this->output( count( $assigned ) . " settings, all declared\n" );
 	}
 }
 

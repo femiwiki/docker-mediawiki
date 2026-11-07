@@ -1,0 +1,215 @@
+# Plain values, loaded before the extension settings in LocalSettings.php (#1271).
+# Format: https://www.mediawiki.org/wiki/Manual:YAML_settings_file_format
+
+# In the order LocalSettings.php loaded them. Wikibase and the extensions after it stay there.
+extensions:
+  - AbuseFilter
+  - AdvancedSearch
+  - AchievementBadges
+  - AntiSpoof
+  - AWS
+  - BetaFeatures
+  - BounceHandler
+  - CategoryTree
+  - Chart
+  - CharInsert
+  - CheckUser
+  - Cite
+  - CiteThisPage
+  - Citoid
+  - CodeEditor
+  - CodeMirror
+  - ConfirmEdit
+  - ConfirmEdit/hCaptcha
+  - DarkMode
+  - DelayedJobQueue
+  - Description2
+  - DisableAccount
+  - Disambiguator
+  - DiscordRCFeed
+  - DiscussionTools
+  - DismissableSiteNotice
+  - Echo
+  - EmbedVideo
+  - FacetedCategory
+  - FediFeeds
+  - FlaggedRevs
+  - Flow
+  - Gadgets
+  - GoogleNewsSitemap
+  - GoogleSiteSearch
+  - CommunityConfiguration
+  - GrowthExperiments
+  - GuidedTour
+  - InputBox
+  - JsonConfig
+  - Josa
+  - Kartographer
+  - Linter
+  - LoginNotify
+  - Math
+  - MobileFrontend
+  - Newsletter
+  - Nuke
+  - OATHAuth
+  - OAuth
+  - PageImages
+  - PageViewInfo
+  - PageViewInfoGA
+  - ParserFunctions
+  - Poem
+  - Popups
+  - QuickInstantCommons
+  - RealMe
+  - RelatedArticles
+  - Renameuser
+  - ReplaceText
+  - RevisionSlider
+  - Sanctions
+  - Scribunto
+  - SecureLinkFixer
+  - SecurePoll
+  - SpamBlacklist
+  - SyntaxHighlight_GeSHi
+  - TemplateData
+  - TemplateSandbox
+  - TemplateStyles
+  - TemplateWizard
+  - TextExtracts
+  - Thanks
+  - TitleBlacklist
+  - TorBlock
+  - Translate
+  - TwoColConflict
+  - UnifiedExtensionForFemiwiki
+  - UniversalLanguageSelector
+  - UnlinkedWikibase
+  - UploadWizard
+  - VisualEditor
+  - Widgets
+
+# Sorted by key
+config:
+  AbuseFilterEnableBlockedExternalDomain: true
+  AchievementBadgesFacebookAppId: '1937597133150935'
+  AchievementBadgesReplaceEchoThankYouEdit: true
+  AchievementBadgesReplaceEchoWelcome: true
+
+  # UPO: also a user preference option (https://www.mediawiki.org/wiki/Help:User_preference_option)
+  AllowHTMLEmail: true
+
+  AWSRegion: ap-northeast-2
+  AWSRepoDeletedHashLevels: 2
+  AWSRepoHashLevels: 2
+  BounceHandlerUnconfirmUsers: true
+
+  # Wikimedia's, within the default $wgBounceRecordPeriod of 7 days
+  BounceRecordLimit: 5
+
+  DarkModeTogglePosition: footer
+  EchoMaxMentionsInEditSummary: 5
+  EchoPerUserBlacklist: true
+  EchoPollForUpdates: 60
+  EmergencyContact: admin@femiwiki.com
+  EnableCanonicalServerLink: true
+  EnableWatchlistLabels: true
+
+  # Use FlaggedRevs only as a protection-like mechanism
+  FlaggedRevsProtection: true
+
+  FlowDefaultLimit: 2
+  GadgetsRepo: json+definition
+
+  # UnifiedExtensionForFemiwiki finds the tasks and topics instead of CirrusSearch.
+  GEHomepageSuggestedEditsEnabled: true
+  GEHomepageSuggestedEditsEnableTopics: true
+
+  # The recommendation task types need services we don't run.
+  GENewcomerTasksImageRecommendationsEnabled: false
+  GENewcomerTasksLinkRecommendationsEnabled: false
+  GENewcomerTasksSectionImageRecommendationsEnabled: false
+  GoogleSiteSearchAppend: true
+  GoogleSiteSearchCSEID: 44508684d5c0e489c
+  JsonConfigEnableLuaSupport: true
+  KartographerDfltStyle: ''
+  KartographerSimpleStyleMarkers: false
+  KartographerSrcsetScales: []
+  KartographerStyles: ['']
+  MathUseInternalRestbasePath: false
+
+  # Advanced mode is available for users
+  MFAdvancedMobileContributions: true
+
+  # Disable automatically showing mobile view, as FemiwikiSkin is little responsive and
+  # MobileFrontend is not tested enough.
+  MFAutodetectMobileView: false
+
+  # Enable mobile preferences in Special:Preferences
+  MFEnableMobilePreferences: true
+
+  MFEnableWikidataDescriptions: {base: false, beta: false, amc: false}
+
+  # Enable the use Wikibase and associated features
+  MFUseWikibase: true
+
+  # OAuth itself treats false as the local source and deprecates it since 1.45
+  MWOAuthSharedUserIDs: true
+
+  MWOAuthSharedUserSource: local
+  PageImagesLeadSectionOnly: false
+  PageTranslationLanguageList: sidebar-always
+
+  # Workload Identity Federation from the instance's IAM role (femiwiki/femiwiki#670): no key. infra
+  # writes this configuration, and google-subject-token.php the token it names
+  PageViewInfoGACredentialsFile: /etc/mediawiki/google-analytics.json
+
+  PasswordSender: admin@femiwiki.com
+  PFEnableStringFunctions: true
+  RelatedArticlesCardLimit: 6
+  RelatedArticlesDescriptionSource: textextracts
+
+  # New sanctions are discussed on their own subpages with DiscussionTools. Sanctions already on
+  # Flow topics stay there until they end.
+  SanctionsDiscussionBackend: DiscussionTools
+
+  ScribuntoDefaultEngine: luasandbox
+  Sitename: 페미위키
+  TranslatePageTranslationULS: true
+  TranslatePermissionUrl: Project:번역
+
+  # A language cookie is not in the cache key, so anonymous readers still
+  # change language only with ?uselang=
+  ULSAnonCanChangeLanguage: false
+
+  ULSIMEEnabled: false
+
+  # Safe only while Caddy's mwcache has vary_accept_language
+  # (femiwiki/caddy-mwcache#188); check-cached-twice.php checks it
+  ULSLanguageDetection: true
+
+  ULSPosition: interlanguage
+  UnifiedExtensionForFemiwikiBlockByEmail: false
+  UnifiedExtensionForFemiwikiModifyEmailTheme: true
+  UnifiedExtensionForFemiwikiPreAuth: true
+
+  # Pages rankingbot saves the rankings to; users listed there earn the ranking badges
+  UnifiedExtensionForFemiwikiRankingPages: ['페미위키:활동적인 사용자/데이터', '페미위키:활동적인 사용자/바이트 데이터']
+
+  UnifiedExtensionForFemiwikiSuggestedEdits: true
+  UnwatchedPageThreshold: 0
+  VisualEditorEditCheck: true
+
+  # Enable the section editing
+  VisualEditorEnableVisualSectionEditing: true
+
+  # Enable 2017 Wikitext Editor to opt-out
+  VisualEditorEnableWikitext: true
+
+  # Enable Single Edit Tab to opt-in
+  VisualEditorUseSingleEditTab: true
+
+  WatchlistExpiry: true
+
+  # Disable Welcome Survey
+  # (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see an example)
+  WelcomeSurveyEnabled: false
