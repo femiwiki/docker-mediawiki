@@ -25,16 +25,14 @@ RUN apt-get update && apt-get install -y \
       unzip \
   ;
 
-# Fonts for the share cards UnifiedExtensionForFemiwiki draws with GD and
-# rsvg-convert. Pretendard has no Hanja, so the two sans faces of Noto CJK stay
-# as the fallback for those; the serif faces would add 52MB.
-ARG PRETENDARD_URL=https://raw.githubusercontent.com/orioncactus/pretendard/v1.3.9
+# Share card fonts for UnifiedExtensionForFemiwiki; Noto CJK's sans faces stay
+# only for the Hanja that Pretendard lacks
 ADD --checksum=sha256:3ffbacde6ab8411f1d2db54bb9b1f0b3ee2a738932033722cf0388c06aed1c93 \
-    ${PRETENDARD_URL}/packages/pretendard/dist/public/static/Pretendard-Regular.otf /usr/local/share/fonts/pretendard/
+    https://raw.githubusercontent.com/orioncactus/pretendard/v1.3.9/packages/pretendard/dist/public/static/Pretendard-Regular.otf /usr/local/share/fonts/pretendard/
 ADD --checksum=sha256:2e91915fab54df71cc9598ebf608b2bdb54c6fe3c066ac61dff0bc44fca71cc7 \
-    ${PRETENDARD_URL}/packages/pretendard/dist/public/static/Pretendard-Bold.otf /usr/local/share/fonts/pretendard/
+    https://raw.githubusercontent.com/orioncactus/pretendard/v1.3.9/packages/pretendard/dist/public/static/Pretendard-Bold.otf /usr/local/share/fonts/pretendard/
 ADD --checksum=sha256:d31ddd9f2bed32fd7e302a205cf2380ba0de6529152d239ef99cfb6f261bfc04 \
-    ${PRETENDARD_URL}/LICENSE /usr/local/share/fonts/pretendard/OFL.txt
+    https://raw.githubusercontent.com/orioncactus/pretendard/v1.3.9/LICENSE /usr/local/share/fonts/pretendard/OFL.txt
 RUN apt-get install -y fonts-noto-cjk &&\
     rm /usr/share/fonts/opentype/noto/NotoSerifCJK-* &&\
     chmod 0644 /usr/local/share/fonts/pretendard/* &&\
