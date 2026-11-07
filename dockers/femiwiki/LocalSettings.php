@@ -797,9 +797,6 @@ Qzp1bkU7hhyyGYMbrb5eoDfzTnok9lnKXOkcAIRuK6SIQLCdoVZ5IDXUQ83zMxen
 EOK;
 $wgOAuth2PrivateKey = getenv( 'WG_O_AUTH_2_PRIVATE_KEY' );
 
-// PageImages
-$wgPageImagesOpenGraphFallbackImage = "/fw-resources/favicons/favicon-512.png";
-
 // PageViewInfoGA, so PageViewInfo reads page views from Google Analytics 4 instead of
 // Wikimedia's pageview API (#1282). The GA4 property's time zone is $wgLocaltimezone's.
 $wgPageViewInfoGAPropertyId = '258014701';
