@@ -91,6 +91,9 @@ extensions:
 # Sorted by key
 config:
   AbuseFilterEnableBlockedExternalDomain: true
+  # VisualEditor is the default editor, so nearly every first edit earned this badge
+  AchievementBadgesDisabledAchievements:
+    - visual-edit
   AchievementBadgesFacebookAppId: '1937597133150935'
   AchievementBadgesReplaceEchoThankYouEdit: true
   AchievementBadgesReplaceEchoWelcome: true
