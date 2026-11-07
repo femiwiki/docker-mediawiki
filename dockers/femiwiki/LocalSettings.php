@@ -80,10 +80,6 @@ if ( getenv( 'FW_PROFILER' ) === 'excimer' && PHP_SAPI !== 'cli' && extension_lo
 	$fwProfiler->start();
 }
 
-// Applied now rather than after this file, so the PHP below reads these values. Keep each key in one file.
-$wgSettings->loadFile( '/etc/mediawiki/LocalSettings.yaml' );
-$wgSettings->apply();
-
 // The URL base path of the wiki; see https://www.mediawiki.org/wiki/Manual:Short_URL
 $wgScriptPath = '';
 $wgArticlePath = "/w/$1";
@@ -555,9 +551,12 @@ $wgParsoidSettings = [
 // Extensions
 //
 
+// The extensions and plain values in LocalSettings.yaml. Applied now rather than after this file,
+// so extensions load in their old order and the PHP below reads these values.
+$wgSettings->loadFile( '/etc/mediawiki/LocalSettings.yaml' );
+$wgSettings->apply();
+
 // AbuseFilter
-wfLoadExtension( 'AbuseFilter' );
-$wgAbuseFilterEnableBlockedExternalDomain = true;
 $wgGroupPermissions['sysop']['abusefilter-modify'] = false;
 $wgGroupPermissions['abusefilter']['abusefilter-bypass-blocked-external-domains'] = true;
 $wgGroupPermissions['abusefilter']['abusefilter-modify-blocked-external-domains'] = true;
@@ -573,39 +572,16 @@ $wgGroupPermissions['sysop']['abusefilter-privatedetails'] = false;
 $wgGroupPermissions['checkuser']['abusefilter-privatedetails'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
-// AdvancedSearch
-wfLoadExtension( 'AdvancedSearch' );
-
-// AchievementBadges
-wfLoadExtension( 'AchievementBadges' );
-$wgAchievementBadgesReplaceEchoThankYouEdit = true;
-$wgAchievementBadgesReplaceEchoWelcome = true;
-$wgAchievementBadgesFacebookAppId = '1937597133150935';
-
-// AntiSpoof
-wfLoadExtension( 'AntiSpoof' );
-
 // AWS
-wfLoadExtension( 'AWS' );
-$wgAWSRegion = 'ap-northeast-2';
 // One bucket with a path per zone. $wgAWSBucketPrefix, which spread the zones
 // over four buckets, is deprecated by the extension.
 $wgAWSBucketName = 'uploads-302617221463-ap-northeast-2-an';
 // The default is the global endpoint, which answers 307 for a young bucket
 // until its name propagates. The regional one answers straight away.
 $wgAWSBucketDomain = '$1.s3.ap-northeast-2.amazonaws.com';
-$wgAWSRepoHashLevels = 2;
-$wgAWSRepoDeletedHashLevels = 2;
-
-// BetaFeatures
-wfLoadExtension( 'BetaFeatures' );
 
 // BounceHandler
-wfLoadExtension( 'BounceHandler' );
 $wgBounceHandlerInternalIPs = explode( ',', getenv( 'WG_BOUNCE_HANDLER_INTERNAL_IPS' ) );
-$wgBounceHandlerUnconfirmUsers = true;
-// Wikimedia's, within the default $wgBounceRecordPeriod of 7 days
-$wgBounceRecordLimit = 5;
 // SSM holds "placeholder" until the real value is entered by hand
 $fwVerpSecret = getenv( 'WG_VERP_SECRET' ) ?: '';
 if ( strlen( $fwVerpSecret ) >= 32 ) {
@@ -622,12 +598,8 @@ $wgHooks['ApiBeforeMain'][] = static function ( $main ) {
 	}
 };
 
-// CategoryTree
-wfLoadExtension( 'CategoryTree' );
-
 // Chart, rendered by the chart-renderer Lambda, which accepts only a token for this instance's
 // role (femiwiki/femiwiki#671). run and cron write the token, infra sets the URL
-wfLoadExtension( 'Chart' );
 if ( getenv( 'FW_CHART_RENDERER_URL' ) ) {
 	$fwChartRendererToken = '/run/secrets/chart-renderer-token';
 	$wgChartServiceUrl = getenv( 'FW_CHART_RENDERER_URL' ) .
@@ -642,30 +614,10 @@ $wgJsonConfigs['Chart.JsonConfig'] = [
 	'isLocal' => true,
 ];
 
-// CharInsert
-wfLoadExtension( 'CharInsert' );
-
-// CheckUser
-wfLoadExtension( 'CheckUser' );
-
-// Cite
-wfLoadExtension( 'Cite' );
-
-// CiteThisPage
-wfLoadExtension( 'CiteThisPage' );
-
 // Citoid
-wfLoadExtension( 'Citoid' );
 $wgCitoidFullRestbaseURL = 'https://ko.wikipedia.org/api/rest_';
 
-// CodeEditor
-wfLoadExtension( 'CodeEditor' );
-
-// CodeMirror
-wfLoadExtension( 'CodeMirror' );
-
 // ConfirmEdit
-wfLoadExtensions( [ 'ConfirmEdit', 'ConfirmEdit/hCaptcha' ] );
 $wgHCaptchaSiteKey = trim( getenv( 'WG_H_CAPTCHA_SITE_KEY' ) ?: '' );
 $wgHCaptchaSecretKey = trim( getenv( 'WG_H_CAPTCHA_SECRET_KEY' ) ?: '' );
 // hCaptcha refuses every signup when a key is missing, so without both it stays
@@ -679,12 +631,7 @@ $wgCaptchaTriggers['create'] = false;
 $wgCaptchaTriggers['addurl'] = false;
 $wgCaptchaTriggers['badlogin'] = false;
 
-// DarkMode
-wfLoadExtension( 'DarkMode' );
-$wgDarkModeTogglePosition = 'footer';
-
 // DelayedJobQueue
-wfLoadExtension( 'DelayedJobQueue' );
 // The database queue, plus delayed jobs, which $wgCdnReboundPurgeDelay needs
 $wgJobTypeConf['default'] = [
 	'class' => \MediaWiki\Extension\DelayedJobQueue\DelayedJobQueueDB::class,
@@ -692,18 +639,10 @@ $wgJobTypeConf['default'] = [
 	'claimTTL' => 3600,
 ];
 
-// Description2
-wfLoadExtension( 'Description2' );
-
 // DisableAccount
-wfLoadExtension( 'DisableAccount' );
 $wgGroupPermissions['sysop']['disableaccount'] = true;
 
-// Disambiguator
-wfLoadExtension( 'Disambiguator' );
-
 // DiscordRCFeed
-wfLoadExtension( 'DiscordRCFeed' );
 $wgRCFeeds['discord'] = [
 	'url' => getenv( 'WG_RC_FEEDS_DISCORD_URL' ) ?: '',
 	'omit_bots' => true,
@@ -737,31 +676,11 @@ $wgRCFeeds['discord'] = [
 	],
 ];
 
-// DiscussionTools
-wfLoadExtension( 'DiscussionTools' );
-
-// DismissableSiteNotice
-wfLoadExtension( 'DismissableSiteNotice' );
-
-// Echo
-wfLoadExtension( 'Echo' );
-$wgEchoMaxMentionsInEditSummary = 5;
-$wgEchoPollForUpdates = 60;
-$wgEchoPerUserBlacklist = true;
-
-// EmbedVideo
-wfLoadExtension( 'EmbedVideo' );
-
-// FacetedCategory
-wfLoadExtension( 'FacetedCategory' );
-
 // FediFeeds
-wfLoadExtension( 'FediFeeds' );
 // infra's Caddyfile routes /actors/* on this host to the REST route
 $wgFediFeedsActorBase = 'https://fedi.femiwiki.com/actors/';
 
 // FlaggedRevs
-wfLoadExtension( 'FlaggedRevs' );
 $wgFlaggedRevsNamespaces = [
 	NS_MAIN,
 	NS_PROJECT,
@@ -769,8 +688,6 @@ $wgFlaggedRevsNamespaces = [
 	// Module
 	828,
 ];
-// Use FlaggedRevs only as a protection-like mechanism
-$wgFlaggedRevsProtection = true;
 // Changes the settings of stable revisions of any page
 // FR_SHOW_STABLE_ALWAYS is 1.
 $wgDefaultUserOptions[ 'flaggedrevsstable' ] = 1;
@@ -784,55 +701,17 @@ $wgGroupPermissions['femiwiki-team']['stablesettings'] = true;
 // Everyone can view Special:UnreviewedPages
 $wgGroupPermissions['*']['unreviewedpages'] = true;
 
-// Flow
-wfLoadExtension( 'Flow' );
-$wgFlowDefaultLimit = 2;
-
 // Gadgets
-wfLoadExtension( 'Gadgets' );
-$wgGadgetsRepo = 'json+definition';
 $wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
 $wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
 $wgGrantPermissions['editinterface']['gadgets-edit'] = true;
 $wgGrantPermissions['editinterface']['gadgets-definition-edit'] = true;
 
-// GoogleNewsSitemap
-wfLoadExtension( 'GoogleNewsSitemap' );
-
-// GoogleSiteSearch
-wfLoadExtension( 'GoogleSiteSearch' );
-$wgGoogleSiteSearchCSEID = '44508684d5c0e489c';
-$wgGoogleSiteSearchAppend = true;
-
 // Graph
 // https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/EWL4AGBEZEDMNNFTM4FRD4MHOU3CVESO/
 // wfLoadExtension( 'Graph' );
 
-// GrowthExperiments, which requires CommunityConfiguration
-wfLoadExtension( 'CommunityConfiguration' );
-wfLoadExtension( 'GrowthExperiments' );
-
-// UnifiedExtensionForFemiwiki finds the tasks and topics instead of CirrusSearch.
-// The recommendation task types need services we don't run.
-$wgGEHomepageSuggestedEditsEnabled = true;
-$wgGEHomepageSuggestedEditsEnableTopics = true;
-$wgGENewcomerTasksLinkRecommendationsEnabled = false;
-$wgGENewcomerTasksImageRecommendationsEnabled = false;
-$wgGENewcomerTasksSectionImageRecommendationsEnabled = false;
-
-// Disable Welcome Survey
-// (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see an example)
-$wgWelcomeSurveyEnabled = false;
-
-// GuidedTour
-wfLoadExtension( 'GuidedTour' );
-
-// InputBox
-wfLoadExtension( 'InputBox' );
-
 // JsonConfig, for the Data: pages Chart draws from
-wfLoadExtension( 'JsonConfig' );
-$wgJsonConfigEnableLuaSupport = true;
 $wgJsonConfigModels['Tabular.JsonConfig'] = 'JsonConfig\JCTabularContent';
 $wgJsonConfigs['Tabular.JsonConfig'] = [
 	'namespace' => 486,
@@ -842,17 +721,9 @@ $wgJsonConfigs['Tabular.JsonConfig'] = [
 	'isLocal' => true,
 ];
 
-// Josa
-wfLoadExtension( 'Josa' );
-
 // Kartographer, with tiles from tile.openstreetmap.org since maps.wikimedia.org is closed to
 // other wikis. That server has no styles or @2x tiles, and no /img/ snapshots for static mode
-wfLoadExtension( 'Kartographer' );
 $wgKartographerMapServer = 'https://tile.openstreetmap.org';
-$wgKartographerStyles = [ '' ];
-$wgKartographerDfltStyle = '';
-$wgKartographerSrcsetScales = [];
-$wgKartographerSimpleStyleMarkers = false;
 $wgJsonConfigModels['Map.JsonConfig'] = 'JsonConfig\JCMapDataContent';
 $wgJsonConfigs['Map.JsonConfig'] = [
 	'namespace' => 486,
@@ -862,23 +733,7 @@ $wgJsonConfigs['Map.JsonConfig'] = [
 	'isLocal' => true,
 ];
 
-// Linter
-wfLoadExtension( 'Linter' );
-
-// LoginNotify
-wfLoadExtension( 'LoginNotify' );
-
-// Math
-wfLoadExtension( 'Math' );
-$wgMathUseInternalRestbasePath = false;
-
 // MobileFrontend
-wfLoadExtension( 'MobileFrontend' );
-// Disable automatically showing mobile view, as FemiwikiSkin is little responsive and
-// MobileFrontend is not tested enough.
-$wgMFAutodetectMobileView = false;
-// Enable mobile preferences in Special:Preferences
-$wgMFEnableMobilePreferences = true;
 // Disable CollapsibleSections in anywhere.
 $wgMFNamespacesWithoutCollapsibleSections = [
 	NS_MAIN,
@@ -924,30 +779,8 @@ $wgMFMobileFormatterOptions = [
 	],
 ];
 $wgDefaultUserOptions['mobile-specialpages'] = false;
-// Advanced mode is available for users
-$wgMFAdvancedMobileContributions = true;
-// Enable the use Wikibase and associated features
-$wgMFUseWikibase = true;
-$wgMFEnableWikidataDescriptions = [
-	'base' => false,
-	'beta' => false,
-	'amc' => false,
-];
-
-// Newsletter
-wfLoadExtension( 'Newsletter' );
-
-// Nuke
-wfLoadExtension( 'Nuke' );
-
-// OATHAuth
-wfLoadExtension( 'OATHAuth' );
 
 // OAuth
-wfLoadExtension( 'OAuth' );
-// OAuth itself treats false as the local source and deprecates it since 1.45
-$wgMWOAuthSharedUserIDs = true;
-$wgMWOAuthSharedUserSource = 'local';
 $wgGroupPermissions['oauthadmin']['mwoauthmanageconsumer'] = true;
 $wgGroupPermissions['user']['mwoauthmanagemygrants'] = true;
 $wgGroupPermissions['user']['mwoauthupdateownconsumer'] = true;
@@ -966,73 +799,28 @@ EOK;
 $wgOAuth2PrivateKey = getenv( 'WG_O_AUTH_2_PRIVATE_KEY' );
 
 // PageImages
-wfLoadExtension( 'PageImages' );
-$wgPageImagesLeadSectionOnly = false;
 $wgPageImagesOpenGraphFallbackImage = "/fw-resources/favicons/favicon-512.png";
-
-// PageViewInfo
-wfLoadExtension( 'PageViewInfo' );
 
 // PageViewInfoGA, so PageViewInfo reads page views from Google Analytics 4 instead of
 // Wikimedia's pageview API (#1282). The GA4 property's time zone is $wgLocaltimezone's.
-wfLoadExtension( 'PageViewInfoGA' );
 $wgPageViewInfoGAPropertyId = '258014701';
-// Workload Identity Federation from the instance's IAM role (femiwiki/femiwiki#670): no key. infra
-// writes this configuration, and google-subject-token.php the token it names
-$wgPageViewInfoGACredentialsFile = '/etc/mediawiki/google-analytics.json';
 // The Google tag, with the web stream's measurement ID. It replaces the UA tag in MediaWiki:Common.js
 $wgPageViewInfoGATrackingID = 'G-023DFCJPXE';
 
-// ParserFunctions
-wfLoadExtension( 'ParserFunctions' );
-$wgPFEnableStringFunctions = true;
-
-// Poem
-wfLoadExtension( 'Poem' );
-
 // Popups
-wfLoadExtension( 'Popups' );
 $wgDefaultUserOptions[ 'popupsreferencepreviews' ] = '1';
 
-// QuickInstantCommons
-wfLoadExtension( 'QuickInstantCommons' );
-
-// RealMe
-wfLoadExtension( 'RealMe' );
-
-// Renameuser
-wfLoadExtension( 'Renameuser' );
-
-// ReplaceText
-wfLoadExtension( 'ReplaceText' );
-
-// RevisionSlider
-wfLoadExtension( 'RevisionSlider' );
-
-// Sanctions
-wfLoadExtension( 'Sanctions' );
-// New sanctions are discussed on their own subpages with DiscussionTools. Sanctions already on
-// Flow topics stay there until they end.
-$wgSanctionsDiscussionBackend = 'DiscussionTools';
-
 // Scribunto
-wfLoadExtension( 'Scribunto' );
-$wgScribuntoDefaultEngine = 'luasandbox';
 $wgScribuntoEngineConf['luasandbox']['cpuLimit'] = 3;
 # 50 MiB
 $wgScribuntoEngineConf['luasandbox']['memoryLimit'] = 52428800;
 
-// SecureLinkFixer
-wfLoadExtension( 'SecureLinkFixer' );
-
 // SecurePoll
-wfLoadExtension( 'SecurePoll' );
 $wgGroupPermissions['electionadmin']['securepoll-create-poll'] = true;
 $wgGroupPermissions['electionadmin']['securepoll-edit-poll'] = true;
 $wgGroupPermissions['electionadmin']['securepoll-view-voter-pii'] = true;
 
 // SpamBlacklist
-wfLoadExtension( 'SpamBlacklist' );
 $wgBlacklistSettings = [
 	'spam' => [
 		'files' => [
@@ -1046,17 +834,7 @@ $wgBlacklistSettings = [
 	],
 ];
 
-// SyntaxHighlight
-wfLoadExtension( 'SyntaxHighlight_GeSHi' );
-
-// TemplateData
-wfLoadExtension( 'TemplateData' );
-
-// TemplateSandbox
-wfLoadExtension( 'TemplateSandbox' );
-
 // TemplateStyles
-wfLoadExtension( 'TemplateStyles' );
 $wgTemplateStylesAllowedUrls = [
 	'font' => [
 		'<^https://fonts\\.googleapis\\.com/css(?:[?#]|$)>',
@@ -1064,63 +842,27 @@ $wgTemplateStylesAllowedUrls = [
 ];
 
 // TemplateWizard
-wfLoadExtension( 'TemplateWizard' );
 $wgDefaultUserOptions['templatewizard-betafeature'] = 1;
 
-// TextExtracts
-wfLoadExtension( 'TextExtracts' );
-
-// Thanks
-wfLoadExtension( 'Thanks' );
-
-// TitleBlacklist
-wfLoadExtension( 'TitleBlacklist' );
-
 // TorBlock
-wfLoadExtension( 'TorBlock' );
 $wgGroupPermissions['user']['torunblocked'] = false;
 
 // Translate
-wfLoadExtension( 'Translate' );
 $wgGroupPermissions['autoconfirmed']['translate'] = true;
 $wgGroupPermissions['translationadmin']['pagetranslation'] = true;
 $wgGroupPermissions['translationadmin']['translate-manage'] = true;
 $wgGroupPermissions['translationadmin']['translate-messagereview'] = true;
 $wgGroupPermissions['translationadmin']['pagelang'] = true;
-$wgTranslatePageTranslationULS = true;
-$wgPageTranslationLanguageList = 'sidebar-always';
-$wgTranslatePermissionUrl = 'Project:번역';
 
 // TwoColConflict
-wfLoadExtension( 'TwoColConflict' );
 // Enable twocolconflict to opt-out
 $wgDefaultUserOptions['twocolconflict'] = '1';
 
-// UnifiedExtensionForFemiwiki
-wfLoadExtension( 'UnifiedExtensionForFemiwiki' );
-$wgUnifiedExtensionForFemiwikiPreAuth = true;
-$wgUnifiedExtensionForFemiwikiSuggestedEdits = true;
-$wgUnifiedExtensionForFemiwikiBlockByEmail = false;
-$wgUnifiedExtensionForFemiwikiModifyEmailTheme = true;
-
 // UniversalLanguageSelector
-wfLoadExtension( 'UniversalLanguageSelector' );
-$wgULSPosition = 'interlanguage';
-$wgULSIMEEnabled = false;
-// Safe only while Caddy's mwcache has vary_accept_language
-// (femiwiki/caddy-mwcache#188); check-cached-twice.php checks it
-$wgULSLanguageDetection = true;
-// A language cookie is not in the cache key, so anonymous readers still
-// change language only with ?uselang=
-$wgULSAnonCanChangeLanguage = false;
 // Enable ULS compact links beta feature to opt-out
 $wgDefaultUserOptions['uls-compact-links'] = 1;
 
-// UnlinkedWikibase
-wfLoadExtension( 'UnlinkedWikibase' );
-
 // UploadWizard
-wfLoadExtension( 'UploadWizard' );
 // Needed to make UploadWizard work in IE, see https://phabricator.wikimedia.org/T41877
 $wgApiFrameOptions = 'SAMEORIGIN';
 $wgExtensionFunctions[] = static function () {
@@ -1170,7 +912,6 @@ $wgAddGroups['bureaucrat']['upwizcampeditors'] = true;
 $wgRemoveGroups['bureaucrat']['upwizcampeditors'] = true;
 
 // VisualEditor
-wfLoadExtension( 'VisualEditor' );
 // Namespaces in which to enable VisualEditor
 $wgVisualEditorAvailableNamespaces = [
 	NS_SPECIAL => true,
@@ -1192,18 +933,10 @@ $wgVisualEditorAvailableNamespaces = [
 	NS_CATEGORY_TALK => true,
 	'_merge_strategy' => 'array_plus',
 ];
-// Enable the section editing
-$wgVisualEditorEnableVisualSectionEditing = true;
-// Enable 2017 Wikitext Editor to opt-out
-$wgVisualEditorEnableWikitext = true;
 $wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
-// Enable Single Edit Tab to opt-in
-$wgVisualEditorUseSingleEditTab = true;
 $wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
-$wgVisualEditorEditCheck = true;
 
 // Widgets
-wfLoadExtension( 'Widgets' );
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
 
 // CollaborationKit is gone, but old revisions still carry its content

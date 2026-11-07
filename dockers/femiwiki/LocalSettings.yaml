@@ -1,8 +1,92 @@
-# Plain values, loaded before the rest of LocalSettings.php (#1271).
+# Plain values, loaded before the extension settings in LocalSettings.php (#1271).
 # Format: https://www.mediawiki.org/wiki/Manual:YAML_settings_file_format
 
+# In the order LocalSettings.php loaded them. Wikibase and the extensions after it stay there.
 extensions:
+  - AbuseFilter
+  - AdvancedSearch
+  - AchievementBadges
+  - AntiSpoof
+  - AWS
+  - BetaFeatures
+  - BounceHandler
+  - CategoryTree
+  - Chart
+  - CharInsert
+  - CheckUser
+  - Cite
+  - CiteThisPage
+  - Citoid
+  - CodeEditor
+  - CodeMirror
+  - ConfirmEdit
+  - ConfirmEdit/hCaptcha
+  - DarkMode
+  - DelayedJobQueue
+  - Description2
+  - DisableAccount
+  - Disambiguator
+  - DiscordRCFeed
+  - DiscussionTools
+  - DismissableSiteNotice
+  - Echo
+  - EmbedVideo
+  - FacetedCategory
+  - FediFeeds
+  - FlaggedRevs
+  - Flow
+  - Gadgets
+  - GoogleNewsSitemap
+  - GoogleSiteSearch
+  - CommunityConfiguration
+  - GrowthExperiments
+  - GuidedTour
+  - InputBox
+  - JsonConfig
+  - Josa
+  - Kartographer
+  - Linter
+  - LoginNotify
+  - Math
+  - MobileFrontend
+  - Newsletter
+  - Nuke
+  - OATHAuth
+  - OAuth
+  - PageImages
+  - PageViewInfo
+  - PageViewInfoGA
+  - ParserFunctions
+  - Poem
+  - Popups
+  - QuickInstantCommons
+  - RealMe
   - RelatedArticles
+  - Renameuser
+  - ReplaceText
+  - RevisionSlider
+  - Sanctions
+  - Scribunto
+  - SecureLinkFixer
+  - SecurePoll
+  - SpamBlacklist
+  - SyntaxHighlight_GeSHi
+  - TemplateData
+  - TemplateSandbox
+  - TemplateStyles
+  - TemplateWizard
+  - TextExtracts
+  - Thanks
+  - TitleBlacklist
+  - TorBlock
+  - Translate
+  - TwoColConflict
+  - UnifiedExtensionForFemiwiki
+  - UniversalLanguageSelector
+  - UnlinkedWikibase
+  - UploadWizard
+  - VisualEditor
+  - Widgets
 
 config:
   Sitename: 페미위키
@@ -18,6 +102,132 @@ config:
   WatchlistExpiry: true
   EnableWatchlistLabels: true
 
+  # AbuseFilter
+  AbuseFilterEnableBlockedExternalDomain: true
+
+  # AchievementBadges
+  AchievementBadgesReplaceEchoThankYouEdit: true
+  AchievementBadgesReplaceEchoWelcome: true
+  AchievementBadgesFacebookAppId: '1937597133150935'
+
+  # AWS
+  AWSRegion: ap-northeast-2
+  AWSRepoHashLevels: 2
+  AWSRepoDeletedHashLevels: 2
+
+  # BounceHandler
+  BounceHandlerUnconfirmUsers: true
+  # Wikimedia's, within the default $wgBounceRecordPeriod of 7 days
+  BounceRecordLimit: 5
+
+  # DarkMode
+  DarkModeTogglePosition: footer
+
+  # Echo
+  EchoMaxMentionsInEditSummary: 5
+  EchoPollForUpdates: 60
+  EchoPerUserBlacklist: true
+
+  # FlaggedRevs
+  # Use FlaggedRevs only as a protection-like mechanism
+  FlaggedRevsProtection: true
+
+  # Flow
+  FlowDefaultLimit: 2
+
+  # Gadgets
+  GadgetsRepo: json+definition
+
+  # GoogleSiteSearch
+  GoogleSiteSearchCSEID: 44508684d5c0e489c
+  GoogleSiteSearchAppend: true
+
+  # GrowthExperiments: UnifiedExtensionForFemiwiki finds the tasks and topics instead of CirrusSearch.
+  # The recommendation task types need services we don't run.
+  GEHomepageSuggestedEditsEnabled: true
+  GEHomepageSuggestedEditsEnableTopics: true
+  GENewcomerTasksLinkRecommendationsEnabled: false
+  GENewcomerTasksImageRecommendationsEnabled: false
+  GENewcomerTasksSectionImageRecommendationsEnabled: false
+  # Disable Welcome Survey
+  # (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see an example)
+  WelcomeSurveyEnabled: false
+
+  # JsonConfig, for the Data: pages Chart draws from
+  JsonConfigEnableLuaSupport: true
+
+  # Kartographer
+  KartographerStyles: ['']
+  KartographerDfltStyle: ''
+  KartographerSrcsetScales: []
+  KartographerSimpleStyleMarkers: false
+
+  # Math
+  MathUseInternalRestbasePath: false
+
+  # MobileFrontend: Disable automatically showing mobile view, as FemiwikiSkin is little responsive and
+  # MobileFrontend is not tested enough.
+  MFAutodetectMobileView: false
+  # Enable mobile preferences in Special:Preferences
+  MFEnableMobilePreferences: true
+  # Advanced mode is available for users
+  MFAdvancedMobileContributions: true
+  # Enable the use Wikibase and associated features
+  MFUseWikibase: true
+  MFEnableWikidataDescriptions: {base: false, beta: false, amc: false}
+
+  # OAuth
+  # OAuth itself treats false as the local source and deprecates it since 1.45
+  MWOAuthSharedUserIDs: true
+  MWOAuthSharedUserSource: local
+
+  # PageImages
+  PageImagesLeadSectionOnly: false
+
+  # PageViewInfoGA: Workload Identity Federation from the instance's IAM role (femiwiki/femiwiki#670): no key. infra
+  # writes this configuration, and google-subject-token.php the token it names
+  PageViewInfoGACredentialsFile: /etc/mediawiki/google-analytics.json
+
+  # ParserFunctions
+  PFEnableStringFunctions: true
+
   # RelatedArticles
   RelatedArticlesCardLimit: 6
   RelatedArticlesDescriptionSource: textextracts
+
+  # Sanctions: New sanctions are discussed on their own subpages with DiscussionTools. Sanctions already on
+  # Flow topics stay there until they end.
+  SanctionsDiscussionBackend: DiscussionTools
+
+  # Scribunto
+  ScribuntoDefaultEngine: luasandbox
+
+  # Translate
+  TranslatePageTranslationULS: true
+  PageTranslationLanguageList: sidebar-always
+  TranslatePermissionUrl: Project:번역
+
+  # UnifiedExtensionForFemiwiki
+  UnifiedExtensionForFemiwikiPreAuth: true
+  UnifiedExtensionForFemiwikiSuggestedEdits: true
+  UnifiedExtensionForFemiwikiBlockByEmail: false
+  UnifiedExtensionForFemiwikiModifyEmailTheme: true
+
+  # UniversalLanguageSelector
+  ULSPosition: interlanguage
+  ULSIMEEnabled: false
+  # Safe only while Caddy's mwcache has vary_accept_language
+  # (femiwiki/caddy-mwcache#188); check-cached-twice.php checks it
+  ULSLanguageDetection: true
+  # A language cookie is not in the cache key, so anonymous readers still
+  # change language only with ?uselang=
+  ULSAnonCanChangeLanguage: false
+
+  # VisualEditor
+  # Enable the section editing
+  VisualEditorEnableVisualSectionEditing: true
+  # Enable 2017 Wikitext Editor to opt-out
+  VisualEditorEnableWikitext: true
+  # Enable Single Edit Tab to opt-in
+  VisualEditorUseSingleEditTab: true
+  VisualEditorEditCheck: true
