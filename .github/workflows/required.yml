@@ -37,10 +37,15 @@ jobs:
     permissions:
       contents: read
 
+  required-gate:
+    uses: femiwiki/.github/.github/workflows/required-gate.yml@ef93d8c1f53e97717700ca68541f7be6a29f90fd
+    permissions:
+      contents: read
+
   # The one check branch protection requires. What has to pass is the
   # workflows called above, so adding a check does not touch femiwiki/infra.
   required:
-    needs: [lint, images, long-comments, shared-lint]
+    needs: [lint, images, long-comments, shared-lint, required-gate]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
