@@ -191,6 +191,10 @@ config:
   UnifiedExtensionForFemiwikiBlockByEmail: false
   UnifiedExtensionForFemiwikiModifyEmailTheme: true
   UnifiedExtensionForFemiwikiPreAuth: true
+
+  # Pages rankingbot saves the rankings to; users listed there earn the ranking badges
+  UnifiedExtensionForFemiwikiRankingPages: ['페미위키:활동적인 사용자/데이터', '페미위키:활동적인 사용자/바이트 데이터']
+
   UnifiedExtensionForFemiwikiSuggestedEdits: true
   UnwatchedPageThreshold: 0
   VisualEditorEditCheck: true
