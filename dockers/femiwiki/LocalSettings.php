@@ -855,8 +855,8 @@ $wgGroupPermissions['translationadmin']['pagelang'] = true;
 $wgDefaultUserOptions['twocolconflict'] = '1';
 
 // UniversalLanguageSelector
-// Enable ULS compact links beta feature to opt-out
-$wgDefaultUserOptions['uls-compact-links'] = 1;
+// No page has interlanguage links, so this saves ~24 KB per page (femiwiki/femiwiki#612)
+$wgDefaultUserOptions['compact-language-links'] = false;
 
 // UploadWizard
 // Needed to make UploadWizard work in IE, see https://phabricator.wikimedia.org/T41877

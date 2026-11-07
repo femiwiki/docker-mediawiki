@@ -195,6 +195,11 @@ config:
   ULSLanguageDetection: true
 
   ULSPosition: interlanguage
+
+  # No web font is the default for Korean, English or Japanese; readers can still turn them on
+  # in the language settings, e.g. for OpenDyslexic (femiwiki/femiwiki#612)
+  ULSWebfontsEnabled: false
+
   UnifiedExtensionForFemiwikiBlockByEmail: false
   UnifiedExtensionForFemiwikiModifyEmailTheme: true
   UnifiedExtensionForFemiwikiPreAuth: true
