@@ -78,6 +78,11 @@ RUN install-php-extensions memcached-3.4.0 ||\
 RUN install-php-extensions apcu-5.1.28 ||\
     install-php-extensions krakjoe/apcu@v5.1.28
 
+# MediaWiki parses LocalSettings.yaml on every request, faster with this than
+# with Symfony YAML. See #1826.
+RUN install-php-extensions yaml-2.3.0 ||\
+    install-php-extensions php/pecl-file_formats-yaml@2.3.0
+
 # A sampling profiler, so where CPU goes stops being inferred from Caddy's
 # wall-clock durations. It costs nothing until MediaWiki is told to use it, and
 # it samples on a timer rather than instrumenting calls, which is why it can be
