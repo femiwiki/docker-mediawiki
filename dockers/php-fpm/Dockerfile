@@ -78,8 +78,8 @@ RUN install-php-extensions memcached-3.4.0 ||\
 RUN install-php-extensions apcu-5.1.28 ||\
     install-php-extensions krakjoe/apcu@v5.1.28
 
-# MediaWiki parses LocalSettings.yaml on every request; this parses it in
-# 0.13 ms instead of Symfony YAML's 0.7 ms. See #1826.
+# MediaWiki parses LocalSettings.yaml on every request, faster with this than
+# with Symfony YAML. See #1826.
 RUN install-php-extensions yaml-2.3.0 ||\
     install-php-extensions php/pecl-file_formats-yaml@2.3.0
 
