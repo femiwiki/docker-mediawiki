@@ -191,6 +191,9 @@ $wgObjectCaches['femiwiki-memcached-pecl'] = [
 	'class' => \Wikimedia\ObjectCache\MemcachedPeclBagOStuff::class,
 	'loggroup' => 'memcached',
 	'routingPrefix' => 'pecl/',
+	// WANObjectCache sets are noreply, so with Nagle on the next command waits out
+	// memcached's delayed ACK: about 45 ms per set (#1807)
+	'allow_tcp_nagle_delay' => false,
 ];
 // $default is not typed: CACHE_MEMCACHED is the string 'memcached-php' and
 // CACHE_DB is the integer 1, so these constants have no one type.
