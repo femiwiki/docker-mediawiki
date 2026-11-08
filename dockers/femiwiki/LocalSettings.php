@@ -556,7 +556,13 @@ $wgParsoidSettings = [
 
 // The extensions and plain values in LocalSettings.yaml. Applied now rather than after this file,
 // so extensions load in their old order and the PHP below reads these values.
-$wgSettings->loadFile( '/etc/mediawiki/LocalSettings.yaml' );
+$fwSettingsFile = new MediaWiki\Settings\Source\FileSource( '/etc/mediawiki/LocalSettings.yaml' );
+// Setup.php gives MediaWiki no cache for settings files, so cache it in APCu ourselves.
+// Not in CLI, where APCu is off and CachedSource would wait on a lock that never comes.
+$wgSettings->load( function_exists( 'apcu_enabled' ) && apcu_enabled()
+	? new MediaWiki\Settings\Cache\CachedSource( new Wikimedia\ObjectCache\APCUBagOStuff(), $fwSettingsFile )
+	: $fwSettingsFile
+);
 $wgSettings->apply();
 
 // AbuseFilter
