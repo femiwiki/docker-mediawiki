@@ -121,6 +121,9 @@ config:
   FediFeedsAutoFollow:
     - bsky.brid.gy@bsky.brid.gy
 
+  # The share button shares index.php?curid= links, with no percent-encoded title
+  FemiwikiShareByPageId: true
+
   # Use FlaggedRevs only as a protection-like mechanism
   FlaggedRevsProtection: true
 
