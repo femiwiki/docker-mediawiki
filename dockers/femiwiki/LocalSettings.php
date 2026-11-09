@@ -405,6 +405,14 @@ foreach ( [
 $wgExtraNamespaces[NS_BBS] = '게시판';
 $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
+// Structured Discussions (Flow) is gone; its boards and topics live on as wikitext
+// talk pages. The topic namespace stays so 주제: links keep working as redirects
+// (see ReplaceFlowPages.php), and pages still holding Flow revisions show a
+// notice instead of failing.
+$wgExtraNamespaces[NS_TOPIC] = '주제';
+$wgNamespaceAliases['Topic'] = NS_TOPIC;
+$wgContentHandlers['flow-board'] = MediaWiki\Content\FallbackContentHandler::class;
+
 // Permission
 $wgAutoConfirmAge = 3600;
 $wgGroupPermissions['*']['createaccount'] = true;
@@ -412,12 +420,8 @@ $wgGroupPermissions['*']['createaccount'] = true;
 $wgGroupPermissions['*']['browsearchive'] = true;
 $wgGroupPermissions['*']['deletedhistory'] = true;
 $wgGroupPermissions['*']['deletedtext'] = true;
-$wgGroupPermissions['user']['flow-hide'] = false;
-$wgGroupPermissions['user']['flow-lock'] = false;
 $wgGroupPermissions['user']['editcontentmodel'] = false;
 $wgGroupPermissions['user']['move'] = false;
-$wgGroupPermissions['autoconfirmed']['flow-hide'] = true;
-$wgGroupPermissions['autoconfirmed']['flow-lock'] = true;
 $wgGroupPermissions['autoconfirmed']['editcontentmodel'] = true;
 $wgGroupPermissions['autoconfirmed']['move'] = true;
 $wgGroupPermissions['sysop']['renameuser'] = true;
