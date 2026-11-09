@@ -74,6 +74,9 @@ fw_install_crontab() {
     fi
     if [ "$jobs" = jobs ]; then
       cat /etc/femiwiki/crontab
+      # The cached special pages such as Special:AncientPages; a full run took
+      # about 10 s on 2026-11-07.
+      echo "${FW_SPECIAL_PAGES_SCHEDULE:-1 5 * * *} /usr/local/bin/update-special-pages > /proc/1/fd/1 2>&1"
       # The types LocalSettings keeps off the default runner, a few at a time.
       # Unset means UnlinkedWikibaseFetch; empty means none.
       if [ -n "${FW_JOB_SLOW_TYPES-UnlinkedWikibaseFetch}" ]; then
