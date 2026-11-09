@@ -5,11 +5,14 @@ ARG CADDY_RATELIMIT_COMMIT=5625512f24f6f59d6f64fb3aafe5eecff0b286db
 ARG CADDY_CLOUDFRONT_IP_COMMIT=784a775e472892e784dc7cc6ff4ae2799d8404d8
 
 # certmagic-s3 lists a directory without a trailing slash, so the rate limiter
-# never found another generation's counts; see femiwiki/infra#1121
-COPY certmagic-s3-list.patch /tmp/
+# never found another generation's counts; see femiwiki/infra#1121. It also
+# reads only the instance's role, so the shared credentials file goes first
+# for a container with its own role from IAM Roles Anywhere (femiwiki/infra#1173)
+COPY certmagic-s3-list.patch certmagic-s3-credentials.patch /tmp/
 RUN git clone -q https://github.com/ss098/certmagic-s3 /src/certmagic-s3 &&\
     git -C /src/certmagic-s3 checkout -q "${CADDY_CERTMAGIC_S3_COMMIT}" &&\
-    git -C /src/certmagic-s3 apply /tmp/certmagic-s3-list.patch
+    git -C /src/certmagic-s3 apply /tmp/certmagic-s3-list.patch &&\
+    git -C /src/certmagic-s3 apply /tmp/certmagic-s3-credentials.patch
 
 RUN XCADDY_DEBUG=1 xcaddy build v2.11.7 \
       --with github.com/caddy-dns/route53 \
