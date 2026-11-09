@@ -518,9 +518,9 @@ $wgHooks['ContentSecurityPolicyDirectives'][] = static function ( array &$direct
 	) );
 };
 
-// As WMF does. Never no-referrer: Caddy's login_walk counts on the same-site
-// Referer (femiwiki/femiwiki#105)
-$wgReferrerPolicy = [ 'origin-when-cross-origin', 'origin' ];
+// Browsers' own default, also for old ones. Never no-referrer: Caddy's login_walk
+// and OSM tiles count on the Referer (femiwiki/femiwiki#105)
+$wgReferrerPolicy = [ 'strict-origin-when-cross-origin', 'origin' ];
 
 // all pages (that are not redirects) are considered as valid articles
 $wgArticleCountMethod = 'any';
