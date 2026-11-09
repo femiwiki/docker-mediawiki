@@ -8,14 +8,16 @@ WARMUP_PORT=8443
 # on their schedule rather than ours. Passing it in makes that change an
 # apply; the copy in the image is what serves when nothing is passed.
 if [[ -n "${FW_ROBOTS_TXT:-}" ]]; then
-  printf '%s\n' "$FW_ROBOTS_TXT" > /srv/docroot/robots.txt
+  printf '%s' "$FW_ROBOTS_TXT" > /srv/docroot/robots.txt
+  [[ "$FW_ROBOTS_TXT" == *$'\n' ]] || printf '\n' >> /srv/docroot/robots.txt
 fi
 
 # The same for the Caddyfile, so a retuned zone is an apply rather than an
 # image. A broken file fails `caddy adapt` below, so the container never gets
 # healthy and the old one keeps serving.
 if [[ -n "${FW_CADDYFILE:-}" ]]; then
-  printf '%s\n' "$FW_CADDYFILE" > Caddyfile
+  printf '%s' "$FW_CADDYFILE" > Caddyfile
+  [[ "$FW_CADDYFILE" == *$'\n' ]] || printf '\n' >> Caddyfile
 fi
 
 caddy adapt --config Caddyfile --adapter caddyfile > /tmp/caddy.json
