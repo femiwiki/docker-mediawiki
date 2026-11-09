@@ -518,9 +518,8 @@ $wgHooks['ContentSecurityPolicyDirectives'][] = static function ( array &$direct
 	) );
 };
 
-// Other sites see only femiwiki.com, not the page, as WMF does; the second is for
-// browsers without origin-when-cross-origin. Never no-referrer: Caddy's login_walk
-// counts on the same-site Referer. femiwiki/femiwiki#105
+// As WMF does. Never no-referrer: Caddy's login_walk counts on the same-site
+// Referer (femiwiki/femiwiki#105)
 $wgReferrerPolicy = [ 'origin-when-cross-origin', 'origin' ];
 
 // all pages (that are not redirects) are considered as valid articles
