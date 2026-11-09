@@ -31,6 +31,7 @@ $command = [
 	'--profile-arn', $profileArn,
 	'--role-arn', $roleArn,
 ];
+// phpcs:ignore MediaWiki.Usage.ForbiddenFunctions.proc_open -- a CLI script outside MediaWiki
 $process = proc_open( $command, [ 1 => [ 'pipe', 'w' ], 2 => [ 'pipe', 'w' ] ], $pipes );
 if ( $process === false ) {
 	fwrite( STDERR, "Cannot run aws_signing_helper\n" );
@@ -42,7 +43,9 @@ $status = proc_close( $process );
 
 $credentials = json_decode( (string)$out, true );
 if ( $status !== 0 || !is_array( $credentials )
-	|| !isset( $credentials['AccessKeyId'], $credentials['SecretAccessKey'], $credentials['SessionToken'] )
+	|| !isset( $credentials['AccessKeyId'] )
+	|| !isset( $credentials['SecretAccessKey'] )
+	|| !isset( $credentials['SessionToken'] )
 ) {
 	// The helper's error names the certificate or the role, never the credentials
 	fwrite( STDERR, 'aws_signing_helper failed: ' . trim( (string)$err ) . "\n" );

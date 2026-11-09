@@ -127,9 +127,11 @@ ARG AWS_SIGNING_HELPER_VERSION=1.7.1
 RUN ARCH="$(case "$TARGETARCH" in amd64) echo X86_64 ;; arm64) echo Aarch64 ;; esac)" &&\
     BASE="https://rolesanywhere.amazonaws.com/releases/${AWS_SIGNING_HELPER_VERSION}/${ARCH}/Linux/Amzn2023" &&\
     curl -fSL "$BASE/aws_signing_helper" -o /tmp/aws_signing_helper &&\
-    echo "$(curl -fsSL "$BASE/aws_signing_helper.sha256" | cut -d' ' -f1)  /tmp/aws_signing_helper" | sha256sum -c &&\
+    curl -fSL "$BASE/aws_signing_helper.sha256" -o /tmp/aws_signing_helper.sha256sums &&\
+    sed "s|  .*|  /tmp/aws_signing_helper|" /tmp/aws_signing_helper.sha256sums > /tmp/aws_signing_helper.sha256 &&\
+    sha256sum -c /tmp/aws_signing_helper.sha256 &&\
     install -m 0755 /tmp/aws_signing_helper /usr/local/bin/aws_signing_helper &&\
-    rm /tmp/aws_signing_helper
+    rm /tmp/aws_signing_helper /tmp/aws_signing_helper.sha256sums /tmp/aws_signing_helper.sha256
 
 # php-fpm's status page and an opcache report, read through the metrics site in
 # the Caddyfile. /srv/metrics is outside the public site's root.
