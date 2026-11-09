@@ -7,6 +7,10 @@ fw_load_secrets() {
   if [ -z "${SSM_SECRETS:-}" ]; then
     return
   fi
+  # This container's own role, when infra gives it a certificate (femiwiki/infra#1173). Without
+  # it chamber cannot read a secret, so fail the start.
+  php /usr/local/lib/femiwiki/aws-credentials.php
+
   set +x -a
   WG_DB_PASSWORD="$(chamber read -q mysql/users/mediawiki password)"
   WG_O_AUTH_2_PRIVATE_KEY="$(chamber read -q mediawiki o_auth_2_private_key)"
@@ -61,8 +65,10 @@ fw_install_crontab() {
   {
     echo 'SHELL=/bin/bash'
     echo 'BASH_ENV=/etc/femiwiki-cron.env'
-    # A token lives an hour; PageViewInfoGA reads it at most hourly, Chart on every render
+    # A token and a Roles Anywhere session live an hour; PageViewInfoGA reads its token at most
+    # hourly, Chart on every render
     if [ -n "${SSM_SECRETS:-}" ]; then
+      echo '*/15 * * * * /usr/local/bin/php /usr/local/lib/femiwiki/aws-credentials.php > /proc/1/fd/1 2>&1'
       echo '*/15 * * * * /usr/local/bin/php /usr/local/lib/femiwiki/google-subject-token.php > /proc/1/fd/1 2>&1'
       echo '*/15 * * * * /usr/local/bin/php /usr/local/lib/femiwiki/chart-renderer-token.php > /proc/1/fd/1 2>&1'
     fi

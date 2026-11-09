@@ -121,6 +121,18 @@ RUN BASE="https://github.com/segmentio/chamber/releases/download/${CHAMBER_VERSI
     install -m 0755 "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" /usr/local/bin/chamber &&\
     rm "/tmp/chamber-${CHAMBER_VERSION}-linux-${TARGETARCH}" /tmp/chamber.sha256sums /tmp/chamber.sha256
 
+# Gets this container's own AWS role from IAM Roles Anywhere when infra gives it a
+# certificate; see aws-credentials.php (femiwiki/infra#1173).
+ARG AWS_SIGNING_HELPER_VERSION=1.7.1
+RUN ARCH="$(case "$TARGETARCH" in amd64) echo X86_64 ;; arm64) echo Aarch64 ;; esac)" &&\
+    BASE="https://rolesanywhere.amazonaws.com/releases/${AWS_SIGNING_HELPER_VERSION}/${ARCH}/Linux/Amzn2023" &&\
+    curl -fSL "$BASE/aws_signing_helper" -o /tmp/aws_signing_helper &&\
+    curl -fSL "$BASE/aws_signing_helper.sha256" -o /tmp/aws_signing_helper.sha256sums &&\
+    sed "s|  .*|  /tmp/aws_signing_helper|" /tmp/aws_signing_helper.sha256sums > /tmp/aws_signing_helper.sha256 &&\
+    sha256sum -c /tmp/aws_signing_helper.sha256 &&\
+    install -m 0755 /tmp/aws_signing_helper /usr/local/bin/aws_signing_helper &&\
+    rm /tmp/aws_signing_helper /tmp/aws_signing_helper.sha256sums /tmp/aws_signing_helper.sha256
+
 # php-fpm's status page and an opcache report, read through the metrics site in
 # the Caddyfile. /srv/metrics is outside the public site's root.
 COPY zzz-status.conf /usr/local/etc/php-fpm.d/
@@ -140,5 +152,5 @@ EXPOSE 9000
 
 COPY ["run", "jobrunner", "prerun", "postrun", "caddy-run", "/usr/local/bin/"]
 COPY cron/crontab /etc/femiwiki/crontab
-COPY start.sh caddy-warmup.php check-cached-twice.php warm-up.php preflight-pages.php create-session-schema.php google-subject-token.php chart-renderer-token.php /usr/local/lib/femiwiki/
+COPY start.sh caddy-warmup.php check-cached-twice.php warm-up.php preflight-pages.php create-session-schema.php google-subject-token.php chart-renderer-token.php aws-credentials.php /usr/local/lib/femiwiki/
 CMD ["/usr/local/bin/run"]
