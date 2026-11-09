@@ -3,7 +3,8 @@
  * Writes AWS credentials for this container's own IAM role, from IAM Roles Anywhere, to the
  * shared credentials file the AWS SDKs and chamber read (femiwiki/infra#1173). The certificate
  * and key come from infra; the instance role is never asked. run and jobrunner call this at
- * start and cron every 15 minutes; a session lives an hour.
+ * start and cron every 15 minutes. A session lives two hours, the profile's limit, so it always
+ * outlives the hour-long web identity tokens MediaWiki asks STS for.
  *
  * Does nothing unless FW_ROLES_ANYWHERE_ROLE_ARN is set.
  *
@@ -30,6 +31,7 @@ $command = [
 	'--trust-anchor-arn', $trustAnchorArn,
 	'--profile-arn', $profileArn,
 	'--role-arn', $roleArn,
+	'--session-duration', '7200',
 ];
 // phpcs:ignore MediaWiki.Usage.ForbiddenFunctions.proc_open -- a CLI script outside MediaWiki
 $process = proc_open( $command, [ 1 => [ 'pipe', 'w' ], 2 => [ 'pipe', 'w' ] ], $pipes );
