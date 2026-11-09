@@ -5,9 +5,8 @@ on:
     branches: [main]
   pull_request:
 
-# A new commit on a pull request makes the run on its old commit pointless,
-# so that run is cancelled. Each run on main gets a group of its own and is
-# never cancelled. Branch protection reads only the newest commit's checks.
+# A new commit on a pull request cancels the run on its old commit; runs on
+# main each get a group of their own and are never cancelled.
 concurrency:
   group: >-
     ${{ github.workflow }}-${{ case(github.event_name == 'pull_request',
