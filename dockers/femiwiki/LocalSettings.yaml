@@ -34,7 +34,6 @@ extensions:
   - FacetedCategory
   - FediFeeds
   - FlaggedRevs
-  - Flow
   - Gadgets
   - GoogleNewsSitemap
   - GoogleSiteSearch
@@ -127,7 +126,6 @@ config:
   # Use FlaggedRevs only as a protection-like mechanism
   FlaggedRevsProtection: true
 
-  FlowDefaultLimit: 2
   GadgetsRepo: json+definition
 
   # UnifiedExtensionForFemiwiki finds the tasks and topics instead of CirrusSearch.
@@ -181,8 +179,7 @@ config:
   RelatedArticlesCardLimit: 6
   RelatedArticlesDescriptionSource: textextracts
 
-  # New sanctions are discussed on their own subpages with DiscussionTools. Sanctions already on
-  # Flow topics stay there until they end.
+  # Sanctions are discussed on their own subpages with DiscussionTools.
   SanctionsDiscussionBackend: DiscussionTools
 
   ScribuntoDefaultEngine: luasandbox
