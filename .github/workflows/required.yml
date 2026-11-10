@@ -5,7 +5,14 @@ on:
     branches: [main]
   pull_request:
 
-# No concurrency group here: a cancelled run fails the required job below.
+# A new commit on a pull request cancels the run on its old commit; runs on
+# main each get a group of their own and are never cancelled.
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{ case(github.event_name == 'pull_request',
+    github.event.pull_request.number, github.run_id) }}
+  cancel-in-progress: true
+
 permissions: {}
 
 jobs:
