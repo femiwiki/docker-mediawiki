@@ -495,8 +495,7 @@ $wgAllowUserJs = true;
 // Allow external image link
 $wgAllowExternalImages = true;
 
-// CSP in WMF's shape: script hosts from FW_CSP_SCRIPT_SRC. default-src stays at core's *
-// unless FW_CSP_DEFAULT_SRC is set; then it is 'self' plus those hosts (empty: 'self' only).
+// CSP in WMF's shape, hosts from FW_CSP_SCRIPT_SRC and FW_CSP_DEFAULT_SRC (unset: core's *).
 // Report-only unless FW_CSP_ENFORCE=1; logs on csp-report-only or csp. femiwiki/femiwiki#680
 $fwCSPHosts = static fn ( string $var ): array => array_values( array_filter(
 	array_map( 'trim', explode( ',', getenv( $var ) ?: '' ) )
