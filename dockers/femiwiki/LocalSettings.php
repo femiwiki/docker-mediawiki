@@ -405,8 +405,8 @@ foreach ( [
 $wgExtraNamespaces[NS_BBS] = '게시판';
 $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
-// Flow is gone: 주제: pages become redirects (ReplaceFlowPages.php), and pages
-// still holding Flow revisions show a notice instead of failing.
+// Flow is gone: 주제: pages are redirects now, and pages still holding Flow
+// revisions show a notice instead of failing.
 $wgExtraNamespaces[NS_TOPIC] = '주제';
 $wgNamespaceAliases['Topic'] = NS_TOPIC;
 $wgContentHandlers['flow-board'] = MediaWiki\Content\FallbackContentHandler::class;
