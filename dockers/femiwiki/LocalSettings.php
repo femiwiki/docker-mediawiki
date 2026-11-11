@@ -550,10 +550,8 @@ $wgSitemapApiConfig['enabled'] = true;
 $wgRestAPIAdditionalRouteFiles[] = 'includes/Rest/site.v1.json';
 
 // Provide Namespace Aliases
-$wgNamespaceAliases = [
-	'도' => NS_HELP,
-	'페' => NS_PROJECT
-];
+$wgNamespaceAliases['도'] = NS_HELP;
+$wgNamespaceAliases['페'] = NS_PROJECT;
 
 // Parsoid Setting
 $wgParsoidSettings = [
