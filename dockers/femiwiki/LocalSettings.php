@@ -497,15 +497,19 @@ $wgAllowUserJs = true;
 // Allow external image link
 $wgAllowExternalImages = true;
 
-// CSP in WMF's shape: script hosts from FW_CSP_SCRIPT_SRC, default-src left at core's *.
+// CSP in WMF's shape, hosts from FW_CSP_SCRIPT_SRC and FW_CSP_DEFAULT_SRC (unset: core's *).
 // Report-only unless FW_CSP_ENFORCE=1; logs on csp-report-only or csp. femiwiki/femiwiki#680
+$fwCSPHosts = static fn ( string $var ): array => array_values( array_filter(
+	array_map( 'trim', explode( ',', getenv( $var ) ?: '' ) )
+) );
 $fwCSPPolicy = [
 	'useNonces' => false,
 	'includeCORS' => false,
-	'script-src' => array_values( array_filter(
-		array_map( 'trim', explode( ',', getenv( 'FW_CSP_SCRIPT_SRC' ) ?: '' ) )
-	) ),
+	'script-src' => $fwCSPHosts( 'FW_CSP_SCRIPT_SRC' ),
 ];
+if ( getenv( 'FW_CSP_DEFAULT_SRC' ) !== false ) {
+	$fwCSPPolicy['default-src'] = $fwCSPHosts( 'FW_CSP_DEFAULT_SRC' );
+}
 if ( getenv( 'FW_CSP_ENFORCE' ) === '1' ) {
 	$wgCSPHeader = $fwCSPPolicy;
 } else {
