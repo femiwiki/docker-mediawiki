@@ -18,8 +18,14 @@ fw_load_secrets() {
   # Missing means LocalSettings.php keeps the fallback captcha, so start anyway.
   WG_H_CAPTCHA_SECRET_KEY="$(chamber read -q mediawiki/h_captcha secret_key)" || WG_H_CAPTCHA_SECRET_KEY=
   WG_SECRET_KEY="$(chamber read -q mediawiki site_key)"
-  WG_SMTP_PASSWORD="$(chamber read -q mediawiki/smtp password)"
-  WG_SMTP_USERNAME="$(chamber read -q mediawiki/smtp username)"
+  # infra uploads this generation's SES key when it makes one (femiwiki/femiwiki#528)
+  if [ -r /etc/mediawiki/smtp/username ] && [ -r /etc/mediawiki/smtp/password ]; then
+    WG_SMTP_USERNAME="$(cat /etc/mediawiki/smtp/username)"
+    WG_SMTP_PASSWORD="$(cat /etc/mediawiki/smtp/password)"
+  else
+    WG_SMTP_PASSWORD="$(chamber read -q mediawiki/smtp password)"
+    WG_SMTP_USERNAME="$(chamber read -q mediawiki/smtp username)"
+  fi
   # Missing means BounceHandler keeps its default, so start anyway.
   WG_VERP_SECRET="$(chamber read -q mediawiki verp_secret)" || WG_VERP_SECRET=
   WG_BOUNCE_HANDLER_TOKEN="$(chamber read -q mediawiki/bounce_handler token)" || WG_BOUNCE_HANDLER_TOKEN=
