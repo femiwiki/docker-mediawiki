@@ -121,8 +121,9 @@ $wgSMTP = [
 	'auth' => true,
 ];
 
-// UPO
-$wgEmailConfirmToEdit = true;
+// Editing no longer waits for a confirmed email (페미위키토론:한시적 편집 제한 정책), which
+// temporary accounts could never have
+$wgEmailConfirmToEdit = false;
 
 // Database settings
 $wgDBtype = 'mysql';
@@ -429,8 +430,17 @@ $wgGroupPermissions['sysop']['importupload'] = false;
 $wgGroupPermissions['oversight']['deletelogentry'] = true;
 $wgGroupPermissions['oversight']['deleterevision'] = true;
 
-// Prevent anonymous users from edit pages
-$wgGroupPermissions['*']['edit'] = false;
+// Logged-out edits save as temporary accounts; UnifiedExtensionForFemiwiki holds the daily limit
+$wgGroupPermissions['*']['edit'] = true;
+$wgAutoCreateTempUser['enabled'] = true;
+$wgTempAccountCreationThrottle = [ [ 'count' => 1, 'seconds' => 86400 ] ];
+// Only the team sees the IP addresses behind temporary accounts, and who looked
+$wgGroupPermissions['femiwiki-team']['checkuser-temporary-account-no-preference'] = true;
+$wgGroupPermissions['femiwiki-team']['checkuser-temporary-account-log'] = true;
+$wgGroupPermissions['sysop']['abusefilter-access-protected-vars'] = false;
+$wgGroupPermissions['sysop']['abusefilter-protected-vars-log'] = false;
+$wgGroupPermissions['femiwiki-team']['abusefilter-access-protected-vars'] = true;
+$wgGroupPermissions['femiwiki-team']['abusefilter-protected-vars-log'] = true;
 
 // Additional groups
 $wgGroupPermissions['importer']['import'] = true;
@@ -642,7 +652,9 @@ if ( $wgHCaptchaSiteKey !== '' && $wgHCaptchaSecretKey !== '' ) {
 	$wgCaptchaClass = 'HCaptcha';
 }
 $wgCaptchaTriggers['createaccount'] = true;
-$wgCaptchaTriggers['edit'] = false;
+// Every edit without an account; accounts passed it on signup
+$wgCaptchaTriggers['edit'] = true;
+$wgGroupPermissions['user']['skipcaptcha'] = true;
 $wgCaptchaTriggers['create'] = false;
 $wgCaptchaTriggers['addurl'] = false;
 $wgCaptchaTriggers['badlogin'] = false;
