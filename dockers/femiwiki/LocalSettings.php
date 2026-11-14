@@ -266,6 +266,16 @@ $wgMWLoggerDefaultSpi = [
 				'processors' => [ 'wiki', 'psr' ],
 				'handlers' => [ 'stream' ]
 			],
+			// Core's routine warnings on these two channels were most of the log
+			// (femiwiki/femiwiki#721). Their errors still get through.
+			'LinkCache' => [
+				'processors' => [ 'wiki', 'psr' ],
+				'handlers' => [ 'stream-error' ]
+			],
+			'memcached' => [
+				'processors' => [ 'wiki', 'psr' ],
+				'handlers' => [ 'stream-error' ]
+			],
 		],
 		'processors' => [
 			'wiki' => [ 'class' => '\\MediaWiki\\Logger\\Monolog\\WikiProcessor' ],
@@ -277,6 +287,14 @@ $wgMWLoggerDefaultSpi = [
 				'args' => [
 					\Monolog\Handler\ErrorLogHandler::OPERATING_SYSTEM,
 					getenv( 'MEDIAWIKI_LOG_LEVEL' ) ?: \Monolog\Logger::WARNING
+				],
+				'formatter' => 'json'
+			],
+			'stream-error' => [
+				'class' => '\\Monolog\\Handler\\ErrorLogHandler',
+				'args' => [
+					\Monolog\Handler\ErrorLogHandler::OPERATING_SYSTEM,
+					\Monolog\Logger::ERROR
 				],
 				'formatter' => 'json'
 			],
