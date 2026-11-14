@@ -39,9 +39,11 @@ jobs:
       # instead of starting its own
       - name: Start pulling the image production runs
         env:
-          CONTAINER_TF: https://raw.githubusercontent.com/femiwiki/infra/main/docker/container.tf
+          INFRA_DOCKER: https://raw.githubusercontent.com/femiwiki/infra/main/docker
         run: |
-          deployed="$(curl -sSf "$CONTAINER_TF" | grep -oE 'ghcr\.io/femiwiki/femiwiki:[^"]+' | head -1)"
+          # The tag is a local in locals.tf; container.tf held it before femiwiki/infra moved it
+          deployed="$(for f in locals.tf container.tf; do curl -sSf "$INFRA_DOCKER/$f"; done \
+                        | grep -oE 'ghcr\.io/femiwiki/femiwiki:[^"]+' | head -1)"
           echo "DEPLOYED_IMAGE=${deployed}" >> "$GITHUB_ENV"
           setsid nohup docker pull -q "$deployed" > "${RUNNER_TEMP}/pull.log" 2>&1 &
       - name: Build amd64 image for testing
@@ -348,9 +350,10 @@ jobs:
           # docker/ alone, which left the Seoul root to a hand commit on the
           # bump branch. See femiwiki/infra#905.
           roots=""
-          for f in */container.tf; do
-            if grep -q 'ghcr\.io/femiwiki/femiwiki:' "$f"; then
-              roots="$roots ${f%/container.tf}"
+          for d in */; do
+            d="${d%/}"
+            if grep -qs 'ghcr\.io/femiwiki/femiwiki:' "$d/locals.tf" "$d/container.tf"; then
+              roots="$roots $d"
             fi
           done
           roots="${roots# }"
@@ -362,7 +365,7 @@ jobs:
         id: source
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          CONTAINER_TF: infra/${{ steps.roots.outputs.first }}/container.tf
+          INFRA_ROOT: infra/${{ steps.roots.outputs.first }}
           REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
         with:
@@ -448,7 +451,11 @@ jobs:
           # Every root, each with its own generation: they diverged while only
           # docker/ was bumped here. See femiwiki/infra#905.
           for root in $ROOTS; do
-            sed -i -E "s|(ghcr\.io/femiwiki/femiwiki:)[^\"]+|\1${VERSION}|g" "$root/container.tf"
+            for f in "$root/locals.tf" "$root/container.tf"; do
+              if [ -f "$f" ]; then
+                sed -i -E "s|(ghcr\.io/femiwiki/femiwiki:)[^\"]+|\1${VERSION}|g" "$f"
+              fi
+            done
             # The running generation is main's, unless the open bump pull
             # request was applied: a bump is applied before it merges, so main
             # then still holds the one before the running container, and the
