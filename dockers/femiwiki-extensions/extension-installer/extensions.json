@@ -113,7 +113,7 @@
     },
     "UnifiedExtensionForFemiwiki": {
       "repository": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki",
-      "commit": "5e4ed9d12979007b0955604b4649c758fbe0c629"
+      "commit": "9794295f9c6428074f61dbdf133ffab0da052efc"
     }
   },
   "non-WMF": {
