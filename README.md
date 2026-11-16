@@ -1,11 +1,11 @@
-# FemiWiki MediaWiki server
+# Femiwiki MediaWiki server
 
 [![Container Registry]][container registry link]
 [![Github checks Status]][github checks link]
 
 > [!IMPORTANT]  
-> This docker image is specifically designed for the needs of FemiWiki, contains
-> FemiWiki-specific configurations and includes arbitrary MediaWiki extensions.
+> This docker image is specifically designed for the needs of Femiwiki, contains
+> Femiwiki-specific configurations and includes arbitrary MediaWiki extensions.
 > It is not recommended to use this image for general purposes. We recommend
 > using the
 > [Docker official image for MediaWiki](https://hub.docker.com/_/mediawiki/).
@@ -15,7 +15,7 @@ repository holds the Dockerfiles, a Compose file for testing, and related code.
 
 ## Usage of Docker Image
 
-The image is a [PHP-FPM] server for FemiWiki, and the same image can also run a
+The image is a [PHP-FPM] server for Femiwiki, and the same image can also run a
 [Caddy] web server. See the example Compose file below. compose.yaml has a
 complete, runnable example for development.
 
@@ -65,7 +65,7 @@ up (<https://github.com/moby/moby/issues/15793>).
 
 ## Usage of Docker Compose file
 
-You can run FemiWiki locally with [Docker Swarm] or [Docker Compose] as shown
+You can run Femiwiki locally with [Docker Swarm] or [Docker Compose] as shown
 below. This starts the services MediaWiki needs, such as a database and
 memcached.
 
@@ -87,7 +87,7 @@ Then visit [http://127.0.0.1:8080] in your browser.
 
 ## Build
 
-These commands are useful when developing FemiWiki.
+These commands are useful when developing Femiwiki.
 
 ```bash
 # Build the Docker image
