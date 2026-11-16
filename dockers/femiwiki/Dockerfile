@@ -2,13 +2,13 @@
 # 설정은 /etc/mediawiki, 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 그 밖의
 # 스크립트는 /usr/local/lib/femiwiki, 시크릿은 /run/secrets, 캐시는 /tmp/cache,
 # 지역화 캐시는 /srv/l10n에 있습니다.
-FROM ghcr.io/femiwiki/caddy:2026-11-09T23-26-e40f5052 AS caddy
+FROM ghcr.io/femiwiki/caddy:2026-11-14T09-17-7f310c7a AS caddy
 
 # Only an amd64 image is published; its files are the same on every platform.
 # hadolint ignore=DL3029
-FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2026-11-13T23-04-458c70a6 AS extensions
+FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2026-11-16T12-49-f92cff11 AS extensions
 
-FROM ghcr.io/femiwiki/mediawiki:2026-11-08T06-40-19f54fad
+FROM ghcr.io/femiwiki/mediawiki:2026-11-14T09-14-6cb8e7c2
 
 # Set timezone
 ENV TZ=Asia/Seoul

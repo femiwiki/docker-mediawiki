@@ -111,6 +111,7 @@ ENV PHP_POST_MAX_SIZE=10M \
     PHP_FPM_PM_MIN_SPARE_SERVERS=1 \
     PHP_FPM_PM_MAX_SPARE_SERVERS=3 \
     PHP_FPM_PM_MAX_REQUESTS=200 \
+    PHP_FPM_PROCESS_DUMPABLE=no \
     PHP_FPM_REQUEST_TERMINATE_TIMEOUT=30
 
 # The containers run under Docker's own tini (`init = true` in femiwiki/infra)

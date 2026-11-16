@@ -1,6 +1,6 @@
 // Lists the pull requests, base images' included, between the femiwiki image
 // infra runs and this one, for the body of the infra bump pull request.
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import type * as Core from "@actions/core";
 import type { getOctokit } from "@actions/github";
 
@@ -39,10 +39,15 @@ export default async ({
 }) => {
 	const [owner, repo] = need(env, "REPO").split("/");
 	const sha = need(env, "SHA");
-	// The image tag ends in the commit it was built from
-	const old = readFileSync(need(env, "CONTAINER_TF"), "utf8").match(
-		/ghcr\.io\/femiwiki\/femiwiki:[^"]*-([0-9a-f]{8})"/,
-	)?.[1];
+	// The image tag ends in the commit it was built from. It is a local in
+	// locals.tf; container.tf held it before femiwiki/infra moved it.
+	const root = need(env, "INFRA_ROOT");
+	const old = ["locals.tf", "container.tf"]
+		.map((f) => `${root}/${f}`)
+		.filter((path) => existsSync(path))
+		.map((path) => readFileSync(path, "utf8"))
+		.join("\n")
+		.match(/ghcr\.io\/femiwiki\/femiwiki:[^"]*-([0-9a-f]{8})"/)?.[1];
 
 	const readFile = async (path: string, ref: string) => {
 		try {
