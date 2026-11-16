@@ -8,7 +8,7 @@ FROM ghcr.io/femiwiki/caddy:2026-11-14T09-17-7f310c7a AS caddy
 # hadolint ignore=DL3029
 FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2026-11-14T09-11-2f7ba650 AS extensions
 
-FROM ghcr.io/femiwiki/mediawiki:2026-11-08T06-40-19f54fad
+FROM ghcr.io/femiwiki/mediawiki:2026-11-14T09-14-6cb8e7c2
 
 # Set timezone
 ENV TZ=Asia/Seoul
