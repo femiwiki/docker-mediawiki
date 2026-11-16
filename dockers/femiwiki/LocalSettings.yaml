@@ -60,7 +60,6 @@ extensions:
   - Popups
   - QuickInstantCommons
   - RealMe
-  - RelatedArticles
   - Renameuser
   - ReplaceText
   - RevisionSlider
@@ -176,8 +175,6 @@ config:
 
   PasswordSender: admin@femiwiki.com
   PFEnableStringFunctions: true
-  RelatedArticlesCardLimit: 6
-  RelatedArticlesDescriptionSource: textextracts
 
   # Sanctions are discussed on their own subpages with DiscussionTools.
   SanctionsDiscussionBackend: DiscussionTools
@@ -204,6 +201,12 @@ config:
   ULSWebfontsEnabled: false
 
   UnifiedExtensionForFemiwikiBlockByEmail: false
+
+  # "더 둘러보기" below articles, in place of RelatedArticles: linked articles, then the topics a
+  # reader asked to see more of, then random articles. Topics are the 문서 주제/ categories.
+  UnifiedExtensionForFemiwikiExplore: true
+  UnifiedExtensionForFemiwikiExploreTopicPrefix: 문서 주제/
+
   UnifiedExtensionForFemiwikiModifyEmailTheme: true
   UnifiedExtensionForFemiwikiPreAuth: true
 
