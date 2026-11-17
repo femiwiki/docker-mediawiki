@@ -161,7 +161,6 @@ config:
 
   # "더 둘러보기" below articles, in place of RelatedArticles: linked articles, then the topics a
   # reader asked to see more of, then random articles. Topics are the 문서 주제/ categories.
-  # For now part of UnifiedExtensionForFemiwiki.
   MoreToExploreEnabled: true
   MoreToExploreTopicPrefix: 문서 주제/
 
