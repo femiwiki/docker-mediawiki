@@ -105,7 +105,7 @@
     "Femiwiki": {
       "type": "skin",
       "repository": "https://github.com/femiwiki/FemiwikiSkin",
-      "commit": "789d4d94c2477f1da60a9a50a820caf17602fb23"
+      "commit": "916490d4e25b790a388378ce3d08979d27c56747"
     },
     "PropertySuggesterLocalStats": {
       "repository": "https://github.com/femiwiki/PropertySuggesterLocalStats",
@@ -113,7 +113,7 @@
     },
     "UnifiedExtensionForFemiwiki": {
       "repository": "https://github.com/femiwiki/UnifiedExtensionForFemiwiki",
-      "commit": "998f273ec15b91ad16f1a8d880e0f1e8da98eb69"
+      "commit": "c8b9b29424cbee3a33e715e4b2453c6212f78922"
     }
   },
   "non-WMF": {
