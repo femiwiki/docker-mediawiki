@@ -159,6 +159,12 @@ config:
   # Enable the use Wikibase and associated features
   MFUseWikibase: true
 
+  # "더 둘러보기" below articles, in place of RelatedArticles: linked articles, then the topics a
+  # reader asked to see more of, then random articles. Topics are the 문서 주제/ categories.
+  # For now part of UnifiedExtensionForFemiwiki.
+  MoreToExploreEnabled: true
+  MoreToExploreTopicPrefix: 문서 주제/
+
   # OAuth itself treats false as the local source and deprecates it since 1.45
   MWOAuthSharedUserIDs: true
 
@@ -201,11 +207,6 @@ config:
   ULSWebfontsEnabled: false
 
   UnifiedExtensionForFemiwikiBlockByEmail: false
-
-  # "더 둘러보기" below articles, in place of RelatedArticles: linked articles, then the topics a
-  # reader asked to see more of, then random articles. Topics are the 문서 주제/ categories.
-  UnifiedExtensionForFemiwikiExplore: true
-  UnifiedExtensionForFemiwikiExploreTopicPrefix: 문서 주제/
 
   UnifiedExtensionForFemiwikiModifyEmailTheme: true
   UnifiedExtensionForFemiwikiPreAuth: true
