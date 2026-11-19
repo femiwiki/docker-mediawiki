@@ -93,6 +93,12 @@ export default async ({
 			: `[MediaWiki ${mediawiki} requires PHP ${floor}](${composer}), so this bumps PHP ${cur} → ${latest}.`,
 		"",
 		`Opened by [run ${context.runId}](${run}).`,
+		"",
+		"```wikitext",
+		patch ? "===보안 패치===" : "===내부 변화===",
+		"",
+		`*PHP ${latest} 업데이트`,
+		"```",
 	].join("\n");
 	writeFileSync(need(env, "BODY"), `${body}\n`);
 	core.info(body);
