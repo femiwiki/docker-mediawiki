@@ -1,5 +1,6 @@
-// Moves php-fpm to the latest patch of the PHP minor we run, or to the minor
-// MediaWiki requires, which follows WMF production rather than the newest PHP
+// Moves php-fpm to the PHP minor that the MediaWiki release we run requires
+// at least. Core raises that floor to what Wikimedia production runs, so this
+// keeps us on WMF's PHP for the release instead of the newest one it allows.
 import { readFileSync, writeFileSync } from "node:fs";
 import type * as Core from "@actions/core";
 import type { context as Context } from "@actions/github";
@@ -54,48 +55,39 @@ export default async ({
 	const floor = php.match(/^>=\s*(\d+\.\d+)/)?.[1];
 	if (!floor) throw new Error(`Unexpected require.php in ${composer}: ${php}`);
 
-	// A newer minor waits for MediaWiki to require it; patches carry security fixes
-	const minor = cur.replace(/\.\d+$/, "");
-	const target = compare(floor, minor) > 0 ? floor : minor;
+	if (compare(floor, cur.replace(/\.\d+$/, "")) <= 0) {
+		core.info(`MediaWiki ${mediawiki} requires PHP ${floor}; we run ${cur}`);
+		return;
+	}
 
 	const tags = await (
 		await get(
-			`https://hub.docker.com/v2/repositories/library/php/tags?name=${target}.&page_size=100`,
+			`https://hub.docker.com/v2/repositories/library/php/tags?name=${floor}.&page_size=100`,
 		)
 	).json();
 	const pattern = new RegExp(
-		`^(${target.replace(".", "\\.")}\\.\\d+)-${variant}$`,
+		`^(${floor.replace(".", "\\.")}\\.\\d+)-${variant}$`,
 	);
 	const versions = (tags.results as { name: string }[])
 		.map((t) => t.name.match(pattern)?.[1])
 		.filter((v): v is string => v !== undefined);
 	if (versions.length === 0) {
-		core.warning(`No php:${target}.x-${variant} image yet`);
+		core.warning(`No php:${floor}.x-${variant} image yet`);
 		return;
 	}
 	const latest = versions.sort(compare)[versions.length - 1];
-	if (compare(latest, cur) <= 0) {
-		core.info(
-			`MediaWiki ${mediawiki} requires PHP ${floor}; we run ${cur}, the latest ${target}`,
-		);
-		return;
-	}
 
 	writeFileSync(
 		dockerfile,
 		text.replace(`php:${cur}-${variant}`, `php:${latest}-${variant}`),
 	);
 	const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-	const patch = target === minor;
 	const body = [
-		patch
-			? `This bumps PHP ${cur} → ${latest}, the latest ${minor} release.`
-			: `[MediaWiki ${mediawiki} requires PHP ${floor}](${composer}), so this bumps PHP ${cur} → ${latest}.`,
+		`[MediaWiki ${mediawiki} requires PHP ${floor}](${composer}), so this bumps PHP ${cur} → ${latest}.`,
 		"",
 		`Opened by [run ${context.runId}](${run}).`,
 	].join("\n");
 	writeFileSync(need(env, "BODY"), `${body}\n`);
 	core.info(body);
 	core.setOutput("ver", latest);
-	core.setOutput("patch", patch ? "true" : "");
 };

@@ -1,10 +1,10 @@
-name: Submit a PR for bumping PHP
+name: Submit a PR for bumping the PHP minor version
 
-# A patch merges itself as soon as Docker Hub has it; a newer minor waits
-# until the MediaWiki version we run requires it
+# Dependabot only bumps PHP patches; a newer minor waits until the MediaWiki
+# version we run requires it, which follows what Wikimedia production runs
 on:
   schedule:
-    - cron: '7 0 * * *'
+    - cron: '0 0 * * 1'
   workflow_dispatch:
 
 permissions: {}
@@ -39,7 +39,6 @@ jobs:
 
       - name: Create Pull Request
         if: steps.check.outputs.ver != ''
-        id: create-pull-request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
@@ -47,10 +46,3 @@ jobs:
           title: 'build(php-fpm): bump PHP to ${{ steps.check.outputs.ver }}'
           branch: bump-php
           body-path: ${{ runner.temp }}/body.md
-
-      - name: Enable Pull Request Automerge
-        if: steps.create-pull-request.outputs.pull-request-number != '' && steps.check.outputs.patch == 'true'
-        env:
-          GH_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
-          PR_NUMBER: ${{ steps.create-pull-request.outputs.pull-request-number }}
-        run: gh pr merge --squash --auto "$PR_NUMBER"
