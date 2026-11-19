@@ -3,7 +3,7 @@
 # See 'PHP version & extensions' section on https://hub.docker.com/_/composer for more details.
 FROM composer:2.10.3 AS composer
 
-FROM php:8.3.36-fpm-bookworm
+FROM php:8.3.37-fpm-bookworm
 
 # Install dependencies and utilities
 RUN apt-get update && apt-get install -y \
