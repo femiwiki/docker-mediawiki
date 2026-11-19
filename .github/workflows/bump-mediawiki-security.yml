@@ -63,8 +63,15 @@ jobs:
               ['-xzOf', tarball, '--wildcards', `*/RELEASE-NOTES-${major}`],
               { silent: true },
             );
-            const security = notes
-              .split(`\n== MediaWiki ${cur} ==`)[0]
+            // The newest section keeps its pre-release heading at times
+            // (1.46.3 shipped under "== MediaWiki 1.46.2 =="), so always take it
+            const sections = notes.split(/\n(?=== MediaWiki \S+ ==\n)/).slice(1);
+            const stop = sections.findIndex(
+              (section, i) => i > 0 && !semver.gt(section.match(/^== MediaWiki (\S+) ==/)[1], cur),
+            );
+            const security = sections
+              .slice(0, stop === -1 ? sections.length : stop)
+              .join('\n')
               .replace(/\n  /g, ' ')
               .split('\n')
               .filter((line) => /^\* \(.*\) SECURITY:/.test(line));
