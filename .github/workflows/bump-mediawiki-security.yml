@@ -92,7 +92,7 @@ jobs:
               '```wikitext',
               '===보안 패치===',
               '',
-              `*MediaWiki ${cur} → ${latest}`,
+              `*미디어위키 ${latest} 업데이트`,
               '```',
             ].join('\n');
             fs.writeFileSync(process.env.BODY, body + '\n');
@@ -171,7 +171,7 @@ jobs:
                   `- [${name}](https://github.com/wikimedia/${repo}/compare/${old.slice(0, 7)}...${sha.slice(0, 7)})`,
                   ...security.map((subject) => `  - ${subject}`),
                 );
-                notes.push(`*${name} ${old.slice(0, 7)} → ${sha.slice(0, 7)}`);
+                notes.push(`*${name} ${type === 'skin' ? '스킨' : '확장기능'} 업데이트`);
               }
             }
 
