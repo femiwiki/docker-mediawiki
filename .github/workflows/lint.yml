@@ -126,14 +126,13 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       contents: read
-      checks: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: reviewdog/action-shellcheck@d0b8d5fd7fad6afdb6e1b6ce1778892be4d1f427 # v1.34.1
         with:
-          reporter: github-check
+          reporter: github-annotations
           filter_mode: nofilter
           fail_level: any
           check_all_files_with_shebangs: true
@@ -142,12 +141,11 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       contents: read
-      checks: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: reviewdog/action-actionlint@48e36f54d8da326b83ab061aee2cc5e01b5ca46f # v1.80.6
         with:
-          reporter: github-check
+          reporter: github-annotations
           fail_level: error

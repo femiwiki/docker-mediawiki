@@ -20,7 +20,6 @@ jobs:
     uses: ./.github/workflows/lint.yml
     permissions:
       contents: read
-      checks: write
 
   # Only for pull requests: on main images.yml runs by itself and publishes.
   # The permissions are the union images.yml and the image workflows declare.
