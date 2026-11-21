@@ -83,14 +83,14 @@ rm -f /tmp/draining /tmp/warming
 # http container is told the same number, since Caddy proxies to it.
 export PHP_FPM_STATUS_LISTEN=$((PHP_FPM_LISTEN + 200))
 
-# opcache sizes are fixed at module start, so they go in an ini file written
-# here from the environment (zz- sorts after opcache-recommended.ini). The #1110
-# metrics tell whether a value is right.
+# opcache values are fixed at module start, so they come from the environment
+# here (zz- sorts after opcache-recommended.ini); the #1110 metrics size them.
 cat > /usr/local/etc/php/conf.d/zz-opcache-env.ini <<EOF
 opcache.memory_consumption=${PHP_OPCACHE_MEMORY_CONSUMPTION:-128}
 opcache.interned_strings_buffer=${PHP_OPCACHE_INTERNED_STRINGS_BUFFER:-32}
 opcache.max_accelerated_files=${PHP_OPCACHE_MAX_ACCELERATED_FILES:-4000}
 opcache.revalidate_freq=${PHP_OPCACHE_REVALIDATE_FREQ:-60}
+opcache.validate_timestamps=${PHP_OPCACHE_VALIDATE_TIMESTAMPS:-1}
 EOF
 
 # Warm opcache by asking for a few pages before serving. The drain file goes
