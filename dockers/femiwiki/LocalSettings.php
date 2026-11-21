@@ -121,12 +121,7 @@ $wgSMTP = [
 	'auth' => true,
 ];
 
-// Editing no longer waits for a confirmed email (페미위키토론:한시적 편집 제한 정책), which
-// temporary accounts could never have
-$wgEmailConfirmToEdit = false;
-
 // Database settings
-$wgDBtype = 'mysql';
 $wgDBserver = getenv( 'WG_DB_SERVER' ) ?: '';
 $wgDBuser = getenv( 'WG_DB_USER' ) ?: '';
 $wgDBpassword = getenv( 'WG_DB_PASSWORD' ) ?:
@@ -135,33 +130,12 @@ $wgDBpassword = getenv( 'WG_DB_PASSWORD' ) ?:
 // still serves, so which schema this container uses has to be a deployment
 // decision. See femiwiki/femiwiki#645.
 $wgDBname = getenv( 'WG_DB_NAME' ) ?: 'femiwiki';
-// Both default to $wgDBname. Pinned so a container on another schema keeps
-// the cache keys and the log-in cookies of femiwiki.
-$wgCachePrefix = 'femiwiki';
-$wgCookiePrefix = 'femiwiki';
 
 // Site secret key
 $wgSecretKey = getenv( 'WG_SECRET_KEY' ) ?: '';
 // Site upgrade key. Must be set to a string (default provided) to turn on the
 // web installer while LocalSettings.php is in place
 $wgUpgradeKey = getenv( 'WG_UPGRADE_KEY' ) ?: '';
-
-// MySQL table options to use during installation or update
-$wgDBTableOptions = 'ENGINE=InnoDB, DEFAULT CHARSET=binary';
-
-// Change the default password type to use when hashing user passwords.
-$wgPasswordDefault = 'argon2';
-
-// Change settings related to password strength and security.
-$wgPasswordPolicy['policies']['default']['MinimalPasswordLength'] = [
-	'value' => 8, 'suggestChangeOnLogin' => true
-];
-
-// Enable database-intensive features
-$wgMiserMode = true;
-
-// Make no jobs will be performed during ordinary requests
-$wgJobRunRate = 0;
 
 // Job types the every-minute runner leaves to run's slower crontab entry, so an old
 // backlog does not go out at full speed. Unset means UnlinkedWikibaseFetch; empty, none.
@@ -252,17 +226,6 @@ if ( $fwSessionDb ) {
 	$wgSessionCacheType = 'femiwiki-sessions';
 }
 
-// Rendered HTML names the uploads bucket, which moved to Seoul at
-// 2026-09-26T18:19Z, so anything cached before then still points at the Tokyo
-// buckets femiwiki/femiwiki#489 wants to delete. purgeParserCache.php cannot
-// do this: it wants SqlBagOStuff and this cache is memcached.
-$wgCacheEpoch = '20260926190000';
-
-// To the host's OpenTelemetry Collector (femiwiki/infra#1710), over UDP after
-// the response, so nothing waits when no one listens
-$wgStatsFormat = 'dogstatsd';
-$wgStatsTarget = 'udp://127.0.0.1:8125';
-
 $wgMWLoggerDefaultSpi = [
 	'class' => '\\MediaWiki\\Logger\\MonologSpi',
 	'args' => [ [
@@ -311,33 +274,7 @@ $wgMWLoggerDefaultSpi = [
 ];
 
 // HTTP Cache setting
-$wgUseCdn = true;
 $wgCdnServers = explode( ',', getenv( 'WG_CDN_SERVERS' ) );
-// Purge each edited page again 11 seconds later, as Wikimedia does, in case a
-// render begun before the edit was stored after the first purge (femiwiki/femiwiki#701)
-$wgCdnReboundPurgeDelay = 11;
-
-// To enable image uploads, make sure the 'images' directory
-// is writable, then set this to true:
-$wgEnableUploads = true;
-$wgFileExtensions = array_merge(
-	$wgFileExtensions, [
-		'pdf',
-		'svg',
-	]
-);
-$wgUseImageMagick = true;
-$wgImageMagickConvertCommand = '/usr/bin/convert';
-$wgSVGConverter = 'rsvg';
-// MediaWiki 1.46 serves small SVGs as the original file by default, and PageImages then puts that SVG
-// in og:image, which link previews don't show (femiwiki/femiwiki#688). Render SVGs as PNG as before 1.46.
-$wgSVGNativeRendering = false;
-$wgNativeImageLazyLoading = true;
-
-// Set $wgCacheDirectory to a writable directory on the web server
-// to make your wiki go slightly faster. The directory should not
-// be publically accessible from the web.
-$wgCacheDirectory = '/tmp/cache';
 
 // CDB files built into /srv/l10n by the Dockerfile, as Wikimedia does.
 // LCStoreStaticArray hides the sidebar override; femiwiki/docker-mediawiki#1379.
@@ -348,51 +285,18 @@ $wgLocalisationCacheConf['storeDirectory'] = '/srv/l10n';
 // so the build itself needs the automatic rebuild.
 $wgLocalisationCacheConf['manualRecache'] = getenv( 'FW_L10N_BUILD' ) === false;
 
-// Site language code, should be one of the list in ./languages/data/Names.php
-$wgLanguageCode = 'ko';
-$wgLoginLanguageSelector = true;
-$wgLocaltimezone = 'Asia/Seoul';
-date_default_timezone_set( $wgLocaltimezone );
-$wgDefaultUserOptions['timecorrection'] = 9;
-$wgPageLanguageUseDB = true;
-
-// Changing this will log out all existing sessions.
-$wgAuthenticationTokenVersion = '1';
-
-// For attaching licensing metadata to pages, and displaying an
-// appropriate copyright notice / icon. GNU Free Documentation
-// License and Creative Commons licenses are supported so far.
-$wgRightsPage = '페미위키:저작권';
-$wgRightsUrl = 'https://creativecommons.org/licenses/by-sa/4.0/deed.ko';
-$wgRightsText = '크리에이티브 커먼즈 저작자표시-동일조건변경허락 4.0 국제 라이선스';
+// The license icon. The license itself is in LocalSettings.yaml.
 $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
-// Path to the GNU diff3 utility. Used for conflict resolution.
-$wgDiff3 = '/usr/bin/diff3';
-
-// Default skin: you can change the default skin. Use the internal symbolic
-// names, ie 'vector', 'monobook':
+// The default skin. The list stays here: LocalSettings.yaml would add it to core's
+// default list rather than replace it.
 $wgDefaultSkin = 'femiwiki';
 $wgSkinsPreferred = [ 'femiwiki', 'vector-2022', 'vector' ];
 
-// Enabled skins.
+// Enabled skins, here rather than in LocalSettings.yaml, which would queue them after its
+// extensions: FemiwikiSkin's menu hooks only see the items already there when they run.
 wfLoadSkin( 'Vector' );
-$wgVectorLanguageInHeader = [
-	'logged_in' => true,
-	'logged_out' => true,
-];
-$wgVectorResponsive = true;
-
 wfLoadSkin( 'Femiwiki' );
-$wgFemiwikiAddLinkClass = true;
-$wgFemiwikiHeadItems = [
-	'fav1' => '<link rel="icon" type="image/svg+xml" sizes="any" href="/fw-resources/favicons/favicon.svg">',
-	'fav2' => '<link rel="icon" type="image/png" sizes="96x96" href="/fw-resources/favicons/favicon-96.png">',
-	'fav3' => '<link rel="icon" type="image/png" sizes="32x32" href="/fw-resources/favicons/favicon-32.png">',
-	'fav4' => '<link rel="icon" type="image/png" sizes="16x16" href="/fw-resources/favicons/favicon-16.png">',
-	'fav6' => '<link rel="manifest" href="/fw-resources/favicons/manifest.json">',
-	'fav7' => '<meta name="theme-color" content="#736ac9">',
-];
 
 //
 // Namespace settings
@@ -429,106 +333,14 @@ foreach ( [
 $wgExtraNamespaces[NS_BBS] = '게시판';
 $wgExtraNamespaces[NS_BBS_TALK] = '게시판토론';
 
-// Flow is gone: 주제: pages are redirects now, and pages still holding Flow
-// revisions show a notice instead of failing.
+// Flow is gone: 주제: pages are redirects now. The flow-board content handler is in
+// LocalSettings.yaml.
 $wgExtraNamespaces[NS_TOPIC] = '주제';
 $wgNamespaceAliases['Topic'] = NS_TOPIC;
-$wgContentHandlers['flow-board'] = MediaWiki\Content\FallbackContentHandler::class;
 
-// Permission
-$wgAutoConfirmAge = 3600;
-$wgGroupPermissions['*']['createaccount'] = true;
-// Deleted pages and revisions are public unless suppressed (see 페미위키:삭제 정책)
-$wgGroupPermissions['*']['browsearchive'] = true;
-$wgGroupPermissions['*']['deletedhistory'] = true;
-$wgGroupPermissions['*']['deletedtext'] = true;
-$wgGroupPermissions['user']['editcontentmodel'] = false;
-$wgGroupPermissions['user']['move'] = false;
-$wgGroupPermissions['autoconfirmed']['editcontentmodel'] = true;
-$wgGroupPermissions['autoconfirmed']['move'] = true;
-$wgGroupPermissions['sysop']['renameuser'] = true;
-$wgGroupPermissions['sysop']['interwiki'] = true;
-$wgGroupPermissions['sysop']['import'] = false;
-$wgGroupPermissions['sysop']['importupload'] = false;
-$wgGroupPermissions['oversight']['deletelogentry'] = true;
-$wgGroupPermissions['oversight']['deleterevision'] = true;
-
-// Logged-out edits save as temporary accounts; UnifiedExtensionForFemiwiki holds the daily limit
-$wgGroupPermissions['*']['edit'] = true;
-$wgAutoCreateTempUser['enabled'] = true;
+// One temporary account a day per IP. Not in LocalSettings.yaml, which would add this to
+// core's default list rather than replace it.
 $wgTempAccountCreationThrottle = [ [ 'count' => 1, 'seconds' => 86400 ] ];
-// Only the team sees the IP addresses behind temporary accounts, and who looked
-$wgGroupPermissions['femiwiki-team']['checkuser-temporary-account-no-preference'] = true;
-$wgGroupPermissions['femiwiki-team']['checkuser-temporary-account-log'] = true;
-$wgGroupPermissions['sysop']['abusefilter-access-protected-vars'] = false;
-$wgGroupPermissions['sysop']['abusefilter-protected-vars-log'] = false;
-$wgGroupPermissions['femiwiki-team']['abusefilter-access-protected-vars'] = true;
-$wgGroupPermissions['femiwiki-team']['abusefilter-protected-vars-log'] = true;
-
-// Additional groups
-$wgGroupPermissions['importer']['import'] = true;
-$wgGroupPermissions['importer']['importupload'] = true;
-$wgGroupPermissions['autopatrolled']['autopatrol'] = true;
-$wgGroupPermissions['blocker']['block'] = true;
-$wgGroupPermissions['blocker']['blockemail'] = true;
-$wgGroupPermissions['blocker']['unblockself'] = true;
-$wgGroupPermissions['rollbacker']['rollback'] = true;
-
-// FemiwikiTeam is just a list of all Femiwiki team member
-$wgGroupPermissions['femiwiki-team']['editprotected'] = true;
-$wgGroupPermissions['femiwiki-team']['editsemiprotected'] = true;
-$wgGroupPermissions['femiwiki-team']['protect'] = true;
-
-// Remain commemorative Seeder group
-$wgGroupPermissions['seeder']['edit'] = true;
-
-// Do not show page content below diffs
-$wgDefaultUserOptions['diffonly'] = '1';
-
-// Enable Enhanced recent changes to opt-out
-$wgDefaultUserOptions['rcenhancedfilters-disable'] = 0;
-
-// Hide logs in Special:Recentchanges
-$wgDefaultUserOptions['rcfilters-saved-queries'] = FormatJson::encode( [
-	'queries' => [
-		// random ID is generated by javascript code '( new Date() ).getTime()' originally
-		'1000000000000' => [
-			'data' => [
-				'params' => [
-					'hidelog' => '1',
-					'hidebots' => '1',
-					'translations' => 'filter',
-				],
-				'highlights' => []
-			],
-			'label' => '기본 필터',
-		]
-	],
-	'version' => '2',
-	'default' => '1000000000000',
-] );
-
-// Hide some Preferences
-$wgHiddenPrefs[] = 'gender';
-$wgHiddenPrefs[] = 'realname';
-
-// Allow display titles not only to titles that normalize to the same canonical
-// DB key as the real page title.
-$wgRestrictDisplayTitle = false;
-
-// Open external links in new tab
-$wgExternalLinkTarget = '_blank';
-
-// The number of authors that credited below an article text.
-// https://github.com/femiwiki/FemiwikiSkin/issues/137
-$wgMaxCredits = 5;
-
-// User CSS and JS
-$wgAllowUserCss = true;
-$wgAllowUserJs = true;
-
-// Allow external image link
-$wgAllowExternalImages = true;
 
 // CSP in WMF's shape, hosts from FW_CSP_SCRIPT_SRC and FW_CSP_DEFAULT_SRC (unset: core's *).
 // Report-only unless FW_CSP_ENFORCE=1; logs on csp-report-only or csp. femiwiki/femiwiki#680
@@ -557,13 +369,6 @@ $wgHooks['ContentSecurityPolicyDirectives'][] = static function ( array &$direct
 	) );
 };
 
-// Browsers' own default, also for old ones. Never no-referrer: Caddy's login_walk
-// and OSM tiles count on the Referer (femiwiki/femiwiki#105)
-$wgReferrerPolicy = [ 'strict-origin-when-cross-origin', 'origin' ];
-
-// all pages (that are not redirects) are considered as valid articles
-$wgArticleCountMethod = 'any';
-
 // Enable subpages in the main namespace
 // See https://github.com/femiwiki/docker-mediawiki/issues/267
 $wgNamespacesWithSubpages[NS_MAIN] = true;
@@ -576,17 +381,12 @@ $wgNamespaceRobotPolicies = [
 	NS_TOPIC => 'noindex,nofollow',
 ];
 
-// Served at /rest.php/site/v1/sitemap/0, as Wikimedia does (T400023). Like
-// Wikimedia, no $wgSitemapNamespaces: the noindex namespaces above stay out.
-$wgSitemapApiConfig['enabled'] = true;
-// 1.46 loads site/v1 only in DevelopmentSettings.php
-$wgRestAPIAdditionalRouteFiles[] = 'includes/Rest/site.v1.json';
-
 // Provide Namespace Aliases
 $wgNamespaceAliases['도'] = NS_HELP;
 $wgNamespaceAliases['페'] = NS_PROJECT;
 
-// Parsoid Setting
+// Parsoid Setting. Not in LocalSettings.yaml, which would merge this into the defaults rather
+// than replace them.
 $wgParsoidSettings = [
 	'linting' => true
 ];
@@ -605,29 +405,6 @@ $wgSettings->load( function_exists( 'apcu_enabled' ) && apcu_enabled()
 	: $fwSettingsFile
 );
 $wgSettings->apply();
-
-// AbuseFilter
-$wgGroupPermissions['sysop']['abusefilter-modify'] = false;
-$wgGroupPermissions['abusefilter']['abusefilter-bypass-blocked-external-domains'] = true;
-$wgGroupPermissions['abusefilter']['abusefilter-modify-blocked-external-domains'] = true;
-$wgGroupPermissions['abusefilter']['abusefilter-modify'] = true;
-$wgGroupPermissions['abusefilter']['changetags'] = true;
-$wgGroupPermissions['abusefilter']['managechangetags'] = true;
-$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = false;
-$wgGroupPermissions['abusefilter']['abusefilter-modify-restricted'] = true;
-$wgGroupPermissions['*']['abusefilter-log-detail'] = true;
-$wgGroupPermissions['*']['abusefilter-view'] = true;
-$wgGroupPermissions['*']['abusefilter-log'] = true;
-$wgGroupPermissions['sysop']['abusefilter-privatedetails'] = false;
-$wgGroupPermissions['checkuser']['abusefilter-privatedetails'] = true;
-$wgGroupPermissions['sysop']['abusefilter-revert'] = true;
-
-// AWS: one bucket with a path per zone. $wgAWSBucketPrefix, which spread the zones
-// over four buckets, is deprecated by the extension.
-$wgAWSBucketName = 'uploads-302617221463-ap-northeast-2-an';
-// The default is the global endpoint, which answers 307 for a young bucket
-// until its name propagates. The regional one answers straight away.
-$wgAWSBucketDomain = '$1.s3.ap-northeast-2.amazonaws.com';
 
 // BounceHandler
 $wgBounceHandlerInternalIPs = explode( ',', getenv( 'WG_BOUNCE_HANDLER_INTERNAL_IPS' ) );
@@ -654,17 +431,6 @@ if ( getenv( 'FW_CHART_RENDERER_URL' ) ) {
 	$wgChartServiceUrl = getenv( 'FW_CHART_RENDERER_URL' ) .
 		( is_readable( $fwChartRendererToken ) ? trim( file_get_contents( $fwChartRendererToken ) ) : '' );
 }
-$wgJsonConfigModels['Chart.JsonConfig'] = 'MediaWiki\Extension\Chart\JCChartContent';
-$wgJsonConfigs['Chart.JsonConfig'] = [
-	'namespace' => 486,
-	'nsName' => 'Data',
-	'pattern' => '/.\.chart$/',
-	'license' => 'CC-BY-SA-4.0',
-	'isLocal' => true,
-];
-
-// Citoid
-$wgCitoidFullRestbaseURL = 'https://ko.wikipedia.org/api/rest_';
 
 // ConfirmEdit
 $wgHCaptchaSiteKey = trim( getenv( 'WG_H_CAPTCHA_SITE_KEY' ) ?: '' );
@@ -674,24 +440,6 @@ $wgHCaptchaSecretKey = trim( getenv( 'WG_H_CAPTCHA_SECRET_KEY' ) ?: '' );
 if ( $wgHCaptchaSiteKey !== '' && $wgHCaptchaSecretKey !== '' ) {
 	$wgCaptchaClass = 'HCaptcha';
 }
-$wgCaptchaTriggers['createaccount'] = true;
-// Every edit without an account; accounts passed it on signup
-$wgCaptchaTriggers['edit'] = true;
-$wgGroupPermissions['user']['skipcaptcha'] = true;
-$wgCaptchaTriggers['create'] = false;
-$wgCaptchaTriggers['addurl'] = false;
-$wgCaptchaTriggers['badlogin'] = false;
-
-// DelayedJobQueue
-// The database queue, plus delayed jobs, which $wgCdnReboundPurgeDelay needs
-$wgJobTypeConf['default'] = [
-	'class' => \MediaWiki\Extension\DelayedJobQueue\DelayedJobQueueDB::class,
-	'order' => 'random',
-	'claimTTL' => 3600,
-];
-
-// DisableAccount
-$wgGroupPermissions['sysop']['disableaccount'] = true;
 
 // DiscordRCFeed
 $wgRCFeeds['discord'] = [
@@ -727,10 +475,6 @@ $wgRCFeeds['discord'] = [
 	],
 ];
 
-// FediFeeds
-// infra's Caddyfile routes /actors/* on this host to the REST route
-$wgFediFeedsActorBase = 'https://fedi.femiwiki.com/actors/';
-
 // FlaggedRevs
 $wgFlaggedRevsNamespaces = [
 	NS_MAIN,
@@ -739,50 +483,10 @@ $wgFlaggedRevsNamespaces = [
 	// Module
 	828,
 ];
-// Changes the settings of stable revisions of any page
-// FR_SHOW_STABLE_ALWAYS is 1.
-$wgDefaultUserOptions[ 'flaggedrevsstable' ] = 1;
-// Group permissions for femiwiki-team
-$wgGroupPermissions['femiwiki-team']['review'] = true;
-$wgGroupPermissions['femiwiki-team']['validate'] = true;
-$wgGroupPermissions['femiwiki-team']['autoreview'] = true;
-$wgGroupPermissions['femiwiki-team']['autoreviewrestore'] = true;
-$wgGroupPermissions['femiwiki-team']['movestable'] = true;
-$wgGroupPermissions['femiwiki-team']['stablesettings'] = true;
-// Everyone can view Special:UnreviewedPages
-$wgGroupPermissions['*']['unreviewedpages'] = true;
-
-// Gadgets
-$wgGroupPermissions['interface-admin']['gadgets-edit'] = true;
-$wgGroupPermissions['interface-admin']['gadgets-definition-edit'] = true;
-$wgGrantPermissions['editinterface']['gadgets-edit'] = true;
-$wgGrantPermissions['editinterface']['gadgets-definition-edit'] = true;
 
 // Graph
 // https://lists.wikimedia.org/hyperkitty/list/wikitech-l@lists.wikimedia.org/thread/EWL4AGBEZEDMNNFTM4FRD4MHOU3CVESO/
 // wfLoadExtension( 'Graph' );
-
-// JsonConfig, for the Data: pages Chart draws from
-$wgJsonConfigModels['Tabular.JsonConfig'] = 'JsonConfig\JCTabularContent';
-$wgJsonConfigs['Tabular.JsonConfig'] = [
-	'namespace' => 486,
-	'nsName' => 'Data',
-	'pattern' => '/.\.tab$/',
-	'license' => 'CC-BY-SA-4.0',
-	'isLocal' => true,
-];
-
-// Kartographer, with tiles from tile.openstreetmap.org since maps.wikimedia.org is closed to
-// other wikis. That server has no styles or @2x tiles, and no /img/ snapshots for static mode
-$wgKartographerMapServer = 'https://tile.openstreetmap.org';
-$wgJsonConfigModels['Map.JsonConfig'] = 'JsonConfig\JCMapDataContent';
-$wgJsonConfigs['Map.JsonConfig'] = [
-	'namespace' => 486,
-	'nsName' => 'Data',
-	'pattern' => '/.\.map$/',
-	'license' => 'CC-BY-SA-4.0',
-	'isLocal' => true,
-];
 
 // MobileFrontend
 // Disable CollapsibleSections in anywhere.
@@ -829,13 +533,8 @@ $wgMFMobileFormatterOptions = [
 		NS_CATEGORY_TALK,
 	],
 ];
-$wgDefaultUserOptions['mobile-specialpages'] = false;
 
 // OAuth
-$wgGroupPermissions['oauthadmin']['mwoauthmanageconsumer'] = true;
-$wgGroupPermissions['user']['mwoauthmanagemygrants'] = true;
-$wgGroupPermissions['user']['mwoauthupdateownconsumer'] = true;
-$wgGroupPermissions['user']['mwoauthproposeconsumer'] = true;
 $wgOAuth2PublicKey = getenv( 'WG_O_AUTH_2_PUBLIC_KEY' ) ?: <<<EOK
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6yeSdmuGv4xyXD9idrQM
@@ -849,111 +548,11 @@ Qzp1bkU7hhyyGYMbrb5eoDfzTnok9lnKXOkcAIRuK6SIQLCdoVZ5IDXUQ83zMxen
 EOK;
 $wgOAuth2PrivateKey = getenv( 'WG_O_AUTH_2_PRIVATE_KEY' );
 
-// PageViewInfoGA, so PageViewInfo reads page views from Google Analytics 4 instead of
-// Wikimedia's pageview API (#1282). The GA4 property's time zone is $wgLocaltimezone's.
-$wgPageViewInfoGAPropertyId = '258014701';
-// The Google tag, with the web stream's measurement ID. It replaces the UA tag in MediaWiki:Common.js
-$wgPageViewInfoGATrackingID = 'G-023DFCJPXE';
-
-// Popups
-$wgDefaultUserOptions[ 'popupsreferencepreviews' ] = '1';
-
-// Scribunto
-$wgScribuntoEngineConf['luasandbox']['cpuLimit'] = 3;
-# 50 MiB
-$wgScribuntoEngineConf['luasandbox']['memoryLimit'] = 52428800;
-
-// SecurePoll
-$wgGroupPermissions['electionadmin']['securepoll-create-poll'] = true;
-$wgGroupPermissions['electionadmin']['securepoll-edit-poll'] = true;
-$wgGroupPermissions['electionadmin']['securepoll-view-voter-pii'] = true;
-
-// SpamBlacklist
-$wgBlacklistSettings = [
-	'spam' => [
-		'files' => [
-			"https://meta.wikimedia.org/w/index.php?title=Spam_blacklist&action=raw&sb_ver=1",
-		],
-	],
-	'email' => [
-		'files' => [
-			"https://meta.wikimedia.org/w/index.php?title=Email_blacklist&action=raw&sb_ver=1",
-		],
-	],
-];
-
-// TemplateStyles
-$wgTemplateStylesAllowedUrls = [
-	'font' => [
-		'<^https://fonts\\.googleapis\\.com/css(?:[?#]|$)>',
-	],
-];
-
-// TemplateWizard
-$wgDefaultUserOptions['templatewizard-betafeature'] = 1;
-
-// TorBlock
-$wgGroupPermissions['user']['torunblocked'] = false;
-
-// Translate
-$wgGroupPermissions['autoconfirmed']['translate'] = true;
-$wgGroupPermissions['translationadmin']['pagetranslation'] = true;
-$wgGroupPermissions['translationadmin']['translate-manage'] = true;
-$wgGroupPermissions['translationadmin']['translate-messagereview'] = true;
-$wgGroupPermissions['translationadmin']['pagelang'] = true;
-
-// TwoColConflict
-// Enable twocolconflict to opt-out
-$wgDefaultUserOptions['twocolconflict'] = '1';
-
-// UniversalLanguageSelector
-// No page has interlanguage links, so this saves ~24 KB per page (femiwiki/femiwiki#612)
-$wgDefaultUserOptions['compact-language-links'] = false;
-
 // UploadWizard
-// Needed to make UploadWizard work in IE, see https://phabricator.wikimedia.org/T41877
-$wgApiFrameOptions = 'SAMEORIGIN';
 $wgExtensionFunctions[] = static function () {
 	$GLOBALS['wgUploadNavigationUrl'] = SpecialPage::getTitleFor( 'UploadWizard' )->getLocalURL();
 	return true;
 };
-$wgUploadWizardConfig = [];
-$wgUploadWizardConfig['alternativeUploadToolsPage'] = '특수:파일올리기';
-$wgUploadWizardConfig['licensing']['thirdParty']['licenseGroups'] = [
-	[
-		'head' => 'mwe-upwiz-license-cc-head',
-		'subhead' => 'mwe-upwiz-license-cc-subhead',
-		'licenses' => [
-			'cc-by-sa-4.0',
-			'cc-by-sa-3.0',
-			'cc-by-sa-2.5',
-			'cc-by-4.0',
-			'cc-by-3.0',
-			'cc-by-2.5',
-			'cc-zero'
-		]
-	],
-	[
-		'head' => 'mwe-upwiz-license-custom-head',
-		'special' => 'custom',
-		'licenses' => [ 'custom' ],
-	],
-	[
-		'head' => 'mwe-upwiz-license-none-head',
-		'licenses' => [ 'none' ]
-	],
-];
-// Skip the tutorial
-$wgUploadWizardConfig['tutorial'] = [ 'skip' => true ];
-$wgUploadWizardConfig['uwLanguages'] = [
-	'en' => 'English',
-	'ko' => '한국어',
-];
-$wgDefaultUserOptions['upwiz_skiptutorial'] = 1;
-$wgHiddenPrefs[] = 'upwiz_skiptutorial';
-// Tweaks for permissions
-$wgGroupPermissions['sysop']['upwizcampaigns'] = false;
-$wgGroupPermissions['sysop']['mass-upload'] = false;
 $wgAddGroups['sysop']['upwizcampeditors'] = false;
 $wgRemoveGroups['sysop']['upwizcampeditors'] = false;
 $wgAddGroups['bureaucrat']['upwizcampeditors'] = true;
@@ -981,16 +580,9 @@ $wgVisualEditorAvailableNamespaces = [
 	NS_CATEGORY_TALK => true,
 	'_merge_strategy' => 'array_plus',
 ];
-$wgDefaultUserOptions['visualeditor-newwikitext'] = 1;
-$wgDefaultUserOptions['visualeditor-tabs'] = 'multi-tab';
 
 // Widgets
 $wgNamespaceContentModels[274] = CONTENT_MODEL_TEXT;
-
-// CollaborationKit is gone, but old revisions still carry its content
-// models, and dumpBackup.php stops at the first one without a handler.
-$wgContentHandlers['CollaborationHubContent'] = 'MediaWiki\\Content\\FallbackContentHandler';
-$wgContentHandlers['CollaborationListContent'] = 'MediaWiki\\Content\\FallbackContentHandler';
 
 // WikiBase - repo
 wfLoadExtension( 'WikibaseRepository', "$IP/extensions/Wikibase/extension-repo.json" );
@@ -1011,73 +603,7 @@ $wgWBRepoSettings['formatterUrlProperty'] = 'P61';
 
 // WikibaseQualityConstraints
 wfLoadExtension( 'WikibaseQualityConstraints' );
-// Femiwiki's own; the defaults are Wikidata's IDs, and P31 here is something else
-$wgWBQualityConstraintsInstanceOfId = 'P1';
-$wgWBQualityConstraintsSubclassOfId = 'P36';
-// Entities made by hand on Femiwiki (femiwiki/docker-mediawiki#437). Lexeme and
-// MediaInfo ones are left out, as Femiwiki has neither.
-$wgWBQualityConstraintsPropertyConstraintId = 'P89';
-$wgWBQualityConstraintsExceptionToConstraintId = 'P90';
-$wgWBQualityConstraintsConstraintStatusId = 'P91';
-$wgWBQualityConstraintsLanguagePropertyId = 'P92';
-$wgWBQualityConstraintsClassId = 'P93';
-$wgWBQualityConstraintsRelationId = 'P94';
-$wgWBQualityConstraintsPropertyId = 'P95';
-$wgWBQualityConstraintsQualifierOfPropertyConstraintId = 'P96';
-$wgWBQualityConstraintsMinimumQuantityId = 'P97';
-$wgWBQualityConstraintsMaximumQuantityId = 'P98';
-$wgWBQualityConstraintsMinimumDateId = 'P99';
-$wgWBQualityConstraintsMaximumDateId = 'P100';
-$wgWBQualityConstraintsNamespaceId = 'P101';
-$wgWBQualityConstraintsFormatAsARegularExpressionId = 'P102';
-$wgWBQualityConstraintsSyntaxClarificationId = 'P103';
-$wgWBQualityConstraintsConstraintClarificationId = 'P104';
-$wgWBQualityConstraintsConstraintScopeId = 'P105';
-$wgWBQualityConstraintsSeparatorId = 'P106';
-$wgWBQualityConstraintsPropertyScopeId = 'P107';
-$wgWBQualityConstraintsMandatoryConstraintId = 'Q494';
-$wgWBQualityConstraintsSuggestionConstraintId = 'Q495';
-$wgWBQualityConstraintsDistinctValuesConstraintId = 'Q496';
-$wgWBQualityConstraintsMultiValueConstraintId = 'Q497';
-$wgWBQualityConstraintsUsedAsQualifierConstraintId = 'Q498';
-$wgWBQualityConstraintsSingleValueConstraintId = 'Q499';
-$wgWBQualityConstraintsSymmetricConstraintId = 'Q500';
-$wgWBQualityConstraintsTypeConstraintId = 'Q501';
-$wgWBQualityConstraintsValueTypeConstraintId = 'Q502';
-$wgWBQualityConstraintsInverseConstraintId = 'Q503';
-$wgWBQualityConstraintsItemRequiresClaimConstraintId = 'Q504';
-$wgWBQualityConstraintsValueRequiresClaimConstraintId = 'Q505';
-$wgWBQualityConstraintsConflictsWithConstraintId = 'Q506';
-$wgWBQualityConstraintsOneOfConstraintId = 'Q507';
-$wgWBQualityConstraintsMandatoryQualifierConstraintId = 'Q508';
-$wgWBQualityConstraintsAllowedQualifiersConstraintId = 'Q509';
-$wgWBQualityConstraintsRangeConstraintId = 'Q510';
-$wgWBQualityConstraintsDifferenceWithinRangeConstraintId = 'Q511';
-$wgWBQualityConstraintsCommonsLinkConstraintId = 'Q512';
-$wgWBQualityConstraintsContemporaryConstraintId = 'Q513';
-$wgWBQualityConstraintsFormatConstraintId = 'Q514';
-$wgWBQualityConstraintsUsedForValuesOnlyConstraintId = 'Q515';
-$wgWBQualityConstraintsUsedAsReferenceConstraintId = 'Q516';
-$wgWBQualityConstraintsNoBoundsConstraintId = 'Q517';
-$wgWBQualityConstraintsAllowedUnitsConstraintId = 'Q518';
-$wgWBQualityConstraintsSingleBestValueConstraintId = 'Q519';
-$wgWBQualityConstraintsAllowedEntityTypesConstraintId = 'Q520';
-$wgWBQualityConstraintsCitationNeededConstraintId = 'Q521';
-$wgWBQualityConstraintsPropertyScopeConstraintId = 'Q522';
-$wgWBQualityConstraintsLabelInLanguageConstraintId = 'Q523';
-$wgWBQualityConstraintsNoneOfConstraintId = 'Q524';
-$wgWBQualityConstraintsIntegerConstraintId = 'Q525';
-$wgWBQualityConstraintsInstanceOfRelationId = 'Q526';
-$wgWBQualityConstraintsSubclassOfRelationId = 'Q527';
-$wgWBQualityConstraintsInstanceOrSubclassOfRelationId = 'Q528';
-$wgWBQualityConstraintsConstraintCheckedOnMainValueId = 'Q529';
-$wgWBQualityConstraintsConstraintCheckedOnQualifiersId = 'Q530';
-$wgWBQualityConstraintsConstraintCheckedOnReferencesId = 'Q531';
-$wgWBQualityConstraintsWikibaseItemId = 'Q532';
-$wgWBQualityConstraintsWikibasePropertyId = 'Q533';
-$wgWBQualityConstraintsAsMainValueId = 'Q534';
-$wgWBQualityConstraintsAsQualifiersId = 'Q535';
-$wgWBQualityConstraintsAsReferencesId = 'Q536';
+// Femiwiki's own property and item IDs are in LocalSettings.yaml
 // Wikidata uses one property for both
 $wgWBQualityConstraintsConstraintEntityTypesId = $wgWBQualityConstraintsConstraintScopeId;
 $wgWBRepoSettings['statementSections']['property'] = [
@@ -1092,8 +618,6 @@ $wgWBRepoSettings['statementSections']['property'] = [
 // PropertySuggesterLocalStats (femiwiki/docker-mediawiki#522)
 wfLoadExtension( 'PropertySuggester' );
 wfLoadExtension( 'PropertySuggesterLocalStats' );
-$wgPropertySuggesterClassifyingPropertyIds = [ 1, 36 ];
-$wgPropertySuggesterInitialSuggestions = [ 1 ];
 
 // WikiBase - client
 wfLoadExtension( 'WikibaseClient', "$IP/extensions/Wikibase/extension-client.json" );
@@ -1105,16 +629,9 @@ $wgWBClientSettings['siteGlobalID'] = 'femiwiki';
 
 // WikiEditor
 wfLoadExtension( 'WikiEditor' );
-$wgDefaultUserOptions['usebetatoolbar'] = 1;
-$wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
-$wgDefaultUserOptions['wikieditor-preview'] = 1;
-$wgDefaultUserOptions['wikieditor-publish'] = 1;
-$wgHiddenPrefs[] = 'usebetatoolbar';
-$wgDefaultUserOptions['visualeditor-enable-experimental'] = 1;
 
 // WikiSEO
 wfLoadExtension( 'WikiSEO' );
-$wgTwitterSiteHandle = '@femiwikidotcome';
 
 //
 // Overwrite server url
@@ -1134,41 +651,14 @@ if ( getenv( 'MEDIAWIKI_SERVER' ) ) {
 // Debug Mode
 //
 if ( getenv( 'MEDIAWIKI_DEBUG_MODE' ) ) {
-	$wgBounceHandlerInternalIPs = [ '0.0.0.0/0' ];
-
 	// 디버그 툴 활성화
 	require_once "includes/DevelopmentSettings.php";
-	// Overwrite DevelopmentSettings
-	$wgCacheDirectory = '/tmp/cache';
 	// It adds site.v1.json again, which REST refuses as a duplicate module
 	$wgRestAPIAdditionalRouteFiles = array_values( array_unique( $wgRestAPIAdditionalRouteFiles ) );
-
-	$wgDebugToolbar = true;
-
-	// 다음이 비활성화되어있어야 디버그 툴을 쓸 수 있음
-	$wgUseFileCache = false;
-	$wgUseCdn = false;
-
-	// 이메일 인증 요구 비활성화
-	$wgEmailConfirmToEdit = false;
-
-	// Google Analytics에서 조회수 읽어오기 비활성화
-	$wgPageViewInfoGAPropertyId = false;
-	$wgPageViewInfoGATrackingID = false;
-
-	// AWS 플러그인 비활성화
-	$wgAWSBucketName = null;
-
-	// 캡차 비활성화
-	$wgCaptchaTriggers['edit'] = false;
-	$wgCaptchaTriggers['create'] = false;
-	$wgCaptchaTriggers['createtalk'] = false;
-	$wgCaptchaTriggers['addurl'] = false;
-	$wgCaptchaTriggers['createaccount'] = false;
-	$wgCaptchaTriggers['badlogin'] = false;
-
-	// 위키베이스 속성 초기화
+	// 위키베이스 속성 초기화. Not in LocalSettings.dev.yaml, which would replace the whole array.
 	$wgWBRepoSettings['formatterUrlProperty'] = null;
+	// The plain values, after DevelopmentSettings.php so they override it
+	$wgSettings->loadFile( '/etc/mediawiki/LocalSettings.dev.yaml' )->apply();
 }
 
 // Settings infra passes as a JSON object of global names to values, after the
