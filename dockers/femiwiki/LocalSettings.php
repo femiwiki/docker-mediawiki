@@ -258,6 +258,11 @@ if ( $fwSessionDb ) {
 // do this: it wants SqlBagOStuff and this cache is memcached.
 $wgCacheEpoch = '20260926190000';
 
+// To the host's OpenTelemetry Collector (femiwiki/infra#1710), over UDP after
+// the response, so nothing waits when no one listens
+$wgStatsFormat = 'dogstatsd';
+$wgStatsTarget = 'udp://127.0.0.1:8125';
+
 $wgMWLoggerDefaultSpi = [
 	'class' => '\\MediaWiki\\Logger\\MonologSpi',
 	'args' => [ [
