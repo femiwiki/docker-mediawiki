@@ -142,10 +142,8 @@ config:
   # A writable directory, not public on the web, to make the wiki go slightly faster
   CacheDirectory: /tmp/cache
 
-  # Rendered HTML names the uploads bucket, which moved to Seoul at
-  # 2026-09-26T18:19Z, so anything cached before then still points at the Tokyo
-  # buckets femiwiki/femiwiki#489 wants to delete. purgeParserCache.php cannot
-  # do this: it wants SqlBagOStuff and this cache is memcached.
+  # The uploads bucket moved to Seoul at 2026-09-26T18:19Z, so older cached HTML points at the
+  # Tokyo buckets femiwiki/femiwiki#489 deletes. purgeParserCache.php needs SqlBagOStuff.
   CacheEpoch: '20260926190000'
 
   # Defaults to $wgDBname. Pinned so a container on another schema keeps the cache keys of femiwiki.
@@ -166,9 +164,8 @@ config:
 
   CitoidFullRestbaseURL: 'https://ko.wikipedia.org/api/rest_'
 
-  # flow-board: Flow is gone, and pages still holding Flow revisions show a notice instead of failing.
-  # Collaboration*: CollaborationKit is gone, but old revisions still carry its content models,
-  # and dumpBackup.php stops at the first one without a handler.
+  # Flow and CollaborationKit are gone, but old revisions still carry their content models.
+  # These show a notice instead of failing, and keep dumpBackup.php going.
   ContentHandlers:
     flow-board: MediaWiki\Content\FallbackContentHandler
     CollaborationHubContent: MediaWiki\Content\FallbackContentHandler
@@ -584,9 +581,8 @@ config:
 
   WatchlistExpiry: true
 
-  # WikibaseQualityConstraints: Femiwiki's own properties and items, made by hand
-  # (femiwiki/docker-mediawiki#437). The defaults are Wikidata's IDs, and P31 here is something
-  # else. Lexeme and MediaInfo ones are left out, as Femiwiki has neither.
+  # WikibaseQualityConstraints: Femiwiki's own properties and items (femiwiki/docker-mediawiki#437),
+  # not Wikidata's defaults. No Lexeme or MediaInfo ones, as Femiwiki has neither.
   WBQualityConstraintsAllowedEntityTypesConstraintId: Q520
 
   WBQualityConstraintsAllowedQualifiersConstraintId: Q509

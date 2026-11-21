@@ -288,9 +288,8 @@ $wgLocalisationCacheConf['manualRecache'] = getenv( 'FW_L10N_BUILD' ) === false;
 // The license icon. The license itself is in LocalSettings.yaml.
 $wgRightsIcon = "$wgResourceBasePath/resources/assets/licenses/cc-by-sa.png";
 
-// Default skin: you can change the default skin. Use the internal symbolic
-// names, ie 'vector', 'monobook'. The list is not in LocalSettings.yaml, which
-// would add it to core's default list rather than replace it.
+// The default skin. The list stays here: LocalSettings.yaml would add it to core's
+// default list rather than replace it.
 $wgDefaultSkin = 'femiwiki';
 $wgSkinsPreferred = [ 'femiwiki', 'vector-2022', 'vector' ];
 
