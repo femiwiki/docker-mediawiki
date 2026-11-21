@@ -1,0 +1,31 @@
+# Development settings, loaded by LocalSettings.php after DevelopmentSettings.php when
+# MEDIAWIKI_DEBUG_MODE is set. Format: https://www.mediawiki.org/wiki/Manual:YAML_settings_file_format
+
+# Sorted by key
+config:
+  # AWS 플러그인 비활성화
+  AWSBucketName: null
+
+  BounceHandlerInternalIPs: [0.0.0.0/0]
+
+  # DevelopmentSettings.php names a directory of its own
+  CacheDirectory: /tmp/cache
+
+  # 캡차 비활성화. Replaces the whole array, as the extension is not loaded yet.
+  CaptchaTriggers:
+    edit: false
+    create: false
+    createtalk: false
+    addurl: false
+    createaccount: false
+    badlogin: false
+
+  DebugToolbar: true
+
+  # Google Analytics에서 조회수 읽어오기 비활성화
+  PageViewInfoGAPropertyId: false
+  PageViewInfoGATrackingID: false
+
+  # 다음이 비활성화되어있어야 디버그 툴을 쓸 수 있음
+  UseCdn: false
+  UseFileCache: false

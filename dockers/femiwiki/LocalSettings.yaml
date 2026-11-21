@@ -89,31 +89,148 @@ extensions:
 # Sorted by key
 config:
   AbuseFilterEnableBlockedExternalDomain: true
+
   # VisualEditor is the default editor, so nearly every first edit earned this badge
   AchievementBadgesDisabledAchievements:
     - visual-edit
+
   AchievementBadgesFacebookAppId: '1937597133150935'
   AchievementBadgesReplaceEchoThankYouEdit: true
   AchievementBadgesReplaceEchoWelcome: true
+  AllowExternalImages: true
 
   # UPO: also a user preference option (https://www.mediawiki.org/wiki/Help:User_preference_option)
   AllowHTMLEmail: true
 
+  AllowUserCss: true
+  AllowUserJs: true
+
+  # Needed to make UploadWizard work in IE, see https://phabricator.wikimedia.org/T41877
+  ApiFrameOptions: SAMEORIGIN
+
+  ArticleCountMethod: any
+
+  # Changing this will log out all existing sessions.
+  AuthenticationTokenVersion: '1'
+
+  AutoConfirmAge: 3600
+
+  # Logged-out edits save as temporary accounts; UnifiedExtensionForFemiwiki holds the daily limit
+  AutoCreateTempUser: {enabled: true}
+
+  # The default is the global endpoint, which answers 307 for a young bucket
+  # until its name propagates. The regional one answers straight away.
+  AWSBucketDomain: '$1.s3.ap-northeast-2.amazonaws.com'
+
+  # One bucket with a path per zone. $wgAWSBucketPrefix, which spread the zones
+  # over four buckets, is deprecated by the extension.
+  AWSBucketName: uploads-302617221463-ap-northeast-2-an
+
   AWSRegion: ap-northeast-2
   AWSRepoDeletedHashLevels: 2
   AWSRepoHashLevels: 2
+  BlacklistSettings:
+    spam:
+      files: ['https://meta.wikimedia.org/w/index.php?title=Spam_blacklist&action=raw&sb_ver=1']
+    email:
+      files: ['https://meta.wikimedia.org/w/index.php?title=Email_blacklist&action=raw&sb_ver=1']
   BounceHandlerUnconfirmUsers: true
 
   # Wikimedia's, within the default $wgBounceRecordPeriod of 7 days
   BounceRecordLimit: 5
 
+  # A writable directory, not public on the web, to make the wiki go slightly faster
+  CacheDirectory: /tmp/cache
+
+  # Rendered HTML names the uploads bucket, which moved to Seoul at
+  # 2026-09-26T18:19Z, so anything cached before then still points at the Tokyo
+  # buckets femiwiki/femiwiki#489 wants to delete. purgeParserCache.php cannot
+  # do this: it wants SqlBagOStuff and this cache is memcached.
+  CacheEpoch: '20260926190000'
+
+  # Defaults to $wgDBname. Pinned so a container on another schema keeps the cache keys of femiwiki.
+  CachePrefix: femiwiki
+
+  # The captcha itself is chosen in LocalSettings.php, by whether the hCaptcha keys are set
+  CaptchaTriggers:
+    createaccount: true
+    # Every edit without an account; accounts passed it on signup
+    edit: true
+    create: false
+    addurl: false
+    badlogin: false
+
+  # Purge each edited page again 11 seconds later, as Wikimedia does, in case a
+  # render begun before the edit was stored after the first purge (femiwiki/femiwiki#701)
+  CdnReboundPurgeDelay: 11
+
+  CitoidFullRestbaseURL: 'https://ko.wikipedia.org/api/rest_'
+
+  # flow-board: Flow is gone, and pages still holding Flow revisions show a notice instead of failing.
+  # Collaboration*: CollaborationKit is gone, but old revisions still carry its content models,
+  # and dumpBackup.php stops at the first one without a handler.
+  ContentHandlers:
+    flow-board: MediaWiki\Content\FallbackContentHandler
+    CollaborationHubContent: MediaWiki\Content\FallbackContentHandler
+    CollaborationListContent: MediaWiki\Content\FallbackContentHandler
+
+  # Defaults to $wgDBname. Pinned so a container on another schema keeps the log-in cookies of femiwiki.
+  CookiePrefix: femiwiki
+
   DarkModeTogglePosition: footer
+
+  # MySQL table options to use during installation or update
+  DBTableOptions: 'ENGINE=InnoDB, DEFAULT CHARSET=binary'
+
+  DBtype: mysql
+  DefaultUserOptions:
+    # Enable twocolconflict to opt-out
+    twocolconflict: '1'
+    # No page has interlanguage links, so this saves ~24 KB per page (femiwiki/femiwiki#612)
+    compact-language-links: false
+    # Do not show page content below diffs
+    diffonly: '1'
+    # Show the stable revision of every page; FR_SHOW_STABLE_ALWAYS is 1
+    flaggedrevsstable: 1
+    mobile-specialpages: false
+    popupsreferencepreviews: '1'
+    # Enable Enhanced recent changes to opt-out
+    rcenhancedfilters-disable: 0
+    # Hide logs, bots and translations in Special:RecentChanges. The ID was made by
+    # JavaScript's ( new Date() ).getTime().
+    rcfilters-saved-queries: '{"queries":{"1000000000000":{"data":{"params":{"hidelog":"1","hidebots":"1","translations":"filter"},"highlights":[]},"label":"기본 필터"}},"version":"2","default":"1000000000000"}'
+    templatewizard-betafeature: 1
+    timecorrection: 9
+    upwiz_skiptutorial: 1
+    usebetatoolbar: 1
+    usebetatoolbar-cgd: 1
+    visualeditor-enable-experimental: 1
+    visualeditor-newwikitext: 1
+    visualeditor-tabs: multi-tab
+    wikieditor-preview: 1
+    wikieditor-publish: 1
+
+  # Path to the GNU diff3 utility. Used for conflict resolution.
+  Diff3: /usr/bin/diff3
+
   EchoMaxMentionsInEditSummary: 5
   EchoPerUserBlacklist: true
   EchoPollForUpdates: 60
+
+  # Editing no longer waits for a confirmed email (페미위키토론:한시적 편집 제한 정책), which
+  # temporary accounts could never have
+  EmailConfirmToEdit: false
+
   EmergencyContact: admin@femiwiki.com
   EnableCanonicalServerLink: true
+  EnableUploads: true
   EnableWatchlistLabels: true
+
+  # Open external links in new tab
+  ExternalLinkTarget: _blank
+
+  # infra's Caddyfile routes /actors/* on this host to the REST route
+  FediFeedsActorBase: 'https://fedi.femiwiki.com/actors/'
 
   # Bridgy Fed bridges to Bluesky the accounts that follow its bot
   FediFeedsAutoFollow:
@@ -122,8 +239,20 @@ config:
   # Take Likes, Announces and quotes; the privacy policy covers them from 2026-11-19
   FediFeedsInteractions: true
 
+  FemiwikiAddLinkClass: true
+  FemiwikiHeadItems:
+    fav1: '<link rel="icon" type="image/svg+xml" sizes="any" href="/fw-resources/favicons/favicon.svg">'
+    fav2: '<link rel="icon" type="image/png" sizes="96x96" href="/fw-resources/favicons/favicon-96.png">'
+    fav3: '<link rel="icon" type="image/png" sizes="32x32" href="/fw-resources/favicons/favicon-32.png">'
+    fav4: '<link rel="icon" type="image/png" sizes="16x16" href="/fw-resources/favicons/favicon-16.png">'
+    fav6: '<link rel="manifest" href="/fw-resources/favicons/manifest.json">'
+    fav7: '<meta name="theme-color" content="#736ac9">'
+
   # The share button shares index.php?curid= links, with no percent-encoded title
   FemiwikiShareByPageId: true
+
+  # Added to core's list
+  FileExtensions: [pdf, svg]
 
   # Use FlaggedRevs only as a protection-like mechanism
   FlaggedRevsProtection: true
@@ -132,20 +261,161 @@ config:
 
   # UnifiedExtensionForFemiwiki finds the tasks and topics instead of CirrusSearch.
   GEHomepageSuggestedEditsEnabled: true
+
   GEHomepageSuggestedEditsEnableTopics: true
 
   # The recommendation task types need services we don't run.
   GENewcomerTasksImageRecommendationsEnabled: false
+
   GENewcomerTasksLinkRecommendationsEnabled: false
   GENewcomerTasksSectionImageRecommendationsEnabled: false
   GoogleSiteSearchAppend: true
   GoogleSiteSearchCSEID: 44508684d5c0e489c
+  GrantPermissions:
+    editinterface:
+      gadgets-edit: true
+      gadgets-definition-edit: true
+
+  # Merged into core's and the extensions' defaults, so only the changes are here
+  GroupPermissions:
+    '*':
+      createaccount: true
+      # Deleted pages and revisions are public unless suppressed (see 페미위키:삭제 정책)
+      browsearchive: true
+      deletedhistory: true
+      deletedtext: true
+      # Logged-out edits save as temporary accounts; UnifiedExtensionForFemiwiki holds the daily limit
+      edit: true
+      abusefilter-log-detail: true
+      abusefilter-view: true
+      abusefilter-log: true
+      # Special:UnreviewedPages
+      unreviewedpages: true
+    user:
+      editcontentmodel: false
+      move: false
+      skipcaptcha: true
+      mwoauthmanagemygrants: true
+      mwoauthupdateownconsumer: true
+      mwoauthproposeconsumer: true
+      torunblocked: false
+    autoconfirmed:
+      editcontentmodel: true
+      move: true
+      translate: true
+    sysop:
+      renameuser: true
+      interwiki: true
+      import: false
+      importupload: false
+      # Only the team sees the IP addresses behind temporary accounts, and who looked
+      abusefilter-access-protected-vars: false
+      abusefilter-protected-vars-log: false
+      abusefilter-modify: false
+      abusefilter-modify-restricted: false
+      abusefilter-privatedetails: false
+      abusefilter-revert: true
+      disableaccount: true
+      upwizcampaigns: false
+      mass-upload: false
+    oversight:
+      deletelogentry: true
+      deleterevision: true
+    abusefilter:
+      abusefilter-bypass-blocked-external-domains: true
+      abusefilter-modify-blocked-external-domains: true
+      abusefilter-modify: true
+      changetags: true
+      managechangetags: true
+      abusefilter-modify-restricted: true
+    autopatrolled:
+      autopatrol: true
+    blocker:
+      block: true
+      blockemail: true
+      unblockself: true
+    checkuser:
+      abusefilter-privatedetails: true
+    electionadmin:
+      securepoll-create-poll: true
+      securepoll-edit-poll: true
+      securepoll-view-voter-pii: true
+    # The list of all Femiwiki team members
+    femiwiki-team:
+      checkuser-temporary-account-no-preference: true
+      checkuser-temporary-account-log: true
+      abusefilter-access-protected-vars: true
+      abusefilter-protected-vars-log: true
+      editprotected: true
+      editsemiprotected: true
+      protect: true
+      review: true
+      validate: true
+      autoreview: true
+      autoreviewrestore: true
+      movestable: true
+      stablesettings: true
+    importer:
+      import: true
+      importupload: true
+    interface-admin:
+      gadgets-edit: true
+      gadgets-definition-edit: true
+    oauthadmin:
+      mwoauthmanageconsumer: true
+    rollbacker:
+      rollback: true
+    # Commemorative
+    seeder:
+      edit: true
+    translationadmin:
+      pagetranslation: true
+      translate-manage: true
+      translate-messagereview: true
+      pagelang: true
+
+  # Added to core's list
+  HiddenPrefs: [gender, realname, upwiz_skiptutorial, usebetatoolbar]
+
+  ImageMagickConvertCommand: /usr/bin/convert
+  JobRunRate: 0
+
+  # DelayedJobQueue: the database queue, plus delayed jobs, which $wgCdnReboundPurgeDelay needs
+  JobTypeConf:
+    default:
+      class: MediaWiki\Extension\DelayedJobQueue\DelayedJobQueueDB
+      order: random
+      claimTTL: 3600
+
   JsonConfigEnableLuaSupport: true
+
+  # The Data: pages Chart and Kartographer draw from
+  JsonConfigModels:
+    Chart.JsonConfig: MediaWiki\Extension\Chart\JCChartContent
+    Tabular.JsonConfig: JsonConfig\JCTabularContent
+    Map.JsonConfig: JsonConfig\JCMapDataContent
+
+  JsonConfigs:
+    Chart.JsonConfig: {namespace: 486, nsName: Data, pattern: '/.\.chart$/', license: CC-BY-SA-4.0, isLocal: true}
+    Tabular.JsonConfig: {namespace: 486, nsName: Data, pattern: '/.\.tab$/', license: CC-BY-SA-4.0, isLocal: true}
+    Map.JsonConfig: {namespace: 486, nsName: Data, pattern: '/.\.map$/', license: CC-BY-SA-4.0, isLocal: true}
   KartographerDfltStyle: ''
+
+  # Tiles from tile.openstreetmap.org since maps.wikimedia.org is closed to other wikis. That server
+  # has no styles or @2x tiles, and no /img/ snapshots for static mode
+  KartographerMapServer: 'https://tile.openstreetmap.org'
+
   KartographerSimpleStyleMarkers: false
   KartographerSrcsetScales: []
   KartographerStyles: ['']
+  LanguageCode: ko
+  Localtimezone: Asia/Seoul
+  LoginLanguageSelector: true
   MathUseInternalRestbasePath: false
+
+  # The number of authors that credited below an article text.
+  # https://github.com/femiwiki/FemiwikiSkin/issues/137
+  MaxCredits: 5
 
   # Advanced mode is available for users
   MFAdvancedMobileContributions: true
@@ -162,16 +432,21 @@ config:
   # Enable the use Wikibase and associated features
   MFUseWikibase: true
 
+  MiserMode: true
+
   # "더 둘러보기" below articles, in place of RelatedArticles: linked articles, then the topics a
   # reader asked to see more of, then random articles. Topics are the 문서 주제/ categories.
   MoreToExploreEnabled: true
+
   MoreToExploreTopicPrefix: 문서 주제/
 
   # OAuth itself treats false as the local source and deprecates it since 1.45
   MWOAuthSharedUserIDs: true
 
   MWOAuthSharedUserSource: local
+  NativeImageLazyLoading: true
   PageImagesLeadSectionOnly: false
+  PageLanguageUseDB: true
   PageTranslationLanguageList: sidebar-always
 
   # Workload Identity Federation from the instance's IAM role (femiwiki/femiwiki#670): no key. infra
@@ -181,16 +456,71 @@ config:
   # So the Google tag does not compete with the page on slow phones (femiwiki/femiwiki#612)
   PageViewInfoGALoadAfterPageLoad: true
 
+  # The GA4 property PageViewInfo reads page views from instead of Wikimedia's pageview API (#1282).
+  # Its time zone is $wgLocaltimezone's.
+  PageViewInfoGAPropertyId: '258014701'
+
+  # The Google tag, with the web stream's measurement ID. It replaces the UA tag in MediaWiki:Common.js
+  PageViewInfoGATrackingID: G-023DFCJPXE
+
+  PasswordDefault: argon2
+  PasswordPolicy:
+    policies:
+      default:
+        MinimalPasswordLength: {value: 8, suggestChangeOnLogin: true}
   PasswordSender: admin@femiwiki.com
   PFEnableStringFunctions: true
+  PropertySuggesterClassifyingPropertyIds: [1, 36]
+  PropertySuggesterInitialSuggestions: [1]
+
+  # Browsers' own default, also for old ones. Never no-referrer: Caddy's login_walk
+  # and OSM tiles count on the Referer (femiwiki/femiwiki#105)
+  ReferrerPolicy: [strict-origin-when-cross-origin, origin]
+
+  # 1.46 loads site/v1 only in DevelopmentSettings.php. See SitemapApiConfig.
+  RestAPIAdditionalRouteFiles: [includes/Rest/site.v1.json]
+
+  # Allow display titles not only to titles that normalize to the same canonical
+  # DB key as the real page title.
+  RestrictDisplayTitle: false
+
+  RightsPage: 페미위키:저작권
+  RightsText: 크리에이티브 커먼즈 저작자표시-동일조건변경허락 4.0 국제 라이선스
+  RightsUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.ko'
 
   # Sanctions are discussed on their own subpages with DiscussionTools.
   SanctionsDiscussionBackend: DiscussionTools
 
   ScribuntoDefaultEngine: luasandbox
+
+  # 3 seconds of CPU and 50 MiB of memory
+  ScribuntoEngineConf:
+    luasandbox:
+      cpuLimit: 3
+      memoryLimit: 52428800
+
+  # Served at /rest.php/site/v1/sitemap/0, as Wikimedia does (T400023). Like
+  # Wikimedia, no $wgSitemapNamespaces: the noindex namespaces stay out.
+  SitemapApiConfig: {enabled: true}
+
   Sitename: 페미위키
+
+  # To the host's OpenTelemetry Collector (femiwiki/infra#1710), over UDP after
+  # the response, so nothing waits when no one listens
+  StatsFormat: dogstatsd
+
+  StatsTarget: 'udp://127.0.0.1:8125'
+  SVGConverter: rsvg
+
+  # MediaWiki 1.46 serves small SVGs as the original file by default, and PageImages then puts that SVG
+  # in og:image, which link previews don't show (femiwiki/femiwiki#688). Render SVGs as PNG as before 1.46.
+  SVGNativeRendering: false
+
+  TemplateStylesAllowedUrls:
+    font: ['<^https://fonts\.googleapis\.com/css(?:[?#]|$)>']
   TranslatePageTranslationULS: true
   TranslatePermissionUrl: Project:번역
+  TwitterSiteHandle: '@femiwikidotcome'
 
   # A language cookie is not in the cache key, so anonymous readers still
   # change language only with ?uselang=
@@ -209,7 +539,6 @@ config:
   ULSWebfontsEnabled: false
 
   UnifiedExtensionForFemiwikiBlockByEmail: false
-
   UnifiedExtensionForFemiwikiModifyEmailTheme: true
   UnifiedExtensionForFemiwikiPreAuth: true
 
@@ -222,6 +551,26 @@ config:
 
   UnifiedExtensionForFemiwikiSuggestedEdits: true
   UnwatchedPageThreshold: 0
+  UploadWizardConfig:
+    alternativeUploadToolsPage: '특수:파일올리기'
+    licensing:
+      thirdParty:
+        licenseGroups:
+          - head: mwe-upwiz-license-cc-head
+            subhead: mwe-upwiz-license-cc-subhead
+            licenses: [cc-by-sa-4.0, cc-by-sa-3.0, cc-by-sa-2.5, cc-by-4.0, cc-by-3.0, cc-by-2.5, cc-zero]
+          - head: mwe-upwiz-license-custom-head
+            special: custom
+            licenses: [custom]
+          - head: mwe-upwiz-license-none-head
+            licenses: [none]
+    # Skip the tutorial
+    tutorial: {skip: true}
+    uwLanguages: {en: English, ko: 한국어}
+  UseCdn: true
+  UseImageMagick: true
+  VectorLanguageInHeader: {logged_in: true, logged_out: true}
+  VectorResponsive: true
   VisualEditorEditCheck: true
 
   # Enable the section editing
@@ -234,6 +583,75 @@ config:
   VisualEditorUseSingleEditTab: true
 
   WatchlistExpiry: true
+
+  # WikibaseQualityConstraints: Femiwiki's own properties and items, made by hand
+  # (femiwiki/docker-mediawiki#437). The defaults are Wikidata's IDs, and P31 here is something
+  # else. Lexeme and MediaInfo ones are left out, as Femiwiki has neither.
+  WBQualityConstraintsAllowedEntityTypesConstraintId: Q520
+
+  WBQualityConstraintsAllowedQualifiersConstraintId: Q509
+  WBQualityConstraintsAllowedUnitsConstraintId: Q518
+  WBQualityConstraintsAsMainValueId: Q534
+  WBQualityConstraintsAsQualifiersId: Q535
+  WBQualityConstraintsAsReferencesId: Q536
+  WBQualityConstraintsCitationNeededConstraintId: Q521
+  WBQualityConstraintsClassId: P93
+  WBQualityConstraintsCommonsLinkConstraintId: Q512
+  WBQualityConstraintsConflictsWithConstraintId: Q506
+  WBQualityConstraintsConstraintCheckedOnMainValueId: Q529
+  WBQualityConstraintsConstraintCheckedOnQualifiersId: Q530
+  WBQualityConstraintsConstraintCheckedOnReferencesId: Q531
+  WBQualityConstraintsConstraintClarificationId: P104
+  WBQualityConstraintsConstraintScopeId: P105
+  WBQualityConstraintsConstraintStatusId: P91
+  WBQualityConstraintsContemporaryConstraintId: Q513
+  WBQualityConstraintsDifferenceWithinRangeConstraintId: Q511
+  WBQualityConstraintsDistinctValuesConstraintId: Q496
+  WBQualityConstraintsExceptionToConstraintId: P90
+  WBQualityConstraintsFormatAsARegularExpressionId: P102
+  WBQualityConstraintsFormatConstraintId: Q514
+  WBQualityConstraintsInstanceOfId: P1
+  WBQualityConstraintsInstanceOfRelationId: Q526
+  WBQualityConstraintsInstanceOrSubclassOfRelationId: Q528
+  WBQualityConstraintsIntegerConstraintId: Q525
+  WBQualityConstraintsInverseConstraintId: Q503
+  WBQualityConstraintsItemRequiresClaimConstraintId: Q504
+  WBQualityConstraintsLabelInLanguageConstraintId: Q523
+  WBQualityConstraintsLanguagePropertyId: P92
+  WBQualityConstraintsMandatoryConstraintId: Q494
+  WBQualityConstraintsMandatoryQualifierConstraintId: Q508
+  WBQualityConstraintsMaximumDateId: P100
+  WBQualityConstraintsMaximumQuantityId: P98
+  WBQualityConstraintsMinimumDateId: P99
+  WBQualityConstraintsMinimumQuantityId: P97
+  WBQualityConstraintsMultiValueConstraintId: Q497
+  WBQualityConstraintsNamespaceId: P101
+  WBQualityConstraintsNoBoundsConstraintId: Q517
+  WBQualityConstraintsNoneOfConstraintId: Q524
+  WBQualityConstraintsOneOfConstraintId: Q507
+  WBQualityConstraintsPropertyConstraintId: P89
+  WBQualityConstraintsPropertyId: P95
+  WBQualityConstraintsPropertyScopeConstraintId: Q522
+  WBQualityConstraintsPropertyScopeId: P107
+  WBQualityConstraintsQualifierOfPropertyConstraintId: P96
+  WBQualityConstraintsRangeConstraintId: Q510
+  WBQualityConstraintsRelationId: P94
+  WBQualityConstraintsSeparatorId: P106
+  WBQualityConstraintsSingleBestValueConstraintId: Q519
+  WBQualityConstraintsSingleValueConstraintId: Q499
+  WBQualityConstraintsSubclassOfId: P36
+  WBQualityConstraintsSubclassOfRelationId: Q527
+  WBQualityConstraintsSuggestionConstraintId: Q495
+  WBQualityConstraintsSymmetricConstraintId: Q500
+  WBQualityConstraintsSyntaxClarificationId: P103
+  WBQualityConstraintsTypeConstraintId: Q501
+  WBQualityConstraintsUsedAsQualifierConstraintId: Q498
+  WBQualityConstraintsUsedAsReferenceConstraintId: Q516
+  WBQualityConstraintsUsedForValuesOnlyConstraintId: Q515
+  WBQualityConstraintsValueRequiresClaimConstraintId: Q505
+  WBQualityConstraintsValueTypeConstraintId: Q502
+  WBQualityConstraintsWikibaseItemId: Q532
+  WBQualityConstraintsWikibasePropertyId: Q533
 
   # Disable Welcome Survey
   # (Visit https://en.wikipedia.org/wiki/Special:WelcomeSurvey to see an example)
