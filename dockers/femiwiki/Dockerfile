@@ -6,7 +6,7 @@ FROM ghcr.io/femiwiki/caddy:2026-11-14T09-17-7f310c7a AS caddy
 
 # Only an amd64 image is published; its files are the same on every platform.
 # hadolint ignore=DL3029
-FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2026-11-22T11-56-cec85c92 AS extensions
+FROM --platform=linux/amd64 ghcr.io/femiwiki/femiwiki-extensions:2026-11-26T00-12-e34f0d66 AS extensions
 
 FROM ghcr.io/femiwiki/mediawiki:2026-11-19T23-22-c703bdbc
 
