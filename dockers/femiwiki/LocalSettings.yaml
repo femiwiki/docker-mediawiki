@@ -315,6 +315,8 @@ config:
       disableaccount: true
       upwizcampaigns: false
       mass-upload: false
+      # Left to widgeteditor
+      editwidgets: false
     oversight:
       deletelogentry: true
       deleterevision: true
