@@ -315,6 +315,8 @@ config:
       disableaccount: true
       upwizcampaigns: false
       mass-upload: false
+      # Widgets grants this to sysop by default. Widget pages run raw HTML and JS, so only widgeteditor edits them
+      editwidgets: false
     oversight:
       deletelogentry: true
       deleterevision: true
