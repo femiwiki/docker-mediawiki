@@ -2,7 +2,7 @@
 # 설정은 /etc/mediawiki, 직접 설치한 실행파일은 /usr/local/{bin,sbin}, 그 밖의
 # 스크립트는 /usr/local/lib/femiwiki, 시크릿은 /run/secrets, 캐시는 /tmp/cache,
 # 지역화 캐시는 /srv/l10n에 있습니다.
-FROM ghcr.io/femiwiki/caddy:2026-11-26T15-03-88c81e75 AS caddy
+FROM ghcr.io/femiwiki/caddy:2026-11-27T14-30-a0e0a0ad AS caddy
 
 # Only an amd64 image is published; its files are the same on every platform.
 # hadolint ignore=DL3029
