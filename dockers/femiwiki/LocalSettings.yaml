@@ -362,6 +362,8 @@ config:
       gadgets-definition-edit: true
     oauthadmin:
       mwoauthmanageconsumer: true
+    rights-manager:
+      userrights: true
     rollbacker:
       rollback: true
     # Commemorative
