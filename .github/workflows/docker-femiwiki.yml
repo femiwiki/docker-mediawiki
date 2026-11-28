@@ -104,6 +104,12 @@ jobs:
           URL="127.0.0.1:8080/w/Special:MathStatus"
           until curl -sLfo /dev/null "$URL"; do
             sleep 1; done
+      # sysop and bureaucrat are split into smaller groups. A right an extension gives them by default
+      # has to go to one of those groups
+      - name: Check that sysop and bureaucrat have no rights
+        run: |
+          curl -sSf '127.0.0.1:8080/api.php?action=query&meta=siteinfo&siprop=usergroups&format=json&formatversion=2' |
+            jq -e '[.query.usergroups[] | select(.name == "sysop" or .name == "bureaucrat") | select(.rights != []) | "\(.name): \(.rights | join(", "))"] | if . == [] then true else (.[] | "::error::" + . + "\n" | halt_error(1)) end'
       - name: Check that every setting the settings files assign is declared
         run: |
           c="$(docker ps -qf name=mediawiki_fastcgi | head -1)"

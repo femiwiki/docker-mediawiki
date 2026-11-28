@@ -555,8 +555,6 @@ $wgExtensionFunctions[] = static function () {
 };
 $wgAddGroups['sysop']['upwizcampeditors'] = false;
 $wgRemoveGroups['sysop']['upwizcampeditors'] = false;
-$wgAddGroups['bureaucrat']['upwizcampeditors'] = true;
-$wgRemoveGroups['bureaucrat']['upwizcampeditors'] = true;
 
 // VisualEditor
 // Namespaces in which to enable VisualEditor

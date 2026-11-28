@@ -97,6 +97,9 @@ config:
   AchievementBadgesFacebookAppId: '1937597133150935'
   AchievementBadgesReplaceEchoThankYouEdit: true
   AchievementBadgesReplaceEchoWelcome: true
+  # Groups patroller gives and takes back, instead of sysop
+  AddGroups:
+    patroller: [editor, autoreview]
   AllowExternalImages: true
 
   # UPO: also a user preference option (https://www.mediawiki.org/wiki/Help:User_preference_option)
@@ -300,23 +303,92 @@ config:
       editcontentmodel: true
       move: true
       translate: true
+    # sysop and bureaucrat are split into the groups below. Their rights are all off so that one an extension adds shows up in CI
+    bureaucrat:
+      noratelimit: false
+      override-antispoof: false
+      renameuser: false
+      userrights: false
     sysop:
-      renameuser: true
-      interwiki: true
-      import: false
-      importupload: false
-      # Only the team sees the IP addresses behind temporary accounts, and who looked
       abusefilter-access-protected-vars: false
-      abusefilter-protected-vars-log: false
+      abusefilter-log-detail: false
+      abusefilter-log-private: false
       abusefilter-modify: false
+      abusefilter-modify-blocked-external-domains: false
       abusefilter-modify-restricted: false
       abusefilter-privatedetails: false
-      abusefilter-revert: true
-      disableaccount: true
-      upwizcampaigns: false
-      mass-upload: false
-      # Left to widgeteditor
+      abusefilter-protected-vars-log: false
+      abusefilter-revert: false
+      abusefilter-view-private: false
+      apihighlimits: false
+      autoconfirmed: false
+      autopatrol: false
+      autoreview: false
+      bigdelete: false
+      block: false
+      blockemail: false
+      browsearchive: false
+      createaccount: false
+      delete: false
+      deletechangetags: false
+      deletedhistory: false
+      deletedtext: false
+      disableaccount: false
+      editcontentmodel: false
+      editinterface: false
+      editprotected: false
+      editsemiprotected: false
+      editsitejson: false
+      edituserjson: false
       editwidgets: false
+      embedvideo-refreshmetadata: false
+      import: false
+      importupload: false
+      interwiki: false
+      ipblock-exempt: false
+      managechangetags: false
+      managementors: false
+      markbotedits: false
+      mass-upload: false
+      mergehistory: false
+      move: false
+      move-categorypages: false
+      move-rootuserpages: false
+      move-subpages: false
+      movefile: false
+      movestable: false
+      newsletter-create: false
+      newsletter-delete: false
+      newsletter-manage: false
+      newsletter-restore: false
+      noratelimit: false
+      nuke: false
+      oathauth-disable-for-user: false
+      oathauth-recover-for-user: false
+      oathauth-verify-user: false
+      oathauth-view-log: false
+      override-antispoof: false
+      patrol: false
+      protect: false
+      renameuser: false
+      replacetext: false
+      reupload: false
+      reupload-shared: false
+      review: false
+      rollback: false
+      setmentor: false
+      skipcaptcha: false
+      stablesettings: false
+      suppressredirect: false
+      tboverride: false
+      titleblacklistlog: false
+      unblockself: false
+      undelete: false
+      unreviewedpages: false
+      unwatchedpages: false
+      upload: false
+      upwizcampaigns: false
+      writemanualnotification: false
     oversight:
       deletelogentry: true
       deleterevision: true
@@ -327,14 +399,25 @@ config:
       changetags: true
       managechangetags: true
       abusefilter-modify-restricted: true
+      abusefilter-revert: true
+      abusefilter-view-private: true
+      abusefilter-log-private: true
     autopatrolled:
       autopatrol: true
     blocker:
       block: true
       blockemail: true
       unblockself: true
+      disableaccount: true
     checkuser:
       abusefilter-privatedetails: true
+    deleter:
+      delete: true
+      bigdelete: true
+      undelete: true
+      nuke: true
+      mergehistory: true
+      suppressredirect: true
     electionadmin:
       securepoll-create-poll: true
       securepoll-edit-poll: true
@@ -360,8 +443,39 @@ config:
     interface-admin:
       gadgets-edit: true
       gadgets-definition-edit: true
+    mentor-manager:
+      setmentor: true
+      managementors: true
+    newsletter-manager:
+      newsletter-create: true
+      newsletter-delete: true
+      newsletter-manage: true
+      newsletter-restore: true
+    oath-admin:
+      oathauth-disable-for-user: true
+      oathauth-recover-for-user: true
+      oathauth-verify-user: true
+      oathauth-view-log: true
     oauthadmin:
       mwoauthmanageconsumer: true
+    patroller:
+      patrol: true
+      autopatrol: true
+      review: true
+      autoreview: true
+      unwatchedpages: true
+    protector:
+      protect: true
+      editprotected: true
+      stablesettings: true
+      movestable: true
+      tboverride: true
+      titleblacklistlog: true
+    renamer:
+      renameuser: true
+      override-antispoof: true
+    replacer:
+      replacetext: true
     rights-manager:
       userrights: true
     rollbacker:
@@ -369,6 +483,14 @@ config:
     # Commemorative
     seeder:
       edit: true
+    site-config:
+      editinterface: true
+      editsitejson: true
+      edituserjson: true
+      interwiki: true
+      managechangetags: true
+      deletechangetags: true
+      writemanualnotification: true
     translationadmin:
       pagetranslation: true
       translate-manage: true
@@ -478,6 +600,8 @@ config:
   # and OSM tiles count on the Referer (femiwiki/femiwiki#105)
   ReferrerPolicy: [strict-origin-when-cross-origin, origin]
 
+  RemoveGroups:
+    patroller: [editor, autoreview]
   # 1.46 loads site/v1 only in DevelopmentSettings.php. See SitemapApiConfig.
   RestAPIAdditionalRouteFiles: [includes/Rest/site.v1.json]
 
